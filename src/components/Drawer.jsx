@@ -39,9 +39,9 @@ export function SideBar() {
       navigate("/training")
     };
 
-    const handleTracking = async () => {
-      navigate("/tracking")
-    };
+    // const handleTracking = async () => {
+    //   navigate("/tracking")
+    // };
 
     const handleGoals = async () => {
       navigate("/goals")
@@ -122,14 +122,14 @@ export function SideBar() {
               </ListItemButton>
             </ListItem>
 
-            <ListItem key="tracking" disablePadding>
+            {/* <ListItem key="tracking" disablePadding>
               <ListItemButton onClick={handleTracking}>
                 <ListItemIcon>
                 <Inbox />
                 </ListItemIcon>
                 <ListItemText primary="Tracking" />
               </ListItemButton>
-            </ListItem>
+            </ListItem> */}
 
             <ListItem key="goals" disablePadding>
               <ListItemButton onClick={handleGoals}>
