@@ -36,7 +36,7 @@ export function Register() {
         e.preventDefault(); 
 
         try {
-            const response = await axios.post('http://localhost:3000/auth/registerAccount', {
+            const response = await axios.post('http://localhost:3000/auth/registerAcc', {
                 email,
                 password
             });

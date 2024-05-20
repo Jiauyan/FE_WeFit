@@ -33,7 +33,7 @@ export function Login () {
         e.preventDefault(); 
     
         try {
-          const response = await axios.post('http://localhost:3000/auth/loginAccount', {
+          const response = await axios.post('http://localhost:3000/auth/loginAcc', {
             email,
             password,
           });
