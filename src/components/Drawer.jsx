@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import {
     Box,
     Drawer,
@@ -25,6 +26,7 @@ export function SideBar() {
 
     const navigate = useNavigate();
 
+    const[logoutStatus, setLogoutStatus] = useState('');
     const drawerWidth = 240;
 
     const handleProfile = async () => {
@@ -55,6 +57,28 @@ export function SideBar() {
       navigate("/tips")
     };
     
+    const handleLogout = async (e) => { 
+      e.preventDefault(); 
+
+      try {
+          const response = await axios.post('http://localhost:3000/auth/logoutAccount', {
+          });
+
+          setLogoutStatus(response.data.message);
+          navigate('/login');
+      } catch (error) {
+          if (axios.isAxiosError(error)) {
+              if (error.response) {
+                  setLogoutStatus(error.response.data.message);
+              } else {
+                  setLogoutStatus('An error occurred');
+              }
+          } else {
+              setLogoutStatus('An unexpected error occurred');
+          }
+      }
+  };
+
   return (
      <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -69,7 +93,14 @@ export function SideBar() {
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
       </Typography>
       {/* Example navigation items */}
-      <Button color="inherit">Logout</Button>
+      <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={handleLogout}
+              >
+                Logout
+            </Button>
     </Toolbar>
         
       </AppBar>

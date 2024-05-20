@@ -19,6 +19,7 @@ import { FitnessLevel } from "../pages/auth/FitnessLevel.jsx";
 import { FitnessGoal } from "../pages/auth/FitnessGoal.jsx";
 import { FavClass } from "../pages/auth/FavClass.jsx";
 import { useAuth } from '../hook/UseAuth.js';  // Adjust the path as necessary
+import { ForgotPassword } from "../pages/auth/ForgotPassword.jsx";
 
 const AuthWrapper = ({ children }) => {
   useAuth();  // Hook to check and manage token
@@ -94,6 +95,10 @@ const routes = [
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/forgotPassword",
+    element: <ForgotPassword />,
   },
   {
     path: "/completeProfile",

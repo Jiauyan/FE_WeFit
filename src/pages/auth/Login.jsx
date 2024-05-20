@@ -93,7 +93,7 @@ export function Login () {
              control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-            <Link href="/login" variant="body2">
+            <Link href="/forgotPassword" variant="body2">
                     Forgot password?
             </Link>
 
