@@ -22,12 +22,13 @@ import {
 
 export function CompleteProfile() {
     
+    const [name, setName] = useState('');
     const [username, setUsername] = useState('');
-    const [age, setAge] = useState('');
+    const [age, setAge] = useState(null);
     const [gender, setGender] = useState('');
     const [dateOfBirth, setDate] = useState('');
-    const [weight, setWeight] = useState('');
-    const [height, setHeight] = useState('');
+    const [weight, setWeight] = useState(null);
+    const [height, setHeight] = useState(null);
     const [role, setRole] = React.useState('');
     const [completeProfileStatus, setCompleteProfileStatus] = useState('');
     const navigate = useNavigate();
@@ -51,6 +52,7 @@ export function CompleteProfile() {
         try {
             const response = await axios.post(`http://localhost:3000/auth/completeProfile/${uid}`, {
                 role,
+                name,
                 username,
                 age,
                 gender,
@@ -113,6 +115,17 @@ export function CompleteProfile() {
                     margin="normal"
                     //required
                     fullWidth
+                    id="name"
+                    label="Name"
+                    name="name"
+                    autoComplete="name"
+                    autoFocus
+                    onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+                    margin="normal"
+                    //required
+                    fullWidth
                     id="username"
                     label="Username"
                     name="username"
@@ -129,7 +142,8 @@ export function CompleteProfile() {
                     name="age"
                     autoComplete="age"
                     autoFocus
-                    onChange={(e) => setAge(e.target.value)}
+                    type="number"
+                    onChange={(e) => setAge(parseFloat(e.target.value) || null)}
             />
             <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Gender</InputLabel>
@@ -160,9 +174,9 @@ export function CompleteProfile() {
                     fullWidth
                     name="weight"
                     label="Weight"
-                    type="integer"
                     id="weight"
-                    onChange={(e) => setWeight(e.target.value)}
+                    type="number"
+                    onChange={(e) => setWeight(parseFloat(e.target.value) || null)}
             />
             <TextField
                     margin="normal"
@@ -170,9 +184,9 @@ export function CompleteProfile() {
                     fullWidth
                     name="height"
                     label="Height"
-                    type="integer"
                     id="height"
-                    onChange={(e) => setHeight(e.target.value)}
+                    type="number"
+                    onChange={(e) => setHeight(parseFloat(e.target.value) || null)}
             />
             <Button
                     type="submit"

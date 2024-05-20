@@ -17,7 +17,7 @@ import { Test } from "../pages/Test.jsx";
 import { CompleteProfile } from "../pages/auth/CompleteProfile.jsx";
 import { FitnessLevel } from "../pages/auth/FitnessLevel.jsx";
 import { FitnessGoal } from "../pages/auth/FitnessGoal.jsx";
-import { ExerciseType } from "../pages/auth/ExerciseType.jsx";
+import { FavClass } from "../pages/auth/FavClass.jsx";
 import { useAuth } from '../hook/UseAuth.js';  // Adjust the path as necessary
 
 const AuthWrapper = ({ children }) => {
@@ -108,8 +108,8 @@ const routes = [
     element: <FitnessGoal />,
   },
   {
-    path: "/exerciseType",
-    element: <ExerciseType />,
+    path: "/favClass",
+    element: <FavClass />,
   },
 ];
 

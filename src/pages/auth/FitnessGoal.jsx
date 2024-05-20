@@ -47,7 +47,7 @@ export function FitnessGoal() {
             });
 
             setFitnessGoalStatus(response.data.message);
-            navigate('/exerciseType', { state: { uid } });
+            navigate('/favClass', { state: { uid } });
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {

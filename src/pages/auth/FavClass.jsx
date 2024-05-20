@@ -21,21 +21,19 @@ import {
 } from "@mui/material";
 
 
-
-export function ExerciseType() {
-    
-    const [exerciseType, setExerciseType] = useState([]);
-    const [exerciseTypeStatus, setExerciseTypeStatus] = useState('');
+export function FavClass() {
+    const [favClass, setFavClass] = useState([]);
+    const [favClassStatus, setFavClassStatus] = useState('');
     const navigate = useNavigate();
 
     const location = useLocation();
     const uid = location.state?.uid; // Access the ID from the state
 
     const handleChange = (type) => {
-        if (exerciseType.includes(type)) {
-            setExerciseType(exerciseType.filter(item => item !== type));
+        if (favClass.includes(type)) {
+            setFavClass(favClass.filter(item => item !== type));
         } else {
-            setExerciseType([...exerciseType, type]);
+            setFavClass([...favClass, type]);
         }
     };
 
@@ -46,21 +44,21 @@ export function ExerciseType() {
         e.preventDefault(); 
 
         try {
-            const response = await axios.post(`http://localhost:3000/auth/exerciseType/${uid}`, {
-                exerciseType
+            const response = await axios.post(`http://localhost:3000/auth/favClass/${uid}`, {
+                favClass
             });
 
-            setExerciseTypeStatus(response.data.message);
+            setFavClassStatus(response.data.message);
             navigate('/login',{ state: { uid } });
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
-                    setExerciseTypeStatus(error.response.data.message);
+                    setFavClassStatus(error.response.data.message);
                 } else {
-                    setExerciseTypeStatus('An error occurred');
+                    setFavClassStatus('An error occurred');
                 }
             } else {
-                setExerciseTypeStatus('An unexpected error occurred');
+                setFavClassStatus('An unexpected error occurred');
             }
         }
     };
@@ -87,8 +85,8 @@ export function ExerciseType() {
                     <Button
                         key={type}
                         fullWidth
-                        variant={exerciseType.includes(type) ? "contained" : "outlined"}
-                        color={exerciseType.includes(type) ? "primary" : "inherit"}
+                        variant={favClass.includes(type) ? "contained" : "outlined"}
+                        color={favClass.includes(type) ? "primary" : "inherit"}
                         onClick={() => handleChange(type)}
                         sx={{ mb: 2 }}
                     >
@@ -99,7 +97,7 @@ export function ExerciseType() {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    disabled={exerciseType.length === 0}
+                    disabled={favClass.length === 0}
                     sx={{ mt: 3, mb: 2 }}
                 >
                     Next
