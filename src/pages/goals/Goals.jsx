@@ -33,7 +33,7 @@ export function Goals(){
     const [completedGoals, setCompletedGoals] = useState({});
     const [completedGoalsStatus, setCompletedGoalsStatus] = useState("");
     const [userData, setUserData] = useState([]);
-    const { user } = useUser();
+    const { user , setUser} = useUser();
     const uid = user.uid;
 
     // Callback for adding a goal
@@ -101,8 +101,18 @@ export function Goals(){
       }));
 
       useEffect(() => {
+        // Load user ID from local storage or other persistent storage
+        const storedUid = localStorage.getItem('uid');
+        if (storedUid) {
+            setUser({ ...user, uid: storedUid });
+        }
+    }, []);
+
+      useEffect(() => {
         const fetchGoals = async () => {
             try {
+                const uid = user?.uid;
+                if (!uid) return;
                 const response = await axios.get(`http://localhost:3000/goals/getAllUserGoals/${uid}`);
                 setGoals(response.data);
                 // Initialize completedGoals based on fetched data
@@ -117,7 +127,7 @@ export function Goals(){
         };
     
         fetchGoals();
-    }, [uid]);
+    }, [user?.uid]);
     return(
         <>
        
