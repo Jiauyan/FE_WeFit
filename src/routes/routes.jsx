@@ -20,6 +20,10 @@ import { FitnessGoal } from "../pages/auth/FitnessGoal.jsx";
 import { FavClass } from "../pages/auth/FavClass.jsx";
 import { useAuth } from '../hook/UseAuth.js';  // Adjust the path as necessary
 import { ForgotPassword } from "../pages/auth/ForgotPassword.jsx";
+import { TrainerProfile } from '../pages/trainerProfile/TrainerProfile.jsx';
+import { TrainerTips } from '../pages/trainerTips/TrainerTips.jsx';
+import { TrainerTraining } from '../pages/trainerTraining/TrainerTraining.jsx';
+import { TrainerQuotes } from '../pages/trainerQuotes/TrainerQuotes.jsx';
 
 const AuthWrapper = ({ children }) => {
   useAuth();  // Hook to check and manage token
@@ -85,6 +89,25 @@ const routes = [
       {
         path: "tips",
         element: <ProtectedRoute element={<Tips />} />,
+      },
+      {
+        path: "trainerProfile",
+        element: <ProtectedRoute element={<TrainerProfile />} />,
+      },
+      
+      {
+        path: "trainerTips",
+        element: <ProtectedRoute element={<TrainerTips />} />,
+      },
+      
+      {
+        path: "trainerTraining",
+        element: <ProtectedRoute element={<TrainerTraining />} />,
+      },
+      
+      {
+        path: "trainerQuotes",
+        element: <ProtectedRoute element={<TrainerQuotes />} />,
       },
     ],
   },

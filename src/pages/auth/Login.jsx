@@ -37,16 +37,17 @@ export function Login () {
             email,
             password,
           });
-          const uid = response.data.uid;
-          setLoginStatus(response.data.message);
+          const uid = response.data.user.uid;
+          const role = response.data.userRole;
+          setLoginStatus(response.data.user.message);
           const token = {
-            accessToken : response.data.stsTokenManager.accessToken,
-            refreshToken : response.data.stsTokenManager.refreshToken,
+            accessToken : response.data.user.stsTokenManager.accessToken,
+            refreshToken : response.data.user.stsTokenManager.refreshToken,
           }
           localStorage.setItem('accessToken', token.accessToken);
           localStorage.setItem('refreshToken', token.refreshToken);
-          updateUser({ uid }); 
-          navigate('/', { state: { uid } });
+          updateUser({ uid, role }); 
+          navigate('/');
         } catch (error) {
           if (axios.isAxiosError(error) && error.response?.status === 401) {
             setLoginStatus('Login failed');
