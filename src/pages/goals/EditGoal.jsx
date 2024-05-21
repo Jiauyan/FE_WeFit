@@ -23,7 +23,7 @@ const style = {
   p: 4,
 };
 
-export function EditGoal({id, oldTitle, disabled}) {
+export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -34,15 +34,15 @@ export function EditGoal({id, oldTitle, disabled}) {
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
-    const status = false;
     try {
         const response = await axios.patch(`http://localhost:3000/goals/updateGoal/${id}`, {
             uid,
             title,
-            status
+            status: false
         });
-
+        console.log(response.data);
         setEditGoalStatus(response.data.message);
+        onEditGoal(response.data);
         handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {

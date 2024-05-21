@@ -34,10 +34,31 @@ export function Goals(){
     const [completedGoalsStatus, setCompletedGoalsStatus] = useState("");
     const [userData, setUserData] = useState([]);
     const { user } = useUser();
-    const uid = user.uid
+    const uid = user.uid;
+
+    // Callback for adding a goal
+    const addGoalCallback = (newGoal) => {
+        setGoals(prevGoals => [...prevGoals, newGoal]);
+    };
+
+    // Callback for editing a goal
+    const editGoalCallback = (updatedGoal) => {
+        setGoals(prevGoals => prevGoals.map(goal => {
+            if (goal.id === updatedGoal.id) {
+                return updatedGoal;
+            }
+            return goal;
+        }));
+    };
+
+    // Callback for deleting a goal
+    const deleteGoalCallback = (goalId) => {
+        setGoals(prevGoals => prevGoals.filter(goal => goal.id !== goalId));
+    };
+
 
     const handleComplete = async (id, title) => {
-        
+        console.log(id);
         try {
             const response = await axios.patch(`http://localhost:3000/goals/updateGoal/${id}`, {
                 uid,
@@ -47,13 +68,19 @@ export function Goals(){
 
             setCompletedGoalsStatus(response.data.message);
 
+            // Update the `goals` state directly
+            setGoals(prevGoals => prevGoals.map(goal => {
+                if (goal.id === id) {
+                    return { ...goal, status: true };
+                }
+                return goal;
+            }));
+
             setCompletedGoals(prevState => ({
                 ...prevState,
-                [id]: !prevState[id] // Toggle completion status
+                [id]: !prevState[id] 
                     }));
 
-
-            //navigate('/login');
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
@@ -90,7 +117,7 @@ export function Goals(){
         };
     
         fetchGoals();
-    }, []);
+    }, [uid]);
     return(
         <>
        
@@ -101,7 +128,7 @@ export function Goals(){
                    
                 <Demo>
                     <Box sx={{ width: 737, height: 100, mt:10}}>
-                        <AddGoal></AddGoal>
+                        <AddGoal onAddGoal={addGoalCallback} ></AddGoal>
                     </Box>
                     <List dense={dense}>
                     {goals.map((goal, index) => (
@@ -121,8 +148,8 @@ export function Goals(){
                                 >
                                     <CheckCircle style={{ color: completedGoals[goal.id] ? 'green' : 'grey' }} />
                                 </IconButton>
-                                    <EditGoal id={goal.id} oldTitle={goal.title} disabled={completedGoals[goal.id]} />
-                                    <DeleteGoal id={goal.id} disabled={completedGoals[goal.id]} />
+                                    <EditGoal id={goal.id} oldTitle={goal.title} disabled={completedGoals[goal.id]} onEditGoal={editGoalCallback} />
+                                    <DeleteGoal id={goal.id} disabled={completedGoals[goal.id]} onDeleteGoal={deleteGoalCallback} />
                                 </Box>
                             </Paper>
                             </Box>

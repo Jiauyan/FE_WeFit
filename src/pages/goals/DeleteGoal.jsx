@@ -22,7 +22,7 @@ const style = {
   p: 4,
 };
 
-export function DeleteGoal({id, disabled}) {
+export function DeleteGoal({id, disabled, onDeleteGoal}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -32,8 +32,9 @@ export function DeleteGoal({id, disabled}) {
     e.preventDefault();
     try {
         const response = await axios.delete(`http://localhost:3000/goals/deleteGoal/${id}`);
-
+        console.log(response.data);
         setDeleteGoalStatus(response.data.message);
+        onDeleteGoal(response.data)
         handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {

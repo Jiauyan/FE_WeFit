@@ -22,7 +22,7 @@ const style = {
   p: 4,
 };
 
-export function AddGoal() {
+export function AddGoal({onAddGoal}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -34,14 +34,14 @@ export function AddGoal() {
   const handleSubmit = async (e) => { 
     e.preventDefault(); 
     try {
-        const status = false;
         const response = await axios.post('http://localhost:3000/goals/addGoal', {
             uid,
             title,
-            status
+            status: false
         });
-
+        console.log(response.data);
         setAddGoalStatus(response.data.message);
+        onAddGoal(response.data);
         handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {
