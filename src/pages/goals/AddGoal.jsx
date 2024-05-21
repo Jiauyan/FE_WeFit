@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useUser } from "../../UseContext";
 import {
     Box,
     Button,
@@ -27,16 +28,21 @@ export function AddGoal() {
   const handleClose = () => setOpen(false);
   const [title, setTitle] = useState('');
   const [addGoalStatus, setAddGoalStatus] = useState('');
+  const { user } = useUser();
+  const uid = user.uid;
 
   const handleSubmit = async (e) => { 
     e.preventDefault(); 
     try {
+        const status = false;
         const response = await axios.post('http://localhost:3000/goals/addGoal', {
-            title
+            uid,
+            title,
+            status
         });
 
         setAddGoalStatus(response.data.message);
-        //navigate('/login');
+        handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {

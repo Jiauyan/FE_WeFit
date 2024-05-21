@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useUser } from "../../UseContext";
 import {
     Box,
     Button,
@@ -28,16 +29,21 @@ export function EditGoal({id, oldTitle, disabled}) {
   const handleClose = () => setOpen(false);
   const [editGoalStatus, setEditGoalStatus] = useState('');
   const [title, setTitle] = useState(oldTitle);
+  const { user } = useUser();
+  const uid = user.uid;
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
+    const status = false;
     try {
         const response = await axios.patch(`http://localhost:3000/goals/updateGoal/${id}`, {
-            title
+            uid,
+            title,
+            status
         });
 
         setEditGoalStatus(response.data.message);
-        //navigate('/login');
+        handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {

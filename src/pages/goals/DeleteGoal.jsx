@@ -34,7 +34,7 @@ export function DeleteGoal({id, disabled}) {
         const response = await axios.delete(`http://localhost:3000/goals/deleteGoal/${id}`);
 
         setDeleteGoalStatus(response.data.message);
-        //navigate('/login');
+        handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
