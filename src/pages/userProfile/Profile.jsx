@@ -7,20 +7,26 @@ import { Outlet } from 'react-router-dom';
 
 export function Profile() {
     const [userData, setUserData] = useState([]);
-    const { user } = useUser();
-    // const auth = getAuth();
-    // const currentUser = auth.currectUser;
-    // console.log(currentUser);
+    const { user , setUser} = useUser();
     const uid = user.uid;
 
-     useEffect(() => {
+    useEffect(() => {
+      // Load user ID from local storage or other persistent storage
+      const storedUid = localStorage.getItem('uid');
+      if (storedUid) {
+          setUser({ ...user, uid: storedUid });
+      }
+  }, []);
+
+    useEffect(() => {
+        const uid = user?.uid;
         if (!uid) return;
         axios.get(`http://localhost:3000/auth/getUserById/${uid}`)
             .then(response => {
                 setUserData(response.data); 
             })
             .catch(error => console.error('There was an error!', error));
-    }, []); 
+    }, [user?.uid]); 
 
     const handleEdit = () => {
         // Example edit action: Navigate or change state to edit mode
