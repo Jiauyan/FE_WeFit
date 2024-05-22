@@ -4,6 +4,7 @@ import { useUser } from "../../UseContext";
 import axios from 'axios'; 
 import { Typography, Paper, Avatar, Button } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
+import { DeleteAccount } from './DeleteAccount';
 
 export function Profile() {
     const [userData, setUserData] = useState([]);
@@ -45,7 +46,8 @@ export function Profile() {
       <Typography>Email: {userData.email || "Unknown"}</Typography>
       <Button onClick={handleEdit} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         Edit
-    </Button>
+      </Button>
+      <DeleteAccount/>
     </Paper>
     <Outlet/>
     </>
