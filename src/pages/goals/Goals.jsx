@@ -27,7 +27,6 @@ import { EditGoal } from "../goals/EditGoal"
 
 export function Goals(){
     const [goals, setGoals] = useState([]);
-    //const [status, setStatus] = useState(false);
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
     const [completedGoals, setCompletedGoals] = useState({});

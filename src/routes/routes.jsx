@@ -24,6 +24,7 @@ import { TrainerProfile } from '../pages/trainerProfile/TrainerProfile.jsx';
 import { TrainerTips } from '../pages/trainerTips/TrainerTips.jsx';
 import { TrainerTraining } from '../pages/trainerTraining/TrainerTraining.jsx';
 import { TrainerQuotes } from '../pages/trainerQuotes/TrainerQuotes.jsx';
+import { EditProfile } from '../pages/userProfile/EditProfile.jsx';
 
 const AuthWrapper = ({ children }) => {
   useAuth();  // Hook to check and manage token
@@ -108,6 +109,10 @@ const routes = [
       {
         path: "trainerQuotes",
         element: <ProtectedRoute element={<TrainerQuotes />} />,
+      },
+      {
+        path: "editProfile",
+        element: <ProtectedRoute element={<EditProfile />} />,
       },
     ],
   },

@@ -3,12 +3,13 @@ import React, { useState , useEffect} from 'react';
 import { useUser } from "../../UseContext";
 import axios from 'axios'; 
 import { Typography, Paper, Avatar, Button } from "@mui/material";
-import { Outlet } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 
 export function Profile() {
     const [userData, setUserData] = useState([]);
     const { user , setUser} = useUser();
     const uid = user.uid;
+    const navigate = useNavigate();
 
     useEffect(() => {
       // Load user ID from local storage or other persistent storage
@@ -28,11 +29,9 @@ export function Profile() {
             .catch(error => console.error('There was an error!', error));
     }, [user?.uid]); 
 
-    const handleEdit = () => {
-        // Example edit action: Navigate or change state to edit mode
-        // Update the user context as needed
-        //updateUser({ ...user, name: "Edited Name" });
-    };
+    const handleEdit = async () => {
+      navigate("/editProfile");
+    }; 
 
   return (
     <>
@@ -46,7 +45,7 @@ export function Profile() {
       <Typography>Email: {userData.email || "Unknown"}</Typography>
       <Button onClick={handleEdit} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         Edit
-      </Button>
+    </Button>
     </Paper>
     <Outlet/>
     </>
