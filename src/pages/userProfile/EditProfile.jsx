@@ -17,9 +17,9 @@ export function EditProfile() {
     const uid = user?.uid;
     const [username, setUsername] = useState('');
     const [age, setAge] = useState('');
-    const [dateOfBirth, setDate] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
+    const [photoURL, setPhotoURL] = useState('');
     const [editProfileStatus, setEditProfileStatus] = useState('');
     const navigate = useNavigate();
 
@@ -31,9 +31,9 @@ export function EditProfile() {
                 setUserData(data);
                 setUsername(data.username);
                 setAge(data.age);
-                setDate(data.dateOfBirth);
                 setWeight(data.weight);
                 setHeight(data.height);
+                setPhotoURL(data.photoURL);
             } catch (error) {
                 console.error('There was an error fetching the user data!', error);
             }
@@ -50,9 +50,9 @@ export function EditProfile() {
             const response = await axios.patch(`http://localhost:3000/profile/updateProfile/${uid}`, {
                 username,
                 age,
-                dateOfBirth,
                 weight,
-                height
+                height,
+                photoURL
             });
             setEditProfileStatus(response.data.message);
             navigate("/profile");
@@ -73,6 +73,18 @@ export function EditProfile() {
         navigate("/profile");
     }; 
 
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        console.log(file);
+        // if (file) {
+        //     const storageRef = ref(storage, `profile_images/${uid}`);
+        //     await uploadBytes(storageRef, file);
+        //     const downloadURL = await getDownloadURL(storageRef);
+        //     setPhotoURL(downloadURL);
+        // }
+    };
+
+
   return (
     <>
     <Paper sx={{ width: 737, height: 788, m: 10 }}>
@@ -88,6 +100,17 @@ export function EditProfile() {
             <Typography id="modal-modal-title" variant="h6" component="h2">
                 Edit Your Profile
             </Typography>
+            <Button
+                    variant="contained"
+                    component="label"
+                    >
+                    Upload Photo
+                    <input
+                        type="file"
+                        hidden
+                        onChange={handleImageUpload}
+                    />
+            </Button>
             <TextField
                     margin="normal"
                     //required
@@ -108,16 +131,6 @@ export function EditProfile() {
                     value ={age}
                     type="number"
                     onChange={(e) => setAge(parseFloat(e.target.value) || null)}
-            />
-            <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
-                    id="dateOfBirth"
-                    label="Date of Birth"
-                    name="dateOfBirth"
-                    value ={dateOfBirth}
-                    onChange={(e) => setDate(e.target.value)}
             />
             <TextField
                     margin="normal"

@@ -162,16 +162,6 @@ export function CompleteProfile() {
                     margin="normal"
                     //required
                     fullWidth
-                    id="dateOfBirth"
-                    label="Date of Birth"
-                    name="dateOfBirth"
-                    autoFocus
-                    onChange={(e) => setDate(e.target.value)}
-            />
-            <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
                     name="weight"
                     label="Weight"
                     id="weight"

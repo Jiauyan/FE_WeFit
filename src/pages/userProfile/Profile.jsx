@@ -1,4 +1,3 @@
-// Profile.js
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../UseContext";
 import axios from 'axios'; 
@@ -36,18 +35,59 @@ export function Profile() {
 
   return (
     <>
-    <Paper sx={{ width: 737, height: 788, m: 10 }}>
-      <Avatar alt={userData.username} src="/static/images/avatar/1.jpg" />
-      <Typography>{userData.username || "Loading..."}</Typography>
-      <Typography>{userData.age || 0} years | {userData.height || 0} CM | {userData.weight || 0} KG</Typography>
-      <Typography>Role: {userData.role || "Unknown"}</Typography>
-      <Typography>Gender: {userData.gender || "Unknown"}</Typography>
-      <Typography>Date of Birth: {userData.dateOfBirth || "Unknown"}</Typography>
-      <Typography>Email: {userData.email || "Unknown"}</Typography>
-      <Button onClick={handleEdit} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+    <Paper
+      sx={{
+        width: 737,
+        height: 788,
+        m: 10,
+        p: 5, 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: 3, 
+        borderRadius: 2, 
+      }}
+    >
+      <Avatar
+        alt={userData.username}
+        src={userData.photoURL}
+        sx={{ width: 200, height: 200, mb: 3 }} 
+      />
+      <Typography
+        variant="h5" 
+        sx={{ mb: 3 }}
+      >
+        {userData.username}
+      </Typography>
+      <Typography
+        sx={{ mb: 3, color: 'text.secondary' }} 
+      >
+        {userData.age} years | {userData.height} CM | {userData.weight} KG
+      </Typography>
+      <Typography
+        sx={{ mb: 2 }}
+      >
+        Role: {userData.role}
+      </Typography>
+      <Typography
+        sx={{ mb: 2 }}
+      >
+        Gender: {userData.gender}
+      </Typography>
+      <Typography
+        sx={{ mb: 2 }}
+      >
+        Email: {userData.email}
+      </Typography>
+      <Button
+        onClick={handleEdit}
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 3 }}
+      >
         Edit
       </Button>
-      <DeleteAccount/>
+      <DeleteAccount />
     </Paper>
     <Outlet/>
     </>
