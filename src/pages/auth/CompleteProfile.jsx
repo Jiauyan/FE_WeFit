@@ -56,7 +56,6 @@ export function CompleteProfile() {
                 username,
                 age,
                 gender,
-                dateOfBirth,
                 weight,
                 height,
             });

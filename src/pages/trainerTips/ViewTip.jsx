@@ -2,14 +2,16 @@ import React, { useState , useEffect} from 'react';
 import { useUser } from "../../UseContext";
 import axios from 'axios'; 
 import { Typography, Paper, Avatar, Button } from "@mui/material";
-import { useNavigate, Outlet } from 'react-router-dom';
-import { DeleteAccount } from './DeleteAccount';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { DeleteTip } from './DeleteTip';
 
-export function Profile() {
-    const [userData, setUserData] = useState([]);
+export function ViewTip() {
+    const [tipData, setTipData] = useState([]);
     const { user , setUser} = useUser();
     const uid = user.uid;
     const navigate = useNavigate();
+    const location = useLocation();
+    const { id } = location.state;
 
     useEffect(() => {
       // Load user ID from local storage or other persistent storage
@@ -22,15 +24,19 @@ export function Profile() {
     useEffect(() => {
         const uid = user?.uid;
         if (!uid) return;
-        axios.get(`http://localhost:3000/auth/getUserById/${uid}`)
+        axios.get(`http://localhost:3000/tips/getTipById/${id}`)
             .then(response => {
-                setUserData(response.data); 
+                setTipData(response.data); 
             })
             .catch(error => console.error('There was an error!', error));
     }, [user?.uid]); 
 
-    const handleEdit = async () => {
-      navigate("/editProfile");
+    const handleEdit = async (id) => {
+      navigate("/editTip", { state: { id: id } });
+    }; 
+
+    const handleBack = async () => {
+      navigate("/trainerTips");
     }; 
 
   return (
@@ -48,46 +54,37 @@ export function Profile() {
         borderRadius: 2, 
       }}
     >
-      <Avatar
-        alt={userData.username}
-        src={"/static/images/avatar/1.jpg"}
-        sx={{ width: 200, height: 200, mb: 3 }} 
-      />
+      <Button
+          fullWidth
+          variant="contained"
+          x={{ mt: 3, mb: 2 }}
+          onClick={handleBack}
+      >
+        Back
+      </Button>
       <Typography
         variant="h5" 
         sx={{ mb: 3 }}
       >
-        {userData.username}
+        {tipData.title}
       </Typography>
-      <Typography
-        sx={{ mb: 3, color: 'text.secondary' }} 
-      >
-        {userData.age} years | {userData.height} CM | {userData.weight} KG
-      </Typography>
+      {tipData.downloadUrl && (
+        <img src={tipData.downloadUrl} alt={tipData.title} style={{ width: '100%', marginBottom: '20px' }} />
+      )}
       <Typography
         sx={{ mb: 2 }}
       >
-        Role: {userData.role}
-      </Typography>
-      <Typography
-        sx={{ mb: 2 }}
-      >
-        Gender: {userData.gender}
-      </Typography>
-      <Typography
-        sx={{ mb: 2 }}
-      >
-        Email: {userData.email}
+      {tipData.desc}
       </Typography>
       <Button
-        onClick={handleEdit}
+        onClick={() => handleEdit(id)}
         fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 3 }}
       >
         Edit
       </Button>
-      <DeleteAccount />
+      <DeleteTip id={id}/>
     </Paper>
     <Outlet/>
     </>

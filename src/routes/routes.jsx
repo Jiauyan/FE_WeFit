@@ -27,6 +27,9 @@ import { TrainerQuotes } from '../pages/trainerQuotes/TrainerQuotes.jsx';
 import { EditProfile } from '../pages/userProfile/EditProfile.jsx';
 import { EditTrainerProfile } from '../pages/trainerProfile/EditTrainerProfile.jsx';
 import { DeleteTrainerAccount } from '../pages/trainerProfile/DeleteTrainerAccount.jsx';
+import { AddTip } from '../pages/trainerTips/AddTip.jsx';
+import { ViewTip } from '../pages/trainerTips/ViewTip.jsx';
+import { EditTip } from '../pages/trainerTips/EditTip.jsx';
 
 const AuthWrapper = ({ children }) => {
   useAuth();  // Hook to check and manage token
@@ -123,6 +126,18 @@ const routes = [
       {
         path: "deleteTrainerAccount",
         element: <ProtectedRoute element={<DeleteTrainerAccount />} />,
+      },
+      {
+        path: "addTip",
+        element: <ProtectedRoute element={<AddTip />} />,
+      },
+      {
+        path: "viewTip",
+        element: <ProtectedRoute element={<ViewTip />} />,
+      },
+      {
+        path: "editTip",
+        element: <ProtectedRoute element={<EditTip />} />,
       },
     ],
   },

@@ -1,13 +1,83 @@
+import React, { useState , useEffect} from 'react';
+import axios from 'axios';
 import {
     Typography,
+    Card,
+    CardHeader,
+    Avatar,
+    IconButton,
+    Button,
+    CardMedia,
+    CardContent,
+    CardActions,
+    Grid,
+    Box
 } from "@mui/material";
 
-export function TrainerTips(){
+import gym from "../../assets/gym.png";
+import { useNavigate, Outlet } from 'react-router-dom';
+import { useUser } from "../../UseContext";
 
+export function TrainerTips(){
+  const navigate = useNavigate();
+  const { user , setUser} = useUser();
+  const uid = user.uid;
+  const [tips, setTips] = useState([]);
+
+      useEffect(() => {
+        const fetchTips = async () => {
+            try {
+                const uid = user?.uid;
+                if (!uid) return;
+                const response = await axios.get(`http://localhost:3000/tips/getAllUserTips/${uid}`);
+                setTips(response.data);
+                console.log(response.data)
+            } catch (error) {
+                console.error('There was an error!', error);
+            }
+        };
+
+        fetchTips();
+    }, [user?.uid]);
+
+    const handleAdd = async () => {
+      navigate("/addTip");
+    }; 
+
+    const handleView = async (tip) => {
+      const tipId = tip.id;
+      navigate("/viewTip", { state: { id: tipId } });
+    }; 
+
+    
     return(
-        <Typography component="h6" variant="h6">
-                TrainerTips
-            </Typography>
+      <Grid container spacing={3} justifyContent="center">
+        <Button
+        onClick={handleAdd}
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 3 }}
+      >
+        Add Sharing Tip
+      </Button>
+      {tips.map((tip, index) => (
+        <Grid item key={index}>
+          <Card onClick={() => handleView(tip)} sx={{ maxWidth: 345 }}>
+            <CardMedia
+              sx={{ p: 2 }}
+              component="img"
+              height="194"
+              image={tip.downloadUrl}
+              alt="Gym"
+            />
+            <CardHeader
+              title={tip.title}
+              subheader={tip.desc} 
+            />
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
     );
 
 }
