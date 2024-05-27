@@ -49,7 +49,9 @@ export function EditTip() {
         formData.append('uid', uid);
         formData.append('title', title);
         formData.append('desc', desc);
-
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
         try {
             const response = await axios.patch(`http://localhost:3000/tips/updateTip/${id}`, formData, {
                 headers: {

@@ -30,6 +30,7 @@ import { DeleteTrainerAccount } from '../pages/trainerProfile/DeleteTrainerAccou
 import { AddTip } from '../pages/trainerTips/AddTip.jsx';
 import { ViewTip } from '../pages/trainerTips/ViewTip.jsx';
 import { EditTip } from '../pages/trainerTips/EditTip.jsx';
+import { ViewTipStudent } from '../pages/tips/ViewTipStudent.jsx';
 
 const AuthWrapper = ({ children }) => {
   useAuth();  // Hook to check and manage token
@@ -138,6 +139,10 @@ const routes = [
       {
         path: "editTip",
         element: <ProtectedRoute element={<EditTip />} />,
+      },
+      {
+        path: "viewTipStudent",
+        element: <ProtectedRoute element={<ViewTipStudent />} />,
       },
     ],
   },

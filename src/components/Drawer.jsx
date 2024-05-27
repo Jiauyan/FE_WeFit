@@ -34,7 +34,7 @@ export function SideBar() {
 
 
     const handleProfile = async () => {
-      navigate(`/profile/:uid`)
+      navigate('/profile')
     };
 
     const handleDashboard = async () => {

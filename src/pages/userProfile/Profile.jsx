@@ -35,59 +35,58 @@ export function Profile() {
 
   return (
     <>
-    <Paper
-      sx={{
-        width: 737,
-        height: 788,
-        m: 10,
-        p: 5, 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: 3, 
-        borderRadius: 2, 
-      }}
-    >
-      <Avatar
+    <Paper sx={{
+    width: 737,
+    height: 'auto', // Adjust height based on content
+    m: 10,
+    p: 3, // Consistent padding
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+    borderRadius: 2 // Soft rounded corners
+    }}>
+    <Avatar
         alt={userData.username}
-        src={"/static/images/avatar/1.jpg"}
+        src={userData.downloadUrl}
         sx={{ width: 200, height: 200, mb: 3 }} 
-      />
-      <Typography
+    />
+    <Typography
         variant="h5" 
         sx={{ mb: 3 }}
-      >
+    >
         {userData.username}
-      </Typography>
-      <Typography
+    </Typography>
+    <Typography
         sx={{ mb: 3, color: 'text.secondary' }} 
-      >
+    >
         {userData.age} years | {userData.height} CM | {userData.weight} KG
-      </Typography>
-      <Typography
+    </Typography>
+    <Typography
         sx={{ mb: 2 }}
-      >
+    >
         Role: {userData.role}
-      </Typography>
-      <Typography
+    </Typography>
+    <Typography
         sx={{ mb: 2 }}
-      >
+    >
         Gender: {userData.gender}
-      </Typography>
-      <Typography
+    </Typography>
+    <Typography
         sx={{ mb: 2 }}
-      >
+    >
         Email: {userData.email}
-      </Typography>
-      <Button
+    </Typography>
+    <Button
         onClick={handleEdit}
         fullWidth
         variant="contained"
+        color="primary"
         sx={{ mt: 3, mb: 3 }}
-      >
+    >
         Edit
-      </Button>
-      <DeleteAccount />
+    </Button>
+    <DeleteAccount />
     </Paper>
     <Outlet/>
     </>
