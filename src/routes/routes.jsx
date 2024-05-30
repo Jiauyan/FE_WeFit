@@ -18,7 +18,6 @@ import { CompleteProfile } from "../pages/auth/CompleteProfile.jsx";
 import { FitnessLevel } from "../pages/auth/FitnessLevel.jsx";
 import { FitnessGoal } from "../pages/auth/FitnessGoal.jsx";
 import { FavClass } from "../pages/auth/FavClass.jsx";
-import { useAuth } from '../hook/UseAuth.js';  // Adjust the path as necessary
 import { ForgotPassword } from "../pages/auth/ForgotPassword.jsx";
 import { TrainerProfile } from '../pages/trainerProfile/TrainerProfile.jsx';
 import { TrainerTips } from '../pages/trainerTips/TrainerTips.jsx';
@@ -32,28 +31,15 @@ import { ViewTip } from '../pages/trainerTips/ViewTip.jsx';
 import { EditTip } from '../pages/trainerTips/EditTip.jsx';
 import { ViewTipStudent } from '../pages/tips/ViewTipStudent.jsx';
 
-const AuthWrapper = ({ children }) => {
-  useAuth();  // Hook to check and manage token
-  return <>{children}</>;
-};
-
-const ProtectedRoute = ({ element }) => {
-  const { token } = useAuth();
-  return token ? element : <Navigate to="/login" />;
-};
 
 const routes = [
   {
     path: "/",
-    element: (
-      <AuthWrapper>
-        <SideBar />
-      </AuthWrapper>
-    ),
+    element: <SideBar />,
     children: [
       {
         path: "profile",
-        element: <ProtectedRoute element={<Profile />} />,
+        element:  <Profile /> ,
         children: [
           {
             path: "test",
@@ -63,86 +49,86 @@ const routes = [
       },
       {
         path: "test",
-        element: <ProtectedRoute element={<Test />} />,
+        element:  <Test /> ,
       },
       {
         path: "dashboard",
-        element: <ProtectedRoute element={<Dashboard />} />,
+        element:  <Dashboard /> ,
       },
       {
         path: "training",
-        element: <ProtectedRoute element={<Training />} />,
+        element:  <Training /> ,
       },
       {
         path: "tracking",
-        element: <ProtectedRoute element={<Tracking />} />,
+        element:  <Tracking /> ,
       },
       {
         path: "bmi",
-        element: <ProtectedRoute element={<BMI />} />,
+        element:  <BMI /> ,
       },
       {
         path: "waterConsumption",
-        element: <ProtectedRoute element={<WaterConsumption />} />,
+        element:  <WaterConsumption /> ,
       },
       {
         path: "goals",
-        element: <ProtectedRoute element={<Goals />} />,
+        element:  <Goals /> ,
       },
       {
         path: "community",
-        element: <ProtectedRoute element={<Community />} />,
+        element:  <Community /> ,
       },
       {
         path: "tips",
-        element: <ProtectedRoute element={<Tips />} />,
+        element:  <Tips /> ,
       },
       {
         path: "trainerProfile",
-        element: <ProtectedRoute element={<TrainerProfile />} />,
+        element:  <TrainerProfile /> ,
       },
       
       {
         path: "trainerTips",
-        element: <ProtectedRoute element={<TrainerTips />} />,
+        element:  <TrainerTips /> ,
       },
       
       {
         path: "trainerTraining",
-        element: <ProtectedRoute element={<TrainerTraining />} />,
+        element:  <TrainerTraining /> ,
       },
       
       {
         path: "trainerQuotes",
-        element: <ProtectedRoute element={<TrainerQuotes />} />,
+        element:  <TrainerQuotes /> ,
       },
       {
         path: "editProfile",
-        element: <ProtectedRoute element={<EditProfile />} />,
+        element:  <EditProfile /> ,
       },
       {
         path: "editTrainerProfile",
-        element: <ProtectedRoute element={<EditTrainerProfile />} />,
+        element:  <EditTrainerProfile /> ,
       },
       {
         path: "deleteTrainerAccount",
-        element: <ProtectedRoute element={<DeleteTrainerAccount />} />,
+        element:  <DeleteTrainerAccount /> ,
       },
       {
         path: "addTip",
-        element: <ProtectedRoute element={<AddTip />} />,
+        element:  <AddTip /> ,
       },
       {
         path: "viewTip",
-        element: <ProtectedRoute element={<ViewTip />} />,
+        element:  <ViewTip /> ,
       },
       {
         path: "editTip",
-        element: <ProtectedRoute element={<EditTip />} />,
+        element:  <EditTip /> ,
       },
       {
         path: "viewTipStudent",
-        element: <ProtectedRoute element={<ViewTipStudent />} />,
+        element:  <ViewTipStudent /> ,
       },
     ],
   },

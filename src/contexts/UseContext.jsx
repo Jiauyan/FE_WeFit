@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
     if (storedUserData) {
       setUser(JSON.parse(storedUserData));
     }
-    if (storedToken) {
+    if (storedToken) {''
       setToken(storedToken);
     }
   }, []);
@@ -33,6 +33,7 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('userData');
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     setUser({});
     setToken(null);
   };
@@ -45,4 +46,6 @@ export const UserProvider = ({ children }) => {
 };
 
 // Custom hook to use user context
-export const useUser = () => useContext(UserContext);
+const useUser = () => useContext(UserContext);
+
+export { UserContext, useUser }
