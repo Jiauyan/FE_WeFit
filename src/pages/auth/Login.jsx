@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation} from 'react-router-dom';
 import axios from 'axios'; 
-import { useUser } from '../../UseContext';
+import { useUser } from '../../contexts/UseContext';
 import {
     Grid,
     CssBaseline,
@@ -21,32 +21,22 @@ import {
     Checkbox,
 } from "@mui/material";
 
+import { ApiTemplate } from "../../api/index"
+
 export function Login () {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [loginStatus, setLoginStatus] = useState('');
     const navigate = useNavigate();
-    const { updateUser } = useUser();
+    const { updateUser, login } = useUser();
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
-    
+        
         try {
-          const response = await axios.post('http://localhost:3000/auth/loginAcc', {
-            email,
-            password,
-          });
-          const uid = response.data.user.uid;
-          const role = response.data.userRole;
-          setLoginStatus(response.data.user.message);
-          const token = {
-            accessToken : response.data.user.stsTokenManager.accessToken,
-            refreshToken : response.data.user.stsTokenManager.refreshToken,
-          }
-          localStorage.setItem('accessToken', token.accessToken);
-          localStorage.setItem('refreshToken', token.refreshToken);
-          updateUser({ uid, role }); 
+          const formData = { email, password }
+          login(formData)
           navigate('/');
         } catch (error) {
           if (axios.isAxiosError(error) && error.response?.status === 401) {

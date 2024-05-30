@@ -20,7 +20,7 @@ import {
     Checkbox,
 } from "@mui/material";
 
-
+import { ApiTemplate } from '../../api';
 
 export function Register() {
     
@@ -36,10 +36,12 @@ export function Register() {
         e.preventDefault(); 
 
         try {
-            const response = await axios.post('http://localhost:3000/auth/registerAcc', {
-                email,
-                password
-            });
+            const method = 'post'
+            const route = `auth/registerAcc`
+            const formData = { email, password }
+
+            const response = await ApiTemplate(method, route, formData)
+
             const uid = response.data.uid;
             setSignupStatus(response.data.message);
             navigate('/completeProfile', { state: { uid }} );
@@ -61,7 +63,7 @@ export function Register() {
        <Grid>
         <Grid></Grid>
             <Typography component="h1" variant="h5">
-                Resgister Account 
+                Register Account 
             </Typography>
             <Typography component="h6" variant="h6">
                 Follow the instructions to make it easier to register and you will be able to explore inside.

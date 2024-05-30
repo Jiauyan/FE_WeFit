@@ -1,6 +1,6 @@
 // UserContext.js
 import React, { createContext, useContext, useState, useEffect  } from 'react';
-
+import { ApiTemplate } from '../api';
 // Create the context
 const UserContext = createContext();
 
@@ -30,16 +30,38 @@ export const UserProvider = ({ children }) => {
     setToken(accessToken);
   };
 
-  const logout = () => {
+  const login = async (formData) => {
+    const method = 'post'
+    const route = `auth/loginAcc`
+
+    const response = await ApiTemplate(method, route, formData)
+
+    const uid = response.data.user.uid;
+    const role = response.data.userRole;
+    const token = {
+      accessToken : response.data.user.stsTokenManager.accessToken,
+      refreshToken : response.data.user.stsTokenManager.refreshToken,
+    }
+    localStorage.setItem('accessToken', token.accessToken);
+    localStorage.setItem('refreshToken', token.refreshToken);
+    updateUser({ uid, role }); 
+  };
+
+  const logout = async () => {
+    const method = 'post'
+    const route = `auth/logoutAccount`
+
+    const response = await ApiTemplate(method, route)
     localStorage.removeItem('userData');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setUser({});
     setToken(null);
+    return response
   };
 
   return (
-    <UserContext.Provider value={{ user, token, updateUser, updateToken, logout }}>
+    <UserContext.Provider value={{ user, token, updateUser, updateToken, logout, login }}>
       {children}
     </UserContext.Provider>
   );
