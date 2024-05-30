@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useUser } from "../../UseContext";
+import { useUser } from "../../contexts/UseContext";
 import { useNavigate, Outlet } from 'react-router-dom';
 import {
     Box,
     Button,
     Typography,
     Modal,
-    TextField
+    TextField,
+    Paper
 }from "@mui/material";
 
 
@@ -58,6 +59,17 @@ export function AddTip() {
     }; 
 
   return (
+    <Paper sx={{
+        width: 737,
+        height: 'auto', // Adjust height based on content
+        m: 10,
+        p: 3, // Consistent padding
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+        borderRadius: 2 // Soft rounded corners
+        }}>
         <Box component="form" noValidate onSubmit={handleSubmit}>
             <Button 
                 onClick={handleBack}
@@ -66,7 +78,7 @@ export function AddTip() {
                 Back
             </Button>
 
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
                 Add Your Sharing Tip
             </Typography>
                     <input
@@ -82,15 +94,17 @@ export function AddTip() {
                     id="tip"
                     onChange={(e) => setTitle(e.target.value)}
             />
-            <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
-                    name="tip"
-                    label="Sharing Tip Description"
-                    id="tip"
-                    onChange={(e) => setDesc(e.target.value)}
-            />
+             <TextField
+                margin="normal"
+                fullWidth
+                name="tip"
+                label="Sharing Tip Description"
+                id="tip"
+                onChange={(e) => setDesc(e.target.value)}
+                multiline
+                rows={20} // This sets the initial number of visible rows
+                variant="outlined" // Optional: add variant for better appearance
+                />
             <Button
                     type="submit"
                     fullWidth
@@ -100,5 +114,6 @@ export function AddTip() {
                 Add
             </Button>
         </Box>
+        </Paper>
   );
 }

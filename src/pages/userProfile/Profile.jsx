@@ -1,9 +1,10 @@
 import React, { useState , useEffect} from 'react';
-import { useUser } from "../../UseContext";
+import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
 import { Typography, Paper, Avatar, Button } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { DeleteAccount } from './DeleteAccount';
+import { GradientButton } from '../../contexts/ThemeProvider';
 
 export function Profile() {
     const [userData, setUserData] = useState([]);
@@ -77,15 +78,15 @@ export function Profile() {
     >
         Email: {userData.email}
     </Typography>
-    <Button
+    <GradientButton
         onClick={handleEdit}
         fullWidth
-        variant="contained"
-        color="primary"
-        sx={{ mt: 3, mb: 3 }}
+        // variant="contained"
+        // color="gradient"
+        // sx={{ mt: 3, mb: 3 }}
     >
         Edit
-    </Button>
+    </GradientButton>
     <DeleteAccount />
     </Paper>
     <Outlet/>

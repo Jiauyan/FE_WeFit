@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react';
-import { useUser } from "../../UseContext";
+import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
 import { Typography, Paper, Avatar, Button } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
@@ -35,22 +35,20 @@ export function TrainerProfile() {
 
   return (
     <>
-    <Paper
-      sx={{
-        width: 737,
-        height: 788,
-        m: 10,
-        p: 5, 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: 3, 
-        borderRadius: 2, 
-      }}
-    >
+    <Paper sx={{
+    width: 737,
+    height: 'auto', // Adjust height based on content
+    m: 10,
+    p: 3, // Consistent padding
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+    borderRadius: 2 // Soft rounded corners
+    }}>
       <Avatar
         alt={userData.username}
-        src={userData.photoURL}
+        src={userData.downloadUrl}
         sx={{ width: 200, height: 200, mb: 3 }} 
       />
       <Typography
@@ -83,6 +81,7 @@ export function TrainerProfile() {
         onClick={handleEdit}
         fullWidth
         variant="contained"
+        color="primary"
         sx={{ mt: 3, mb: 3 }}
       >
         Edit

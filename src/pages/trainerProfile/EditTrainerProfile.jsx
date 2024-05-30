@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react';
-import { useUser } from "../../UseContext";
+import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
 import { 
     Typography, 
@@ -19,7 +19,7 @@ export function EditTrainerProfile() {
     const [age, setAge] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
-    const [photoURL, setPhotoURL] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
     const [editProfileStatus, setEditProfileStatus] = useState('');
     const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ export function EditTrainerProfile() {
                 setAge(data.age);
                 setWeight(data.weight);
                 setHeight(data.height);
-                setPhotoURL(data.photoURL);
+                setProfileImage(data.downloadUrl);
             } catch (error) {
                 console.error('There was an error fetching the user data!', error);
             }
@@ -46,16 +46,21 @@ export function EditTrainerProfile() {
 
     const handleSubmit = async (e) => { 
         e.preventDefault();
-        try {
-            const response = await axios.patch(`http://localhost:3000/profile/updateProfile/${uid}`, {
-                username,
-                age,
-                weight,
-                height,
-                photoURL
+        const formData = new FormData();
+        formData.append('profileImage', profileImage);
+        formData.append('username', username);
+        formData.append('age', age);
+        formData.append('weight', weight);
+        formData.append('height', height);
+        try { 
+            const responseUpdate = await axios.post(`http://localhost:3000/profile/uploadProfileImage/${uid}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
-            setEditProfileStatus(response.data.message);
-            navigate("/profile");
+            setUserData(responseUpdate.data);
+            setEditProfileStatus(responseUpdate.data.message);
+            navigate("/trainerProfile",{ state: { uid: uid } } );
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
@@ -73,96 +78,96 @@ export function EditTrainerProfile() {
         navigate("/profile");
     }; 
 
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        console.log(file);
-        // if (file) {
-        //     const storageRef = ref(storage, `profile_images/${uid}`);
-        //     await uploadBytes(storageRef, file);
-        //     const downloadURL = await getDownloadURL(storageRef);
-        //     setPhotoURL(downloadURL);
-        // }
-    };
-
-
   return (
     <>
-    <Paper sx={{ width: 737, height: 788, m: 10 }}>
-    <Box component="form" noValidate onSubmit={handleSubmit}>
-            <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleBack}
-              >
-                Back
-            </Button>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                Edit Your Profile
-            </Typography>
-            <Button
-                    variant="contained"
-                    component="label"
-                    >
-                    Upload Photo
-                    <input
-                        type="file"
-                        hidden
-                        onChange={handleImageUpload}
-                    />
-            </Button>
-            <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    value ={username}
-                    onChange={(e) => setUsername(e.target.value)}
+    <Paper sx={{ 
+    width: 737, 
+    height: 'auto', 
+    m: 10,
+    p: 3, 
+    boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)' 
+    }}>
+    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
+            Edit Your Profile
+        </Typography>
+        {profileImage && (
+           <Avatar
+            alt={userData.username}
+            src={userData.downloadUrl}
+            sx={{ width: 200, height: 200, mb: 3 }} 
             />
-             <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
-                    id="age"
-                    label="Age"
-                    name="age"
-                    value ={age}
-                    type="number"
-                    onChange={(e) => setAge(parseFloat(e.target.value) || null)}
-            />
-            <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
-                    name="weight"
-                    label="Weight"
-                    id="weight"
-                    type="number"
-                    value ={weight}
-                    onChange={(e) => setWeight(parseFloat(e.target.value) || null)}
-            />
-            <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
-                    name="height"
-                    label="Height"
-                    id="height"
-                    type="number"
-                    value ={height}
-                    onChange={(e) => setHeight(parseFloat(e.target.value) || null)}
-            />
-            <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-            >
-                Save
-            </Button>
-        </Box>
+        )}
+        <input
+        type="file"
+        //={{ display: 'none' }} 
+        onChange={(e) => setProfileImage(e.target.files[0])}
+        />
+        <TextField
+            margin="normal"
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            variant="outlined"
+            sx={{ mb: 1 }}
+        />
+        <TextField
+            margin="normal"
+            fullWidth
+            id="age"
+            label="Age"
+            name="age"
+            value={age}
+            type="number"
+            onChange={(e) => setAge(parseFloat(e.target.value) || null)}
+            variant="outlined"
+            sx={{ mb: 1 }}
+        />
+        <TextField
+            margin="normal"
+            fullWidth
+            name="weight"
+            label="Weight"
+            id="weight"
+            type="number"
+            value={weight}
+            onChange={(e) => setWeight(parseFloat(e.target.value) || null)}
+            variant="outlined"
+            sx={{ mb: 1 }}
+        />
+        <TextField
+            margin="normal"
+            fullWidth
+            name="height"
+            label="Height"
+            id="height"
+            type="number"
+            value={height}
+            onChange={(e) => setHeight(parseFloat(e.target.value) || null)}
+            variant="outlined"
+            sx={{ mb: 1 }}
+        />
+        <Button
+            onClick={handleBack}
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 3, mb: 2, mr: 1 }}
+        >
+            Back
+        </Button>
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, mb: 2, mr: 1 }}
+        >
+            Save
+        </Button>
+    </Box>
     </Paper>
     <Outlet/>
     </>

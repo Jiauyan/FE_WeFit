@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react';
-import { useUser } from "../../UseContext";
+import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
 import { 
     Typography, 
@@ -79,56 +79,71 @@ export function EditTip() {
 
   return (
     <>
-    <Paper sx={{ width: 737, height: 788, m: 10 }}>
-    <Box component="form" noValidate onSubmit={handleSubmit}>
-            <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleBack}
-              >
-                Back
-            </Button>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                Edit Your Sharing Tip
-            </Typography>
-            <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
-                    id="title"
-                    label="Sharing Tip Title"
-                    name="title"
-                    value ={title}
-                    onChange={(e) => setTitle(e.target.value)}
-            />
-             {tipImage && (
-                    <img src={tipImage} alt={title} style={{ width: '100%', marginBottom: '20px' }} />
-                    )}
-                    <input
-                        type="file"
-                        onChange={(e) => setTipImage(e.target.files[0])}
-                    />
-             <TextField
-                    margin="normal"
-                    //required
-                    fullWidth
-                    id="desc"
-                    label="Sharing Tip Description"
-                    name="desc"
-                    value ={desc}
-                    onChange={(e) => setDesc(e.target.value)}
-            />
-            <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-            >
-                Save
-            </Button>
-        </Box>
-    </Paper>
+    <Paper sx={{
+    width: 737,
+    height: 'auto',  // Automatically adjust height based on content
+    m: 10,
+    p: 3,  // Consistent padding
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',  // Subtle shadow for depth
+    borderRadius: 2  // Soft rounded corners
+}}>
+    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ width: '100%' }}>
+        <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={handleBack}
+        >
+            Back
+        </Button>
+        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
+            Edit Your Sharing Tip
+        </Typography>
+        <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="title"
+            label="Sharing Tip Title"
+            name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            sx={{ mb: 2 }}
+        />
+        {tipImage && (
+            <img src={tipImage} alt={title} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', marginBottom: '20px' }} />
+        )}
+        <input
+            type="file"
+            onChange={(e) => setTipImage(e.target.files[0])}
+            style={{ marginBottom: '20px' }}
+        />
+        <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="desc"
+            label="Sharing Tip Description"
+            name="desc"
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+            sx={{ mb: 2 }}
+        />
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, mb: 3 }}
+        >
+            Save
+        </Button>
+    </Box>
+</Paper>
     <Outlet/>
     </>
   );
