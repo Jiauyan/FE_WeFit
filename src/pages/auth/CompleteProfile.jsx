@@ -20,6 +20,8 @@ import {
     Checkbox,
 } from "@mui/material";
 
+import { ApiTemplate } from '../../api';
+
 export function CompleteProfile() {
     
     const [name, setName] = useState('');
@@ -50,15 +52,12 @@ export function CompleteProfile() {
         e.preventDefault(); 
 
         try {
-            const response = await axios.post(`http://localhost:3000/auth/completeProfile/${uid}`, {
-                role,
-                name,
-                username,
-                age,
-                gender,
-                weight,
-                height,
-            });
+            const method = 'post'
+            const route = `auth/completeProfile/${uid}`
+            const formData = { role, name, username, age, gender, weight, height }
+
+            const response = await ApiTemplate(method, route, formData)
+
             setCompleteProfileStatus(response.data.message);
             if (role === 'Student') {
                 navigate('/fitnessLevel', { state: { uid } });
