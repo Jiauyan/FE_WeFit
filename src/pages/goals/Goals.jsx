@@ -1,6 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
-import { useUser } from "../../UseContext";
+import { useUser } from "../../contexts/UseContext";
 import {
     Typography,
     Container,
@@ -130,9 +130,9 @@ export function Goals(){
     return(
         <>
        
-        <Box sx={{ flexGrow: 1, maxWidth: 752 }}> 
+        <Box sx={{ flexGrow: 1, maxWidth: 737 }}> 
         
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                    
                 <Demo>

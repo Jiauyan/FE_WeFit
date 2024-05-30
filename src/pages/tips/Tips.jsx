@@ -9,14 +9,14 @@ import {
     Button,
     CardMedia,
     CardContent,
-    CardActions,
+    CardActionArea,
     Grid,
     Box
 } from "@mui/material";
 
 import gym from "../../assets/gym.png";
 import { useNavigate, Outlet } from 'react-router-dom';
-import { useUser } from "../../UseContext";
+import { useUser } from "../../contexts/UseContext";
 
 export function Tips(){
   const navigate = useNavigate();
@@ -47,25 +47,43 @@ export function Tips(){
 
     
     return(
-      <Grid container spacing={3} justifyContent="center">
-      {tips.map((tip, index) => (
-        <Grid item key={index}>
-          <Card onClick={() => handleView(tip)} sx={{ maxWidth: 345 }}>
-            <CardMedia
-              sx={{ p: 2 }}
-              component="img"
-              height="194"
-              image={tip.downloadUrl}
-              alt="Gym"
-            />
-            <CardHeader
-              title={tip.title}
-              subheader={tip.desc} 
-            />
-          </Card>
-        </Grid>
-      ))}
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center">
+  {tips.map((tip, index) => (
+     <Grid item xs={2} sm={4} md={4} key={index}>
+       <Card
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  boxShadow: 3,
+                  transition: "0.3s",
+                  '&:hover': { boxShadow: 10 },
+              }}
+        onClick={() => handleView(tip)}
+      >
+         <CardActionArea sx={{ display: 'flex', flexDirection: 'column' }}>
+         <CardMedia
+         component="img"
+         image={tip.downloadUrl}
+         alt={tip.title}
+         sx={{
+             height: 220,// Fixed height or adjust as needed
+             weight : '100%', 
+             objectFit: 'cover'
+         }}
+          />
+          <CardContent sx={{ flexGrow: 1 }}>
+            <Typography gutterBottom variant="h5" component="div">
+              {tip.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {tip.createdAt}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
     </Grid>
+  ))}
+</Grid>
     );
 
 }

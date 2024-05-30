@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react';
-import { useUser } from "../../UseContext";
+import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
 import { 
     Typography, 
@@ -166,7 +166,7 @@ export function EditProfile() {
             fullWidth
             variant="contained"
             color="primary"
-            sx={{ mt: 3, mb: 2, ml: 1 }}
+            sx={{ mt: 3, mb: 2, mr: 1 }}
         >
             Save
         </Button>
