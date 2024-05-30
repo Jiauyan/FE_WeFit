@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import { useUser } from "../UseContext";
+import { useUser, UserContext } from "../contexts/UseContext";
 import {
     Box,
     Drawer,
@@ -14,24 +14,47 @@ import {
     ListItemIcon,
     ListItemText,
     Divider,
-    Button
+    Button,
+    IconButton,
+    
 } from "@mui/material";
 import {
     Inbox,
     Mail,
+    FitnessCenter,
+    Dashboard,
+    TrackChanges,
+    Group,
+    TipsAndUpdates,
+    Logout,
+    AccountCircle,
+    Menu
 } from "@mui/icons-material";
 import { useNavigate, Outlet } from 'react-router-dom';
 
 
-export function SideBar() {
+export function SideBar(props) {
 
     const navigate = useNavigate();
     const { user , setUser} = useUser();
+    const { window, children } = props;
+    const { logout } = useContext(UserContext);
     const uid = user.uid;
     const role = user.role;
     const[logoutStatus, setLogoutStatus] = useState('');
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [isClosing, setIsClosing] = useState(false);
     const drawerWidth = 240;
+    const [open, setOpen] = useState(true); 
 
+    const handleDrawerClose = () => {
+        setIsClosing(true);
+        setMobileOpen(false);
+    };
+    
+    const handleDrawerTransitionEnd = () => {
+    setIsClosing(false);
+    };
 
     const handleProfile = async () => {
       navigate('/profile')
@@ -74,12 +97,10 @@ export function SideBar() {
     };
 
     const handleLogout = async (e) => { 
-      e.preventDefault(); 
+      e.preventDefault();   
 
       try {
-          const response = await axios.post('http://localhost:3000/auth/logoutAccount', {
-          });
-
+          const response = logout()
           setLogoutStatus(response.data.message);
           navigate('/login');
       } catch (error) {
@@ -97,184 +118,133 @@ export function SideBar() {
 
   // Conditional rendering based on role
   const studentItems = [
-    { key: "My Profile", action: handleProfile },
-    { key: "Dashboard", action: handleDashboard },
-    { key: "Training", action: handleTraining },
-    { key: "Goals", action: handleGoals },
-    { key: "Community", action: handleCommunity },
-    { key: "Tips", action: handleTips },
+    { key: "My Profile", icon: <AccountCircle />, action: handleProfile },
+    { key: "Dashboard", icon: <Dashboard />, action: handleDashboard },
+    { key: "Training", icon: <FitnessCenter />, action: handleTraining },
+    { key: "Goals", icon: <TrackChanges /> , action: handleGoals },
+    { key: "Community", icon: <Group />,action: handleCommunity },
+    { key: "Tips", icon: <TipsAndUpdates />, action: handleTips },
 ];
 
 const trainerItems = [
-    { key: "My Profile", action: handleTrainerProfile },
-    { key: "Training", action: handleTrainerTraining },
-    { key: "Tips", action: handleTrainerTips },
-    { key: "Quotes", action: handleTrainerQuotes },  // Assume you have a /quotes route
+    { key: "My Profile", icon: <AccountCircle />, action: handleTrainerProfile },
+    { key: "Training", icon: <FitnessCenter />, action: handleTrainerTraining },
+    { key: "Tips", icon: <TipsAndUpdates />, action: handleTrainerTips },
+    { key: "Quotes", icon: <TipsAndUpdates />, action: handleTrainerQuotes },  // Assume you have a /quotes route
 ];
 
 // Choose items based on role
 const itemsToShow = role === "Student" ? studentItems : trainerItems;
 
+const toggleDrawer = () => {
+    if (!isClosing) {
+        setMobileOpen(!mobileOpen);
+      }
+};
+
+const drawer = (
+    <div>
+        <Toolbar />
+        <Divider />
+        <List>
+            {itemsToShow.map((item) => (
+                <ListItem key={item.key} disablePadding>
+                    <ListItemButton onClick={item.action} sx={{ 
+                        '&:hover': {
+                            bgcolor: '#112F91',
+                            color: '#FFFFFF',
+                            '& .MuiListItemIcon-root': {
+                                color: '#FFFFFF',
+                            }
+                        }
+                    }}>
+                        <ListItemIcon>{item.icon}</ListItemIcon>
+                        <ListItemText primary={item.key} />
+                    </ListItemButton>
+                </ListItem>
+            ))}
+        </List>
+    </div>
+  );
+
 return (
     <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
-            <Toolbar>
-                <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
-                <Button variant="contained" onClick={handleLogout}>Logout</Button>
-            </Toolbar>
-        </AppBar>
-
-        <Drawer
-            sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
-                    width: drawerWidth,
-                    boxSizing: 'border-box',
-                },
-            }}
-            variant="permanent"
-            anchor="left"
-        >
-            <Toolbar>
-                <Typography variant="h6" sx={{ my: 2 }}>
+    <AppBar position="fixed" sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+        backgroundColor: '#112F91',
+        //width: `calc(100% - ${drawerWidth}px)`, 
+        ml: `${drawerWidth}px`
+    }}>
+        <Toolbar sx={{ display:'flex', justifyContent:'space-between' }}>
+            <Box sx={{ display:'flex', justifyContent:'flex-start', alignItems:'center' }}>
+                <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={toggleDrawer}
+                sx={{ mr: 2, display: { sm: "none" } }}
+                >
+                    <Menu />
+                </IconButton>
+                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                     UMFitness
                 </Typography>
-            </Toolbar>
-            <Divider />
-            <List>
-                {itemsToShow.map(item => (
-                    <ListItem key={item.key} disablePadding>
-                        <ListItemButton onClick={item.action}>
-                            <ListItemIcon><Inbox /></ListItemIcon>
-                            <ListItemText primary={item.key} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Drawer>
-        <Outlet/>
+            </Box>
+            <Box sx={{ display:'flex', justifyContent:'flex-end', alignItems:'center' }}>
+                <Button color="inherit" onClick={handleLogout} startIcon={<Logout />}>
+                    Logout
+                </Button>
+            </Box>
+        </Toolbar>
+    </AppBar>
+    <Box
+          component="nav"
+          sx={{
+            width: { sm: drawerWidth },
+            flexShrink: { sm: 0 },
+          }}
+          aria-label="mailbox folders"
+        >
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onTransitionEnd={handleDrawerTransitionEnd}
+            onClose={handleDrawerClose}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+              zIndex: 1400,
+            }}
+          >
+            {drawer}
+          </Drawer>
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+    
+    <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+        <Toolbar />
+        <Outlet />
     </Box>
+</Box>
 );
 }
 
-
-
-
-  // return (
-  //    <Box sx={{ display: 'flex' }}>
-  //     <CssBaseline />
-  
-  //     <AppBar
-  //       position="fixed"
-  //       //elevation={1}
-  //       sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px`  }}
-  //     >
-  //      <Toolbar>
-  //     {/* Add your top navigation items here */}
-  //     <Typography variant="h6" sx={{ flexGrow: 1 }}>
-  //     </Typography>
-  //     {/* Example navigation items */}
-  //     <Button
-  //               //fullWidth
-  //               variant="contained"
-  //               //sx={{ mt: 3, mb: 2 }}
-  //               onClick={handleLogout}
-  //             >
-  //               Logout
-  //           </Button>
-  //   </Toolbar>
-        
-  //     </AppBar>
-
-
-  //     <Drawer
-  //       sx={{
-  //         width: drawerWidth,
-  //         flexShrink: 0,
-  //         '& .MuiDrawer-paper': {
-  //           width: drawerWidth,
-  //           boxSizing: 'border-box',
-  //         },
-  //       }}
-  //       variant="permanent"
-  //       anchor="left"
-  //     >
-  //       <Toolbar>
-  //         <Typography variant="h6" sx={{ my: 2 }}>
-  //           UMFitness
-  //         </Typography>
-  //       </Toolbar>
-  //       <Divider />
-  //       <List>
-         
-  //           <ListItem key="My Profile" disablePadding>
-  //             <ListItemButton onClick={handleProfile}>
-  //               <ListItemIcon>
-  //               <Inbox />
-  //               </ListItemIcon>
-  //               <ListItemText primary="My Profile" />
-  //             </ListItemButton>
-  //           </ListItem>
-
-  //           <ListItem key="dashboard" disablePadding>
-  //             <ListItemButton onClick={handleDashboard}>
-  //               <ListItemIcon>
-  //               <Inbox />
-  //               </ListItemIcon>
-  //               <ListItemText primary="Dashboard" />
-  //             </ListItemButton>
-  //           </ListItem>
-
-  //           <ListItem key="training" disablePadding>
-  //             <ListItemButton onClick={handleTraining}>
-  //               <ListItemIcon>
-  //               <Inbox />
-  //               </ListItemIcon>
-  //               <ListItemText primary="Training" />
-  //             </ListItemButton>
-  //           </ListItem>
-
-  //           {/* <ListItem key="tracking" disablePadding>
-  //             <ListItemButton onClick={handleTracking}>
-  //               <ListItemIcon>
-  //               <Inbox />
-  //               </ListItemIcon>
-  //               <ListItemText primary="Tracking" />
-  //             </ListItemButton>
-  //           </ListItem> */}
-
-  //           <ListItem key="goals" disablePadding>
-  //             <ListItemButton onClick={handleGoals}>
-  //               <ListItemIcon>
-  //               <Inbox />
-  //               </ListItemIcon>
-  //               <ListItemText primary="Goals" />
-  //             </ListItemButton>
-  //           </ListItem>
-
-  //           <ListItem key="community" disablePadding>
-  //             <ListItemButton onClick={handleCommunity}>
-  //               <ListItemIcon>
-  //               <Inbox />
-  //               </ListItemIcon>
-  //               <ListItemText primary="Community" />
-  //             </ListItemButton>
-  //           </ListItem>
-
-  //           <ListItem key="tips" disablePadding>
-  //             <ListItemButton onClick={handleTips}>
-  //               <ListItemIcon>
-  //               <Inbox />
-  //               </ListItemIcon>
-  //               <ListItemText primary="Tips" />
-  //             </ListItemButton>
-  //           </ListItem>
-
-  //       </List>
-  //     </Drawer>
-  //     <Outlet/>
-  //   </Box>
-  // );
-//}
