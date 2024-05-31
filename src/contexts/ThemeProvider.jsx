@@ -3,11 +3,24 @@ import { CssBaseline } from "@mui/material";
 import { Typography, Paper, Avatar, Button } from "@mui/material";
 
 const theme = createTheme({
+    // MuiDrawer:{
+    //   styleOverrides:{
+    //     paper:{
+    //       backgroundColor:"#eaefff",
+    //   },
+    // },
+    // },
     palette: {
+      primary:{
+        main : '#112F91',
+      },
       gradient: {
-        primary: 'linear-gradient(45deg, #9DCEFF 10%, #112F91 80% )', // Use different colors for a visible gradient
+        primary: 'linear-gradient(45deg, #9DCEFF 10%, #112F91 80% )', 
         secondary: 'linear-gradient(45deg, #1A73E8 30%, #112F91 90%)',
       },
+    },
+    typography: {
+      fontFamily: 'Arial, sans-serif',
     },
   });
   

@@ -129,20 +129,35 @@ export function Goals(){
     }, [user?.uid]);
     return(
         <>
-       
+        <Grid 
+        container 
+        component="main" 
+        sx={{ 
+            //height: '100vh', 
+            // width: '100vw',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}
+        >
         <Box sx={{ flexGrow: 1, maxWidth: 737 }}> 
         
             <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={12}>
                    
                 <Demo>
-                    <Box sx={{ width: 737, height: 100, mt:10}}>
+                    <Box sx={{ 
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent:'end'
+                    }}>
                         <AddGoal onAddGoal={addGoalCallback} ></AddGoal>
                     </Box>
                     <List dense={dense}>
                     {goals.map((goal, index) => (
-                        <Box key={index} sx={{ marginBottom: 2 }}> 
-                            <Paper key={index} sx={{ width: 737, height: 100,p:10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Box key={index} sx={{ marginBottom: 5 }}> 
+                            <Paper key={index} sx={{ width: 737, height: 100,p:10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: "0.3s",
+                  '&:hover': { boxShadow: 10 }, }}>
                                 <Box >
                                     <ListItemText
                                         primary={goal.title} // Display the goal title
@@ -168,6 +183,7 @@ export function Goals(){
                 </Grid>
             </Grid>
         </Box>
+        </Grid>
         <Outlet/>
         </>
     );

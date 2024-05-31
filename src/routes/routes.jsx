@@ -40,12 +40,6 @@ const routes = [
       {
         path: "profile",
         element:  <Profile /> ,
-        children: [
-          {
-            path: "test",
-            element: <Test />,
-          },
-        ]
       },
       {
         path: "test",

@@ -8,8 +8,10 @@ import {
     Button, 
     Box,
     TextField,
+    Grid
 } from "@mui/material";
 import {  useNavigate, Outlet } from 'react-router-dom';
+import { GradientButton } from '../../contexts/ThemeProvider';
 
 export function EditProfile() {
     const [userData, setUserData] = useState({});
@@ -83,15 +85,28 @@ export function EditProfile() {
 
   return (
     <>
-    <Paper sx={{ 
-    width: 737, 
-    height: 'auto', 
-    m: 10,
-    p: 3, 
-    boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)' 
-    }}>
-    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
+    <Grid 
+      container 
+      component="main" 
+      sx={{ 
+        //height: '100vh', 
+        // width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <Paper sx={{
+        width: '737px', 
+        height: 'auto', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4 
+      }}>
+      <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
             Edit Your Profile
         </Typography>
         {profileImage && (
@@ -101,9 +116,10 @@ export function EditProfile() {
             sx={{ width: 200, height: 200, mb: 3 }} 
             />
         )}
+        <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <input
+        style={{ display: 'block', margin: 'auto' }}
         type="file"
-        //={{ display: 'none' }} 
         onChange={(e) => setProfileImage(e.target.files[0])}
         />
         <TextField
@@ -161,17 +177,19 @@ export function EditProfile() {
         >
             Back
         </Button>
-        <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2, mr: 1 }}
-        >
-            Save
-        </Button>
-    </Box>
-</Paper>
+    
+      <GradientButton
+       type="submit"
+               fullWidth
+               variant="contained"
+               color="primary"
+               sx={{ mt: 3, mb: 2, mr: 1 }}
+           >
+               Save
+      </GradientButton>
+      </Box>
+      </Paper>
+    </Grid>
     <Outlet/>
     </>
   );

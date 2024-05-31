@@ -21,6 +21,8 @@ import {
 } from "@mui/material";
 
 import { ApiTemplate } from '../../api';
+import { GradientButton } from '../../contexts/ThemeProvider';
+import backGround from "../../assets/backGround.png";
 
 export function CompleteProfile() {
     
@@ -43,10 +45,6 @@ export function CompleteProfile() {
     const handleRole = async (event) => {
         setRole(event.target.value);
     };
-
-    const handleBack = async () => {
-        navigate("/register");
-    }; 
 
     const handleSubmit = async (e) => { 
         e.preventDefault(); 
@@ -79,26 +77,41 @@ export function CompleteProfile() {
 
 
     return (
-       <Grid>
-        <Grid></Grid>
-        <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleBack}
-              >
-                Back
-            </Button>
-            <Typography component="h1" variant="h5">
+        <Grid 
+        container 
+        component="main" 
+        sx={{ 
+            height: 'auto', 
+            width: 'auto',
+            backgroundImage: `url(${backGround})`,
+            backgroundPosition: 'center', 
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+      }}
+    >
+      <Paper sx={{
+        width: 737,
+        height: 'auto', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4,
+        margin: 4  
+      }}>
+         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1}>
                 Let's complete your profile 
             </Typography>
-            <Typography component="h6" variant="h6">
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
                 It will help us to know more about you!
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Role</InputLabel>
                     <Select
+                        required
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={role}
@@ -111,41 +124,36 @@ export function CompleteProfile() {
             </FormControl>
             <TextField
                     margin="normal"
-                    //required
+                    required
                     fullWidth
                     id="name"
                     label="Name"
                     name="name"
-                    autoComplete="name"
-                    autoFocus
                     onChange={(e) => setName(e.target.value)}
             />
             <TextField
                     margin="normal"
-                    //required
+                    required
                     fullWidth
                     id="username"
                     label="Username"
                     name="username"
-                    autoComplete="username"
-                    autoFocus
                     onChange={(e) => setUsername(e.target.value)}
             />
              <TextField
                     margin="normal"
-                    //required
+                    required
                     fullWidth
                     id="age"
                     label="Age"
                     name="age"
-                    autoComplete="age"
-                    autoFocus
                     type="number"
                     onChange={(e) => setAge(parseFloat(e.target.value) || null)}
             />
             <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                     <Select
+                        required
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={gender}
@@ -158,7 +166,7 @@ export function CompleteProfile() {
             </FormControl>
             <TextField
                     margin="normal"
-                    //required
+                    required
                     fullWidth
                     name="weight"
                     label="Weight"
@@ -168,7 +176,7 @@ export function CompleteProfile() {
             />
             <TextField
                     margin="normal"
-                    //required
+                    required
                     fullWidth
                     name="height"
                     label="Height"
@@ -176,15 +184,16 @@ export function CompleteProfile() {
                     type="number"
                     onChange={(e) => setHeight(parseFloat(e.target.value) || null)}
             />
-            <Button
+            <GradientButton
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
                     {role === 'Student' ? 'Next' : 'Confirm'}
-            </Button>
-        </Box>
-       </Grid>
+            </GradientButton>
+            </Box>
+      </Paper>
+    </Grid>
     );
 };

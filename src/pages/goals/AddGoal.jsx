@@ -8,6 +8,7 @@ import {
     Modal,
     TextField
 }from "@mui/material";
+import { GradientButton } from '../../contexts/ThemeProvider';
 
 const style = {
   position: 'absolute',
@@ -20,6 +21,9 @@ const style = {
   border: '2px solid #000',
   boxShadow: 20,
   p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
 };
 
 export function AddGoal({onAddGoal}) {
@@ -60,7 +64,12 @@ export function AddGoal({onAddGoal}) {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Add New</Button>
+      <Button
+        fullWidth
+        variant="contained"
+        color="primary"
+        sx={{ mt: 3, mb: 3 }}
+        onClick={handleOpen}>Add New</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -76,10 +85,12 @@ export function AddGoal({onAddGoal}) {
                 X
             </Button>
 
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5}} margin={1} >
                 Add A New Goal
             </Typography>
             <TextField
+                    multiline
+                    rows={5}
                     margin="normal"
                     //required
                     fullWidth
@@ -88,14 +99,14 @@ export function AddGoal({onAddGoal}) {
                     id="goal"
                     onChange={(e) => setTitle(e.target.value)}
             />
-            <Button
+            <GradientButton
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
                 Add
-            </Button>
+            </GradientButton>
         </Box>
       </Modal>
     </div>

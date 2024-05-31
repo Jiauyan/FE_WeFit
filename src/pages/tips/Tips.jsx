@@ -47,9 +47,13 @@ export function Tips(){
 
     
     return(
-      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center">
-  {tips.map((tip, index) => (
-     <Grid item xs={2} sm={4} md={4} key={index}>
+      <Box sx={{ padding: 2 }}>
+      <Typography variant="h4" component="h2" align="center" sx={{ marginBottom: 2, fontWeight: 'bold', color: 'primary' }}>
+        Sharing Tips From Trainers
+      </Typography>
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>
+      {tips.map((tip, index) => (
+        <Grid marginTop={5} item xs={2} sm={4} md={4} key={index}>
        <Card
                 sx={{
                   width: '100%',
@@ -66,13 +70,13 @@ export function Tips(){
          image={tip.downloadUrl}
          alt={tip.title}
          sx={{
-             height: 220,// Fixed height or adjust as needed
+             height: 220,
              weight : '100%', 
              objectFit: 'cover'
          }}
           />
-          <CardContent sx={{ flexGrow: 1 }}>
-            <Typography gutterBottom variant="h5" component="div">
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
+            <Typography gutterBottom variant="h5" >
               {tip.title}
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -84,6 +88,7 @@ export function Tips(){
     </Grid>
   ))}
 </Grid>
+</Box>
     );
 
 }

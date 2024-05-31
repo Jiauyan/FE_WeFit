@@ -8,9 +8,12 @@ import {
     Typography,
     Modal,
     TextField,
-    Paper
+    Paper,
+    Grid,
+    IconButton
 }from "@mui/material";
-
+import { ArrowBackIos } from '@mui/icons-material';
+import { GradientButton } from '../../contexts/ThemeProvider';
 
 export function AddTip() {
   const navigate = useNavigate();
@@ -59,35 +62,47 @@ export function AddTip() {
     }; 
 
   return (
+    <Grid 
+      container 
+      component="main" 
+      sx={{ 
+        //height: '100vh', 
+        // width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
     <Paper sx={{
-        width: 737,
-        height: 'auto', // Adjust height based on content
-        m: 10,
-        p: 3, // Consistent padding
+        width: '737px', 
+        height: 'auto', 
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-        borderRadius: 2 // Soft rounded corners
-        }}>
-        <Box component="form" noValidate onSubmit={handleSubmit}>
-            <Button 
-                onClick={handleBack}
-                sx={{ position: 'absolute', top: 10, right: 10 }}
-            >
-                Back
-            </Button>
-
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4 
+      }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+      <IconButton
+        onClick={handleBack}
+      >
+        <ArrowBackIos />
+      </IconButton>
+    </Box>
+    
+        <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
                 Add Your Sharing Tip
-            </Typography>
+        </Typography>
                     <input
                         type="file"
                         onChange={(e) => setTipImage(e.target.files[0])}
                     />
+                    <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
+                    required
                     margin="normal"
-                    //required
+                    requiredrequired
                     fullWidth
                     name="tip"
                     label="Sharing Tip Title"
@@ -95,6 +110,7 @@ export function AddTip() {
                     onChange={(e) => setTitle(e.target.value)}
             />
              <TextField
+                required
                 margin="normal"
                 fullWidth
                 name="tip"
@@ -102,18 +118,19 @@ export function AddTip() {
                 id="tip"
                 onChange={(e) => setDesc(e.target.value)}
                 multiline
-                rows={20} // This sets the initial number of visible rows
-                variant="outlined" // Optional: add variant for better appearance
+                rows={20} 
+                variant="outlined"  
                 />
-            <Button
+            <GradientButton
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
                 Add
-            </Button>
+            </GradientButton>
         </Box>
         </Paper>
+        </Grid>
   );
 }

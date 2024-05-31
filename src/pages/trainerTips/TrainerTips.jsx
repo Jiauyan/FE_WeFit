@@ -52,21 +52,26 @@ export function TrainerTips(){
 
     
     return(
-      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center">
-    <Grid item xs={12}>
+        <>
+        <Box sx={{ 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent:'end',
+            margin:4,
+        }}>
         <Button
             onClick={handleAdd}
-            fullWidth
             variant="contained"
             color="primary"
             sx={{ mt: 3, mb: 2 }}
         >
             Add Sharing Tip
         </Button>
-    </Grid>
-    {tips.map((tip, index) => (
+        </Box>
+    <Grid container padding={4} spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>
+      {tips.map((tip, index) => (
         <Grid item xs={2} sm={4} md={4} key={index}>
-            <Card
+       <Card
                 sx={{
                   width: '100%',
                   height: '100%',
@@ -74,32 +79,33 @@ export function TrainerTips(){
                   transition: "0.3s",
                   '&:hover': { boxShadow: 10 },
               }}
-                onClick={() => handleView(tip)}
-            >
-                <CardActionArea sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <CardMedia
-                        component="img"
-                        image={tip.downloadUrl}
-                        alt={tip.title}
-                        sx={{
-                            height: 220,// Fixed height or adjust as needed
-                            weight : '100%', 
-                            objectFit: 'cover'
-                        }}
-                    />
-                    <CardContent sx={{ flexGrow: 1 }}>
-                        <Typography gutterBottom variant="h5" component="div">
-                            {tip.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {tip.createdAt}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        </Grid>
-    ))}
+        onClick={() => handleView(tip)}
+      >
+         <CardActionArea sx={{ display: 'flex', flexDirection: 'column' }}>
+         <CardMedia
+         component="img"
+         image={tip.downloadUrl}
+         alt={tip.title}
+         sx={{
+             height: 220,
+             weight : '100%', 
+             objectFit: 'cover'
+         }}
+          />
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
+            <Typography gutterBottom variant="h5" >
+              {tip.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {tip.createdAt}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </Grid>
+  ))}
 </Grid>
+</>
     );
 
 }

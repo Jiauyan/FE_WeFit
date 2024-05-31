@@ -19,7 +19,8 @@ import {
     MenuItem,
     Checkbox,
 } from "@mui/material";
-
+import { GradientButton } from '../../contexts/ThemeProvider';
+import backGround from "../../assets/backGround.png";
 
 export function ForgotPassword() {
 
@@ -53,34 +54,56 @@ export function ForgotPassword() {
 
 
     return (
-        <Grid>
-            <Typography component="h5" variant="h5" sx={{ mt: 4 }}>
+        <Grid 
+        container 
+        component="main" 
+        sx={{ 
+            height: '100vh', 
+            width: '100vw',
+            backgroundImage: `url(${backGround})`,
+            backgroundPosition: 'center', 
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+      }}
+    >
+      <Paper sx={{
+        width: 737,
+        height: 'auto', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4,
+        margin: 4  
+      }}>
+        <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1} >
                 Reset your password
             </Typography>
-            <Typography component="h6" variant="h6" sx={{ mb: 2 }}>
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
                 The reset password link will send via your email
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
             <TextField
                     margin="normal"
-                    //required
+                    required
                     fullWidth
                     id="email"
                     label="Email"
                     name="email"
-                    autoComplete="email"
-                    autoFocus
                     onChange={(e) => setEmail(e.target.value)}
             />
-                <Button
+                <GradientButton
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
                     Confirm
-                </Button>
+                </GradientButton>
             </Box>
-       </Grid>
+      </Paper>
+    </Grid>
     );
 };

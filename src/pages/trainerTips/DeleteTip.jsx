@@ -7,6 +7,7 @@ import {
     Typography,
     Modal,
 }from "@mui/material";
+import { GradientButton } from '../../contexts/ThemeProvider';
 
 const style = {
   position: 'absolute',
@@ -19,8 +20,10 @@ const style = {
   border: '2px solid #000',
   boxShadow: 20,
   p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
 };
-
 export function DeleteTip({id}) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -53,9 +56,15 @@ export function DeleteTip({id}) {
 
   return (
     <div>
-      <Button variant="contained" fullWidth sx={{ mt: 3, mb: 3 }} onClick={handleOpen} aria-label="delete">
+      <GradientButton
+      fullWidth
+      variant="contained"
+      color="primary"
+      sx={{ mt: 3, mb: 2, mr: 1 }} 
+      onClick={handleOpen} 
+      aria-label="delete">
         Delete
-     </Button>
+     </GradientButton>
       <Modal
         open={open}
         onClose={handleClose}
@@ -71,20 +80,20 @@ export function DeleteTip({id}) {
                 X
             </Button>
 
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:10}} margin={1} >
                 Confirm
             </Typography>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                Are you sure you wish to delete your sharing tip?
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
+                Are you sure you wish to delete sharing tip?
             </Typography>
-            <Button
+            <GradientButton
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
                 Confirm
-            </Button>
+            </GradientButton>
         </Box>
       </Modal>
     </div>

@@ -1,9 +1,11 @@
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
-import { Typography, Paper, Avatar, Button } from "@mui/material";
+import { Typography, Paper, Avatar, Button, Grid, Box, IconButton } from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DeleteTip } from './DeleteTip';
+import { GradientButton } from '../../contexts/ThemeProvider';
+import { ArrowBackIos } from '@mui/icons-material';
 
 export function ViewTip() {
     const [tipData, setTipData] = useState([]);
@@ -52,44 +54,62 @@ export function ViewTip() {
 
   return (
     <>
-   <Paper
-  sx={{
-    width: 737,  // Fixed width, consider making it responsive if needed
-    height: 'auto',  // Height auto-adjusts to content
-    m: 10,  // Margin for spacing from surrounding content
-    p: 5,  // Padding for internal spacing
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    boxShadow: 3,  // Consistent shadow for depth
-    borderRadius: 2,  // Rounded corners
-    backgroundColor: 'background.paper',  // Ensures it uses the theme's background color for paper elements
-  }}
->
-<Button
-    fullWidth
-    variant="contained"
-    color="primary"  // Use primary color to align with theme
-    sx={{ mt: 3, mb: 2 }}
-    onClick={handleBack}
-  >
-    Back
-  </Button>
-  <Typography
-    variant="h5" 
-    component="h2"  // Semantically correct header tag
-    sx={{ mb: 3, textAlign: 'center' }}  // Centered text for the title
-  >
-    {tipData.title}
-  </Typography>
-    <Typography
-        variant="body2"
-        color="textSecondary"
-        sx={{ mb: 3 }}
+   <Grid 
+      container 
+      component="main" 
+      sx={{ 
+        //height: '100vh', 
+        // width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
     >
-        Created at: {tipData.createdAt}
+    <Paper sx={{
+        width: '737px', 
+        height: 'auto', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4 
+      }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+      <IconButton
+        onClick={handleBack}
+      >
+        <ArrowBackIos />
+      </IconButton>
+    </Box>
+    <Typography
+      variant="h5" 
+      component="h2"  // Semantically correct header tag
+      sx={{ mb: 3, textAlign: 'center' }}  // Centered text for the title
+    >
+      {tipData.title}
     </Typography>
-    {tipData.downloadUrl && (
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 3 }}>
+  <Avatar
+    alt={tipUser.username}
+    src={tipUser.downloadUrl}
+    sx={{ width: 40, height: 40, mr: 2 }} // Added margin-right to separate Avatar from text
+  />
+  <Typography
+    variant="body2"
+    color="textSecondary"
+    sx={{ mr: 2 }}
+  >
+    {tipUser.username}
+  </Typography>
+  <Typography
+    variant="body2"
+    color="textSecondary"
+  >
+    {new Date(tipData.createdAt).toLocaleDateString()}
+  </Typography>
+</Box>
+  {tipData.downloadUrl && (
     <img
       src={tipData.downloadUrl}
       alt={tipData.title}
@@ -97,7 +117,7 @@ export function ViewTip() {
         width: '100%',  // Full width of the container
         maxHeight: '500px',  // Max height to control large images
         objectFit: 'contain',  // Ensures the image is contained within the element without stretching
-        marginBottom: '30px'
+        marginBottom: '20px'
       }}
     />
   )}
@@ -107,7 +127,7 @@ export function ViewTip() {
   >
   {tipData.desc}
 </Typography>
-    <Button
+    <GradientButton
          fullWidth
          variant="contained"
          color="primary"  
@@ -115,9 +135,10 @@ export function ViewTip() {
         onClick={() => handleEdit(id)}
     >
         Edit
-    </Button>
+    </GradientButton>
     <DeleteTip id={id} />
 </Paper>
+</Grid>
     <Outlet/>
     </>
   );

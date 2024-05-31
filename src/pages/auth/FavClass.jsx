@@ -19,7 +19,8 @@ import {
     MenuItem,
     Checkbox,
 } from "@mui/material";
-
+import { GradientButton } from '../../contexts/ThemeProvider';
+import backGround from "../../assets/backGround.png";
 
 export function FavClass() {
     const [favClass, setFavClass] = useState([]);
@@ -65,22 +66,37 @@ export function FavClass() {
 
 
     return (
-        <Grid>
-        <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleBack}
-              >
-                Back
-            </Button>
-            <Typography component="h5" variant="h5" sx={{ mt: 4 }}>
+        <Grid 
+        container 
+        component="main" 
+        sx={{ 
+            height: '100vh', 
+            width: '100vw',
+            backgroundImage: `url(${backGround})`,
+            backgroundPosition: 'center', 
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+      }}
+    >
+      <Paper sx={{
+        width: 737,
+        height: 'auto', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4,
+        margin: 4  
+      }}>
+        <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1} >
                 Select all yout favorite type of exercises
             </Typography>
-            <Typography component="h6" variant="h6" sx={{ mb: 2 }}>
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
                 It will help us to know your favorite types of exercises.
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
                 {['Yoga', 'Dance', 'Cardio', 'Strength', 'HIIT', 'Meditation'].map((type) => (
                     <Button
                         key={type}
@@ -88,12 +104,12 @@ export function FavClass() {
                         variant={favClass.includes(type) ? "contained" : "outlined"}
                         color={favClass.includes(type) ? "primary" : "inherit"}
                         onClick={() => handleChange(type)}
-                        sx={{ mb: 2 }}
+                        sx={{ mt: 3, mb: 2 }}
                     >
                         {type}
                     </Button>
                 ))}
-                <Button
+                <GradientButton
                     type="submit"
                     fullWidth
                     variant="contained"
@@ -101,8 +117,9 @@ export function FavClass() {
                     sx={{ mt: 3, mb: 2 }}
                 >
                     Next
-                </Button>
+                </GradientButton>
             </Box>
-       </Grid>
+      </Paper>
+    </Grid>
     );
 };

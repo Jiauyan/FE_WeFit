@@ -1,9 +1,10 @@
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
-import { Typography, Paper, Avatar, Button } from "@mui/material";
+import { Typography, Paper, Avatar, Button, Grid } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { DeleteTrainerAccount } from './DeleteTrainerAccount';
+import { GradientButton } from '../../contexts/ThemeProvider';
 
 export function TrainerProfile() {
     const [userData, setUserData] = useState([]);
@@ -35,18 +36,28 @@ export function TrainerProfile() {
 
   return (
     <>
-    <Paper sx={{
-    width: 737,
-    height: 'auto', // Adjust height based on content
-    m: 10,
-    p: 3, // Consistent padding
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-    borderRadius: 2 // Soft rounded corners
-    }}>
-      <Avatar
+    <Grid 
+      container 
+      component="main" 
+      sx={{ 
+        //height: '100vh', 
+        // width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <Paper sx={{
+        width: '737px', 
+        height: 'auto', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4 
+      }}>
+        <Avatar
         alt={userData.username}
         src={userData.downloadUrl}
         sx={{ width: 200, height: 200, mb: 3 }} 
@@ -77,7 +88,7 @@ export function TrainerProfile() {
       >
         Email: {userData.email}
       </Typography>
-      <Button
+      <GradientButton
         onClick={handleEdit}
         fullWidth
         variant="contained"
@@ -85,9 +96,10 @@ export function TrainerProfile() {
         sx={{ mt: 3, mb: 3 }}
       >
         Edit
-      </Button>
+      </GradientButton>
       <DeleteTrainerAccount />
-    </Paper>
+      </Paper>
+    </Grid>
     <Outlet/>
     </>
   );

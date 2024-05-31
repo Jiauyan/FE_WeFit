@@ -9,6 +9,8 @@ import {
     IconButton,
 }from "@mui/material";
 import {Delete, Edit} from '@mui/icons-material';
+import { GradientButton } from '../../contexts/ThemeProvider';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -20,6 +22,9 @@ const style = {
   border: '2px solid #000',
   boxShadow: 20,
   p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
 };
 
 export function DeleteGoal({id, disabled, onDeleteGoal}) {
@@ -71,20 +76,20 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
                 X
             </Button>
 
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:10}} margin={1} >
                 Confirm
             </Typography>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
                 Are you sure you wish to delete the goal?
             </Typography>
-            <Button
+            <GradientButton
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
                 Confirm
-            </Button>
+            </GradientButton>
         </Box>
       </Modal>
     </div>

@@ -203,44 +203,48 @@ return (
             width: { sm: drawerWidth },
             flexShrink: { sm: 0 },
           }}
-          aria-label="mailbox folders"
         >
-          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-          <Drawer
-            variant="temporary"
-            open={mobileOpen}
-            onTransitionEnd={handleDrawerTransitionEnd}
-            onClose={handleDrawerClose}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-            sx={{
-              display: { xs: "block", sm: "none" },
-              "& .MuiDrawer-paper": {
-                boxSizing: "border-box",
-                width: drawerWidth,
-              },
-              zIndex: 1400,
-            }}
-          >
-            {drawer}
-          </Drawer>
-          <Drawer
-            variant="permanent"
-            sx={{
-              display: { xs: "none", sm: "block" },
-              "& .MuiDrawer-paper": {
-                boxSizing: "border-box",
-                width: drawerWidth,
-              },
-            }}
-            open
-          >
-            {drawer}
-          </Drawer>
+         <Drawer
+  variant="temporary"
+  open={mobileOpen}
+  onTransitionEnd={handleDrawerTransitionEnd}
+  onClose={handleDrawerClose}
+  ModalProps={{
+    keepMounted: true, 
+  }}
+  sx={{
+    display: { xs: "block", sm: "none" },
+    zIndex: 1400,
+  }}
+  PaperProps={{
+    style: {
+      boxSizing: 'border-box',
+      width: drawerWidth,
+      //backgroundColor: '#acbdf5',
+    },
+  }}
+>
+  {drawer}
+</Drawer>
+<Drawer
+  variant="permanent"
+  sx={{
+    display: { xs: "none", sm: "block" },
+  }}
+  PaperProps={{
+    style: {
+      boxSizing: 'border-box',
+      width: drawerWidth,
+      //backgroundColor: '#acbdf5', 
+    },
+  }}
+  open
+>
+  {drawer}
+</Drawer>
         </Box>
     
-    <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+    <Box component="main" sx={{ backgroundColor:'#f2f5fd', flexGrow: 1, p: 3, height: '100vh', width: '100vw'  }}>
         <Toolbar />
         <Outlet />
     </Box>

@@ -1,8 +1,10 @@
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
-import { Typography, Paper, Button } from "@mui/material";
+import { Typography, Paper, Button, Grid, IconButton, Box, Avatar } from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { GradientButton } from '../../contexts/ThemeProvider';
+import { ArrowBackIos } from '@mui/icons-material';
 
 export function ViewTipStudent() {
   const [tipData, setTipData] = useState([]);
@@ -47,50 +49,61 @@ export function ViewTipStudent() {
 
   return (
     <>
-    <Paper
-  sx={{
-    width: 737,  // Fixed width, consider making it responsive if needed
-    height: 'auto',  // Height auto-adjusts to content
-    m: 10,  // Margin for spacing from surrounding content
-    p: 5,  // Padding for internal spacing
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    boxShadow: 3,  // Consistent shadow for depth
-    borderRadius: 2,  // Rounded corners
-    backgroundColor: 'background.paper',  // Ensures it uses the theme's background color for paper elements
-  }}
->
-  <Button
-    fullWidth
-    variant="contained"
-    color="primary"  // Use primary color to align with theme
-    sx={{ mt: 3, mb: 2 }}
-    onClick={handleBack}
-  >
-    Back
-  </Button>
+    <Grid 
+      container 
+      component="main" 
+      sx={{ 
+        //height: '100vh', 
+        // width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+    <Paper sx={{
+        width: '737px', 
+        height: 'auto', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4 
+      }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+      <IconButton
+        onClick={handleBack}
+      >
+        <ArrowBackIos />
+      </IconButton>
+    </Box>
+    <Typography
+      variant="h5" 
+      component="h2"  // Semantically correct header tag
+      sx={{ mb: 3, textAlign: 'center' }}  // Centered text for the title
+    >
+      {tipData.title}
+    </Typography>
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 3 }}>
+  <Avatar
+    alt={tipUser.username}
+    src={tipUser.downloadUrl}
+    sx={{ width: 40, height: 40, mr: 2 }} // Added margin-right to separate Avatar from text
+  />
   <Typography
-    variant="h5" 
-    component="h2"  // Semantically correct header tag
-    sx={{ mb: 3, textAlign: 'center' }}  // Centered text for the title
+    variant="body2"
+    color="textSecondary"
+    sx={{ mr: 2 }}
   >
-    {tipData.title}
+    {tipUser.username}
   </Typography>
   <Typography
-        variant="body2"
-        color="textSecondary"
-        sx={{ mb: 1 }}
-    >
-        Created by: {tipUser.username}
-    </Typography>
-    <Typography
-        variant="body2"
-        color="textSecondary"
-        sx={{ mb: 3 }}
-    >
-        Created at: {tipData.createdAt}
-    </Typography>
+    variant="body2"
+    color="textSecondary"
+  >
+    {new Date(tipData.createdAt).toLocaleDateString()}
+  </Typography>
+</Box>
   {tipData.downloadUrl && (
     <img
       src={tipData.downloadUrl}
@@ -110,6 +123,7 @@ export function ViewTipStudent() {
   {tipData.desc}
 </Typography>
 </Paper>
+</Grid>
     <Outlet/>
     </>
   );

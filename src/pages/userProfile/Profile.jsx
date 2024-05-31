@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
-import { Typography, Paper, Avatar, Button } from "@mui/material";
+import { Typography, Paper, Avatar, Button, Grid } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { DeleteAccount } from './DeleteAccount';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -36,17 +36,27 @@ export function Profile() {
 
   return (
     <>
-    <Paper sx={{
-    width: 737,
-    height: 'auto', // Adjust height based on content
-    m: 10,
-    p: 3, // Consistent padding
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-    borderRadius: 2 // Soft rounded corners
-    }}>
+    <Grid 
+      container 
+      component="main" 
+      sx={{ 
+        //height: '100vh', 
+        // width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <Paper sx={{
+        width: '737px', 
+        height: 'auto', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+        borderRadius: 2,
+        padding: 4 
+      }}>
     <Avatar
         alt={userData.username}
         src={userData.downloadUrl}
@@ -78,17 +88,19 @@ export function Profile() {
     >
         Email: {userData.email}
     </Typography>
+    
     <GradientButton
         onClick={handleEdit}
         fullWidth
-        // variant="contained"
-        // color="gradient"
-        // sx={{ mt: 3, mb: 3 }}
-    >
+        variant="contained"
+        color="primary"
+        sx={{ mt: 3, mb: 3 }}
+      >
         Edit
     </GradientButton>
     <DeleteAccount />
     </Paper>
+    </Grid>
     <Outlet/>
     </>
   );
