@@ -34,14 +34,6 @@ export function ViewTipStudent() {
             .catch(error => console.error('There was an error!', error));
     }, [user?.uid]); 
 
-    useEffect(() => {
-      const uid = tipUserID;
-      axios.get(`http://localhost:3000/auth/getUserById/${uid}`)
-          .then(response => {
-              setTipUser(response.data); 
-          })
-          .catch(error => console.error('There was an error!', error));
-  }, [tipUserID]); 
 
     const handleBack = async () => {
       navigate("/tips");
@@ -86,8 +78,8 @@ export function ViewTipStudent() {
     </Typography>
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 3 }}>
   <Avatar
-    alt={tipUser.username}
-    src={tipUser.downloadUrl}
+    alt={tipData.username}
+    src={tipData.userImageUrl}
     sx={{ width: 40, height: 40, mr: 2 }} // Added margin-right to separate Avatar from text
   />
   <Typography
@@ -95,7 +87,7 @@ export function ViewTipStudent() {
     color="textSecondary"
     sx={{ mr: 2 }}
   >
-    {tipUser.username}
+    {tipData.username}
   </Typography>
   <Typography
     variant="body2"

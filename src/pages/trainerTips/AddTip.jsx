@@ -19,11 +19,13 @@ export function AddTip() {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
+  const [shortDesc, setShortDesc] = useState('');
   const [tipImage, setTipImage] = useState(null);
   const [addTipStatus, setAddTipStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
- 
+  const userImageUrl = user.data.downloadUrl;
+  const username = user.data.username;
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
@@ -32,6 +34,9 @@ export function AddTip() {
     formData.append('uid', uid);
     formData.append('title', title);
     formData.append('desc', desc);
+    formData.append('shortDesc', shortDesc);
+    formData.append('username', username);
+    formData.append('userImageUrl', userImageUrl);
 
     try {
         const response = await axios.post('http://localhost:3000/tips/addTip', formData, {
@@ -104,18 +109,28 @@ export function AddTip() {
                     margin="normal"
                     requiredrequired
                     fullWidth
-                    name="tip"
+                    name="tipTitle"
                     label="Sharing Tip Title"
-                    id="tip"
+                    id="tipTitle"
                     onChange={(e) => setTitle(e.target.value)}
             />
+            <TextField
+                required
+                margin="normal"
+                fullWidth
+                name="tipShortDesc"
+                label="Sharing Tip Short Description"
+                id="tipShortDesc"
+                onChange={(e) => setShortDesc(e.target.value)}
+                variant="outlined"  
+                />
              <TextField
                 required
                 margin="normal"
                 fullWidth
-                name="tip"
-                label="Sharing Tip Description"
-                id="tip"
+                name="tipFullDesc"
+                label="Sharing Tip Full Description"
+                id="tipFullDesc"
                 onChange={(e) => setDesc(e.target.value)}
                 multiline
                 rows={20} 

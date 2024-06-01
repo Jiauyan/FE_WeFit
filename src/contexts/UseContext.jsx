@@ -38,13 +38,14 @@ export const UserProvider = ({ children }) => {
 
     const uid = response.data.user.uid;
     const role = response.data.userRole;
+    const data= response.data.userData;
     const token = {
       accessToken : response.data.user.stsTokenManager.accessToken,
       refreshToken : response.data.user.stsTokenManager.refreshToken,
     }
     localStorage.setItem('accessToken', token.accessToken);
     localStorage.setItem('refreshToken', token.refreshToken);
-    updateUser({ uid, role }); 
+    updateUser({ uid, role , data}); 
   };
 
   const logout = async () => {

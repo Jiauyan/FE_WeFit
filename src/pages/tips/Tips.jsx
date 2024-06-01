@@ -79,6 +79,9 @@ export function Tips(){
             <Typography gutterBottom variant="h5" >
               {tip.title}
             </Typography>
+            <Typography variant="body2" color="text.secondary" >
+              {tip.shortDesc}
+            </Typography>
             <Typography variant="body2" color="text.secondary">
               {tip.createdAt}
             </Typography>
