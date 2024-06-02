@@ -21,7 +21,7 @@ export function EditProfile() {
     const [age, setAge] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState('');
     const [editProfileStatus, setEditProfileStatus] = useState('');
     const navigate = useNavigate();
     
@@ -47,10 +47,21 @@ export function EditProfile() {
         }
     }, [uid]);
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            setProfileImage(e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+
     const handleSubmit = async (e) => { 
         e.preventDefault();
         const formData = new FormData();
-        formData.append('profileImage', profileImage);
+        formData.append('downloadUrl', profileImage);
         formData.append('username', username);
         formData.append('age', age);
         formData.append('weight', weight);
@@ -111,8 +122,8 @@ export function EditProfile() {
         </Typography>
         {profileImage && (
            <Avatar
-            alt={userData.username}
-            src={userData.downloadUrl}
+            alt='none'
+            src={profileImage}
             sx={{ width: 200, height: 200, mb: 3 }} 
             />
         )}
@@ -120,7 +131,7 @@ export function EditProfile() {
         <input
         style={{ display: 'block', margin: 'auto' }}
         type="file"
-        onChange={(e) => setProfileImage(e.target.files[0])}
+        onChange={handleFileChange}
         />
         <TextField
             margin="normal"
