@@ -22,6 +22,7 @@ export function EditTip() {
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('');
     const [tipImage, setTipImage] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null); 
     const [editTipStatus, setEditTipStatus] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -36,6 +37,7 @@ export function EditTip() {
                 setTitle(data.title);
                 setDesc(data.desc);
                 setTipImage(data.downloadUrl);
+                setPreviewUrl(data.downloadUrl);
             } catch (error) {
                 console.error('There was an error fetching the tip data!', error);
             }
@@ -46,6 +48,20 @@ export function EditTip() {
         }
     }, []);
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          setTipImage(file);
+    
+          // Read the file and set the preview URL
+          const reader = new FileReader();
+          reader.onload = () => {
+            setPreviewUrl(reader.result);
+          };
+          reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = async (e) => { 
         e.preventDefault();
         const formData = new FormData();
@@ -53,16 +69,13 @@ export function EditTip() {
         formData.append('uid', uid);
         formData.append('title', title);
         formData.append('desc', desc);
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
         try {
             const response = await axios.patch(`http://localhost:3000/tips/updateTip/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            setEditTipStatus(response.data.message);
+            //setEditTipStatus(response.data);
             navigate("/viewTip", { state: { id: id } });
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -114,13 +127,13 @@ export function EditTip() {
     <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }}  >
             Edit Your Sharing Tip
         </Typography>
-        {tipImage && (
-            <img src={tipImage} alt={title} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', marginBottom: '20px' }} />
-        )}
-        <input
-            type="file"
-            onChange={(e) => setTipImage(e.target.files[0])}
-            style={{ marginBottom: '20px' }}
+        {previewUrl && (
+                          <img src={previewUrl} alt={title} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', marginBottom: '20px' }} />
+                      )}
+                      <input
+                          type="file"
+                          onChange={handleFileChange}
+                          style={{ marginBottom: '20px' }}
         />
         <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField

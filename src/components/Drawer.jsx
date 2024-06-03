@@ -244,7 +244,18 @@ return (
 </Drawer>
         </Box>
     
-    <Box component="main" sx={{ backgroundColor:'#f2f5fd', flexGrow: 1, p: 3, height: '100vh', width: '100vw'  }}>
+    <Box
+        component="main"
+        sx={{
+          backgroundColor: '#f2f5fd',
+          flexGrow: 1,
+          p: 3,
+          minHeight: '100vh',
+          width: '100vw',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <Toolbar />
         <Outlet />
     </Box>

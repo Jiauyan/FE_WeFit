@@ -21,7 +21,8 @@ export function EditProfile() {
     const [age, setAge] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
-    const [profileImage, setProfileImage] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null); 
     const [editProfileStatus, setEditProfileStatus] = useState('');
     const navigate = useNavigate();
     
@@ -37,6 +38,7 @@ export function EditProfile() {
                 setWeight(data.weight);
                 setHeight(data.height);
                 setProfileImage(data.downloadUrl);
+                setPreviewUrl(data.downloadUrl);
             } catch (error) {
                 console.error('There was an error fetching the user data!', error);
             }
@@ -47,12 +49,15 @@ export function EditProfile() {
         }
     }, [uid]);
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
         if (file) {
+          setProfileImage(file);
+    
+          // Read the file and set the preview URL
           const reader = new FileReader();
-          reader.onload = (e) => {
-            setProfileImage(e.target.result);
+          reader.onload = () => {
+            setPreviewUrl(reader.result);
           };
           reader.readAsDataURL(file);
         }
@@ -61,7 +66,7 @@ export function EditProfile() {
     const handleSubmit = async (e) => { 
         e.preventDefault();
         const formData = new FormData();
-        formData.append('downloadUrl', profileImage);
+        formData.append('profileImage', profileImage);
         formData.append('username', username);
         formData.append('age', age);
         formData.append('weight', weight);
@@ -120,10 +125,10 @@ export function EditProfile() {
       <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
             Edit Your Profile
         </Typography>
-        {profileImage && (
+        {previewUrl && (
            <Avatar
             alt='none'
-            src={profileImage}
+            src={previewUrl}
             sx={{ width: 200, height: 200, mb: 3 }} 
             />
         )}
@@ -140,7 +145,7 @@ export function EditProfile() {
             label="Username"
             name="username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value) || null}
             variant="outlined"
             sx={{ mb: 1 }}
         />

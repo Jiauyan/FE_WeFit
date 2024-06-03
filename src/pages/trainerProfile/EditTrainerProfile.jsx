@@ -22,6 +22,7 @@ export function EditTrainerProfile() {
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
     const [profileImage, setProfileImage] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null); 
     const [editProfileStatus, setEditProfileStatus] = useState('');
     const navigate = useNavigate();
 
@@ -36,6 +37,7 @@ export function EditTrainerProfile() {
                 setWeight(data.weight);
                 setHeight(data.height);
                 setProfileImage(data.downloadUrl);
+                setPreviewUrl(data.downloadUrl);
             } catch (error) {
                 console.error('There was an error fetching the user data!', error);
             }
@@ -45,6 +47,20 @@ export function EditTrainerProfile() {
             fetchUserData();
         }
     }, [uid]);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          setProfileImage(file);
+    
+          // Read the file and set the preview URL
+          const reader = new FileReader();
+          reader.onload = () => {
+            setPreviewUrl(reader.result);
+          };
+          reader.readAsDataURL(file);
+        }
+    };
 
     const handleSubmit = async (e) => { 
         e.preventDefault();
@@ -106,10 +122,10 @@ export function EditTrainerProfile() {
       <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
             Edit Your Profile
         </Typography>
-        {profileImage && (
-           <Avatar
-            alt={userData.username}
-            src={userData.downloadUrl}
+        {previewUrl && (
+            <Avatar
+            alt='none'
+            src={previewUrl}
             sx={{ width: 200, height: 200, mb: 3 }} 
             />
         )}
@@ -117,7 +133,7 @@ export function EditTrainerProfile() {
         <input
         style={{ display: 'block', margin: 'auto' }}
         type="file"
-        onChange={(e) => setProfileImage(e.target.files[0])}
+        onChange={handleFileChange}
         />
         <TextField
             margin="normal"

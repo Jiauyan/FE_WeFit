@@ -21,11 +21,26 @@ export function AddTip() {
   const [desc, setDesc] = useState('');
   const [shortDesc, setShortDesc] = useState('');
   const [tipImage, setTipImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null); 
   const [addTipStatus, setAddTipStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
   const userImageUrl = user.data.downloadUrl;
   const username = user.data.username;
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setTipImage(file);
+
+      // Read the file and set the preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
@@ -99,10 +114,14 @@ export function AddTip() {
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
                 Add Your Sharing Tip
         </Typography>
-                    <input
-                        type="file"
-                        onChange={(e) => setTipImage(e.target.files[0])}
-                    />
+                      {previewUrl && (
+                          <img src={previewUrl} alt={title} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', marginBottom: '20px' }} />
+                      )}
+                      <input
+                          type="file"
+                          onChange={handleFileChange}
+                          style={{ marginBottom: '20px' }}
+                      />
                     <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
                     required

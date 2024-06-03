@@ -56,7 +56,7 @@ export function TrainerTips(){
         <Box sx={{ 
             display: 'flex',
             alignItems: 'center',
-            justifyContent:'end',
+            justifyContent:'center',
             margin:4,
         }}>
         <Button
@@ -108,6 +108,7 @@ export function TrainerTips(){
     </Grid>
   ))}
 </Grid>
+<Outlet/>
 </>
     );
 

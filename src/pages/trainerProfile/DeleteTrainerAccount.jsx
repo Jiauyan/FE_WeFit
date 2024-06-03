@@ -64,7 +64,7 @@ export function DeleteTrainerAccount() {
   return (
     <div>
       <Button onClick={handleOpen} edge="end" aria-label="delete">
-        Delete
+        Delete Account
      </Button>
       <Modal
         open={open}

@@ -32,22 +32,43 @@ export function Register() {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
+    
+    const validateEmail = (email) => {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(String(email).toLowerCase());
+    };
+
+    const validatePassword = (password) => {
+        // Example: password should be at least 6 characters long
+        return password.length >= 6;
+    };
 
     const handleSubmit = async (e) => { 
         e.preventDefault(); 
+        
+        let isValid = true;
 
         if (!email) {
-            setEmailError("Email is required");
-            return false;
-          } else {
-            setEmailError("");
-          }
-          if (!password) {
-            setPasswordError("Password is required");
-            return false;
-          } else {
-            setPasswordError("");
-          }
+          setEmailError("Email is required");
+          isValid = false;
+        } else if (!validateEmail(email)) {
+          setEmailError("Invalid email address");
+          isValid = false;
+        } else {
+          setEmailError("");
+        }
+
+        if (!password) {
+          setPasswordError("Password is required");
+          isValid = false;
+        } else if (!validatePassword(password)) {
+          setPasswordError("Password must be at least 6 characters long");
+          isValid = false;
+        } else {
+          setPasswordError("");
+        }
+
+        if (!isValid) return;
 
         try {
             const method = 'post'
@@ -141,7 +162,7 @@ export function Register() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Register
+                Next
               </GradientButton>
               <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
               <Link href="/login" variant="body2">

@@ -95,9 +95,7 @@ export function Goals(){
 
     };
 
-    const Demo = styled('div')(({ theme }) => ({
-        backgroundColor: theme.palette.background.paper,
-      }));
+    
 
       useEffect(() => {
         // Load user ID from local storage or other persistent storage
@@ -145,7 +143,6 @@ export function Goals(){
             <Grid container spacing={3}>
                 <Grid item xs={12} md={12}>
                    
-                <Demo>
                     <Box sx={{ 
                         display: 'flex',
                         alignItems: 'center',
@@ -179,7 +176,6 @@ export function Goals(){
                             </Box>
                         ))}
                             </List>
-                </Demo>
                 </Grid>
             </Grid>
         </Box>

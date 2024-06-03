@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate} from 'react-router-dom';
 import axios from 'axios'; 
 import { useUser } from '../../contexts/UseContext';
+import { GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import { auth } from "../../configs/firebaseDB";
 import {
     Grid,
     Box,
@@ -25,23 +27,45 @@ export function Login () {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
-    const { updateUser, login } = useUser();
+    const { updateUser, login, signInWithGoogle } = useUser();
+
+    const validateEmail = (email) => {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(String(email).toLowerCase());
+    };
+
+    const validatePassword = (password) => {
+        // Example: password should be at least 6 characters long
+        return password.length >= 6;
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
 
+        let isValid = true;
+
         if (!email) {
           setEmailError("Email is required");
-          return false;
+          isValid = false;
+        } else if (!validateEmail(email)) {
+          setEmailError("Invalid email address");
+          isValid = false;
         } else {
           setEmailError("");
         }
+
         if (!password) {
           setPasswordError("Password is required");
-          return false;
+          isValid = false;
+        } else if (!validatePassword(password)) {
+          setPasswordError("Password must be at least 6 characters long");
+          isValid = false;
         } else {
           setPasswordError("");
         }
+
+        if (!isValid) return;
         
         try {
           const formData = { email, password }
@@ -55,6 +79,7 @@ export function Login () {
           }
         }
       };
+
     
     return (
       <Grid container component="main" sx={{ height: '100vh', width: '100vw' }}>
@@ -135,6 +160,14 @@ export function Login () {
               >
                 Login
               </GradientButton>
+              {/* <GradientButton
+                onClick={googleSignIn}
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign in With Google
+              </GradientButton> */}
               <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Sign up"}
