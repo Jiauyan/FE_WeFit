@@ -48,7 +48,7 @@ export function Tips(){
     
     return(
       <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" component="h2" align="center" sx={{ marginBottom: 2, fontWeight: 'bold', color: 'primary' }}>
+      <Typography variant="h4" align="center" gutterBottom>
         Sharing Tips From Trainers
       </Typography>
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>

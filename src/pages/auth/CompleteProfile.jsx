@@ -81,7 +81,7 @@ export function CompleteProfile() {
         container 
         component="main" 
         sx={{ 
-            height: 'auto', 
+            height: '100vh', 
             width: 'auto',
             backgroundImage: `url(${backGround})`,
             backgroundPosition: 'center', 

@@ -116,7 +116,7 @@ export function FavClass() {
                     disabled={favClass.length === 0}
                     sx={{ mt: 3, mb: 2 }}
                 >
-                    Next
+                    Confirm
                 </GradientButton>
             </Box>
       </Paper>

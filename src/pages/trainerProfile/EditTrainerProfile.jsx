@@ -36,8 +36,8 @@ export function EditTrainerProfile() {
                 setAge(data.age);
                 setWeight(data.weight);
                 setHeight(data.height);
-                setProfileImage(data.downloadUrl);
-                setPreviewUrl(data.downloadUrl);
+                setProfileImage(data.photoURL);
+                setPreviewUrl(data.photoURL);
             } catch (error) {
                 console.error('There was an error fetching the user data!', error);
             }

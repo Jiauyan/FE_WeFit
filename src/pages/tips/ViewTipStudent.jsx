@@ -88,7 +88,7 @@ export function ViewTipStudent() {
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 3 }}>
   <Avatar
     alt={tipUser.username}
-    src={tipUser.downloadUrl}
+    src={tipUser.photoURL}
     sx={{ width: 40, height: 40, mr: 2 }} // Added margin-right to separate Avatar from text
   />
   <Typography

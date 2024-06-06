@@ -17,6 +17,7 @@ import {
     FormGroup,
     FormControlLabel,
     Grid,
+    LinearProgress
 } from "@mui/material";
 import { CheckCircle } from '@mui/icons-material';
 import { useNavigate, Outlet } from 'react-router-dom';
@@ -35,6 +36,27 @@ export function Goals(){
     const { user , setUser} = useUser();
     const uid = user.uid;
 
+    const GoalCard = styled(Paper)(({ theme }) => ({
+        width: 737,
+        height: 'auto',
+        padding: theme.spacing(2),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        transition: "0.3s",
+        borderRadius: 16,
+        boxShadow: theme.shadows[3],
+        '&:hover': {
+            boxShadow: theme.shadows[6],
+        },
+    }));
+
+    const calculateProgress = () => {
+        const totalGoals = goals.length;
+        const completedGoalsCount = goals.filter(goal => goal.status).length;
+        return (completedGoalsCount / totalGoals) * 100;
+    };
+    
     // Callback for adding a goal
     const addGoalCallback = (newGoal) => {
         setGoals(prevGoals => [...prevGoals, newGoal]);
@@ -127,60 +149,64 @@ export function Goals(){
     }, [user?.uid]);
     return(
         <>
-        <Grid 
-        container 
-        component="main" 
-        sx={{ 
-            //height: '100vh', 
-            // width: '100vw',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}
-        >
-        <Box sx={{ flexGrow: 1, maxWidth: 737 }}> 
-        
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={12}>
-                   
-                    <Box sx={{ 
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent:'end'
-                    }}>
-                        <AddGoal onAddGoal={addGoalCallback} ></AddGoal>
+            <Grid
+                container
+                component="main"
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#f0f4f8',
+                    minHeight: '100vh',
+                    padding: 4
+                }}
+            >
+                <Box sx={{ flexGrow: 1, maxWidth: 737 }}>
+                    <Typography variant="h4" align="center" gutterBottom>
+                        Your Goals
+                    </Typography>
+                    <Typography variant="h6" align="center" gutterBottom>
+                        "Setting goals is the first step in turning the invisible into the visible." - Tony Robbins
+                    </Typography>
+                    <LinearProgress variant="determinate" value={calculateProgress()} sx={{ height: 10, borderRadius: 5, my: 2 }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', mb: 2 }}>
+                        <AddGoal onAddGoal={addGoalCallback} />
                     </Box>
                     <List dense={dense}>
-                    {goals.map((goal, index) => (
-                        <Box key={index} sx={{ marginBottom: 5 }}> 
-                            <Paper key={index} sx={{ width: 737, height: 100,p:10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: "0.3s",
-                  '&:hover': { boxShadow: 10 }, }}>
-                                <Box >
-                                    <ListItemText
-                                        primary={goal.title} // Display the goal title
-                                        secondary={secondary ? 'Secondary text' : null}
-                                    />
-                                </Box>
-                                <Box>
-                                <IconButton edge="end" 
-                                    aria-label="complete" 
-                                    onClick={() => handleComplete(goal.id, goal.title)} // Pass title here
-                                    disabled={completedGoals[goal.id]}
-                                >
-                                    <CheckCircle style={{ color: completedGoals[goal.id] ? 'green' : 'grey' }} />
-                                </IconButton>
-                                    <EditGoal id={goal.id} oldTitle={goal.title} disabled={completedGoals[goal.id]} onEditGoal={editGoalCallback} />
-                                    <DeleteGoal id={goal.id} disabled={completedGoals[goal.id]} onDeleteGoal={deleteGoalCallback} />
-                                </Box>
-                            </Paper>
+                        {goals.map((goal, index) => (
+                            <Box key={index} sx={{ marginBottom: 5 }}>
+                                <GoalCard>
+                                    <Box>
+                                        <Typography variant="h6" component="div">
+                                            {goal.title}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {secondary ? 'Secondary text' : null}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                        <IconButton
+                                            edge="end"
+                                            aria-label="complete"
+                                            onClick={() => handleComplete(goal.id, goal.title)}
+                                            disabled={completedGoals[goal.id]}
+                                        >
+                                            <CheckCircle style={{ color: completedGoals[goal.id] ? 'green' : 'grey' }} />
+                                        </IconButton>
+                                        {!completedGoals[goal.id] && (
+                                            <>
+                                                <EditGoal id={goal.id} oldTitle={goal.title} disabled={completedGoals[goal.id]} onEditGoal={editGoalCallback} />
+                                                <DeleteGoal id={goal.id} disabled={completedGoals[goal.id]} onDeleteGoal={deleteGoalCallback} />
+                                            </>
+                                        )}
+                                    </Box>
+                                </GoalCard>
                             </Box>
                         ))}
-                            </List>
-                </Grid>
+                    </List>
+                </Box>
             </Grid>
-        </Box>
-        </Grid>
-        <Outlet/>
+            <Outlet />
         </>
     );
 

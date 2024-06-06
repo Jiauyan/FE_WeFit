@@ -25,7 +25,7 @@ export function AddTip() {
   const [addTipStatus, setAddTipStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
-  const userImageUrl = user.data.downloadUrl;
+  const userImageUrl = user.data.photoURL;
   const username = user.data.username;
 
   const handleFileChange = (e) => {

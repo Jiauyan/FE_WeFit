@@ -59,7 +59,7 @@ export function Profile() {
       }}>
     <Avatar
         alt={userData.username}
-        src={userData.downloadUrl}
+        src={userData.photoURL}
         sx={{ width: 200, height: 200, mb: 3 }} 
     />
     <Typography
