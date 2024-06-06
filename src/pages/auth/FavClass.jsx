@@ -18,6 +18,8 @@ import {
     Select,
     MenuItem,
     Checkbox,
+    Snackbar,
+    Alert,
 } from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
 import backGround from "../../assets/backGround.png";
@@ -25,6 +27,7 @@ import backGround from "../../assets/backGround.png";
 export function FavClass() {
     const [favClass, setFavClass] = useState([]);
     const [favClassStatus, setFavClassStatus] = useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -38,9 +41,10 @@ export function FavClass() {
         }
     };
 
-    const handleBack = async () => {
-        navigate("/fitnessGoal");
-    }; 
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
+
     const handleSubmit = async (e) => { 
         e.preventDefault(); 
 
@@ -50,7 +54,10 @@ export function FavClass() {
             });
 
             setFavClassStatus(response.data.message);
-            navigate('/login',{ state: { uid } });
+            setOpenSnackbar(true);
+            setTimeout(() => {
+                navigate('/login', { state: { uid } });
+            }, 2000); 
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
@@ -118,6 +125,20 @@ export function FavClass() {
                 >
                     Confirm
                 </GradientButton>
+                <Snackbar 
+                open={openSnackbar} 
+                autoHideDuration={2000} 
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                sx={{
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                }}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                    Registration successful! Redirecting to login page...
+                </Alert>
+            </Snackbar>
             </Box>
       </Paper>
     </Grid>

@@ -18,6 +18,8 @@ import {
     Select,
     MenuItem,
     Checkbox,
+    Snackbar,
+    Alert,
 } from "@mui/material";
 
 import { ApiTemplate } from '../../api';
@@ -34,10 +36,16 @@ export function CompleteProfile() {
     const [weight, setWeight] = useState(null);
     const [height, setHeight] = useState(null);
     const [role, setRole] = React.useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
     const [completeProfileStatus, setCompleteProfileStatus] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-    const uid = location.state?.uid; // Access the ID from the state
+    const uid = location.state?.uid; 
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
+
     const handleGender = async (event) => {
         setGender(event.target.value);
       };
@@ -60,7 +68,10 @@ export function CompleteProfile() {
             if (role === 'Student') {
                 navigate('/fitnessLevel', { state: { uid } });
             } else {
-                navigate('/login');
+                setOpenSnackbar(true);
+                setTimeout(() => {
+                    navigate('/login', { state: { uid } });
+                }, 2000);
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -192,6 +203,20 @@ export function CompleteProfile() {
                 >
                     {role === 'Student' ? 'Next' : 'Confirm'}
             </GradientButton>
+            <Snackbar 
+                open={openSnackbar} 
+                autoHideDuration={2000} 
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                sx={{
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                }}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                    Registration successful! Redirecting to login page...
+                </Alert>
+            </Snackbar>
             </Box>
       </Paper>
     </Grid>
