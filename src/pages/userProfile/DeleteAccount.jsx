@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { useUser } from "../../contexts/UseContext";
+import { useUser, UserContext } from "../../contexts/UseContext";
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -10,7 +10,7 @@ import {
     TextField,
     IconButton,
 }from "@mui/material";
-import {Delete, Edit} from '@mui/icons-material';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -35,15 +35,14 @@ export function DeleteAccount() {
   const handleClose = () => setOpen(false);
   const [deleteAccountStatus, setDeleteAccountStatus] = useState('');
   const { user , setUser} = useUser();
-  const uid = user.uid;
+  const { deleteAccount } = useContext(UserContext);
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
+    const uid = user.uid;
     try {
-        const response = await axios.delete(`http://localhost:3000/auth/deleteAccount/${uid}`);
-        console.log(response.data);
-        setDeleteAccountStatus(response.data.message);
-        //handleClose();
+        const response = deleteAccount(uid);
+        setDeleteAccountStatus(response.data);
         navigate("/login");
     } catch (error) {
         if (axios.isAxiosError(error)) {

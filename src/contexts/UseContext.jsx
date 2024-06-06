@@ -85,8 +85,21 @@ export const UserProvider = ({ children }) => {
     return response
   };
 
+  const deleteAccount = async (uid) => {
+    const method = 'delete'
+    const route = `auth/deleteAccount/${uid}`
+
+    const response = await ApiTemplate(method, route)
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('userData');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    return response
+  };
+
   return (
-    <UserContext.Provider value={{ user, token, updateUser, updateToken, logout, login }}>
+    <UserContext.Provider value={{ user, token, updateUser, updateToken, logout, login, deleteAccount }}>
       {children}
     </UserContext.Provider>
   );
