@@ -196,9 +196,9 @@ export function Goals(){
                                         {!completedGoals[goal.id] && (
                                             <>
                                                 <EditGoal id={goal.id} oldTitle={goal.title} disabled={completedGoals[goal.id]} onEditGoal={editGoalCallback} />
-                                                <DeleteGoal id={goal.id} disabled={completedGoals[goal.id]} onDeleteGoal={deleteGoalCallback} />
                                             </>
                                         )}
+                                        <DeleteGoal id={goal.id} onDeleteGoal={deleteGoalCallback} />
                                     </Box>
                                 </GoalCard>
                             </Box>

@@ -98,7 +98,7 @@ export function FavClass() {
         margin: 4  
       }}>
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1} >
-                Select all yout favorite type of exercises
+                Select all your favorite type of exercises
             </Typography>
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
                 It will help us to know your favorite types of exercises.
