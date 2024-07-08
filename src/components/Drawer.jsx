@@ -93,7 +93,7 @@ export function SideBar(props) {
     };
 
     const handleTrainerQuotes = async () => {
-      navigate("/trainerQuotes")
+      navigate("/motivationalQuotes")
     };
 
     const handleLogout = async (e) => { 

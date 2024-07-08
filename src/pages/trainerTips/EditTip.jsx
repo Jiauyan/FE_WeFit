@@ -21,6 +21,7 @@ export function EditTip() {
     const uid = user?.uid;
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('');
+    const [shortDesc, setShortDesc] = useState('');
     const [tipImage, setTipImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null); 
     const [editTipStatus, setEditTipStatus] = useState('');
@@ -36,6 +37,7 @@ export function EditTip() {
                 setTipData(data);
                 setTitle(data.title);
                 setDesc(data.desc);
+                setShortDesc(data.shortDesc);
                 setTipImage(data.downloadUrl);
                 setPreviewUrl(data.downloadUrl);
             } catch (error) {
@@ -69,6 +71,7 @@ export function EditTip() {
         formData.append('uid', uid);
         formData.append('title', title);
         formData.append('desc', desc);
+        formData.append('shortDesc', shortDesc);
         try {
             const response = await axios.patch(`http://localhost:3000/tips/updateTip/${id}`, formData, {
                 headers: {
@@ -152,7 +155,19 @@ export function EditTip() {
             required
             fullWidth
             id="desc"
-            label="Sharing Tip Description"
+            label="Sharing Tip Short Description"
+            name="desc"
+            value={shortDesc}
+            onChange={(e) => setShortDesc(e.target.value)}
+            sx={{ mb: 1 }}
+
+        />
+        <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="desc"
+            label="Sharing Tip Full Description"
             name="desc"
             value={desc}
             onChange={(e) => setDesc(e.target.value)}

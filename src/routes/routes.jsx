@@ -30,6 +30,10 @@ import { AddTip } from '../pages/trainerTips/AddTip.jsx';
 import { ViewTip } from '../pages/trainerTips/ViewTip.jsx';
 import { EditTip } from '../pages/trainerTips/EditTip.jsx';
 import { ViewTipStudent } from '../pages/tips/ViewTipStudent.jsx';
+import { MotivationalQuotes } from '../pages/trainerQuotes/MotivationalQuotes.jsx';
+import { AddMotivationalQuote } from '../pages/trainerQuotes/AddMotivationalQuote.jsx';
+import { EditMotivationalQuote } from '../pages/trainerQuotes/EditMotivationalQuote.jsx';
+import { DeleteMotivationalQuote } from '../pages/trainerQuotes/DeleteMotivationalQuote.jsx';
 
 
 const routes = [
@@ -91,11 +95,6 @@ const routes = [
         path: "trainerTraining",
         element:  <TrainerTraining /> ,
       },
-      
-      {
-        path: "trainerQuotes",
-        element:  <TrainerQuotes /> ,
-      },
       {
         path: "editProfile",
         element:  <EditProfile /> ,
@@ -123,6 +122,22 @@ const routes = [
       {
         path: "viewTipStudent",
         element:  <ViewTipStudent /> ,
+      },
+      {
+        path: "motivationalQuotes",
+        element:  <MotivationalQuotes /> ,
+      },
+      {
+        path: "addMotivationalQuote",
+        element:  <AddMotivationalQuote /> ,
+      },
+      {
+        path: "editMotivationalQuote",
+        element:  <EditMotivationalQuote /> ,
+      },
+      {
+        path: "deleteMotivationalQuotes",
+        element:  <DeleteMotivationalQuote /> ,
       },
     ],
   },

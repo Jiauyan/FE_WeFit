@@ -18,8 +18,13 @@ import {
     Select,
     MenuItem,
     Checkbox,
+    InputAdornment,
+    IconButton
 } from "@mui/material";
-
+import {  
+  Visibility,
+  VisibilityOff,
+} from '@mui/icons-material';
 import { ApiTemplate } from '../../api';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import registerBackground from "../../assets/registerBackground.png";
@@ -32,7 +37,11 @@ export function Register() {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
-    
+    const [showPassword, setShowPassword] = useState(false);
+    const handleTogglePasswordVisibility = () => {
+      setShowPassword(!showPassword);
+    };
+
     const validateEmail = (email) => {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return re.test(String(email).toLowerCase());
@@ -145,17 +154,26 @@ export function Register() {
                 helperText={emailError}
               />
               <TextField
-                required
-                margin="normal"
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-                error={!!passwordError}
-                helperText={passwordError}
-              />
+              required
+              margin="normal"
+              fullWidth
+              name="password"
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              error={!!passwordError}
+              helperText={passwordError}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleTogglePasswordVisibility}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
               <GradientButton
                 type="submit"
                 fullWidth

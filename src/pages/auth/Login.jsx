@@ -14,7 +14,13 @@ import {
     Link,
     Paper,
     Checkbox,
+    InputAdornment,
+    IconButton
 } from "@mui/material";
+import {  
+  Visibility,
+  VisibilityOff,
+} from '@mui/icons-material';
 
 import { GradientButton } from '../../contexts/ThemeProvider';
 import loginBackground from "../../assets/loginBackground.png";
@@ -27,7 +33,12 @@ export function Login () {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
+    
     const { updateUser, login, signInWithGoogle } = useUser();
+    const [showPassword, setShowPassword] = useState(false);
+    const handleTogglePasswordVisibility = () => {
+      setShowPassword(!showPassword);
+    };
 
     const validateEmail = (email) => {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -131,18 +142,27 @@ export function Login () {
                 error={!!emailError}
                 helperText={emailError}
               />
-              <TextField
-                required
-                margin="normal"
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-                error={!!passwordError}
-                helperText={passwordError}
-              />
+             <TextField
+              required
+              margin="normal"
+              fullWidth
+              name="password"
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              error={!!passwordError}
+              helperText={passwordError}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleTogglePasswordVisibility}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', width: '100%' }}>
                 {/* <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
