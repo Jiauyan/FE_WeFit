@@ -16,7 +16,7 @@ import { GradientButton } from '../../contexts/ThemeProvider';
 import { ArrowBackIos } from '@mui/icons-material';
 
 export function EditTip() {
-    const [userData, setTipData] = useState({});
+    const [tipData, setTipData] = useState({});
     const { user , setUser} = useUser();
     const uid = user?.uid;
     const [title, setTitle] = useState('');

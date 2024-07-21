@@ -14,7 +14,7 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import { AddMotivationalQuote } from "../trainerQuotes/AddMotivationalQuote";
 import { DeleteMotivationalQuote } from "../trainerQuotes/DeleteMotivationalQuote"
 import { EditMotivationalQuote } from "../trainerQuotes/EditMotivationalQuote"
-
+import { GetRandomMotivationalQuote } from "../trainerQuotes/GetRandomMotivationalQuote"
 
 export function MotivationalQuotes(){
     const [motivationalQuotes, setMotivationalQuotes] = useState([]);
@@ -25,6 +25,7 @@ export function MotivationalQuotes(){
     const [userData, setUserData] = useState([]);
     const { user , setUser} = useUser();
     const uid = user.uid;
+    const [randomMotivationalQuote, setRandomMotivationalQuote] = useState("");
 
     const MotivationalQuoteCard = styled(Paper)(({ theme }) => ({
         width: 737,
@@ -62,13 +63,24 @@ export function MotivationalQuotes(){
         setMotivationalQuotes(prevMotivationalQuotes => prevMotivationalQuotes.filter(motivationalQuote => motivationalQuote.id !== motivationalQuoteId));
     };
 
-      useEffect(() => {
-        // Load user ID from local storage or other persistent storage
+     // Callback for randoming a motivationalQuote
+     const getRandomMotivationalQuoteCallback = (randomMotivationalQuote) => {
+        setRandomMotivationalQuote(randomMotivationalQuote);
+        localStorage.setItem('randomMotivationalQuote', JSON.stringify(randomMotivationalQuote));
+    };
+
+    useEffect(() => {
         const storedUid = localStorage.getItem('uid');
         if (storedUid) {
             setUser({ ...user, uid: storedUid });
         }
-    }, []);
+
+        const storedRandomMotivationalQuote = localStorage.getItem('randomMotivationalQuote');
+        if (storedRandomMotivationalQuote) {
+            setRandomMotivationalQuote(JSON.parse(storedRandomMotivationalQuote));
+        }
+    }, [setUser, user]);
+
 
       useEffect(() => {
         const fetchMotivationalQuotes = async () => {
@@ -103,6 +115,14 @@ export function MotivationalQuotes(){
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', mb: 2 }}>
                         <AddMotivationalQuote onAddMotivationalQuote={addMotivationalQuoteCallback} />
+                        <GetRandomMotivationalQuote id={randomMotivationalQuote.id} onGetRandomMotivationalQuote={getRandomMotivationalQuoteCallback} />
+                    </Box>
+                    <Box>
+                        {randomMotivationalQuote && (
+                            <Typography variant="h6" component="div">
+                                {randomMotivationalQuote.motivationalQuote}
+                            </Typography>
+                        )}
                     </Box>
                     <List dense={dense}>
                         {motivationalQuotes.map((motivationalQuote, index) => (

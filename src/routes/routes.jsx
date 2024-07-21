@@ -21,7 +21,6 @@ import { FavClass } from "../pages/auth/FavClass.jsx";
 import { ForgotPassword } from "../pages/auth/ForgotPassword.jsx";
 import { TrainerProfile } from '../pages/trainerProfile/TrainerProfile.jsx';
 import { TrainerTips } from '../pages/trainerTips/TrainerTips.jsx';
-import { TrainerTraining } from '../pages/trainerTraining/TrainerTraining.jsx';
 import { TrainerQuotes } from '../pages/trainerQuotes/TrainerQuotes.jsx';
 import { EditProfile } from '../pages/userProfile/EditProfile.jsx';
 import { EditTrainerProfile } from '../pages/trainerProfile/EditTrainerProfile.jsx';
@@ -34,6 +33,11 @@ import { MotivationalQuotes } from '../pages/trainerQuotes/MotivationalQuotes.js
 import { AddMotivationalQuote } from '../pages/trainerQuotes/AddMotivationalQuote.jsx';
 import { EditMotivationalQuote } from '../pages/trainerQuotes/EditMotivationalQuote.jsx';
 import { DeleteMotivationalQuote } from '../pages/trainerQuotes/DeleteMotivationalQuote.jsx';
+import { TrainingPrograms } from '../pages/trainerTraining/TrainingPrograms.jsx';
+import { AddTrainingProgram } from '../pages/trainerTraining/AddTrainingProgram.jsx';
+import { ViewTrainingProgram } from '../pages/trainerTraining/ViewTrainingProgram.jsx';
+import { DeleteTrainingProgram } from '../pages/trainerTraining/DeleteTrainingProgram.jsx';
+import { EditTrainingProgram } from '../pages/trainerTraining/EditTrainingProgram.jsx';
 
 
 const routes = [
@@ -90,11 +94,6 @@ const routes = [
         path: "trainerTips",
         element:  <TrainerTips /> ,
       },
-      
-      {
-        path: "trainerTraining",
-        element:  <TrainerTraining /> ,
-      },
       {
         path: "editProfile",
         element:  <EditProfile /> ,
@@ -138,6 +137,26 @@ const routes = [
       {
         path: "deleteMotivationalQuotes",
         element:  <DeleteMotivationalQuote /> ,
+      },
+      {
+        path: "trainingPrograms",
+        element:  <TrainingPrograms /> ,
+      },
+      {
+        path: "addTrainingProgram",
+        element:  <AddTrainingProgram /> ,
+      },
+      {
+        path: "viewTrainingProgram",
+        element:  <ViewTrainingProgram /> ,
+      },
+      {
+        path: "deleteTrainingProgram",
+        element:  <DeleteTrainingProgram /> ,
+      },
+      {
+        path: "editTrainingProgram",
+        element:  <EditTrainingProgram /> ,
       },
     ],
   },

@@ -138,6 +138,7 @@ export function Login () {
                 label="Email"
                 name="email"
                 type= "email"
+                autoComplete="current-email"
                 onChange={(e) => setEmail(e.target.value)}
                 error={!!emailError}
                 helperText={emailError}
@@ -150,6 +151,7 @@ export function Login () {
               label="Password"
               type={showPassword ? 'text' : 'password'}
               id="password"
+              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
               error={!!passwordError}
               helperText={passwordError}
