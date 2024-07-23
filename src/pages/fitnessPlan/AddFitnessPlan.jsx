@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     Box,
-    Button,
     Typography,
     Modal,
     TextField,
@@ -13,30 +12,34 @@ import {
     IconButton,
     List,
     ListItem,
-    ListItemText
+    ListItemText,
+    Checkbox
 }from "@mui/material";
-import { ArrowBackIos, Add, Delete } from '@mui/icons-material';
+import { ArrowBackIos, Add, Delete,Edit } from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 
 export function AddFitnessPlan() {
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handleOpenEdit = () => setOpenEdit(true);
+  const handleCloseEdit = () => setOpenEdit(false);
   const [title, setTitle] = useState('');
   const [task, setTask] = useState('');
   const [duration, setDuration] = useState('');
   const [fitnessPlanID, setFitnessPlanID] = useState('');
-  const [fitnessActivity, setFitnessActivity] = useState('');
   const [date, setDate] = useState(null);
-  const [listFitnessActivity, setListFitnessActivity] = useState([]);
   const [fitnessActivities, setFitnessActivities] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [completeCount, setCompleteCount] = useState(0);
   const [addFitnessPlanStatus, setAddFitnessPlanStatus] = useState('');
-  const [addFitnessActivityStatus, setAddFitnessActivityStatus] = useState('');
+  const [addNewFitnessActivityStatus, setAddNewFitnessActivityStatus] = useState('');
+  const [currentActivity, setCurrentActivity] = useState(null);
   const { user } = useUser();
   const uid = user.uid;
 
@@ -60,7 +63,6 @@ export function AddFitnessPlan() {
 
     try {
         const formattedDate = format(date, 'dd/MM/yyyy');
-        console.log(formattedDate);
         const response = await axios.post('http://localhost:3000/fitnessPlan/addFitnessPlan',{
            uid,
            title,
@@ -69,12 +71,12 @@ export function AddFitnessPlan() {
            totalCount
         });
         const fitnessPlanID = response.data.id;
+        setFitnessPlanID(fitnessPlanID);
         await Promise.all(fitnessActivities.map(activity =>
-          axios.post('http://localhost:3000/fitnessActivity/addFitnessActivity', {
+          axios.patch(`http://localhost:3000/fitnessActivity/updateFitnessActivity/${activity.id}`, {
             uid,
             ...activity,
             fitnessPlanID,
-            
           })
         ));
         setAddFitnessPlanStatus(response.data.message);
@@ -91,24 +93,82 @@ export function AddFitnessPlan() {
         }
     }
   };
-
-  const handleAddFitnessActivity = async (e) => {
-          e.preventDefault();
-          const listOfFitnessActivity = `${task} - ${duration}`;
-          setListFitnessActivity(prevListFitnessActivity => [...prevListFitnessActivity, listOfFitnessActivity]);
-          setFitnessActivities(prev => [...prev, { task, duration }]);
-          setTotalCount(prevCount => prevCount + 1);
-          handleClose();
-  };
-
-  const handleRemoveFitnessActivity = (index) => {
-    setListFitnessActivity(prevListFitnessActivity => prevListFitnessActivity.filter((_, i) => i !== index));
-    setFitnessActivities(prev => prev.filter((_, i) => i !== index));
-    setTotalCount(prevCount => prevCount - 1);
-  };
       
+  const handleAddFitnessActivity = async (e) => {
+    e.preventDefault();
+
+    try {
+        const timestamp = new Date().toISOString();
+        const response = await axios.post('http://localhost:3000/fitnessActivity/addFitnessActivity', {
+            uid,
+            task,
+            duration,
+            status: false,
+            fitnessPlanID,
+            createdAt: timestamp
+        });
+
+        const newActivity = response.data;
+        setFitnessActivities(prev => [...prev, newActivity]);
+        setTotalCount(prevCount => prevCount + 1);
+        handleClose();
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                setAddNewFitnessActivityStatus(error.response.data.message);
+            } else {
+                setAddNewFitnessActivityStatus('An error occurred');
+            }
+        } else {
+            setAddNewFitnessActivityStatus('An unexpected error occurred');
+        }
+    }
+};
+
+const handleRemoveFitnessActivity = async (index) => {
+    const activityId = fitnessActivities[index].id;
+
+    try {
+        await axios.delete(`http://localhost:3000/fitnessActivity/deleteFitnessActivity/${activityId}`);
+        setFitnessActivities(prev => prev.filter((_, i) => i !== index));
+        setTotalCount(prevCount => prevCount - 1);
+        setCompleteCount(prev => fitnessActivities.filter(activity => activity.status).length);
+    } catch (error) {
+        console.error('There was an error deleting the fitness activity!', error);
+    }
+};
+
+const handleEditFitnessActivity = (index) => {
+    const activity = fitnessActivities[index];
+    setCurrentActivity({ ...activity, index }); // Add the index to currentActivity
+    setTask(activity.task);
+    setDuration(activity.duration);
+    setOpenEdit(true);
+};
+
+const handleUpdateFitnessActivity = async (e) => {
+    e.preventDefault();
+
+    try {
+        const updatedActivity = {
+            ...currentActivity,
+            task,
+            duration
+        };
+
+        await axios.patch(`http://localhost:3000/fitnessActivity/updateFitnessActivity/${currentActivity.id}`, updatedActivity);
+
+        setFitnessActivities(prev =>
+            prev.map(activity => (activity.id === currentActivity.id ? updatedActivity : activity))
+        );
+        handleCloseEdit();
+    } catch (error) {
+        console.error('There was an error updating the fitness activity!', error);
+    }
+};
+
   const handleBack = async () => {
-          navigate(-1);
+          navigate("/fitnessPlan");
       }; 
 
   return (
@@ -172,14 +232,23 @@ export function AddFitnessPlan() {
               </IconButton>
             </Box>
             <List>
-              {listFitnessActivity.map((fitnessActivity, index) => (
-                <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <ListItemText primary={fitnessActivity} />
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveFitnessActivity(index)}>
-                    <Delete />
-                  </IconButton>
-                </ListItem>
-              ))}
+                {fitnessActivities && fitnessActivities.map((fitnessActivity, index) => (
+                    <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Checkbox
+                            disabled
+                        />
+                    <ListItemText
+                        primary={fitnessActivity.task}
+                        secondary={`${fitnessActivity.duration}`}
+                    />
+                    <IconButton edge="end" aria-label="edit" onClick={() => handleEditFitnessActivity(index)}>
+                        <Edit />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveFitnessActivity(index)}>
+                        <Delete />
+                    </IconButton>
+                    </ListItem>
+                ))}
             </List>
             <GradientButton
                     type="submit"
@@ -189,15 +258,15 @@ export function AddFitnessPlan() {
             >
                 Add
             </GradientButton>
-        </Box>
-        </Paper>
-        </Grid>
-        <Modal
+            </Box>
+            </Paper>
+            </Grid>
+            <Modal
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-          >
+            >
             <Box sx={style} component="form" noValidate onSubmit={handleAddFitnessActivity}>
               <IconButton 
                 onClick={handleClose}
@@ -237,6 +306,53 @@ export function AddFitnessPlan() {
               </GradientButton>
               </Box>
             </Modal>
+            <Modal
+            open={openEdit}
+            onClose={handleCloseEdit}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            >
+            <Box sx={style} component="form" noValidate onSubmit={handleUpdateFitnessActivity}>
+                <IconButton
+                    onClick={handleCloseEdit}
+                    sx={{ position: 'absolute', top: 10, right: 10 }}
+                >
+                    X
+                </IconButton>
+
+                <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, mt: 5 }} margin={1}>
+                    Edit Fitness Activity
+                </Typography>
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="editFitnessActivity"
+                    label="Fitness Activity"
+                    id="editFitnessActivity"
+                    value={task}
+                    onChange={(e) => setTask(e.target.value)}
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="editDuration"
+                    label="Duration"
+                    id="editDuration"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                />
+                <GradientButton
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Save
+                </GradientButton>
+            </Box>
+        </Modal>
         </LocalizationProvider>
   );
 }

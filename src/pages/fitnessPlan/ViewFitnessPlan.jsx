@@ -60,7 +60,7 @@ export function ViewFitnessPlan() {
   };
 
   const handleBack = async () => {
-    navigate(-1);
+    navigate("/fitnessPlan");
   };
 
   return (

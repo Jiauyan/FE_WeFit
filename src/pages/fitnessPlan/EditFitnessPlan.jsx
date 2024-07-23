@@ -123,7 +123,7 @@ export function EditFitnessPlan() {
             ));
 
             setUpdateFitnessPlanStatus('Fitness Plan updated successfully!');
-            navigate("/fitnessPlan");
+            navigate("/viewFitnessPlan", { state: { id: id } });
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
@@ -417,7 +417,7 @@ export function EditFitnessPlan() {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
-                    Update
+                    Save
                 </GradientButton>
             </Box>
         </Modal>

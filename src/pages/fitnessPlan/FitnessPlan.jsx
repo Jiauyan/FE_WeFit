@@ -3,36 +3,20 @@ import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import {
     Typography,
-    Container,
     Box,
     Paper,
     Button,
     styled,
     List,
-    ListItem,
-    ListItemAvatar,
-    ListItemIcon,
-    ListItemText,
-    IconButton,
-    FormGroup,
-    FormControlLabel,
     Grid,
-    LinearProgress
 } from "@mui/material";
-import { CheckCircle } from '@mui/icons-material';
 import { useNavigate, Outlet } from 'react-router-dom';
-//import { AddFitnessPlan } from "../fitnessPlan/AddFitnessPlan";
-//import { DeleteFitnessPlan } from "../fitnessPlan/DeleteFitnessPlan"
-//import { EditFitnessPlan } from "../fitnessPlan/EditFitnessPlan"
 
 
 export function FitnessPlan(){
     const navigate = useNavigate();
     const [fitnessPlan, setFitnessPlan] = useState([]);
     const [dense, setDense] = React.useState(false);
-    const [secondary, setSecondary] = React.useState(false);
-    const [completedFitnessPlan, setCompletedFitnessPlan] = useState({});
-    const [completedFitnessPlanStatus, setCompletedFitnessPlanStatus] = useState("");
     const [userData, setUserData] = useState([]);
     const { user , setUser} = useUser();
     const uid = user.uid;
@@ -116,30 +100,29 @@ export function FitnessPlan(){
                     <List dense={dense}>
                         {fitnessPlan.map((fitnessPlan, index) => (
                             <Box key={index} sx={{ marginBottom: 5 }}>
-                                <FitnessPlanCard>
-                                    <Box>
-                                        <Typography variant="h6" component="div" sx={{m: 2}}>
-                                            {fitnessPlan.title}
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary" sx={{m: 2}}>
-                                            {fitnessPlan.date}
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <Button
-                                        onClick={() => handleView(fitnessPlan)}
-                                        //variant="contained"
-                                        color="primary"
-                                        sx={{ mt: 3, mb: 2 }}
-                                    >
-                                        View More
-                                    </Button>
-                                    </Box>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {fitnessPlan.completeCount}/{fitnessPlan.totalCount}
-                                    </Typography>
-                                </FitnessPlanCard>
-                            </Box>
+                            <FitnessPlanCard>
+                              <Box>
+                                <Typography variant="h6" component="div" sx={{ m: 2 }}>
+                                  {fitnessPlan.title}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" sx={{ m: 2 }}>
+                                  {fitnessPlan.date}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-start' }}>
+                                <Button
+                                  onClick={() => handleView(fitnessPlan)}
+                                  color="primary"
+                                  sx={{ mt: 3, mb: 2 }}
+                                >
+                                  View More
+                                </Button>
+                                <Typography variant="body2" color="textSecondary" sx={{ alignSelf: 'flex-end' }}>
+                                  {fitnessPlan.completeCount}/{fitnessPlan.totalCount}
+                                </Typography>
+                              </Box>
+                            </FitnessPlanCard>
+                          </Box>
                         ))}
                     </List>
                 </Box>
