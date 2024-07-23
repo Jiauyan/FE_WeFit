@@ -8,6 +8,7 @@ export default defineConfig({
     include: ['@mui/icons-material']
   },
   build: {
+    outDir: 'build',
     rollupOptions: {
       external: ['@mui/icons-material']
     }
