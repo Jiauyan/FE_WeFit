@@ -14,7 +14,7 @@ import {
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 
-export function TrainingPrograms(){
+export function TrainerTrainingPrograms(){
   const navigate = useNavigate();
   const { user , setUser} = useUser();
   const [trainingPrograms, setTrainingPrograms] = useState([]);
@@ -40,7 +40,7 @@ export function TrainingPrograms(){
 
     const handleView = async (trainingProgram) => {
       const trainingProgramId = trainingProgram.id;
-      navigate("/viewTrainingProgram", { state: { id: trainingProgramId } });
+      navigate("/viewTrainerTrainingProgram", { state: { id: trainingProgramId } });
     }; 
 
     

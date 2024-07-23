@@ -33,11 +33,17 @@ import { MotivationalQuotes } from '../pages/trainerQuotes/MotivationalQuotes.js
 import { AddMotivationalQuote } from '../pages/trainerQuotes/AddMotivationalQuote.jsx';
 import { EditMotivationalQuote } from '../pages/trainerQuotes/EditMotivationalQuote.jsx';
 import { DeleteMotivationalQuote } from '../pages/trainerQuotes/DeleteMotivationalQuote.jsx';
-import { TrainingPrograms } from '../pages/trainerTraining/TrainingPrograms.jsx';
 import { AddTrainingProgram } from '../pages/trainerTraining/AddTrainingProgram.jsx';
-import { ViewTrainingProgram } from '../pages/trainerTraining/ViewTrainingProgram.jsx';
+import { ViewTrainerTrainingProgram} from '../pages/trainerTraining/ViewTrainerTrainingProgram.jsx';
 import { DeleteTrainingProgram } from '../pages/trainerTraining/DeleteTrainingProgram.jsx';
 import { EditTrainingProgram } from '../pages/trainerTraining/EditTrainingProgram.jsx';
+import { TrainerTrainingPrograms } from '../pages/trainerTraining/TrainerTrainingPrograms.jsx';
+import { TrainingPrograms } from '../pages/training/TrainingPrograms.jsx';
+import { ViewTrainingProgram } from '../pages/training/ViewTrainingProgram.jsx';
+import { FitnessPlan } from '../pages/fitnessPlan/FitnessPlan.jsx';
+import { AddFitnessPlan } from '../pages/fitnessPlan/AddFitnessPlan.jsx';
+import { ViewFitnessPlan } from '../pages/fitnessPlan/ViewFitnessPlan.jsx';
+import { EditFitnessPlan } from '../pages/fitnessPlan/EditFitnessPlan.jsx';
 
 
 const routes = [
@@ -139,16 +145,16 @@ const routes = [
         element:  <DeleteMotivationalQuote /> ,
       },
       {
-        path: "trainingPrograms",
-        element:  <TrainingPrograms /> ,
+        path: "trainerTrainingPrograms",
+        element:  <TrainerTrainingPrograms /> ,
       },
       {
         path: "addTrainingProgram",
         element:  <AddTrainingProgram /> ,
       },
       {
-        path: "viewTrainingProgram",
-        element:  <ViewTrainingProgram /> ,
+        path: "viewTrainerTrainingProgram",
+        element:  <ViewTrainerTrainingProgram /> ,
       },
       {
         path: "deleteTrainingProgram",
@@ -157,6 +163,30 @@ const routes = [
       {
         path: "editTrainingProgram",
         element:  <EditTrainingProgram /> ,
+      },
+      {
+        path: "trainingPrograms",
+        element:  <TrainingPrograms /> ,
+      },
+      {
+        path: "viewTrainingProgram",
+        element:  <ViewTrainingProgram /> ,
+      },
+      {
+        path: "fitnessPlan",
+        element:  <FitnessPlan /> ,
+      },
+      {
+        path: "addFitnessPlan",
+        element:  <AddFitnessPlan /> ,
+      },
+      {
+        path: "viewFitnessPlan",
+        element:  <ViewFitnessPlan/> ,
+      },
+      {
+        path: "editFitnessPlan",
+        element:  <EditFitnessPlan/> ,
       },
     ],
   },

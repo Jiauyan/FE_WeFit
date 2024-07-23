@@ -85,7 +85,7 @@ export function SideBar(props) {
     };
 
     const handleTrainerTraining = async () => {
-      navigate("/trainingPrograms")
+      navigate("/trainerTrainingPrograms")
     };
 
     const handleTrainerTips = async () => {

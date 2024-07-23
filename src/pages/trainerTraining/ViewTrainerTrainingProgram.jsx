@@ -7,7 +7,7 @@ import { DeleteTrainingProgram } from './DeleteTrainingProgram';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { ArrowBackIos, Delete } from '@mui/icons-material';
 
-export function ViewTrainingProgram() {
+export function ViewTrainerTrainingProgram() {
   const [trainingProgramData, setTrainingProgramData] = useState([]);
   const [trainingProgramUserID, setTrainingProgramUserID] = useState(null);
   const [trainingProgramUser, setTrainingProgramUser] = useState({});
@@ -49,7 +49,7 @@ export function ViewTrainingProgram() {
   };
 
   const handleBack = async () => {
-    navigate("/trainingPrograms");
+    navigate("/trainerTrainingPrograms");
   };
 
   const slots = Array.isArray(trainingProgramData.slots) ? trainingProgramData.slots : [];

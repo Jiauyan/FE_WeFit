@@ -24,30 +24,30 @@ const style = {
   flexDirection: 'column',
   alignItems: 'center'
 };
-export function DeleteTrainingProgram({id}) {
+export function DeleteFitnessPlan({id}) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [deleteTrainingProgramStatus, setDeleteTrainingProgramStatus] = useState('');
+  const [deleteFitnessPlanStatus, setDeleteFitnessPlanStatus] = useState('');
     
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        const response = await axios.delete(`http://localhost:3000/trainingPrograms/deleteTrainingProgram/${id}`);
+        const response = await axios.delete(`http://localhost:3000/fitnessPlan/deleteFitnessPlan/${id}`);
         console.log(response.data);
-        setDeleteTrainingProgramStatus(response.data.message);
+        setDeleteFitnessPlanStatus(response.data.message);
         handleClose();
-        navigate("/trainerTrainingPrograms");
+        navigate("/fitnessPlan");
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
-                setDeleteTrainingProgramStatus(error.response.data.message);
+                setDeleteFitnessPlanStatus(error.response.data.message);
             } else {
-                setDeleteTrainingProgramStatus('An error occurred');
+                setDeleteFitnessPlanStatus('An error occurred');
             }
         } else {
-            setDeleteTrainingProgramStatus('An unexpected error occurred');
+            setDeleteFitnessPlanStatus('An unexpected error occurred');
         }
     }
 };
@@ -84,7 +84,7 @@ export function DeleteTrainingProgram({id}) {
                 Confirm
             </Typography>
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
-                Are you sure you wish to delete the training program?
+                Are you sure you wish to delete the fitness plan?
             </Typography>
             <GradientButton
                     type="submit"

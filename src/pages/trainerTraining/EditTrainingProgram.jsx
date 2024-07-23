@@ -151,7 +151,7 @@ export function EditTrainingProgram() {
         console.log(response.data);
         
         setUpdateTrainingProgramStatus(response.data.message);
-        navigate("/trainingPrograms");
+        navigate("/trainerTrainingPrograms");
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {

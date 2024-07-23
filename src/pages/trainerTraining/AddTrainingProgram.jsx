@@ -124,7 +124,7 @@ export function AddTrainingProgram() {
         console.log(response.data);
         
         setAddTrainingProgramStatus(response.data.message);
-        navigate("/trainingPrograms");
+        navigate("/trainerTrainingPrograms");
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {

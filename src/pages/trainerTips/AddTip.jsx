@@ -126,7 +126,6 @@ export function AddTip() {
             <TextField
                     required
                     margin="normal"
-                    requiredrequired
                     fullWidth
                     name="tipTitle"
                     label="Sharing Tip Title"
