@@ -44,6 +44,7 @@ import { FitnessPlan } from '../pages/fitnessPlan/FitnessPlan.jsx';
 import { AddFitnessPlan } from '../pages/fitnessPlan/AddFitnessPlan.jsx';
 import { ViewFitnessPlan } from '../pages/fitnessPlan/ViewFitnessPlan.jsx';
 import { EditFitnessPlan } from '../pages/fitnessPlan/EditFitnessPlan.jsx';
+import { ConsentForm } from '../pages/training/ConsentForm.jsx';
 
 
 const routes = [
@@ -187,6 +188,10 @@ const routes = [
       {
         path: "editFitnessPlan",
         element:  <EditFitnessPlan/> ,
+      },
+      {
+        path: "consentForm",
+        element:  <ConsentForm/> ,
       },
     ],
   },

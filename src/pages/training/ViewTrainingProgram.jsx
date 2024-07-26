@@ -48,7 +48,7 @@ export function ViewTrainingProgram() {
   };
 
   const handleBook = async (id) => {
-    navigate("/trainingPrograms");
+    navigate("/consentForm",{ state: { id } });
   };
 
   const slots = Array.isArray(trainingProgramData.slots) ? trainingProgramData.slots : [];
