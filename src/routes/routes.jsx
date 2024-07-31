@@ -45,6 +45,9 @@ import { AddFitnessPlan } from '../pages/fitnessPlan/AddFitnessPlan.jsx';
 import { ViewFitnessPlan } from '../pages/fitnessPlan/ViewFitnessPlan.jsx';
 import { EditFitnessPlan } from '../pages/fitnessPlan/EditFitnessPlan.jsx';
 import { ConsentForm } from '../pages/training/ConsentForm.jsx';
+import { BookingDetails } from '../pages/training/BookingDetails.jsx';
+import { Booking } from '../pages/booking/Booking.jsx';
+import { ViewBooking } from '../pages/booking/ViewBooking.jsx';
 
 
 const routes = [
@@ -192,6 +195,18 @@ const routes = [
       {
         path: "consentForm",
         element:  <ConsentForm/> ,
+      },
+      {
+        path: "bookingDetails",
+        element:  <BookingDetails/> ,
+      },
+      {
+        path: "myBooking",
+        element:  <Booking/> ,
+      },
+      {
+        path: "viewBooking",
+        element:  <ViewBooking/> ,
       },
     ],
   },

@@ -69,6 +69,10 @@ export function TrainingPrograms() {
         navigate("/training");
     };
 
+    const handleViewMyBooking = async () => {
+        navigate("/myBooking");
+    };
+
     return (
         <Container>
             <Box sx={{
@@ -94,7 +98,7 @@ export function TrainingPrograms() {
                     Recommended
                 </Button>
                 <Button
-                    //onClick={handleAdd}
+                    onClick={handleViewMyBooking}
                     variant="contained"
                     color="primary"
                     sx={{ mt: 3, mb: 2 }}

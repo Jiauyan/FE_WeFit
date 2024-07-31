@@ -37,17 +37,18 @@ export const UserProvider = ({ children }) => {
     const route = `auth/loginAcc`
 
     const response = await ApiTemplate(method, route, formData)
-
+    console.log(response.data);
     const uid = response.data.user.uid;
     const role = response.data.userRole;
     const data= response.data.userData;
+    const consentForm = response.data.consentForm;
     const token = {
       accessToken : response.data.user.stsTokenManager.accessToken,
       refreshToken : response.data.user.stsTokenManager.refreshToken,
     }
     localStorage.setItem('accessToken', token.accessToken);
     localStorage.setItem('refreshToken', token.refreshToken);
-    updateUser({ uid, role , data}); 
+    updateUser({ uid, role , data, consentForm}); 
   };
 
   // const signInWithGoogle = async () => {

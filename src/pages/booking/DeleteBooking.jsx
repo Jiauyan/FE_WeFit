@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import {
     Box,
     Button,
     Typography,
     Modal,
+    TextField,
+    IconButton,
 }from "@mui/material";
+import {Delete, Edit} from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
 
 const style = {
@@ -24,30 +27,31 @@ const style = {
   flexDirection: 'column',
   alignItems: 'center'
 };
-export function DeleteTrainingProgram({id}) {
+
+export function DeleteBooking({id}) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [deleteTrainingProgramStatus, setDeleteTrainingProgramStatus] = useState('');
+  const [deleteBookingStatus, setDeleteBookingStatus] = useState('');
     
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        const response = await axios.delete(`http://localhost:3000/trainingPrograms/deleteTrainingProgram/${id}`);
+        const response = await axios.delete(`http://localhost:3000/trainingClassBooking/deleteTrainingClassBooking/${id}`);
         console.log(response.data);
-        setDeleteTrainingProgramStatus(response.data.message);
+        setDeleteBookingStatus(response.data.message);
         handleClose();
-        navigate("/trainerTrainingPrograms");
+        navigate("/myBooking");
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
-                setDeleteTrainingProgramStatus(error.response.data.message);
+                setDeleteBookingStatus(error.response.data.message);
             } else {
-                setDeleteTrainingProgramStatus('An error occurred');
+                setDeleteBookingStatus('An error occurred');
             }
         } else {
-            setDeleteTrainingProgramStatus('An unexpected error occurred');
+            setDeleteBookingStatus('An unexpected error occurred');
         }
     }
 };
@@ -63,7 +67,7 @@ export function DeleteTrainingProgram({id}) {
       sx={{ mt: 3, mb: 2, mr: 1 }} 
       onClick={handleOpen} 
       aria-label="delete">
-        Delete
+       Cancel Booking
      </GradientButton>
       <Modal
         open={open}
@@ -84,7 +88,7 @@ export function DeleteTrainingProgram({id}) {
                 Confirm
             </Typography>
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
-                Are you sure you wish to delete the training program?
+                Are you sure you wish to delete the booking?
             </Typography>
             <GradientButton
                     type="submit"

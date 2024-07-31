@@ -10,10 +10,13 @@ import completeImage from "../../assets/completeImage.png"
 
 export function ConsentForm() {
     const [consentFormData, setConsentFormData] = useState({});
-    const [exercise, setExercise] = useState('');
-    const [ncd, setNcd] = useState('');
-    const [symptoms, setSymptoms] = useState('');
-    const { user, setUser } = useUser();
+    const [q1, setQ1] = useState('');
+    const [q2, setQ2] = useState('');
+    const [q2_details, setQ2_details] = useState('');
+    const [q3, setQ3] = useState('');
+    const [q3_details, setQ3_details] = useState('');
+    const [addConsentFormStatus, setAddConsentFormStatus] = useState('');
+    const { user, updateUser, setUser } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
     const { id } = location.state;
@@ -26,9 +29,42 @@ export function ConsentForm() {
     }
   }, []);
 
-  const handleBack = () => {
+  const handleBack = async () => {
     navigate("/viewTrainingProgram", { state: { id } });
   };
+
+  const handleBook = async () => {
+    navigate("/bookingDetails", { state: { id } });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const uid = user.uid;
+      const response = await axios.post('http://localhost:3000/consentForm/addConsentForm', {
+          uid,
+          q1,
+          q2,
+          q2_details,
+          q3,
+          q3_details
+      });
+      setAddConsentFormStatus(response.data.message);
+      updateUser(({ ...user, consentForm: response.data }));
+      navigate("/bookingDetails", { state: { id } });
+  } catch (error) {
+      if (axios.isAxiosError(error)) {
+          if (error.response) {
+            setAddConsentFormStatus(error.response.data.message);
+          } else {
+            setAddConsentFormStatus('An error occurred');
+          }
+      } else {
+        setAddConsentFormStatus('An unexpected error occurred');
+      }
+  }
+  };
+
 
   return (
     <>
@@ -53,137 +89,139 @@ export function ConsentForm() {
           borderRadius: 2,
           padding: 4 
         }}>
-            {userConsentForm ? (
+            {userConsentForm && Object.keys(userConsentForm).length > 0 ? (
             <>
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
             <IconButton onClick={handleBack}>
               <ArrowBackIos />
             </IconButton>
             <Typography>
-            Step 1 of 2
-          </Typography>
-          </Box>
-          <Typography variant="h6" component="h2" sx={{ mb: 5, fontWeight: 'bold' }}>
-            Consent Form
-          </Typography>
-              <Box sx={{ textAlign: 'center', mb: 4 }}>
-                 <img src={completeImage} alt="Completed" style={{ width: '100px', marginBottom: '16px' }} /> 
+              Step 1 of 2
+            </Typography>
+            </Box>
+              <Typography variant="h6" component="h2" sx={{ mb: 5, fontWeight: 'bold' }}>
+                Consent Form
+              </Typography>
+            <Box sx={{ textAlign: 'center', mb: 4 }}>
+                <img src={completeImage} alt="Completed" style={{ width: '100px', marginBottom: '16px' }} /> 
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#1A237E', mb:3, mt :3 }}>
                   You had completed your consent form.
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#757575' }}>
                   You can skip this step and proceed to the next step.
                 </Typography>
-              </Box>
-              <GradientButton
+            </Box>
+            <GradientButton
                 fullWidth
                 variant="contained"
                 color="primary"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => navigate('/nextStep')} // Adjust this path as necessary
-              >
-                Next
-              </GradientButton>
+                onClick={handleBook} // Adjust this path as necessary
+            >
+              Next
+            </GradientButton>
             </>
           ) : (
             <>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
-            <IconButton onClick={handleBack}>
-              <ArrowBackIos />
-            </IconButton>
-            <Typography>
-            Step 1 of 2
-          </Typography>
-          </Box>
-          <Typography variant="h6" component="h2" sx={{ mb: 5, fontWeight: 'bold' }}>
-            Consent Form
-          </Typography>
-
-          <FormControl component="fieldset" sx={{ width: '100%', ml: 10 }}>
-            <Typography >1. Are you doing regular exercise in your life?</Typography>
-            <Box>
-              <RadioGroup
-                    value={exercise} 
-                    onChange={(e) => setExercise(e.target.value)}
-                    sx={{
-                        '& .MuiSvgIcon-root': {
-                          fontSize: 20,
-                        },
-                        margin:2}}
-                >
-                <Box>
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                {exercise === 'yes' && (
-                  <TextField label="If yes, please specify" variant="standard" />
-                )}
-                </Box>
-                <FormControlLabel value="no" control={<Radio />} label="No" />
-              </RadioGroup>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+              <IconButton onClick={handleBack}>
+                <ArrowBackIos />
+              </IconButton>
+              <Typography>
+                Step 1 of 2
+              </Typography>
             </Box>
-          </FormControl>
-
-          <FormControl component="fieldset" sx={{ width: '100%', mt: 2, ml:10 }}>
-            <Typography >2. Do you know if you have any known NCD?</Typography>
-            <Typography  sx={{ mt: 2, ml:2 , fontSize:15}}>
-              (NCD for example: Cardiovascular disease, Metabolic disease (diabetes), Renal disease,...)
-            </Typography>
-            <Box>
-              <RadioGroup
-                    value={ncd} 
-                    onChange={(e) => setNcd(e.target.value)}
-                    sx={{
-                        '& .MuiSvgIcon-root': {
-                          fontSize: 20,
-                        },
-                        margin:2}}
-                >
+              <Typography variant="h6" component="h2" sx={{ mb: 5, fontWeight: 'bold' }}>
+                Consent Form
+              </Typography>
+            <Box component="form" onSubmit={handleSubmit} noValidate>
+              <FormControl component="fieldset" sx={{ width: '100%', ml: 5 }}>
+                <Typography> 1. Are you doing regular exercise in your life?</Typography>
                 <Box>
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                {ncd === 'yes' && (
-                  <TextField label="If yes, please specify" variant="standard" />
-                )}
-                </Box>
-                <FormControlLabel value="no" control={<Radio />} label="No" />
-              </RadioGroup>
-            </Box>
-          </FormControl>
-
-          <Box sx={{ width: '100%', mt: 2, ml:10  }}>
-            <Typography sx={{ mb: 2  }}>3. Do you have any signs or symptoms of NCD?</Typography>
-            <img src={consentFormImage} alt={"consent form"} />
-            </Box>
-            <FormControl component="fieldset" sx={{ width: '100%', mt: 2, ml:10  }}>      
-            <RadioGroup
-                    value={symptoms} 
-                    onChange={(e) => setSymptoms(e.target.value)}
-                    sx={{
-                        '& .MuiSvgIcon-root': {
-                          fontSize: 20,
-                        },
-                        margin:2}}
-                >
+                  <RadioGroup
+                        noValidate
+                        value={q1} 
+                        onChange={(e) => setQ1(e.target.value)}
+                        sx={{
+                            '& .MuiSvgIcon-root': {
+                              fontSize: 20,
+                            },
+                            margin:2}}
+                  >
                 <Box>
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                {symptoms === 'yes' && (
-                  <TextField label="If yes, please specify" variant="standard" />
-                )}
+                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                 </Box>
-                <FormControlLabel value="no" control={<Radio />} label="No" />
-              </RadioGroup>
-          </FormControl>
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </Box>
+              </FormControl>
 
-          <GradientButton
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Next
-          </GradientButton>
-            </>
-          )}
-        </Paper>
-      </Grid>
+              <FormControl component="fieldset" sx={{ width: '100%', mt: 2, ml:5 }}>
+                <Typography >2. Do you know if you have any known NCD?</Typography>
+                <Typography  sx={{ mt: 2, ml:2 , fontSize:15}}>
+                  (NCD for example: Cardiovascular disease, Metabolic disease (diabetes), Renal disease,...)
+                </Typography>
+                <Box>
+                  <RadioGroup
+                        noValidate
+                        value={q2} 
+                        onChange={(e) => setQ2(e.target.value)}
+                        sx={{
+                            '& .MuiSvgIcon-root': {
+                              fontSize: 20,
+                            },
+                            margin:2}}
+                  >
+                <Box>
+                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                  {q2 === 'yes' && (
+                    <TextField label="If yes, please specify" variant="standard" onChange={(e) => setQ2_details(e.target.value)}/>
+                  )}
+                </Box>
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </Box>
+              </FormControl>
+
+              <FormControl component="fieldset" sx={{ width: '100%', mt: 2, ml:5 }}>
+                <Typography sx={{ mb: 2  }}>3. Do you have any signs or symptoms of NCD?</Typography>
+                <Box><img src={consentFormImage} alt={"consent form"} /></Box>
+                <Box>     
+                  <RadioGroup
+                        noValidate
+                        value={q3} 
+                        onChange={(e) => setQ3(e.target.value)}
+                        sx={{
+                            '& .MuiSvgIcon-root': {
+                              fontSize: 20,
+                            },
+                            margin:2}}
+                  >
+                <Box>
+                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                  {q3 === 'yes' && (
+                    <TextField label="If yes, please specify" variant="standard" onChange={(e) => setQ3_details(e.target.value)} />
+                  )}
+                </Box>
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                  </RadioGroup>
+                  </Box>
+              </FormControl>
+
+              <GradientButton
+                type = "submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Next
+              </GradientButton>
+            </Box>
+              </>
+            )}
+          </Paper>
+        </Grid>
     </>
   );
 }
