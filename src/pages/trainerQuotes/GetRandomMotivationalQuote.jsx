@@ -9,6 +9,7 @@ import {
     TextField
 }from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
+import Doll from "../../assets/Doll.png";
 
 const style = {
   position: 'absolute',
@@ -30,6 +31,7 @@ export function GetRandomMotivationalQuote({id, onGetRandomMotivationalQuote}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [showDialog, setShowDialog] = useState(true);
   const [randomMotivationalQuote, setRandomMotivationalQuote] = useState('');
   const [getRandomMotivationalQuoteStatus, setGetRandomMotivationalQuoteStatus] = useState('');
   const { user } = useUser();
@@ -40,7 +42,7 @@ const handleRandom = async (e) => {
     handleOpen();
     try {
         const response = await axios.get(`http://localhost:3000/motivationalQuotes/getRandomMotivationalQuote/${id}`);
-        console.log(response.data);
+        //console.log(response.data);
         setRandomMotivationalQuote(response.data);
         setGetRandomMotivationalQuoteStatus(response.data.message);
         //onGetRandomMotivationalQuote(response.data);
@@ -77,12 +79,20 @@ const handleSubmit = async (e) => {
 
   return (
     <div>
-      <Button
-        fullWidth
-        variant="contained"
-        color="primary"
-        sx={{ mt: 3, mb: 3 }}
-        onClick={handleRandom}>Random</Button>
+      <img 
+        onClick={handleRandom} 
+        src={Doll} 
+        alt="Doll" 
+        width="200" 
+        height="170"
+        style={{
+          cursor: 'pointer',
+          transition: 'transform 0.2s ease',
+          transform: 'translateZ(0)',
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+      />
       <Modal
         open={open}
         onClose={handleClose}

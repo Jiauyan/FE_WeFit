@@ -147,6 +147,7 @@ export function Goals(){
     
         fetchGoals();
     }, [user?.uid]);
+    
     return(
         <>
             <Grid

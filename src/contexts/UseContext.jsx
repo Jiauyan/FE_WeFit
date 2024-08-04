@@ -77,7 +77,8 @@ export const UserProvider = ({ children }) => {
     const method = 'post'
     const route = `auth/logoutAccount`
 
-    const response = await ApiTemplate(method, route)
+    const response = await ApiTemplate(method, route);
+    const userUid = localStorage.getItem('uid');
     setUser(null);
     setToken(null);
     localStorage.removeItem('userData');

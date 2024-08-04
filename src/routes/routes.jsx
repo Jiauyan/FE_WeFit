@@ -48,6 +48,7 @@ import { ConsentForm } from '../pages/training/ConsentForm.jsx';
 import { BookingDetails } from '../pages/training/BookingDetails.jsx';
 import { Booking } from '../pages/booking/Booking.jsx';
 import { ViewBooking } from '../pages/booking/ViewBooking.jsx';
+import { GetRandomMotivationalQuote } from '../pages/trainerQuotes/GetRandomMotivationalQuote.jsx';
 
 
 const routes = [
@@ -207,6 +208,10 @@ const routes = [
       {
         path: "viewBooking",
         element:  <ViewBooking/> ,
+      },
+      {
+        path: "getRandomMotivationalQuote",
+        element:  <GetRandomMotivationalQuote/> ,
       },
     ],
   },
