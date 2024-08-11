@@ -49,6 +49,7 @@ import { BookingDetails } from '../pages/training/BookingDetails.jsx';
 import { Booking } from '../pages/booking/Booking.jsx';
 import { ViewBooking } from '../pages/booking/ViewBooking.jsx';
 import { GetRandomMotivationalQuote } from '../pages/trainerQuotes/GetRandomMotivationalQuote.jsx';
+import { MyPost } from '../pages/community/MyPost.jsx';
 
 
 const routes = [
@@ -212,6 +213,10 @@ const routes = [
       {
         path: "getRandomMotivationalQuote",
         element:  <GetRandomMotivationalQuote/> ,
+      },
+      {
+        path: "myPost",
+        element:  <MyPost/> ,
       },
     ],
   },

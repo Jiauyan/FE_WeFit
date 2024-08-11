@@ -16,47 +16,56 @@ import {
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 import { ArrowBackIos } from '@mui/icons-material';
-import { AddPost } from '../community/AddPost';
+import { DeletePost } from './DeletePost';
+import { EditPost } from './EditPost';
 
-export function Community() {
+export function MyPost() {
     const navigate = useNavigate();
     const { user, setUser } = useUser();
-    const [posts, setPosts] = useState([]);
-
+    const [myPosts, setMyPosts] = useState([]);
+    
     useEffect(() => {
-        // Load user ID from local storage or other persistent storage
-        const storedUid = localStorage.getItem('uid');
-        if (storedUid) {
-            setUser({ ...user, uid: storedUid });
-        }
-    }, []);
-
-    useEffect(() => {
-        const fetchPosts = async () => {
+        const fetchMyPosts = async () => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-                const response = await axios.get('http://localhost:3000/posts/getAllPosts');
+                const response = await axios.get(`http://localhost:3000/posts/getAllPostsByUid/${uid}`);
                 const sortedPosts = response.data.sort((a, b) => new Date(b.time) - new Date(a.time));
-                setPosts(sortedPosts);
+                setMyPosts(sortedPosts);
             } catch (error) {
                 console.error('There was an error!', error);
             }
         };
 
-        fetchPosts();
+        fetchMyPosts();
     }, [user?.uid]);
+        
+    // Callback for editing a post
+    const editPostCallback = (updatedMyPost) => {
+        setMyPosts(prevMyPosts => prevMyPosts.map(myPost => {
+            if (myPost.id === updatedMyPost.id) {
+                return updatedMyPost;
+            }
+            return myPost;
+        }));
+    };
 
-    const addPostCallback = (newPost) => {
-        setPosts(prevPosts => [newPost, ...prevPosts]);
+    // Callback for deleting a post
+    const deletePostCallback = (myPostId) => {
+        setMyPosts(prevMyPosts => prevMyPosts.filter(myPost => myPost.id !== myPostId));
+    };
+   
+    const handleView = async (myPost) => {
+        const myPostId = myPost.id;
+        navigate("/viewPost", { state: { id: myPostId } });
     };
 
     const handleChat = async () => {
         navigate("/chat");
     };
 
-    const handleMyPost = async () => {
-        navigate("/myPost");
+    const handleBack = async () => {
+        navigate("/community");
     };
 
     return (
@@ -68,29 +77,28 @@ export function Community() {
                 margin: 4,
             }}>
                 <Button
-                    onClick={handleChat}
+                    onClick={handleBack}
                     variant="contained"
                     color="primary"
                     sx={{ mt: 3, mb: 2, mr: 2 }}
                 >
-                    Chat
+                    Back
                 </Button>
-                <AddPost onAddPost={addPostCallback}></AddPost>
                 <Button
-                    onClick={handleMyPost}
+                    onClick={handleChat}
                     variant="contained"
                     color="primary"
-                    sx={{ mt: 3, mb: 2, ml: 2 }}
+                    sx={{ mt: 3, mb: 2 }}
                 >
-                    My Post
+                    Chat
                 </Button>
             </Box>
 
             <Typography variant="h4" gutterBottom>
-                All Posts
+                My Posts
             </Typography>
             <Grid container padding={4} spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>
-                {posts.map((post, index) => (
+                {myPosts.map((myPost, index) => (
                     <Grid item xs={12} sm={6} md={6} key={index}>
                         <Card
                             sx={{
@@ -101,11 +109,11 @@ export function Community() {
                                 '&:hover': { boxShadow: 10 },
                             }}
                         >
-                            <CardActionArea sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: 2 }}>
+                             <CardActionArea sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: 2 }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', margin: 2 }}>
                                     <Avatar
-                                        src={post.userPhotoUrl}
-                                        alt={post.userName}
+                                        src={myPost.userPhotoUrl}
+                                        alt={myPost.userName}
                                         sx={{
                                             height: 50,
                                             width: 50,
@@ -115,18 +123,23 @@ export function Community() {
                                     />
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                         <Typography variant="h6" component="div">
-                                            {post.userName}
+                                            {myPost.userName}
                                         </Typography>
                                         <Typography variant="body3" color="textSecondary" >
-                                            {post.formattedTime}
+                                            {myPost.formattedTime}
                                         </Typography>
                                     </Box>
                                 </Box>
-                                <CardContent >
-                                    <Typography variant="body1" color="textSecondary">
-                                        {post.postDetails}
-                                    </Typography>
+                                <CardContent>
+                                <Typography variant="body1" color="textSecondary">
+                                    {myPost.postDetails}
+                                </Typography>
                                 </CardContent>
+
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                                    <EditPost id={myPost.id} oldDesc={myPost.postDetails} onEditPost={editPostCallback} />
+                                    <DeletePost id={myPost.id} onDeletePost={deletePostCallback} />
+                                </Box>
                             </CardActionArea>
                         </Card>
                     </Grid>
