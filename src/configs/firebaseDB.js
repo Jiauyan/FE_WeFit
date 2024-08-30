@@ -2,6 +2,7 @@ import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -17,6 +18,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
+const database = getDatabase(app);
 
 const connectfirebaseDB = async () => {
   try {
@@ -31,5 +33,6 @@ export {
   connectfirebaseDB,
   auth,
   db,
-  storage
+  storage,
+  database
 };

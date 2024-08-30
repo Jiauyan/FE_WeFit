@@ -18,12 +18,17 @@
     "@mui/x-date-pickers-pro": "^7.9.0",
     "axios": "^1.6.8",
     "date-fns": "^2.29.3",
+    "dompurify": "^3.1.6",
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
     "firebase": "^10.12.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
     "react-toastify": "^10.0.5",
-    "recharts": "^2.12.7"
+    "react-window": "^1.8.10",
+    "recharts": "^2.12.7",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

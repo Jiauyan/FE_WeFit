@@ -50,6 +50,10 @@ import { Booking } from '../pages/booking/Booking.jsx';
 import { ViewBooking } from '../pages/booking/ViewBooking.jsx';
 import { GetRandomMotivationalQuote } from '../pages/trainerQuotes/GetRandomMotivationalQuote.jsx';
 import { MyPost } from '../pages/community/MyPost.jsx';
+import { ChatRoom}  from '../pages/community/ChatRoom.jsx';
+import { ChatPage } from '../pages/community/ChatPage.jsx';
+import { UserChatList } from '../pages/community/UserChatList.jsx';
+import { NewChatRoom }from '../pages/community/NewChatRoom.jsx';
 
 
 const routes = [
@@ -217,6 +221,22 @@ const routes = [
       {
         path: "myPost",
         element:  <MyPost/> ,
+      },
+      {
+        path: "chatPage",
+        element:  <ChatPage/> ,
+      },
+      {
+        path: "chat",
+        element:  <ChatRoom/> ,
+      },
+      {
+        path: "userChatList",
+        element:  <UserChatList/> ,
+      },
+      {
+        path: "newChatRoom",
+        element:  <NewChatRoom/> ,
       },
     ],
   },

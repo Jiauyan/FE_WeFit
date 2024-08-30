@@ -52,7 +52,7 @@ export function Community() {
     };
 
     const handleChat = async () => {
-        navigate("/chat");
+        navigate("/chatPage");
     };
 
     const handleMyPost = async () => {
