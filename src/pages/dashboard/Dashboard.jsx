@@ -12,7 +12,7 @@ export function Dashboard() {
   const [randomMotivationalQuote, setRandomMotivationalQuote] = useState("");
   const { user , updateUser, setUser} = useUser();
   const [BMIValue, setBMIValue] = useState(null);
-  const [steps, setSteps] = useState(null);
+  const [steps, setSteps] = useState('');
   const [completedGoals, setCompletedGoals] = useState({});
   const [goals, setGoals] = useState([]);
   const [completionPercentage, setCompletionPercentage] = useState(0);
@@ -59,8 +59,8 @@ export function Dashboard() {
                   const uid = user?.uid;
                   if (!uid) return;
                   const response = await axios.get(`http://localhost:3000/steps/getStepCountByUid/${uid}`);
-                  setSteps(response.data.stepCount);
-                  console.log(response.data);
+                  setSteps(response.data.steps.stepCount);
+                  console.log(response.data.steps.stepCount);
               } catch (error) {
                   console.error('There was an error!', error);
               }

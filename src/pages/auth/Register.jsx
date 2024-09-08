@@ -48,8 +48,9 @@ export function Register() {
     };
 
     const validatePassword = (password) => {
-        // Example: password should be at least 6 characters long
-        return password.length >= 6;
+      const hasUppercase = /[A-Z]/.test(password);
+      const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      return password.length >= 6 && hasUppercase && hasSymbol;
     };
 
     const handleSubmit = async (e) => { 
@@ -71,7 +72,7 @@ export function Register() {
           setPasswordError("Password is required");
           isValid = false;
         } else if (!validatePassword(password)) {
-          setPasswordError("Password must be at least 6 characters long");
+          setPasswordError("Password must be at least 6 characters long, contain at least one uppercase letter and symbol.");
           isValid = false;
         } else {
           setPasswordError("");
@@ -89,8 +90,13 @@ export function Register() {
             const uid = response.data.uid;
             setSignupStatus(response.data.message);
             navigate('/completeProfile', { state: { uid }} );
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
+        } catch (error) { 
+          console.log(error)
+          if (error.response.data === 'Error while registering Account, Error: FirebaseError: Firebase: Error (auth/email-already-in-use).') {
+          setEmailError("Email is already in use. Please choose another email.");
+          setSignupStatus(error);
+          } 
+          else if (axios.isAxiosError(error)) {
                 if (error.response) {
                     setSignupStatus(error.response.data.message || 'Registration failed with status code: ' + error.response.status);
                 } else {

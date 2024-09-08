@@ -83,7 +83,11 @@ export function Login () {
           await login(formData)
           navigate('/');
         } catch (error) {
-          if (axios.isAxiosError(error) && error.response?.status === 401) {
+          if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).') {
+            setPasswordError("Incorrect email or password");
+            setEmailError("Incorrect email or password");
+            setLoginStatus(error);
+          } else if (axios.isAxiosError(error) && error.response?.status === 401) {
             setLoginStatus(error);
           } else {
             setLoginStatus('An error occurred');
