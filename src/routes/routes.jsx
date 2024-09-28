@@ -54,6 +54,9 @@ import { ChatRoom}  from '../pages/community/ChatRoom.jsx';
 import { ChatPage } from '../pages/community/ChatPage.jsx';
 import { UserChatList } from '../pages/community/UserChatList.jsx';
 import { NewChatRoom }from '../pages/community/NewChatRoom.jsx';
+import { StudentList } from '../pages/trainerTraining/StudentList.jsx';
+import { ViewStudentDetails } from '../pages/trainerTraining/ViewStudentDetails.jsx';
+import { ViewConsentForm } from '../pages/trainerTraining/ViewConsentForm.jsx';
 
 
 const routes = [
@@ -237,6 +240,18 @@ const routes = [
       {
         path: "newChatRoom",
         element:  <NewChatRoom/> ,
+      },
+      {
+        path: "studentList",
+        element:  <StudentList/> ,
+      },
+      {
+        path: "viewStudentDetails",
+        element:  <ViewStudentDetails/> ,
+      },
+      {
+        path: "viewConsentForm",
+        element:  <ViewConsentForm/> ,
       },
     ],
   },

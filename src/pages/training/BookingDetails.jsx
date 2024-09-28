@@ -86,12 +86,14 @@ export function BookingDetails() {
     e.preventDefault();
     try {
       const uid = user.uid;
+      const status = false;
       const response = await axios.post('http://localhost:3000/trainingClassBooking/addTrainingClassBooking', {
         uid,
         name,
         contactNum,
         slot,
-        trainingClassID
+        trainingClassID,
+        status
       });
       setAddBookingDetailsStatus(response.data.message);
       handleOpen();

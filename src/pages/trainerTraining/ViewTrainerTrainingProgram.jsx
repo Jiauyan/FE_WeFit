@@ -6,6 +6,7 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DeleteTrainingProgram } from './DeleteTrainingProgram';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { ArrowBackIos, Delete } from '@mui/icons-material';
+import { SelectSlot } from './SelectSlot';
 
 export function ViewTrainerTrainingProgram() {
   const [trainingProgramData, setTrainingProgramData] = useState([]);
@@ -175,6 +176,7 @@ export function ViewTrainerTrainingProgram() {
                 </ListItem>
               ))}
             </List>
+          <SelectSlot id={id}></SelectSlot>
           <GradientButton
             fullWidth
             variant="contained"
