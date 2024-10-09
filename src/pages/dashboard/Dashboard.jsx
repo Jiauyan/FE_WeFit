@@ -59,8 +59,10 @@ export function Dashboard() {
                   const uid = user?.uid;
                   if (!uid) return;
                   const response = await axios.get(`http://localhost:3000/steps/getStepCountByUid/${uid}`);
-                  setSteps(response.data.steps.stepCount);
-                  console.log(response.data.steps.stepCount);
+                   // Check if stepCount exists, otherwise set to 0
+                  const fetchedSteps = response.data.steps?.stepCount ?? 0;
+                  setSteps(fetchedSteps);
+                  console.log(fetchedSteps);
               } catch (error) {
                   console.error('There was an error!', error);
               }

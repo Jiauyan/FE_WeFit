@@ -18,8 +18,7 @@ export function UserChatList() {
     const fetchUsers = async () => {
       try {
         const senderUID = user.uid;
-        const response = await axios.get(`http://localhost:3000/chat/getAllUsersWithoutMessagesFromSender/${senderUID}`);
-        console.log(response.data);
+        const response = await axios.get(`http://localhost:3000/chat/getAllUsersWithoutMessagesFromOrToSender/${senderUID}`);
         setUsers(response.data);
         setFilteredUsers(response.data);
         setLoading(false);
@@ -47,28 +46,27 @@ export function UserChatList() {
     setSearchTerm(event.target.value);
   };
 
-  const handleUserClick = async (receiverData) => {
+  const handleUserClick = async (otherUserData) => {
     try {
       // Assuming `user` is available in the current scope
       const senderUID = user.uid;
-      const receiverDetails = {
-        username: receiverData.username,
-        photoURL: receiverData.photoURL,
-        uid: receiverData.uid
+      const otherUserDetails = {
+        username: otherUserData.username,
+        photoURL: otherUserData.photoURL,
+        uid: otherUserData.uid
       };
       // Send a POST request to create a new chatroom
       const response = await axios.post('http://localhost:3000/chat/createChatroom', {
         senderUID,
-        receiverUID: receiverData.uid
+        receiverUID: otherUserData.uid
       });
   
-      //console.log(response.data.c);
       setChatroom(response.data);
       // Navigate to the chat page with receiver's details
       navigate('/chat', { 
         state: { 
           chatroomId : response.data.chatroomId,
-          receiverDetails
+          otherUserDetails
         } 
       });
   

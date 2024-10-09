@@ -151,7 +151,7 @@ export function EditTrainingProgram() {
         console.log(response.data);
         
         setUpdateTrainingProgramStatus(response.data.message);
-        navigate("/trainerTrainingPrograms");
+        navigate("/viewTrainerTrainingProgram", { state: { id: id } });
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -166,7 +166,7 @@ export function EditTrainingProgram() {
   };
 
   const handleBack = async () => {
-    navigate(-1);
+    navigate("/viewTrainerTrainingProgram", { state: { id: id } });
   };
 
   return (

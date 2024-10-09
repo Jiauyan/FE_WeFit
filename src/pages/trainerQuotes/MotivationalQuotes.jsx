@@ -45,17 +45,17 @@ export function MotivationalQuotes(){
 
     // Callback for adding a motivationalQuote
     const addMotivationalQuoteCallback = (newMotivationalQuote) => {
-        setMotivationalQuotes(prevMotivationalQuotes => [...prevMotivationalQuotes, newMotivationalQuote]);
+        setMotivationalQuotes(prevMotivationalQuotes => [newMotivationalQuote, ...prevMotivationalQuotes]);
     };
 
     // Callback for editing a motivationalQuote
     const editMotivationalQuoteCallback = (updatedMotivationalQuote) => {
-        setMotivationalQuotes(prevMotivationalQuotes => prevMotivationalQuotes.map(motivationalQuote => {
-            if (motivationalQuote.id === updatedMotivationalQuote.id) {
-                return updatedMotivationalQuote;
-            }
-            return motivationalQuote;
-        }));
+        setMotivationalQuotes(prevMotivationalQuotes => {
+            // Remove the updated quote from its current position
+            const filteredQuotes = prevMotivationalQuotes.filter(motivationalQuote => motivationalQuote.id !== updatedMotivationalQuote.id);
+            // Insert the updated quote at the beginning
+            return [updatedMotivationalQuote, ...filteredQuotes];
+        });
     };
 
     // Callback for deleting a motivationalQuote
@@ -88,7 +88,10 @@ export function MotivationalQuotes(){
                 const uid = user?.uid;
                 if (!uid) return;
                 const response = await axios.get(`http://localhost:3000/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
-                setMotivationalQuotes(response.data);
+                const sortedMotivationalQuote = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                console.log("r",response.data);
+                console.log("sorted", sortedMotivationalQuote);
+                setMotivationalQuotes(sortedMotivationalQuote);
             } catch (error) {
                 console.error('There was an error!', error);
             }

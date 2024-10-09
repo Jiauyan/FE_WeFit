@@ -66,7 +66,11 @@ export function FitnessPlan(){
     const handleView = async (fitnessPlan) => {
         const fitnessPlanId = fitnessPlan.id;
         navigate("/viewFitnessPlan", { state: { id: fitnessPlanId } });
-    };  
+    }; 
+
+    const handleBack = async () => {
+      navigate("/training");
+    };
 
     return(
         <>
@@ -85,7 +89,15 @@ export function FitnessPlan(){
             >
                 <Box sx={{ flexGrow: 1, maxWidth: 737 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mb:2 }}>
-                    <Typography variant="h6" align="left">
+                  <Button
+                      onClick={handleBack}
+                      variant="contained"
+                      color="primary"
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      Back
+                    </Button>
+                  <Typography variant="h6" align="left">
                         My Fitness Plan
                     </Typography>
                     <Button

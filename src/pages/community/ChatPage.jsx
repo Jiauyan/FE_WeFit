@@ -19,8 +19,8 @@ export function ChatPage() {
   useEffect(() => {
     const fetchChatrooms = async () => {
       try {
-        const senderUID = user.uid;
-        const response = await axios.get(`http://localhost:3000/chat/getChatroomsBySender/${senderUID}`);
+        const userUID = user.uid;
+        const response = await axios.get(`http://localhost:3000/chat/getChatroomsByUser/${userUID}`);
         setChatrooms(response.data);
         setFilteredChatrooms(response.data);
         setLoading(false);
@@ -58,7 +58,7 @@ export function ChatPage() {
 
     // Filter sorted chatrooms by the search term (username)
     const filtered = sortedChatrooms.filter(chatroom =>
-      chatroom.receiverDetails.username.toLowerCase().includes(searchTerm.toLowerCase())
+      chatroom.otherUserDetails.username.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     setFilteredChatrooms(filtered);
@@ -89,9 +89,9 @@ export function ChatPage() {
     setSearchTerm(event.target.value);
   };
 
-  const handleChatroomClick = (chatroomId, chatroomDetails,  receiverDetails) => {
+  const handleChatroomClick = (chatroomId, chatroomDetails,  otherUserDetails) => {
     // Navigate to the chat room with the selected user
-    navigate('/chat', { state: {chatroomId, chatroomDetails, receiverDetails } });
+    navigate('/chat', { state: {chatroomId, chatroomDetails, otherUserDetails } });
   };
 
   if (loading) {
@@ -162,13 +162,13 @@ export function ChatPage() {
           <ListItemButton
             sx={{ borderBottom: '1px solid #e0e0e0' }}
             key={chatroom.chatroomId}
-            onClick={() => handleChatroomClick(chatroom.chatroomId, chatroom.chatroomDetails, chatroom.receiverDetails)}
+            onClick={() => handleChatroomClick(chatroom.chatroomId, chatroom.chatroomDetails, chatroom.otherUserDetails)}
           >
             <ListItemAvatar>
-              <Avatar src={chatroom.receiverDetails.photoURL} />
+              <Avatar src={chatroom.otherUserDetails.photoURL} />
             </ListItemAvatar>
             <ListItemText
-              primary={chatroom.receiverDetails.username}
+              primary={chatroom.otherUserDetails.username}
               secondary={lastMessageText}
               primaryTypographyProps={{ fontWeight: 'bold' }}
               secondaryTypographyProps={{

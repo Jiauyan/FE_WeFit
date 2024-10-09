@@ -14,7 +14,7 @@ export function ChatRoom() {
   const senderUID = user?.uid;
   const navigate = useNavigate();
   const location = useLocation();
-  const { chatroomId, chatroomDetails, receiverDetails} = location.state;
+  const { chatroomId, chatroomDetails, otherUserDetails} = location.state;
   const messagesEndRef = useRef(null);
   const [isInitialScroll, setIsInitialScroll] = useState(true); // Track the initial scroll
   const [isUpdated, setIsUpdated] = useState(false);
@@ -57,7 +57,7 @@ export function ChatRoom() {
   const sendMessage = async () => {
     if (message.trim()) {
       try {
-        const receiverUID = receiverDetails.uid;
+        const receiverUID = otherUserDetails.uid;
   
         // Send the message to the backend
         const response = await axios.post(`http://localhost:3000/chat/sendMessage/${chatroomId}`, {
@@ -138,8 +138,8 @@ export function ChatRoom() {
         justifyContent: 'center' 
       }}>
         <Avatar
-          src={receiverDetails.photoURL}
-          alt={receiverDetails.username}
+          src={otherUserDetails.photoURL}
+          alt={otherUserDetails.username}
           sx={{
             height: 50,
             width: 50,
@@ -148,7 +148,7 @@ export function ChatRoom() {
           }}
         />
         <Typography variant="h6" noWrap component="div">
-          {receiverDetails.username}
+          {otherUserDetails.username}
         </Typography>
         <FiberManualRecord
           sx={{

@@ -89,14 +89,14 @@ export function TrainingPrograms() {
                 >
                     Back
                 </Button>
-                <Button
+                {/* <Button
                     //onClick={handleAdd}
                     variant="contained"
                     color="primary"
                     sx={{ mt: 3, mb: 2, mr: 2 }}
                 >
                     Recommended
-                </Button>
+                </Button> */}
                 <Button
                     onClick={handleViewMyBooking}
                     variant="contained"

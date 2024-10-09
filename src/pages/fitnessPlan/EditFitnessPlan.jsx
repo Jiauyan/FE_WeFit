@@ -26,11 +26,21 @@ export function EditFitnessPlan() {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false); // State for delete modal
+    const [activityToDelete, setActivityToDelete] = useState(null); // State for the index of the activity to be deleted
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const handleOpenEdit = () => setOpenEdit(true);
     const handleCloseEdit = () => setOpenEdit(false);
-
+    const handleOpenDelete = (index) => {
+        setActivityToDelete(index);
+        setOpenDelete(true);
+    };
+    const handleCloseDelete = () => {
+        setActivityToDelete(null);
+        setOpenDelete(false);
+    };
     const [title, setTitle] = useState('');
     const [task, setTask] = useState('');
     const [duration, setDuration] = useState('');
@@ -64,6 +74,7 @@ export function EditFitnessPlan() {
         alignItems: 'center'
     };
 
+    
     useEffect(() => {
         const fetchFitnessPlanData = async () => {
             try {
@@ -108,7 +119,6 @@ export function EditFitnessPlan() {
         e.preventDefault();
         try {
             const formattedDate = format(date, 'dd/MM/yyyy');
-            console.log(createdAt);
             await axios.patch(`http://localhost:3000/fitnessPlan/updateFitnessPlan/${id}`, {
                 uid,
                 title,
@@ -168,14 +178,16 @@ export function EditFitnessPlan() {
         }
     };
 
-    const handleRemoveFitnessActivity = async (index) => {
-        const activityId = fitnessActivityData[index].id;
+    const handleRemoveFitnessActivity = async () => {
+        if (activityToDelete === null) return;
 
+        const activityId = fitnessActivityData[activityToDelete].id;
         try {
             await axios.delete(`http://localhost:3000/fitnessActivity/deleteFitnessActivity/${activityId}`);
-            setFitnessActivityData(prev => prev.filter((_, i) => i !== index));
+            setFitnessActivityData(prev => prev.filter((_, i) => i !== activityToDelete));
             setTotalCount(prevCount => prevCount - 1);
             setCompleteCount(prev => fitnessActivityData.filter(activity => activity.status).length);
+            handleCloseDelete();
         } catch (error) {
             console.error('There was an error deleting the fitness activity!', error);
         }
@@ -312,7 +324,7 @@ export function EditFitnessPlan() {
                                     <IconButton edge="end" aria-label="edit" onClick={() => handleEditFitnessActivity(index)}>
                                         <Edit />
                                     </IconButton>
-                                    <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveFitnessActivity(index)}>
+                                    <IconButton edge="end" aria-label="delete" onClick={() => handleOpenDelete(index)}>
                                         <Delete />
                                     </IconButton>
                                 </ListItem>
@@ -421,6 +433,36 @@ export function EditFitnessPlan() {
                 </GradientButton>
             </Box>
         </Modal>
+        <Modal
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+            <Button 
+                onClick={handleCloseDelete}
+                sx={{ position: 'absolute', top: 10, right: 10 }}
+            >
+                X
+            </Button>
+
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:10}} margin={1} >
+                Confirm
+            </Typography>
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
+                Are you sure you wish to delete the fitness activity?
+            </Typography>
+            <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    onClick={handleRemoveFitnessActivity}
+            >
+                Confirm
+            </Button>
+        </Box>
+      </Modal>
         </LocalizationProvider>
     );
 }
