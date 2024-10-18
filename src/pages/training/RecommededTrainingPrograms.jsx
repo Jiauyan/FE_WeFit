@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowBackIos, Delete } from '@mui/icons-material';
 
 const RecommendedTrainingPrograms = () => {
@@ -28,11 +28,11 @@ const RecommendedTrainingPrograms = () => {
 
     // Handle program view navigation
     const handleView = (program) => {
-        navigate("/viewTrainingProgram", { state: { id: program.id } });
+        navigate("/viewTrainingProgram", { state: { id: program.id , pathPrev: "/recommend"} });
     };
 
     const handleBack = () => {
-        navigate(-1); // Go back to the previous page
+         navigate("/trainingPrograms");
     };
 
     useEffect(() => {

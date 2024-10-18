@@ -54,7 +54,7 @@ export function BookingDetails() {
     const { user, updateUser, setUser } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
-    const { id } = location.state;
+    const { id , pathPrev} = location.state;
     const [bookedProgramsSlot, setBookedProgramsSlot] = useState([]);
 
   useEffect(() => {
@@ -93,9 +93,9 @@ export function BookingDetails() {
 
     fetchBookings();
 }, [user?.uid]);
-console.log(bookedProgramsSlot);
+
   const handleBack = async () => {
-    navigate("/consentForm", { state: { id } });
+    navigate("/consentForm", { state: { id , pathPrev} });
   };
 
   const handleView = async () => {

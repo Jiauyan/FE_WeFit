@@ -19,9 +19,11 @@ export function ConsentForm() {
     const { user, updateUser, setUser } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
-    const { id } = location.state;
+    const { id, pathPrev } = location.state;
     const userConsentForm = user.consentForm;
-    
+
+    console.log(pathPrev);
+
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
     if (storedUid) {
@@ -30,11 +32,12 @@ export function ConsentForm() {
   }, []);
 
   const handleBack = async () => {
-    navigate("/viewTrainingProgram", { state: { id } });
+    
+    navigate("/viewTrainingProgram", { state: { id, pathName:"/consentForm" , pathPrev} });
   };
 
   const handleBook = async () => {
-    navigate("/bookingDetails", { state: { id } });
+    navigate("/bookingDetails", { state: { id , pathPrev} });
   };
 
   const handleSubmit = async (e) => {

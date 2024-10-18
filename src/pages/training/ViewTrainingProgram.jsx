@@ -13,8 +13,9 @@ export function ViewTrainingProgram() {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = location.state;
-  
+  const { id, pathName, pathPrev } = location.state;
+
+  console.log(pathPrev);
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
     if (storedUid) {
@@ -43,12 +44,21 @@ export function ViewTrainingProgram() {
         .catch(error => console.error('There was an error!', error));
   }, [trainerID]); 
 
-  const handleBack = async () => {
-    navigate(-1);
+  const handleBack = () => {
+    console.log(pathPrev);
+    console.log(pathName);
+    if (pathPrev === "/recommend" && pathName === "/consentForm") {
+      navigate("/recommededTrainingPrograms");
+    } else if (pathName === "/consentForm") {
+      navigate("/trainingPrograms", { state: { id } });
+    } else {
+      navigate(-1);
+    }
   };
 
   const handleBook = async (id) => {
-    navigate("/consentForm",{ state: { id } });
+    console.log(pathPrev);
+    navigate("/consentForm",{ state: { id, pathPrev } });
   };
 
   const slots = Array.isArray(trainingProgramData.slots) ? trainingProgramData.slots : [];
