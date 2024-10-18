@@ -15,13 +15,37 @@ import {
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 import { ArrowBackIos } from '@mui/icons-material';
+import Section from './Section';
+
 
 export function TrainingPrograms() {
     const navigate = useNavigate();
     const { user, setUser } = useUser();
     const [trainingPrograms, setTrainingPrograms] = useState([]);
     const [recommendedTrainingPrograms, setRecommendedTrainingPrograms] = useState([]);
-    
+    const [bookedPrograms, setBookedPrograms] = useState([]);
+    const [beginnerPrograms, setBeginnerPrograms] = useState([]);
+    const [intermediatePrograms, setIntermediatePrograms] = useState([]);
+    const [advancedPrograms, setAdvancedPrograms] = useState([]);
+
+    useEffect(() => {
+        const fetchBookings = async () => {
+            try {
+                const uid = user?.uid;
+                if (!uid) return;
+
+                // Fetch booked programs
+                const response = await axios.get(`http://localhost:3000/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
+                const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
+                setBookedPrograms(bookedProgramIds);
+            } catch (error) {
+                console.error('There was an error!', error);
+            }
+        };
+
+        fetchBookings();
+    }, [user?.uid]);
+
     useEffect(() => {
             const fetchRecommendedTrainingPrograms = async () => {
                 try {
@@ -35,29 +59,47 @@ export function TrainingPrograms() {
                       fitnessGoal,
                       favClass
                     });
-                    setRecommendedTrainingPrograms(response.data);
+                     const availableRecommendedPrograms = response.data.filter((program) => !bookedPrograms.includes(program.id));
+                setRecommendedTrainingPrograms(availableRecommendedPrograms);
                 } catch (error) {
                     console.error('There was an error!', error);
                 }
             };
 
             fetchRecommendedTrainingPrograms();
-        }, [user?.uid]);
+        }, [user?.uid, bookedPrograms]);
 
     useEffect(() => {
-        const fetchTrainingPrograms = async () => {
-            try {
-                const uid = user?.uid;
-                if (!uid) return;
-                const response = await axios.get('http://localhost:3000/trainingPrograms/getAllTrainingPrograms');
-                setTrainingPrograms(response.data);
-            } catch (error) {
-                console.error('There was an error!', error);
-            }
-        };
+    const fetchTrainingPrograms = async () => {
+        try {
+            const uid = user?.uid;
+            if (!uid) return;
 
-        fetchTrainingPrograms();
-    }, [user?.uid]);
+            // Fetch all training programs
+            const response = await axios.get('http://localhost:3000/trainingPrograms/getAllTrainingPrograms');
+
+            // Filter out booked programs
+            const availablePrograms = response.data.filter(
+                (program) => !bookedPrograms.includes(program.id)
+            );
+
+            // Categorize by fitness level
+            const beginner = availablePrograms.filter((program) => program.fitnessLevel === 'Beginner');
+            const intermediate = availablePrograms.filter((program) => program.fitnessLevel === 'Intermediate');
+            const advanced = availablePrograms.filter((program) => program.fitnessLevel === 'Advanced');
+
+            // Set state
+            setTrainingPrograms(availablePrograms);
+            setBeginnerPrograms(beginner);
+            setIntermediatePrograms(intermediate);
+            setAdvancedPrograms(advanced);
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    };
+
+    fetchTrainingPrograms();
+    }, [user?.uid, bookedPrograms]);
 
    
     const handleView = async (trainingProgram) => {
@@ -79,7 +121,7 @@ export function TrainingPrograms() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'end',
-                margin: 4,
+                //margin: 4,
             }}>
                 <Button
                     onClick={handleBack}
@@ -89,14 +131,6 @@ export function TrainingPrograms() {
                 >
                     Back
                 </Button>
-                {/* <Button
-                    //onClick={handleAdd}
-                    variant="contained"
-                    color="primary"
-                    sx={{ mt: 3, mb: 2, mr: 2 }}
-                >
-                    Recommended
-                </Button> */}
                 <Button
                     onClick={handleViewMyBooking}
                     variant="contained"
@@ -106,88 +140,26 @@ export function TrainingPrograms() {
                     My Booking
                 </Button>
             </Box>
-
-            <Typography variant="h4" gutterBottom>
-                Recommended Training Programs
-            </Typography>
-            <Grid container padding={4} spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>
-                {recommendedTrainingPrograms.map((trainingProgram, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Card
-                            sx={{
-                                width: '100%',
-                                height: '100%',
-                                boxShadow: 3,
-                                transition: "0.3s",
-                                '&:hover': { boxShadow: 10 },
-                            }}
-                            onClick={() => handleView(trainingProgram)}
-                        >
-                            <CardActionArea sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <CardMedia
-                                    component="img"
-                                    image={trainingProgram.downloadUrl}
-                                    alt={trainingProgram.title}
-                                    sx={{
-                                        height: 220,
-                                        width: '100%',
-                                        objectFit: 'cover'
-                                    }}
-                                />
-                                <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
-                                    <Typography gutterBottom variant="h5">
-                                        {trainingProgram.title}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {trainingProgram.fitnessLevel}
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-
-            <Typography variant="h4" gutterBottom marginTop={4}>
-                All Training Programs
-            </Typography>
-            <Grid container padding={4} spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>
-                {trainingPrograms.map((trainingProgram, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Card
-                            sx={{
-                                width: '100%',
-                                height: '100%',
-                                boxShadow: 3,
-                                transition: "0.3s",
-                                '&:hover': { boxShadow: 10 },
-                            }}
-                            onClick={() => handleView(trainingProgram)}
-                        >
-                            <CardActionArea sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <CardMedia
-                                    component="img"
-                                    image={trainingProgram.downloadUrl}
-                                    alt={trainingProgram.title}
-                                    sx={{
-                                        height: 220,
-                                        width: '100%',
-                                        objectFit: 'cover'
-                                    }}
-                                />
-                                <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
-                                    <Typography gutterBottom variant="h5">
-                                        {trainingProgram.title}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {trainingProgram.fitnessLevel}
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+            <Section
+                title="Recommended for You"
+                programs={recommendedTrainingPrograms}
+                onSeeAll={() => navigate("/recommededTrainingPrograms")}
+            />
+             <Section
+                title="Beginner Training Programs"
+                programs={beginnerPrograms}
+                onSeeAll={() => navigate("/beginnerTrainingPrograms")}
+            />
+             <Section
+                title="Intermediate Training Programs"
+                programs={intermediatePrograms}
+                onSeeAll={() => navigate("/intermediateTrainingPrograms")}
+            />
+            <Section
+                title="Advanced Training Programs"
+                programs={advancedPrograms}
+                onSeeAll={() => navigate("/advancedTrainingPrograms")}
+            />
             <Outlet />
         </Container>
     );

@@ -49,6 +49,7 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem('accessToken', token.accessToken);
     localStorage.setItem('refreshToken', token.refreshToken);
     updateUser({ uid, role , data, consentForm}); 
+    return response;
   };
 
   // const signInWithGoogle = async () => {

@@ -8,7 +8,9 @@ import {
     CardContent,
     CardActionArea,
     Grid,
-    Box
+    Box,
+    TextField,
+    Pagination
 } from "@mui/material";
 
 import { useNavigate, Outlet } from 'react-router-dom';
@@ -18,6 +20,9 @@ export function TrainerTrainingPrograms(){
   const navigate = useNavigate();
   const { user , setUser} = useUser();
   const [trainingPrograms, setTrainingPrograms] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 6;
 
       useEffect(() => {
         const fetchTrainingPrograms = async () => {
@@ -43,28 +48,54 @@ export function TrainerTrainingPrograms(){
       navigate("/viewTrainerTrainingProgram", { state: { id: trainingProgramId } });
     }; 
 
+    // Filter programs based on search term
+    const filteredPrograms = trainingPrograms.filter(program =>
+      program.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Calculate the current programs to display based on the page
+    const startIndex = (page - 1) * itemsPerPage;
+    const currentPrograms = filteredPrograms.slice(startIndex, startIndex + itemsPerPage);
+
     
     return(
         <>
-        <Box sx={{ 
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent:'center',
-            margin:4,
-        }}>
-        <Button
-            onClick={handleAdd}
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2 }}
-        >
-            Add Training Program
-        </Button>
-        </Box>
-    <Grid container padding={4} spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>
-      {trainingPrograms.map((trainingProgram, index) => (
-        <Grid item xs={2} sm={4} md={4} key={index}>
-       <Card
+        <Box padding={3}>
+            <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
+                    My Training Programs
+                </Typography>
+                <Button
+                    onClick={handleAdd}
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 2, mb: 2 }}
+                >
+                    Add New
+                </Button>
+            </Box>
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Search Training Programs"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ marginBottom: 5, marginTop: 2 }}
+            />
+             {currentPrograms.length === 0 || filteredPrograms.length === 0 ? ( // Check if there are no programs
+                <Typography variant="body1" color="text.secondary" align="center">
+                    No Training Programs Found.
+                </Typography>
+            ) : (
+                <>
+      <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="start" marginTop={3}>
+        {currentPrograms.map((program) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={program.id}>
+            <Card
                 sx={{
                   width: '100%',
                   height: '100%',
@@ -72,13 +103,13 @@ export function TrainerTrainingPrograms(){
                   transition: "0.3s",
                   '&:hover': { boxShadow: 10 },
               }}
-        onClick={() => handleView(trainingProgram)}
-      >
+              onClick={() => handleView(program)}
+            >
          <CardActionArea sx={{ display: 'flex', flexDirection: 'column' }}>
          <CardMedia
          component="img"
-         image={trainingProgram.downloadUrl}
-         alt={trainingProgram.title}
+         image={program.downloadUrl}
+         alt={program.title}
          sx={{
              height: 220,
              weight : '100%', 
@@ -86,11 +117,11 @@ export function TrainerTrainingPrograms(){
          }}
           />
           <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
-            <Typography gutterBottom variant="h5" >
-              {trainingProgram.title}
+          <Typography gutterBottom variant="h6" align="center">
+              {program.title}
             </Typography>
-            <Typography variant="body2" color="text.secondary" >
-              {trainingProgram.fitnessLevel}
+            <Typography variant="body2" color="text.secondary" align="center" >
+              {program.fitnessLevel}
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -98,6 +129,16 @@ export function TrainerTrainingPrograms(){
     </Grid>
   ))}
 </Grid>
+<Pagination
+                count={Math.ceil(filteredPrograms.length / itemsPerPage)}
+                page={page}
+                onChange={(event, value) => setPage(value)}
+                color="primary"
+                sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }}
+            />
+</>
+)}
+</Box>
 <Outlet/>
 </>
     );

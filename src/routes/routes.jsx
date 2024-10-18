@@ -13,7 +13,6 @@ import { Community } from "../pages/community/Community.jsx";
 import { Tips } from "../pages/tips/Tips.jsx";
 import { BMI } from "../pages/tracking/BMI.jsx";
 import { WaterConsumption } from "../pages/tracking/WaterConsumption.jsx";
-import { Test } from "../pages/Test.jsx";
 import { CompleteProfile } from "../pages/auth/CompleteProfile.jsx";
 import { FitnessLevel } from "../pages/auth/FitnessLevel.jsx";
 import { FitnessGoal } from "../pages/auth/FitnessGoal.jsx";
@@ -57,6 +56,14 @@ import { NewChatRoom }from '../pages/community/NewChatRoom.jsx';
 import { StudentList } from '../pages/trainerTraining/StudentList.jsx';
 import { ViewStudentDetails } from '../pages/trainerTraining/ViewStudentDetails.jsx';
 import { ViewConsentForm } from '../pages/trainerTraining/ViewConsentForm.jsx';
+import AllProgramsPage from '../pages/training/RecommededTrainingPrograms.jsx';
+import RecommendedTrainingPrograms from '../pages/training/RecommededTrainingPrograms.jsx';
+import BeginnerTrainingPrograms from '../pages/training/BeginnerTrainingPrograms.jsx';
+import IntermediateTrainingPrograms from '../pages/training/IntermediateTrainingPrograms.jsx';
+import AdvancedTrainingPrograms from '../pages/training/AdvancedTrainingPrograms.jsx';
+import PendingBooking from '../pages/booking/PendingBooking.jsx';
+import CompletedBooking from '../pages/booking/CompletedBooking.jsx';
+import { ViewPost } from '../pages/community/ViewPost.jsx';
 
 
 const routes = [
@@ -67,10 +74,6 @@ const routes = [
       {
         path: "profile",
         element:  <Profile /> ,
-      },
-      {
-        path: "test",
-        element:  <Test /> ,
       },
       {
         path: "dashboard",
@@ -252,6 +255,34 @@ const routes = [
       {
         path: "viewConsentForm",
         element:  <ViewConsentForm/> ,
+      },
+      {
+        path: "recommededTrainingPrograms",
+        element:  <RecommendedTrainingPrograms/> ,
+      },
+      {
+        path: "beginnerTrainingPrograms",
+        element:  <BeginnerTrainingPrograms/> ,
+      },
+      {
+        path: "intermediateTrainingPrograms",
+        element:  <IntermediateTrainingPrograms/> ,
+      },
+      {
+        path: "advancedTrainingPrograms",
+        element:  <AdvancedTrainingPrograms/> ,
+      },
+      {
+        path: "pendingBooking",
+        element:  <PendingBooking/> ,
+      },
+      {
+        path: "completedBooking",
+        element:  <CompletedBooking/> ,
+      },
+      {
+        path: "viewPost",
+        element:  <ViewPost/> ,
       },
     ],
   },

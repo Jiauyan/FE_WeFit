@@ -82,7 +82,8 @@ export function UserChatList() {
       sx={{ 
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding:3
       }}
     >
       <Paper sx={{

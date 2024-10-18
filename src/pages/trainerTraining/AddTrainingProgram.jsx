@@ -74,7 +74,7 @@ export function AddTrainingProgram() {
     }
   };
 
-  const handleAddSlot = (e) => {
+  const handleAddSlot = async (e) => {
     e.preventDefault();
     if (currentDate && currentStartTime && currentEndTime) {
       const start = new Date(currentDate);
@@ -85,6 +85,23 @@ export function AddTrainingProgram() {
 
       const slotString = `${start.toLocaleDateString()} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
+      const newSlot = slotString;
+
+      if (slots.includes(slotString)) {
+        alert("This slot has already been added. Please choose a different time.");
+        return;
+      }
+
+      // Fetch existing programs and their slots
+      const existingPrograms = await fetchExistingPrograms();
+      const existingSlots = existingPrograms.flatMap(program => program.slots);
+  
+      // Check for slot clash
+      if (isSlotClashing(newSlot, existingSlots)) {
+        alert("This slot overlaps with an existing one. Please choose a different time.");
+        return;
+      }
+      
       setSlots(prevSlots => [...prevSlots, slotString]);
       setCurrentDate(null);
       setCurrentStartTime(null);
@@ -93,6 +110,42 @@ export function AddTrainingProgram() {
     }
   };
 
+  const fetchExistingPrograms = async () => {
+    try {
+        const uid = user?.uid;
+        if (!uid) return;
+        const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('There was an error!', error);
+    }
+  };
+
+  const isSlotClashing = (newSlot, existingSlots) => {
+    const [newStart, newEnd] = parseSlotString(newSlot);
+  
+    return existingSlots.some((slotString) => {
+      const [existingStart, existingEnd] = parseSlotString(slotString);
+  
+      // Check if the new slot overlaps with any existing slots
+      return (newStart < existingEnd && newEnd > existingStart);
+    });
+  };
+  
+  const parseSlotString = (slotString) => {
+    const [datePart, timePart] = slotString.split(" - ");
+    const [startTime, endTime] = timePart.split(" to ");
+  
+    // Parse the date and times into Date objects
+    const [month, day, year] = datePart.split("/");
+  
+    // Combine date with start and end times
+    const startDate = new Date(`${year}-${month}-${day} ${startTime}`);
+    const endDate = new Date(`${year}-${month}-${day} ${endTime}`);
+  
+    return [startDate, endDate];
+  };
   // const handleRemoveSlot = (index) => {
   //   const newSlots = slots.filter((_, i) => i !== index);
   //   setSlots(newSlots);

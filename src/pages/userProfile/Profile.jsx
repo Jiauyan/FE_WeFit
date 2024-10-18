@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
-import { Typography, Paper, Avatar, Button, Grid } from "@mui/material";
+import { Typography, Paper, Avatar, Button, Grid, Box } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { DeleteAccount } from './DeleteAccount';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -36,6 +36,7 @@ export function Profile() {
 
   return (
     <>
+    <Box padding={3}>
     <Grid 
       container 
       component="main" 
@@ -101,6 +102,7 @@ export function Profile() {
     <DeleteAccount />
     </Paper>
     </Grid>
+    </Box>
     <Outlet/>
     </>
   );

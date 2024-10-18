@@ -46,7 +46,7 @@ export function ViewConsentForm() {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: 4,
+                padding: 3,
             }}
         >
             <Paper sx={{

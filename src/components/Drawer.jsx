@@ -31,6 +31,7 @@ import {
     Menu
 } from "@mui/icons-material";
 import { useNavigate, Outlet } from 'react-router-dom';
+import Footer from './Footer';
 
 
 export function SideBar(props) {
@@ -249,7 +250,8 @@ return (
         sx={{
           backgroundColor: '#f2f5fd',
           flexGrow: 1,
-          p: 3,
+          p: 0,
+          m: 0,
           minHeight: '100vh',
           width: '100vw',
           display: 'flex',
@@ -258,6 +260,17 @@ return (
       >
         <Toolbar />
         <Outlet />
+          <Box sx={{ 
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            weight:'100%',
+            mt: 'auto', 
+            p: 0,  // No padding
+            m: 0,  // No margin
+          }}>
+          <Footer/>
+        </Box>
     </Box>
 </Box>
 );

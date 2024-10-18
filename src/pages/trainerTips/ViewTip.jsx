@@ -63,7 +63,8 @@ export function ViewTip() {
         // width: '100vw',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding:3
       }}
     >
     <Paper sx={{

@@ -84,12 +84,12 @@ export function EditPost({id, oldDesc, onEditPost}) {
                 X
             </Button>
 
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5}} margin={1} >
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:2}} margin={1} >
                 Edit Your Post
             </Typography>
             <TextField
             multiline
-            rows={5}
+            rows={10}
                     margin="normal"
                     //required
                     fullWidth

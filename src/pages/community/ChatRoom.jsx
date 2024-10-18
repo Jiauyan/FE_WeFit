@@ -110,16 +110,17 @@ export function ChatRoom() {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      overflow: 'hidden',  // Prevent scrolling outside the paper
+      minHeight:"80vh"
+      //overflow: 'hidden',  // Prevent scrolling outside the paper
     }}>
       <Paper sx={{
       display: 'flex',
       flexDirection: 'column',
       boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
       borderRadius: 2,
-      width: '737px',
-      height: '85vh',  // Maximum height set to 100vh
-      overflowY: 'hidden',  // Enable scroll inside Paper if content overflows
+      width: '700px',
+      height: '70vh',  // Maximum height set to 100vh
+      overflowY: 'auto',  // Enable scroll inside Paper if content overflows
     }}>
     {/* Header Section */}
     <Box sx={{ 
@@ -141,22 +142,22 @@ export function ChatRoom() {
           src={otherUserDetails.photoURL}
           alt={otherUserDetails.username}
           sx={{
-            height: 50,
-            width: 50,
+            height: 35,
+            width: 35,
             objectFit: 'cover',
             marginRight: 2,
           }}
         />
-        <Typography variant="h6" noWrap component="div">
+        <Typography variant="body1" noWrap component="div">
           {otherUserDetails.username}
         </Typography>
-        <FiberManualRecord
+        {/* <FiberManualRecord
           sx={{
             color: isOnline ? 'green' : 'gray',
             fontSize: 14,
             ml: 1,
           }}
-        />
+        /> */}
       </Box>
     </Box>
 

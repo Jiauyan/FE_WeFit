@@ -62,19 +62,18 @@ export function SelectSlot({id}) {
 
   return (
     <div>
-      <Button
+      <GradientButton
         fullWidth
         variant="contained"
         color="primary"
         sx={{ mt: 3, mb: 3 }}
-        onClick={handleOpen}>View Students</Button>
+        onClick={handleOpen}>View Students</GradientButton>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-slot"
         aria-describedby="modal-modal-description"
       >
-        
         <Box sx={style} component="form" noValidate>
             <Button 
                 onClick={handleClose}

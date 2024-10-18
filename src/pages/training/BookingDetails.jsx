@@ -55,7 +55,8 @@ export function BookingDetails() {
     const navigate = useNavigate();
     const location = useLocation();
     const { id } = location.state;
-    
+    const [bookedProgramsSlot, setBookedProgramsSlot] = useState([]);
+
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
     if (storedUid) {
@@ -74,6 +75,25 @@ export function BookingDetails() {
       .catch(error => console.error('There was an error!', error));
   }, [user?.uid]);
 
+  useEffect(() => {
+    const fetchBookings = async () => {
+        try {
+            const uid = user?.uid;
+            if (!uid) return;
+
+            // Fetch booked programs
+            const response = await axios.get(`http://localhost:3000/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
+            console.log(response.data);
+           // const bookedProgramSlot = response.data.map((booking) => booking.slot);
+            setBookedProgramsSlot(response.data);
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    };
+
+    fetchBookings();
+}, [user?.uid]);
+console.log(bookedProgramsSlot);
   const handleBack = async () => {
     navigate("/consentForm", { state: { id } });
   };
@@ -84,6 +104,15 @@ export function BookingDetails() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if the selected slot clashes with existing bookings
+    const slotClash = bookedProgramsSlot.some(booking => booking.slot === slot);
+    console.log(slotClash);
+    if (slotClash) {
+        alert('Slot clash with an existing booking. Please choose a different slot.');
+        return; // Exit the function if there is a clash
+    }
+
     try {
       const uid = user.uid;
       const status = false;

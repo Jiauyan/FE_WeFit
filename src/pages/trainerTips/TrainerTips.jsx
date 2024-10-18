@@ -12,7 +12,9 @@ import {
     CardActions,
     CardActionArea,
     Grid,
-    Box
+    Box,
+    TextField,
+    Pagination
 } from "@mui/material";
 
 import gym from "../../assets/gym.png";
@@ -24,6 +26,9 @@ export function TrainerTips(){
   const { user , setUser} = useUser();
   const uid = user.uid;
   const [tips, setTips] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 6;
 
       useEffect(() => {
         const fetchTips = async () => {
@@ -50,27 +55,51 @@ export function TrainerTips(){
       navigate("/viewTip", { state: { id: tipId } });
     }; 
 
+    // Filter programs based on search term
+    const filteredTips = tips.filter(tip=>
+      tip.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+    // Calculate the current programs to display based on the page
+    const startIndex = (page - 1) * itemsPerPage;
+    const currentTips = filteredTips.slice(startIndex, startIndex + itemsPerPage);
     
     return(
-        <>
-        <Box sx={{ 
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent:'center',
-            margin:4,
-        }}>
-        <Button
-            onClick={handleAdd}
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2 }}
-        >
-            Add Sharing Tip
-        </Button>
-        </Box>
-    <Grid container padding={4} spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>
-      {tips.map((tip, index) => (
-        <Grid item xs={2} sm={4} md={4} key={index}>
+       <Box padding={3}>
+            <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
+                    My Sharing Tips
+                </Typography>
+                <Button
+                    onClick={handleAdd}
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 2, mb: 2 }}
+                >
+                    Add New
+                </Button>
+            </Box>
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Search Sharing Tips"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ marginBottom: 5, marginTop: 2 }}
+            />
+             {currentTips.length === 0 || filteredTips.length === 0 ? ( // Check if there are no programs
+                <Typography variant="body1" color="text.secondary" align="center">
+                    No Sharing Tip Found.
+                </Typography>
+            ) : (
+                <>
+      <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="start" marginTop={3}>
+      {currentTips.map((tip, index) => (
+         <Grid item xs={12} sm={6} md={4} lg={3} key={tip.id}>
        <Card
                 sx={{
                   width: '100%',
@@ -93,13 +122,13 @@ export function TrainerTips(){
          }}
           />
           <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
-            <Typography gutterBottom variant="h5" >
+            <Typography gutterBottom variant="h5" align="center">
               {tip.title}
             </Typography>
-            <Typography variant="body2" color="text.secondary" >
+            <Typography variant="body2" color="text.secondary" align="center">
               {tip.shortDesc}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary" align="center">
               {tip.createdAt}
             </Typography>
           </CardContent>
@@ -108,8 +137,17 @@ export function TrainerTips(){
     </Grid>
   ))}
 </Grid>
+<Pagination
+                count={Math.ceil(filteredTips.length / itemsPerPage)}
+                page={page}
+                onChange={(event, value) => setPage(value)}
+                color="primary"
+                sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }}
+            />
+            </>
+            )}
 <Outlet/>
-</>
+</Box>
     );
 
 }

@@ -46,7 +46,7 @@ export function ViewBooking() {
   }, [trainerID]); 
 
   const handleBack = async () => {
-    navigate("/myBooking");
+    navigate(-1);
   };
 
 

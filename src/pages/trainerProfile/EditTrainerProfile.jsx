@@ -98,6 +98,7 @@ export function EditTrainerProfile() {
 
   return (
     <>
+    <Box padding={3}>
     <Grid 
       container 
       component="main" 
@@ -203,6 +204,7 @@ export function EditTrainerProfile() {
       </Box>
       </Paper>
     </Grid>
+    </Box>
     <Outlet/>
     </>
   );

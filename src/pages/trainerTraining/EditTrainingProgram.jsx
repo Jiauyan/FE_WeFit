@@ -103,7 +103,7 @@ export function EditTrainingProgram() {
     }
   };
 
-  const handleAddSlot = (e) => {
+  const handleAddSlot = async (e) => {
     e.preventDefault();
     if (currentDate && currentStartTime && currentEndTime) {
       const start = new Date(currentDate);
@@ -114,12 +114,66 @@ export function EditTrainingProgram() {
 
       const slotString = `${start.toLocaleDateString()} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-      setSlots([...slots, slotString ]);
+      const newSlot = slotString;
+
+      if (slots.includes(slotString)) {
+        alert("This slot has already been added. Please choose a different time.");
+        return;
+      }
+
+      // Fetch existing programs and their slots
+      const existingPrograms = await fetchExistingPrograms();
+      const existingSlots = existingPrograms.flatMap(program => program.slots);
+  
+      // Check for slot clash
+      if (isSlotClashing(newSlot, existingSlots)) {
+        alert("This slot overlaps with an existing one. Please choose a different time.");
+        return;
+      }
+      
+      setSlots(prevSlots => [...prevSlots, slotString]);
       setCurrentDate(null);
       setCurrentStartTime(null);
       setCurrentEndTime(null);
       handleClose();
     }
+  };
+
+  const fetchExistingPrograms = async () => {
+    try {
+        const uid = user?.uid;
+        if (!uid) return;
+        const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('There was an error!', error);
+    }
+  };
+
+  const isSlotClashing = (newSlot, existingSlots) => {
+    const [newStart, newEnd] = parseSlotString(newSlot);
+  
+    return existingSlots.some((slotString) => {
+      const [existingStart, existingEnd] = parseSlotString(slotString);
+  
+      // Check if the new slot overlaps with any existing slots
+      return (newStart < existingEnd && newEnd > existingStart);
+    });
+  };
+  
+  const parseSlotString = (slotString) => {
+    const [datePart, timePart] = slotString.split(" - ");
+    const [startTime, endTime] = timePart.split(" to ");
+  
+    // Parse the date and times into Date objects
+    const [month, day, year] = datePart.split("/");
+  
+    // Combine date with start and end times
+    const startDate = new Date(`${year}-${month}-${day} ${startTime}`);
+    const endDate = new Date(`${year}-${month}-${day} ${endTime}`);
+  
+    return [startDate, endDate];
   };
 
   const handleRemoveSlot = (index) => {
@@ -353,21 +407,21 @@ export function EditTrainingProgram() {
           </Typography>
           <DatePicker
             label="Select Date"
-            value={currentDate}
+            value={currentDate || null}
             onChange={(newValue) => setCurrentDate(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
           />
           <TimePicker
             label="Select Start Time"
-            value={currentStartTime}
+            value={currentStartTime || null}
             onChange={(newValue) => setCurrentStartTime(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
           />
           <TimePicker
             label="Select End Time"
-            value={currentEndTime}
+            value={currentEndTime || null}
             onChange={(newValue) => setCurrentEndTime(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 

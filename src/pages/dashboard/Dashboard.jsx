@@ -6,6 +6,9 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { GetRandomMotivationalQuote } from '../trainerQuotes/GetRandomMotivationalQuote';
 import { useUser } from "../../contexts/UseContext";
 import { CustomCircularProgress } from "../../components/CustomCircularProgress";
+import StepsBarChart from './StepsBarChart';
+import WaterLineChart from './WaterLineChart';
+import TrainingPieChart from './TrainingPieChart';
 
 export function Dashboard() {
   
@@ -60,9 +63,8 @@ export function Dashboard() {
                   if (!uid) return;
                   const response = await axios.get(`http://localhost:3000/steps/getStepCountByUid/${uid}`);
                    // Check if stepCount exists, otherwise set to 0
-                  const fetchedSteps = response.data.steps?.stepCount ?? 0;
+                  const fetchedSteps = response.data.steps?.stepsToday ?? 0;
                   setSteps(fetchedSteps);
-                  console.log(fetchedSteps);
               } catch (error) {
                   console.error('There was an error!', error);
               }
@@ -173,7 +175,7 @@ export function Dashboard() {
     };
 
   return (
-    <Container maxWidth="lg">
+    <Box padding={3}>
       <Typography variant="h6" gutterBottom>
         Dashboard Overview
       </Typography>
@@ -209,7 +211,7 @@ export function Dashboard() {
         <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ padding: 2, backgroundColor: '#8676FE'}}>
             <WaterDrop sx={{ color: 'white' }} />
-            <Typography variant="h6" sx={{ color: 'white' }}>{currentHydration}</Typography>
+            <Typography variant="h6" sx={{ color: 'white' }}>{currentHydration || 0} </Typography>
             <Typography variant="subtitle1" sx={{ color: 'white' }}>Water taken</Typography>
           </Card>
         </Grid>
@@ -229,20 +231,9 @@ export function Dashboard() {
         </Grid>
 
         <Grid item xs={12} md={9}>
-          <Card sx={{ padding: 3 }}>
+          <Card sx={{ padding: 2 }}>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend /> 
-                  <Bar type="monotone" dataKey="steps" fill="#22D3EE" barSize={10} radius={[10, 10, 0, 0]}/>
-                  <Bar type="monotone" dataKey="water" fill="#A78BFA" barSize={10} radius={[10, 10, 0, 0]}/>
-                  <Bar type="monotone" dataKey="workout" fill="#FB923C" barSize={10} radius={[10, 10, 0, 0]}/>
-                </BarChart>
-              </ResponsiveContainer>
+                <StepsBarChart/>
             </CardContent>
           </Card>
         </Grid>
@@ -315,7 +306,21 @@ export function Dashboard() {
             <Typography align = "center" variant="subtitle1">You have completed {completionPercentage}% of your goals.</Typography>
           </Card>
         </Grid>
+        <Grid item xs={12} md={7}>
+          <Card sx={{ padding: 2 }}>
+            <CardContent>
+                <WaterLineChart/>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <Card sx={{ padding: 2 }}>
+            <CardContent>
+                <TrainingPieChart/>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 }

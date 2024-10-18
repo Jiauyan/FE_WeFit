@@ -1,6 +1,8 @@
 import { ThemeProvider, createTheme, styled } from "@mui/material";
 import { CssBaseline } from "@mui/material";
 import { Typography, Paper, Avatar, Button } from "@mui/material";
+import Footer from "../components/Footer";
+import { SideBar } from "../components/Drawer";
 
 const theme = createTheme({
     // MuiDrawer:{
@@ -39,6 +41,7 @@ export const ThemeColorProvider = ({ children }) => {
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             { children }
+            {/* <Footer/> */}
         </ThemeProvider>
     )
 

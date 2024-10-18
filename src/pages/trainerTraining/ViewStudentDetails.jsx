@@ -63,7 +63,7 @@ export function ViewStudentDetails() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 4
+        padding: 3
       }}
     >
       <Paper sx={{

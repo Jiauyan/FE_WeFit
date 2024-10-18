@@ -44,7 +44,7 @@ export function ViewTrainingProgram() {
   }, [trainerID]); 
 
   const handleBack = async () => {
-    navigate("/trainingPrograms");
+    navigate(-1);
   };
 
   const handleBook = async (id) => {

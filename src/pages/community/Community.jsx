@@ -11,7 +11,10 @@ import {
     Box,
     IconButton,
     Container,
-    Avatar
+    Avatar,
+    TextField,
+    Pagination,
+    Link
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
@@ -22,7 +25,10 @@ export function Community() {
     const navigate = useNavigate();
     const { user, setUser } = useUser();
     const [posts, setPosts] = useState([]);
-
+    const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 12;
+  
     useEffect(() => {
         // Load user ID from local storage or other persistent storage
         const storedUid = localStorage.getItem('uid');
@@ -59,19 +65,61 @@ export function Community() {
         navigate("/myPost");
     };
 
+    // Filter programs based on search term
+    const filteredPosts = posts.filter(post =>
+        post.postDetails.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+  
+      // Calculate the current programs to display based on the page
+      const startIndex = (page - 1) * itemsPerPage;
+      const currentPosts = filteredPosts.slice(startIndex, startIndex + itemsPerPage);
+
+    const handleView = (post) => {
+        navigate('/viewPost', { state: { id: post.id } });
+    };
+
+    const PostDetails = ({ post }) => {
+        const sentences = post.postDetails.split('. ');
+    
+        return (
+            <Box>
+            <Typography variant="body1" color="textSecondary" display="inline">
+                {sentences.slice(0, 3).join('. ') + (sentences.length > 3 ? '...' : '')}
+            </Typography>
+            {sentences.length > 3 && (
+                <Link
+                    component="button"
+                    variant="body2"
+                    onClick={handleView}
+                    sx={{ textDecoration: 'underline', ml: 0.5 }}
+                >
+                    See more
+                </Link>
+            )}
+        </Box>
+        );
+    };
+
     return (
-        <Container>
-            <Box sx={{
+        <Box padding={3}>
+            <Box sx={{ 
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'end',
-                margin: 4,
-            }}>
+                justifyContent: 'space-between'
+            }}> 
+            <Typography variant="h5" sx={{display: 'flex', alignItems: 'center' }}>  
+              All Posts
+            </Typography>
+                <Box sx={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'end'
+                }}>
                 <Button
                     onClick={handleChat}
                     variant="contained"
                     color="primary"
-                    sx={{ mt: 3, mb: 2, mr: 2 }}
+                    sx={{ mt: 3, mb: 2, mr: 2}}
                 >
                     Chat
                 </Button>
@@ -84,24 +132,38 @@ export function Community() {
                 >
                     My Post
                 </Button>
+                </Box>
             </Box>
-
-            <Typography variant="h4" gutterBottom>
-                All Posts
-            </Typography>
-            <Grid container padding={4} spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="center" marginTop={2}>
-                {posts.map((post, index) => (
-                    <Grid item xs={12} sm={6} md={6} key={index}>
-                        <Card
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Search Posts"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ marginBottom: 5, marginTop: 2 }}
+            />
+             {currentPosts.length === 0 || filteredPosts.length === 0 ? ( // Check if there are no programs
+                <Typography variant="body1" color="text.secondary" align="center">
+                    No Post Found.
+                </Typography>
+            ) : (
+                <>
+           
+           <Grid container spacing={{ xs: 2, md: 4 }} justifyContent="start" marginTop={3}>
+           {currentPosts.map((post) => (
+ <Grid item xs={12} sm={6} md={6} lg={6} key={post.id}>
+                            <Card
                             sx={{
                                 width: '100%',
-                                height: '100%',
+                                minHeight: 230,
+                                maxHeight:230,
                                 boxShadow: 3,
                                 transition: "0.3s",
                                 '&:hover': { boxShadow: 10 },
                             }}
+                            onClick={() => handleView(post)}
                         >
-                            <CardActionArea sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: 2 }}>
+                            <CardContent  sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: 2 }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', margin: 2 }}>
                                     <Avatar
                                         src={post.userPhotoUrl}
@@ -123,16 +185,22 @@ export function Community() {
                                     </Box>
                                 </Box>
                                 <CardContent >
-                                    <Typography variant="body1" color="textSecondary">
-                                        {post.postDetails}
-                                    </Typography>
+                                <PostDetails post={post} />
                                 </CardContent>
-                            </CardActionArea>
+                            </CardContent >
                         </Card>
                     </Grid>
                 ))}
             </Grid>
-            <Outlet />
-        </Container>
+            <Pagination
+                count={Math.ceil(filteredPosts.length / itemsPerPage)}
+                page={page}
+                onChange={(event, value) => setPage(value)}
+                color="primary"
+                sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }}
+            />
+            </>
+            )}
+            </Box>
     );
 }
