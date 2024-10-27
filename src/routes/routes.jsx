@@ -56,7 +56,6 @@ import { NewChatRoom }from '../pages/community/NewChatRoom.jsx';
 import { StudentList } from '../pages/trainerTraining/StudentList.jsx';
 import { ViewStudentDetails } from '../pages/trainerTraining/ViewStudentDetails.jsx';
 import { ViewConsentForm } from '../pages/trainerTraining/ViewConsentForm.jsx';
-import AllProgramsPage from '../pages/training/RecommededTrainingPrograms.jsx';
 import RecommendedTrainingPrograms from '../pages/training/RecommededTrainingPrograms.jsx';
 import BeginnerTrainingPrograms from '../pages/training/BeginnerTrainingPrograms.jsx';
 import IntermediateTrainingPrograms from '../pages/training/IntermediateTrainingPrograms.jsx';
@@ -64,7 +63,7 @@ import AdvancedTrainingPrograms from '../pages/training/AdvancedTrainingPrograms
 import PendingBooking from '../pages/booking/PendingBooking.jsx';
 import CompletedBooking from '../pages/booking/CompletedBooking.jsx';
 import { ViewPost } from '../pages/community/ViewPost.jsx';
-
+import { TrainerDashboard } from '../pages/trainerDashboard/TrainerDashboard.jsx';
 
 const routes = [
   {
@@ -284,6 +283,11 @@ const routes = [
         path: "viewPost",
         element:  <ViewPost/> ,
       },
+      {
+        path: "trainerDashboard",
+        element:  <TrainerDashboard/> ,
+      },
+
     ],
   },
   {

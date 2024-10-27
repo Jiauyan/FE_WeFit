@@ -28,7 +28,8 @@ import {
     TipsAndUpdates,
     Logout,
     AccountCircle,
-    Menu
+    Menu,
+    FormatQuote
 } from "@mui/icons-material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import Footer from './Footer';
@@ -84,6 +85,10 @@ export function SideBar(props) {
     const handleTrainerProfile = async () => {
       navigate("/trainerProfile")
     };
+    
+    const handleTrainerDashboard = async () => {
+      navigate("/trainerDashboard")
+    };
 
     const handleTrainerTraining = async () => {
       navigate("/trainerTrainingPrograms")
@@ -129,9 +134,10 @@ export function SideBar(props) {
 
 const trainerItems = [
     { key: "My Profile", icon: <AccountCircle />, action: handleTrainerProfile },
+    { key: "Dashboard", icon: <Dashboard />, action: handleTrainerDashboard },
     { key: "Training", icon: <FitnessCenter />, action: handleTrainerTraining },
     { key: "Tips", icon: <TipsAndUpdates />, action: handleTrainerTips },
-    { key: "Quotes", icon: <TipsAndUpdates />, action: handleTrainerQuotes },  // Assume you have a /quotes route
+    { key: "Quotes", icon: <FormatQuote />, action: handleTrainerQuotes },  // Assume you have a /quotes route
 ];
 
 // Choose items based on role

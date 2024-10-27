@@ -18,7 +18,8 @@ import {
     ListItem,
     ListItemText,
     Divider,
-    Modal
+    Modal,
+    InputAdornment
 } from "@mui/material";
 import { ArrowBackIos, Upload, Delete, Add } from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -46,11 +47,18 @@ export function EditTrainingProgram() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [title, setTitle] = useState('');
+  const [typeOfTrainingProgram, setTypeOfTrainingProgram] = useState('');
+  const [capacity, setCapacity] = useState('');
+  const [feeType, setFeeType] = useState(''); 
+  const [feeAmount, setFeeAmount] = useState('');
+  const [venueType, setVenueType] = useState(''); 
+  const [venue, setVenue] = useState('');
   const [fitnessLevel, setFitnessLevel] = useState('');
   const [fitnessGoal, setFitnessGoal] = useState('');
   const [typeOfExercise, setTypeOfExercise] = useState('');
   const [desc, setDesc] = useState('');
   const [slots, setSlots] = useState([]);
+  const [currentSlots, setCurrentSlots] = useState([]);
   const [currentDate, setCurrentDate] = useState(null);
   const [currentStartTime, setCurrentStartTime] = useState(null);
   const [currentEndTime, setCurrentEndTime] = useState(null);
@@ -62,6 +70,21 @@ export function EditTrainingProgram() {
   const location = useLocation();
   const { id } = location.state;
   const [trainingProgramData, setTrainingProgramData] = useState({});
+  const [openDeleteSlot, setOpenDeleteSlot] = useState(false);
+  const [indexToDelete, setIndexToDelete] = useState(null);
+  const [slotToDelete, setSlotToDelete] = useState(null);
+
+  const handleOpenDeleteSlot = (index, slot) => {
+      setIndexToDelete(index);
+      setSlotToDelete(slot);
+      setOpenDeleteSlot(true);  // Corrected the state function name
+  };
+
+  const handleCloseDeleteSlot = () => {
+      setOpenDeleteSlot(false);  // Corrected the state function name
+      setIndexToDelete(null);
+      setSlotToDelete(null);
+  };  
 
   useEffect(() => {
     const fetchTipData = async () => {
@@ -70,10 +93,17 @@ export function EditTrainingProgram() {
             const data = response.data;
             setTrainingProgramData(data);
             setTitle(data.title);
+            setTypeOfTrainingProgram(data.typeOfTrainingProgram);
+            setCapacity(data.capacity);
+            setFeeType(data.feeType);
+            setFeeAmount(data.feeAmount);
+            setVenueType(data.venueType);
+            setVenue(data.venue);
             setFitnessLevel(data.fitnessLevel);
             setFitnessGoal(data.fitnessGoal);
             setTypeOfExercise(data.typeOfExercise);
             setSlots(data.slots);
+            setCurrentSlots(data.slots);
             setDesc(data.desc);
             setCurrentDate(data.currentDate);
             setCurrentStartTime(data.currentStartTime);
@@ -114,12 +144,19 @@ export function EditTrainingProgram() {
 
       const slotString = `${start.toLocaleDateString()} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-      const newSlot = slotString;
+      const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
 
-      if (slots.includes(slotString)) {
+      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
+
+      if (isSlotClashing(newSlot, currentSlots)) {
         alert("This slot has already been added. Please choose a different time.");
         return;
       }
+      // // Check for duplicate slot in the current session
+      // if (currentSlots.some(slot => slot.time === newSlot.time)) {
+      //   alert("This slot has already been added. Please choose a different time.");
+      //   return;
+      // }
 
       // Fetch existing programs and their slots
       const existingPrograms = await fetchExistingPrograms();
@@ -131,11 +168,13 @@ export function EditTrainingProgram() {
         return;
       }
       
-      setSlots(prevSlots => [...prevSlots, slotString]);
+      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
+      setSlots(prevSlots => [...prevSlots, newSlot]);
       setCurrentDate(null);
       setCurrentStartTime(null);
       setCurrentEndTime(null);
       handleClose();
+      console.log(slots);
     }
   };
 
@@ -151,34 +190,68 @@ export function EditTrainingProgram() {
     }
   };
 
-  const isSlotClashing = (newSlot, existingSlots) => {
-    const [newStart, newEnd] = parseSlotString(newSlot);
-  
-    return existingSlots.some((slotString) => {
-      const [existingStart, existingEnd] = parseSlotString(slotString);
-  
-      // Check if the new slot overlaps with any existing slots
-      return (newStart < existingEnd && newEnd > existingStart);
-    });
-  };
-  
   const parseSlotString = (slotString) => {
-    const [datePart, timePart] = slotString.split(" - ");
+    if (!slotString || typeof slotString !== 'string' && !slotString.time) {
+        console.error("Invalid slot data:", slotString);
+        return [new Date(), new Date()]; // Return default or current dates to prevent further errors
+    }
+
+    const slotTime = typeof slotString === 'string' ? slotString : slotString.time;
+    console.log("Parsing slot time:", slotTime);
+    
+    const [datePart, timePart] = slotTime.split(" - ");
+    if (!datePart || !timePart) {
+        console.error("Slot time format error:", slotTime);
+        return [new Date(), new Date()];
+    }
+
     const [startTime, endTime] = timePart.split(" to ");
-  
+    if (!startTime || !endTime) {
+        console.error("Start/End time format error:", timePart);
+        return [new Date(), new Date()];
+    }
+
     // Parse the date and times into Date objects
     const [month, day, year] = datePart.split("/");
-  
-    // Combine date with start and end times
     const startDate = new Date(`${year}-${month}-${day} ${startTime}`);
     const endDate = new Date(`${year}-${month}-${day} ${endTime}`);
-  
-    return [startDate, endDate];
-  };
 
-  const handleRemoveSlot = (index) => {
-    const newSlots = slots.filter((_, i) => i !== index);
-    setSlots(newSlots);
+    return [startDate, endDate];
+};
+
+const isSlotClashing = (newSlot, existingSlots) => {
+    const [newStart, newEnd] = parseSlotString(newSlot);
+
+    return existingSlots.some((slot) => {
+        const [existingStart, existingEnd] = parseSlotString(slot);
+
+        // Check if the new slot overlaps with any existing slots
+        return (newStart < existingEnd && newEnd > existingStart);
+    });
+};
+  const handleRemoveSlot = async () => {
+    if (indexToDelete === null) return;
+    console.log(indexToDelete);
+    // Assuming each slot has a unique identifier like `id`, which should be set when slots are fetched or created
+   // const slotIdToDelete = slotToDelete;
+    const trainingProgramID = trainingProgramData.id;
+    console.log(trainingProgramID);
+    try {
+        // If your backend requires, send a request to delete the slot
+        await axios.post('http://localhost:3000/trainingPrograms/deleteSlot', {
+          id : trainingProgramID,
+          slotToDelete : slotToDelete
+        });
+
+        //Update the local state to reflect this deletion
+        setCurrentSlots(prev => prev.filter((_, index) => index !== indexToDelete));
+        setSlots(prev => prev.filter((_, index) => index !== indexToDelete));
+
+        // Close the delete confirmation modal
+        handleCloseDeleteSlot();
+    } catch (error) {
+        console.error('There was an error deleting the slot!', error);
+    }
   };
 
   const handleSubmit = async (e) => { 
@@ -187,14 +260,19 @@ export function EditTrainingProgram() {
     formData.append('trainingProgramImage', trainingProgramImage); 
     formData.append('uid', uid);
     formData.append('title', title);
+    formData.append('typeOfTrainingProgram', typeOfTrainingProgram);
+    formData.append('capacity', capacity);
+    formData.append('feeType', feeType);
+    formData.append('feeAmount', feeAmount);
+    formData.append('venueType', venueType);
+    formData.append('venue', venue);
     formData.append('fitnessLevel', fitnessLevel);
     formData.append('fitnessGoal', fitnessGoal);
     formData.append('typeOfExercise', typeOfExercise);
     formData.append('desc', desc);
     slots.forEach((slot, index) => {
-      formData.append(`slots[${index}]`, slot);
+    formData.append(`slots[${index}]`, JSON.stringify(slot));
     });
-
     try {
         const response = await axios.patch(`http://localhost:3000/trainingPrograms/updateTrainingProgram/${id}`, formData, {
             headers: {
@@ -297,6 +375,108 @@ export function EditTrainingProgram() {
               onChange={(e) => setTitle(e.target.value)}
             />
             <FormControl margin="normal" fullWidth>
+              <InputLabel id="type-of-training-program-label">Training Program Type</InputLabel>
+              <Select
+                  labelId="type-of-training-program-label"
+                  id="type-of-training-program-select"
+                  value={typeOfTrainingProgram}
+                  onChange={(e) => {
+                    setTypeOfTrainingProgram(e.target.value);
+                    if (e.target.value === 'Personal Training') {
+                      setCapacity(1); // Set capacity to 1 for Personal Training
+                    } else {
+                      setCapacity(''); // Clear capacity for Group Classes to allow user input
+                    }
+                  }}
+                  fullWidth
+                  label="Type of Training Program"
+                >
+                <MenuItem value="Personal Training">Personal Training</MenuItem>
+                <MenuItem value="Group Classes">Group Classes</MenuItem>
+              </Select>
+            </FormControl>
+
+            {typeOfTrainingProgram === 'Group Classes' && (
+              <TextField
+                margin="normal"
+                fullWidth
+                id="class-capacity"
+                label="Enter Class Capacity"
+                type="number"
+                value={capacity}
+                onChange={(e) => setCapacity(e.target.value)}
+                InputProps={{
+                  inputProps: { 
+                    min: 1  // Ensures no zero or negative values, assuming at least one person must be in a class
+                  }
+                }}
+              />
+            )}
+            <FormControl margin="normal" fullWidth>
+              <InputLabel id="training-fee-label">Training Program Fee</InputLabel>
+              <Select
+                labelId="training-fee-label"
+                id="training-fee-select"
+                value={feeType}
+                onChange={(e) => {
+                  setFeeType(e.target.value);
+                  if (e.target.value === 'Free') {
+                    setFeeAmount('0'); 
+                  } else {
+                    setFeeAmount(''); 
+                  }
+                }}
+                fullWidth
+                label="Training Program Fee"
+              >
+                <MenuItem value="Free">Free</MenuItem>
+                <MenuItem value="Paid">Paid</MenuItem>
+              </Select>
+            </FormControl>
+
+            {feeType === 'Paid' && (
+              <TextField
+                margin="normal"
+                fullWidth
+                id="training-fee"
+                label="Enter Fee Amount"
+                type="number"
+                value={feeAmount}
+                onChange={(e) => setFeeAmount(e.target.value)}
+                InputProps={{
+                  inputProps: { min: 0 },  // Ensures no negative values
+                  startAdornment: <InputAdornment position="start">RM</InputAdornment>,  // RM symbol
+                }}
+              />
+            )}
+             <FormControl margin="normal" fullWidth>
+                <InputLabel id="venue-type-label">Venue</InputLabel>
+                <Select
+                  labelId="venue-type-label"
+                  id="venue-type-select"
+                  value={venueType}
+                  onChange={(e) => setVenueType(e.target.value)}
+                  fullWidth
+                  label="Venue"
+                >
+                  <MenuItem value="Online">Online</MenuItem>
+                  <MenuItem value="Physical">Physical</MenuItem>
+                </Select>
+              </FormControl>
+
+              {venueType === 'Physical' && (
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  id="venue"
+                  label="Enter Venue"
+                  type="text"
+                  value={venue}
+                  onChange={(e) => setVenue(e.target.value)}
+                />
+              )}
+
+            <FormControl margin="normal" fullWidth>
               <InputLabel id="demo-simple-select-autowidth-label">Fitness Level</InputLabel>
               <Select
                 labelId="demo-simple-select-autowidth-label"
@@ -370,9 +550,9 @@ export function EditTrainingProgram() {
             <List>
               {slots.map((slot, index) => (
                 <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <ListItemText primary={slot} />
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveSlot(index)}>
-                    <Delete />
+                  <ListItemText primary={slot.time} />
+                  <IconButton edge="end" aria-label="delete" onClick={() => handleOpenDeleteSlot(index, slot)}>
+                      <Delete />
                   </IconButton>
                 </ListItem>
               ))}
@@ -435,6 +615,36 @@ export function EditTrainingProgram() {
                 Add
           </GradientButton>
         </Box>
+      </Modal>
+      <Modal
+          open={openDeleteSlot}
+          onClose={handleCloseDeleteSlot}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+      >
+          <Box sx={style}>
+              <Button 
+                  onClick={handleCloseDeleteSlot}
+                  sx={{ position: 'absolute', top: 10, right: 10 }}
+              >
+                  X
+              </Button>
+
+              <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:10 }} margin={1}>
+                  Confirm Deletion
+              </Typography>
+              <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
+                  Are you sure you wish to delete this slot?
+              </Typography>
+              <Button
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={handleRemoveSlot}
+              >
+                  Confirm
+              </Button>
+          </Box>
       </Modal>
     </LocalizationProvider>
   );

@@ -180,7 +180,7 @@ export function EditFitnessPlan() {
 
     const handleRemoveFitnessActivity = async () => {
         if (activityToDelete === null) return;
-
+        console.log(activityToDelete); 
         const activityId = fitnessActivityData[activityToDelete].id;
         try {
             await axios.delete(`http://localhost:3000/fitnessActivity/deleteFitnessActivity/${activityId}`);

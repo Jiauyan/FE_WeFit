@@ -1,34 +1,35 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
 import { Container, Grid, Card, CardContent, Typography, Box, Button, CircularProgress } from '@mui/material';
-import { DirectionsWalk, WaterDrop, TrackChanges, FitnessCenter } from '@mui/icons-material';
+import { Whatshot, School, EventAvailable, FitnessCenter, FormatQuote, TipsAndUpdates } from '@mui/icons-material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { GetRandomMotivationalQuote } from '../trainerQuotes/GetRandomMotivationalQuote';
 import { useUser } from "../../contexts/UseContext";
 import { CustomCircularProgress } from "../../components/CustomCircularProgress";
-import StepsBarChart from './StepsBarChart';
-import WaterLineChart from './WaterLineChart';
-import TrainingPieChart from './TrainingPieChart';
+import TrainerLineChart from './TrainerLineChart';
+import TrainerMotivationalLineChart from './TrainerMotivationalLineChart';
+import TrainerBarChart from './TrainerBarChart';
+import TrainerPieChart from './TrainerPieChart';
 
-export function Dashboard() {
+export function TrainerDashboard() {
   
-  const [randomMotivationalQuote, setRandomMotivationalQuote] = useState("");
+  
   const { user , updateUser, setUser} = useUser();
   const [BMIValue, setBMIValue] = useState(null);
   const [steps, setSteps] = useState('');
-  const [completedGoals, setCompletedGoals] = useState({});
   const [goals, setGoals] = useState([]);
-  const [completionPercentage, setCompletionPercentage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [username, setUsername] = useState('');
-  const [fitnessLevel, setFitnessLevel] = useState('');
-  const [fitnessGoal, setFitnessGoal] = useState('');
-  const [currentHydration, setCurentHydration] = useState('');
-  const [currentMotivationalQuote, setCurrentMotivationalQuote] = useState("");
-
+  const [motivationalQuote, setMotivationalQuote] = useState("");
+  const [motivationalQuoteCount, setMotivationalQuoteCount] = useState(0);
+  const [sharingTip, setSharingTip] = useState("");
+  const [sharingTipCount, setSharingTipCount] = useState(0);
+  const [trainingProgram, setTrainingProgram] = useState("");
+  const [trainingProgramCount, setTrainingProgramCount] = useState(0);
+  
   useEffect(() => {
     const fetchUser = async () => {
         try {
@@ -39,10 +40,6 @@ export function Dashboard() {
             setHeight(response.data.height);
             setWeight(response.data.weight);
             setUsername(response.data.username);
-            setFitnessLevel(response.data.fitnessLevel);
-            setFitnessGoal(response.data.fitnessGoal);
-            setCurentHydration(response.data.todayWater);
-            setCurrentMotivationalQuote(response.data.currentMotivationalQuote);
 
             const heightInMeters = response.data.height / 100;
             const weight = response.data.weight;
@@ -58,63 +55,72 @@ export function Dashboard() {
     fetchUser();
 }, [user?.uid]);
 
-  useEffect(() => {
-          const fetchSteps = async () => {
-              try {
-                  const uid = user?.uid;
-                  if (!uid) return;
-                  const response = await axios.get(`http://localhost:3000/steps/getStepCountByUid/${uid}`);
-                   // Check if stepCount exists, otherwise set to 0
-                  const fetchedSteps = response.data.steps?.stepsToday ?? 0;
-                  setSteps(fetchedSteps);
-              } catch (error) {
-                  console.error('There was an error!', error);
-              }
-          };
-          fetchSteps();
-      }, [user?.uid]);
-
-  useEffect(() => {
+ useEffect(() => {
       const storedUid = localStorage.getItem('uid');
       if (storedUid) {
           setUser({ ...user, uid: storedUid });
       }
-
-      const storedRandomMotivationalQuote = user.randomMotivationalQuote;
-      if (storedRandomMotivationalQuote) {
-          setRandomMotivationalQuote(storedRandomMotivationalQuote);
-      }
   }, [setUser, user]);
 
-  useEffect(() => {
-    const fetchGoals = async () => {
-      try {
-        const uid = user?.uid;
-        if (!uid) return;
-        const response = await axios.get(`http://localhost:3000/goals/getAllUserGoals/${uid}`);
-        setGoals(response.data);
-        
-        let completedCount = 0;
-        response.data.forEach(goal => {
-          if (goal.status) completedCount++; // Increment if goal is completed
-        });
-        // Calculate percentage
-        const percentage = response.data.length > 0 ? (completedCount / response.data.length) * 100 : 0;
-        setCompletionPercentage(percentage.toFixed(2)); // Store percentage, rounded to 2 decimal places
-      } catch (error) {
-        console.error('There was an error!', error);
-      }
-    };
+    useEffect(() => {
+      const fetchMotivationalQuote = async () => {
+          try {
+              const uid = user?.uid;
+              if (!uid) return;
+              const response = await axios.get(`http://localhost:3000/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
+              // Check if stepCount exists, otherwise set to 0
+              const fetchedMotivationalQuote = response.data;
+              const fetchedMotivationalQuoteCount = response.data.length;
+              setMotivationalQuote(fetchedMotivationalQuote);
+              setMotivationalQuoteCount(fetchedMotivationalQuoteCount);
 
-    fetchGoals();
-  }, [user?.uid]);
+          } catch (error) {
+              console.error('There was an error!', error);
+          }
+      };
+      fetchMotivationalQuote();
+    }, [user?.uid]);
 
-  const getRandomMotivationalQuoteCallback = (randomMotivationalQuote) => {
-    setCurrentMotivationalQuote(randomMotivationalQuote);
-    setRandomMotivationalQuote(randomMotivationalQuote);
-    //updateUser(({ ...user, randomMotivationalQuote: randomMotivationalQuote }));
-  };
-  
+ useEffect(() => {
+      const fetchSharingTip = async () => {
+          try {
+              const uid = user?.uid;
+              if (!uid) return;
+              const response = await axios.get(`http://localhost:3000/tips/getAllUserTips/${uid}`);
+              // Check if stepCount exists, otherwise set to 0
+              const fetchedSharingTip = response.data;
+              const fetchedSharingTipCount = response.data.length;
+              setSharingTip(fetchedSharingTip);
+              setSharingTipCount(fetchedSharingTipCount);
+
+              console.log(fetchedSharingTip)
+          } catch (error) {
+              console.error('There was an error!', error);
+          }
+      };
+      fetchSharingTip();
+    }, [user?.uid]);
+
+    useEffect(() => {
+      const fetchTrainingProgram = async () => {
+          try {
+              const uid = user?.uid;
+              if (!uid) return;
+              const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+              // Check if stepCount exists, otherwise set to 0
+              const fetchedTrainingProgram = response.data;
+              const fetchedTrainingProgramCount = response.data.length;
+              setTrainingProgram(fetchedTrainingProgram);
+              setTrainingProgramCount(fetchedTrainingProgramCount);
+
+              console.log(fetchedTrainingProgram)
+          } catch (error) {
+              console.error('There was an error!', error);
+          }
+      };
+      fetchTrainingProgram();
+    }, [user?.uid]);
+
   let bmiCategoryColor;
   let bmiCategoryLabel;
   
@@ -174,6 +180,7 @@ export function Dashboard() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
         <Card sx={{
+            minHeight: 100,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -181,56 +188,50 @@ export function Dashboard() {
             backgroundColor: '#5D8BEA',
             color: 'white',
         }}>
-            <Box>
-            <Typography variant="h6">Welcome, Student {username}!</Typography>
-                {currentMotivationalQuote && (
-                            <Typography  variant="subtitle1">
-                                {currentMotivationalQuote}
-                            </Typography>
-                        )}
+           <Box>
+           <Typography variant="h6">Welcome, Trainer {username}!</Typography>
             </Box>
-              <GetRandomMotivationalQuote id={randomMotivationalQuote.id} onGetRandomMotivationalQuote={getRandomMotivationalQuoteCallback} ></GetRandomMotivationalQuote>
         </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ padding: 2 , backgroundColor: '#1FB2B2'}}>
-            <DirectionsWalk sx={{ color: 'white' }} />
-            <Typography variant="h6" sx={{ color: 'white' }}>{steps}</Typography>
-            <Typography variant="subtitle1" sx={{ color: 'white' }}>Steps taken</Typography>
+            <FitnessCenter  sx={{ color: 'white' }} />
+            <Typography variant="h6" sx={{ color: 'white' }}>{trainingProgramCount}</Typography>
+            <Typography variant="subtitle1" sx={{ color: 'white' }}>Training Programs</Typography>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        {/* <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ padding: 2, backgroundColor: '#8676FE'}}>
-            <WaterDrop sx={{ color: 'white' }} />
-            <Typography variant="h6" sx={{ color: 'white' }}>{currentHydration || 0} </Typography>
-            <Typography variant="subtitle1" sx={{ color: 'white' }}>Water taken</Typography>
+            <School sx={{ color: 'white' }} />
+            <Typography variant="h6" sx={{ color: 'white' }}>{} </Typography>
+            <Typography variant="subtitle1" sx={{ color: 'white' }}></Typography>
           </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        </Grid> */}
+        <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ padding: 2 , backgroundColor: '#F56081'}}>
-            <TrackChanges sx={{ color: 'white' }} />
-            <Typography variant="h6" sx={{ color: 'white' }}>{fitnessGoal}</Typography>
-            <Typography variant="subtitle1" sx={{ color: 'white' }}>Fitness Goal</Typography>
+            <TipsAndUpdates  sx={{ color: 'white' }} />
+            <Typography variant="h6" sx={{ color: 'white' }}>{sharingTipCount}</Typography>
+            <Typography variant="subtitle1" sx={{ color: 'white' }}>Sharing Tips</Typography>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ padding: 2 , backgroundColor: '#F77A4D'}}>
-            <FitnessCenter sx={{ color: 'white' }}/>
-            <Typography variant="h6" sx={{ color: 'white' }}>{fitnessLevel}</Typography>
-            <Typography variant="subtitle1" sx={{ color: 'white' }}>Fitness level</Typography>
+            <FormatQuote sx={{ color: 'white' }}/>
+            <Typography variant="h6" sx={{ color: 'white' }}>{motivationalQuoteCount}</Typography>
+            <Typography variant="subtitle1" sx={{ color: 'white' }}>Motivational Quotes</Typography>
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={7}>
           <Card sx={{ padding: 2 }}>
             <CardContent>
-                <StepsBarChart/>
+                <TrainerBarChart/>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={5}>
         <Card sx={{ padding: 3 }}>
             <Typography sx={{  mb: 2 }} variant="h6" align="center" >Body Mass Index (BMI)</Typography>
             <Typography sx={{  mb: 2 }} variant="h4" align="right">{BMIValue}</Typography>
@@ -289,26 +290,24 @@ export function Dashboard() {
             </Box>
           </Card>
           <Card sx={{ padding: 3, mt: 3 }}>
-            <Typography variant="h6">Goals Achievement</Typography>
             <Box
             align = "center"
             marginTop={2}>
-            <CustomCircularProgress value={completionPercentage} />
+            <TrainerPieChart />
             </Box>
-            <Typography align = "center" variant="subtitle1">You have completed {completionPercentage}% of your goals.</Typography>
           </Card>
         </Grid>
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={6}>
           <Card sx={{ padding: 2 }}>
             <CardContent>
-                <WaterLineChart/>
+                <TrainerLineChart/>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={6}>
           <Card sx={{ padding: 2 }}>
             <CardContent>
-                <TrainingPieChart/>
+                <TrainerMotivationalLineChart/>
             </CardContent>
           </Card>
         </Grid>

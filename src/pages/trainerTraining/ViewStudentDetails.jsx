@@ -132,7 +132,7 @@ export function ViewStudentDetails() {
                 Slot:
               </Typography>
               <Typography variant="body1">
-                {studentData.slot}
+                {studentData.slot.time}
               </Typography>
             </Box>
           </Box>

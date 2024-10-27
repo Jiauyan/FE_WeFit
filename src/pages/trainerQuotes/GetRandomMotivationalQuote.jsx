@@ -62,7 +62,12 @@ const handleRandom = async (e) => {
 const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        onGetRandomMotivationalQuote(randomMotivationalQuote);
+        const uid = user?.uid;
+        if (!uid) return;
+        const response = await axios.patch(`http://localhost:3000/profile/updateCurrentMotivationalQuote/${uid}`,{
+            currentMotivationalQuote : randomMotivationalQuote.motivationalQuote
+        });
+        onGetRandomMotivationalQuote(response.data);
         handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {

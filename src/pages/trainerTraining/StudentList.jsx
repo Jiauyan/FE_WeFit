@@ -16,12 +16,13 @@ export function StudentList() {
   const location = useLocation();
   const { id, slot, title } = location.state;
 
+  console.log(slot);
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const response = await axios.post(`http://localhost:3000/trainingPrograms/getStudentBySlot`, {
           id,
-          slot
+          slot : slot.time
         });
         console.log(response.data.id);
         setStudents(response.data)
@@ -101,7 +102,7 @@ export function StudentList() {
               color: "textSecondary", 
             }}
           >
-            All Students ( {slot} )
+            All Students ( {slot.time} )
           </Typography>
         </Box>
         {filteredStudents.length === 0 ? (

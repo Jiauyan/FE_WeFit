@@ -15,7 +15,7 @@ export function ViewTrainerTrainingProgram() {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = location.state;
+  const { id, page } = location.state;
 
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
@@ -50,7 +50,7 @@ export function ViewTrainerTrainingProgram() {
   };
 
   const handleBack = async () => {
-    navigate("/trainerTrainingPrograms");
+    navigate("/trainerTrainingPrograms", {state: {currentPage: page}});
   };
 
   const slots = Array.isArray(trainingProgramData.slots) ? trainingProgramData.slots : [];
@@ -122,6 +122,83 @@ export function ViewTrainerTrainingProgram() {
               {trainingProgramUser.username}
             </Typography>
           </Box>
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Training Program Type
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgramData.typeOfTrainingProgram}
+          </Typography>
+          {trainingProgramData.typeOfTrainingProgram === 'Group Classes' && (
+            <Box>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold' }}
+            >
+              Capacity
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              {trainingProgramData.capacity}
+            </Typography> 
+            </Box>
+          )}
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Training Program Fee
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgramData.feeType}
+          </Typography>
+          {trainingProgramData.feeType === 'Paid' && (
+            <Box>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold' }}
+            >
+              Fee Amount
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              RM {trainingProgramData.feeAmount}
+            </Typography> 
+            </Box>
+          )}
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Venue Type
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgramData.venueType}
+          </Typography>
+          {trainingProgramData.venueType === 'Physical' && (
+            <Box>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold',textAlign: 'center' }}
+            >
+              Venue
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              {trainingProgramData.venue}
+            </Typography> 
+            </Box>
+          )}
+
+
           <Typography
             variant="h6"
             component="h2"
@@ -172,7 +249,7 @@ export function ViewTrainerTrainingProgram() {
           <List>
               {slots.map((slot, index) => (
                 <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <ListItemText primary={slot} />
+                  <ListItemText primary={slot?.time} />
                 </ListItem>
               ))}
             </List>

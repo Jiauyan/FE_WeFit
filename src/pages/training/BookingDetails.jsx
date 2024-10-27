@@ -194,7 +194,7 @@ export function BookingDetails() {
               id="contactNum"
               onChange={(e) => setContactNum(e.target.value)}
             />
-             <FormControl margin="normal" fullWidth>
+            <FormControl margin="normal" fullWidth>
                 <InputLabel id="demo-simple-select-autowidth-label">Slot</InputLabel>
                 <Select
                     labelId="demo-simple-select-autowidth-label"
@@ -205,12 +205,17 @@ export function BookingDetails() {
                     label="Slot"
                 >
                     {trainingProgramSlot.map((slot, index) => (
-                    <MenuItem key={index} value={slot}>  
-                        {slot}  
-                    </MenuItem>
+                        <MenuItem 
+                            key={index} 
+                            value={slot} 
+                            disabled={slot.status} // Disables the MenuItem if slot.status is true
+                        >
+                            {/* {`${slot.time} - ${slot.status ? 'Full' : 'Available'}`}   */}
+                            {slot.time}
+                        </MenuItem>
                     ))}
                 </Select>
-                </FormControl>
+            </FormControl>
             <GradientButton
                 type="submit"
                 fullWidth

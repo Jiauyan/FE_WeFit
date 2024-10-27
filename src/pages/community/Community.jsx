@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import {
     Typography,
@@ -79,26 +79,66 @@ export function Community() {
     };
 
     const PostDetails = ({ post }) => {
-        const sentences = post.postDetails.split('. ');
+        const textRef = useRef(null); // Reference to the text element
+        const [isOverflowing, setIsOverflowing] = useState(false); // Track overflow state
+    
+        // Function to check for text overflow
+        const checkOverflow = () => {
+            if (textRef.current) {
+                // Check if the content height exceeds 3 lines height (1.5em line height)
+                const hasOverflow = textRef.current.scrollHeight > (1.5 * parseInt(window.getComputedStyle(textRef.current).fontSize) * 3);
+                setIsOverflowing(hasOverflow);
+            }
+        };
+    
+        // Check overflow on mount and post updates
+        useEffect(() => {
+            checkOverflow();
+            // Adding a resize listener to handle responsive changes
+            window.addEventListener('resize', checkOverflow);
+            return () => window.removeEventListener('resize', checkOverflow);
+        }, [post]);
     
         return (
-            <Box>
-            <Typography variant="body1" color="textSecondary" display="inline">
-                {sentences.slice(0, 3).join('. ') + (sentences.length > 3 ? '...' : '')}
-            </Typography>
-            {sentences.length > 3 && (
-                <Link
-                    component="button"
-                    variant="body2"
-                    onClick={handleView}
-                    sx={{ textDecoration: 'underline', ml: 0.5 }}
+            <Box
+                sx={{
+                    minHeight: 70,
+                    position: 'relative',
+                    overflow: 'hidden',
+                }}
+            >
+                <Typography
+                    ref={textRef}
+                    variant="body1"
+                    color="textSecondary"
+                    component="span"
+                    sx={{
+                        display: '-webkit-box',
+                        overflow: 'hidden',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 2, // Limit to 3 lines
+                        textOverflow: 'ellipsis',
+                        lineHeight: '1.5em',
+                    }}
                 >
-                    See more
-                </Link>
-            )}
-        </Box>
+                    {post.postDetails}
+                </Typography>
+    
+                {/* Conditionally render "See more" only if content overflows */}
+                {isOverflowing && (
+                    <Link
+                        component="button"
+                        variant="body2"
+                        onClick={() => console.log('See more clicked')}
+                        sx={{ textDecoration: 'underline' }}
+                    >
+                        See more
+                    </Link>
+                )}
+            </Box>
         );
     };
+    
 
     return (
         <Box padding={3}>

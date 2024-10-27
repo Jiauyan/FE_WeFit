@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import {
     Typography,
@@ -21,6 +21,7 @@ import { useUser } from "../../contexts/UseContext";
 import { ArrowBackIos } from '@mui/icons-material';
 import { DeletePost } from './DeletePost';
 import { EditPost } from './EditPost';
+import { AddPost } from '../community/AddPost';
 
 export function MyPost() {
     const navigate = useNavigate();
@@ -56,6 +57,10 @@ export function MyPost() {
         }));
     };
 
+    const addPostCallback = (newPost) => {
+        setMyPosts(prevPosts => [newPost, ...prevPosts]);
+    };
+
     // Callback for deleting a post
     const deletePostCallback = (myPostId) => {
         setMyPosts(prevMyPosts => prevMyPosts.filter(myPost => myPost.id !== myPostId));
@@ -66,7 +71,7 @@ export function MyPost() {
     };
 
     const handleChat = async () => {
-        navigate("/chat");
+        navigate("/chatPage");
     };
 
     const handleBack = async () => {
@@ -83,32 +88,67 @@ export function MyPost() {
     const currentMyPosts = filteredMyPosts.slice(startIndex, startIndex + itemsPerPage);
 
     const PostDetails = ({ post }) => {
-        const sentences = post.postDetails.split('. ');
+        const textRef = useRef(null); // Reference to the text element
+        const [isOverflowing, setIsOverflowing] = useState(false); // Track overflow state
+    
+        // Function to check for text overflow
+        const checkOverflow = () => {
+            if (textRef.current) {
+                // Check if the content height exceeds 3 lines height (1.5em line height)
+                const hasOverflow = textRef.current.scrollHeight > (1.5 * parseInt(window.getComputedStyle(textRef.current).fontSize) * 3);
+                setIsOverflowing(hasOverflow);
+            }
+        };
+    
+        // Check overflow on mount and post updates
+        useEffect(() => {
+            checkOverflow();
+            // Adding a resize listener to handle responsive changes
+            window.addEventListener('resize', checkOverflow);
+            return () => window.removeEventListener('resize', checkOverflow);
+        }, [post]);
     
         return (
-            <Box sx={{ 
-                minHeight: 70,
-                maxHeight:70,
-                marginLeft: 2
-                }}>
-            <Typography variant="body1" color="textSecondary" display="inline">
-                {sentences.slice(0, 3).join('. ') + (sentences.length > 3 ? '...' : '')}
-            </Typography>
-            {sentences.length > 3 && (
-                <Link
-                    component="button"
-                    variant="body2"
-                    onClick={handleView}
-                    sx={{ textDecoration: 'underline', ml: 0.5 }}
+            <Box
+                sx={{
+                    minHeight: 70,
+                    marginLeft: 2,
+                    position: 'relative',
+                    overflow: 'hidden',
+                }}
+            >
+                <Typography
+                    ref={textRef}
+                    variant="body1"
+                    color="textSecondary"
+                    component="span"
+                    sx={{
+                        display: '-webkit-box',
+                        overflow: 'hidden',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 2, // Limit to 3 lines
+                        textOverflow: 'ellipsis',
+                        lineHeight: '1.5em',
+                    }}
                 >
-                    See more
-                </Link>
-            )}
-        </Box>
+                    {post.postDetails}
+                </Typography>
+    
+                {/* Conditionally render "See more" only if content overflows */}
+                {isOverflowing && (
+                    <Link
+                        component="button"
+                        variant="body2"
+                        onClick={() => console.log('See more clicked')}
+                        sx={{ textDecoration: 'underline' }}
+                    >
+                        See more
+                    </Link>
+                )}
+            </Box>
         );
     };
-
-
+    
     return (
         <Box padding={3}>
             <Box sx={{ 
@@ -136,10 +176,11 @@ export function MyPost() {
                     onClick={handleChat}
                     variant="contained"
                     color="primary"
-                    sx={{ mt: 3, mb: 2 }}
+                    sx={{ mt: 3, mb: 2, mr:2 }}
                 >
                     Chat
                 </Button>
+                <AddPost onAddPost={addPostCallback}></AddPost>
             </Box>
             </Box>
             <TextField
@@ -170,9 +211,10 @@ export function MyPost() {
                             minHeight: 230, 
                             maxHeight:230,
                            }}
-                        //onClick={() => handleView(myPost)}
+                        
                     >
-                        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <CardContent onClick={() => handleView(myPost)}
+                        sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', margin: 2 }}>
                                     <Avatar
@@ -191,11 +233,12 @@ export function MyPost() {
                                 </Box>
                                 <PostDetails post={myPost} />
                             </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+                           
+                        </CardContent> 
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 , mt: -2, mr:2}}>
                                 <EditPost id={myPost.id} oldDesc={myPost.postDetails} onEditPost={editPostCallback} />
                                 <DeletePost id={myPost.id} onDeletePost={deletePostCallback} />
                             </Box>
-                        </CardContent>
                     </Card>
                 </Grid>
                 ))}

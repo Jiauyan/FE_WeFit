@@ -43,6 +43,7 @@ export function SelectSlot({id}) {
   const uid = user.uid;
   const navigate = useNavigate();
   
+  
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return;
@@ -58,7 +59,7 @@ export function SelectSlot({id}) {
     navigate('/studentList', { state: { id: id ,slot } });
 };
 
-
+console.log(trainingProgramSlot);
 
   return (
     <div>
@@ -97,7 +98,7 @@ export function SelectSlot({id}) {
                 >
                     {trainingProgramSlot.map((slot, index) => (
                     <MenuItem key={index} value={slot}>  
-                        {slot}  
+                        {slot.time}  
                     </MenuItem>
                     ))}
                 </Select>

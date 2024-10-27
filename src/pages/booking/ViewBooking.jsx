@@ -8,7 +8,8 @@ import { ArrowBackIos, Delete } from '@mui/icons-material';
 import { DeleteBooking } from './DeleteBooking';
 
 export function ViewBooking() {
-  const [bookingData, setBookingData] = useState([]);
+  const [bookingData, setBookingData] = useState('');
+  const [trainingProgram, setTrainingProgram] = useState('');
   const [trainerID, setTrainerID] = useState(null);
   const [trainer, setTrainer] = useState({});
   //const [slot , setSlot] = useState('');
@@ -27,10 +28,11 @@ export function ViewBooking() {
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return;
-    axios.get(`http://localhost:3000/trainingPrograms/getTrainingProgramById/${id}`)
+    axios.get(`http://localhost:3000/trainingClassBooking/getBookingById/${bookingId}`)
       .then(response => {
-        setBookingData(response.data);
-        setTrainerID(response.data.uid);
+        setBookingData(response.data.booking);
+        setTrainingProgram(response.data.trainingProgram)
+        setTrainerID(response.data.trainingProgram.uid);
       })
       .catch(error => console.error('There was an error!', error));
   }, [user?.uid]);
@@ -48,7 +50,6 @@ export function ViewBooking() {
   const handleBack = async () => {
     navigate(-1);
   };
-
 
   return (
     <>
@@ -78,10 +79,10 @@ export function ViewBooking() {
               <ArrowBackIos />
             </IconButton>
           </Box>
-          {bookingData.downloadUrl && (
+          {trainingProgram.downloadUrl && (
             <img
-              src={bookingData.downloadUrl}
-              alt={bookingData.title}
+              src={trainingProgram.downloadUrl}
+              alt={trainingProgram.title}
               style={{
                 width: '100%',
                 maxHeight: '500px',
@@ -98,7 +99,7 @@ export function ViewBooking() {
             Title
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {bookingData.title}
+            {trainingProgram.title}
           </Typography>
           <Typography
             variant="h6"
@@ -117,6 +118,82 @@ export function ViewBooking() {
               {trainer.username}
             </Typography>
           </Box>
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Training Program Type
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgram.typeOfTrainingProgram}
+          </Typography>
+          {trainingProgram.typeOfTrainingProgram === 'Group Classes' && (
+            <Box>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold' }}
+            >
+              Capacity
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              {trainingProgram.capacity}
+            </Typography> 
+            </Box>
+          )}
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Training Program Fee
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgram.feeType}
+          </Typography>
+          {trainingProgram.feeType === 'Paid' && (
+            <Box>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold' }}
+            >
+              Fee Amount
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              RM {trainingProgram.feeAmount}
+            </Typography> 
+            </Box>
+          )}
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Venue Type
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgram.venueType}
+          </Typography>
+          {trainingProgram.venueType === 'Physical' && (
+            <Box>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold',textAlign: 'center' }}
+            >
+              Venue
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              {trainingProgram.venue}
+            </Typography> 
+            </Box>
+          )}
+
           <Typography
             variant="h6"
             component="h2"
@@ -125,7 +202,7 @@ export function ViewBooking() {
             Fitness Level
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {bookingData.fitnessLevel}
+            {trainingProgram.fitnessLevel}
           </Typography>
           <Typography
             variant="h6"
@@ -135,7 +212,7 @@ export function ViewBooking() {
             Type of Exercise
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {bookingData.typeOfExercise}
+            {trainingProgram.typeOfExercise}
           </Typography>
           <Typography
             variant="h6"
@@ -145,7 +222,7 @@ export function ViewBooking() {
             Goal
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {bookingData.fitnessGoal}
+            {trainingProgram.fitnessGoal}
           </Typography>
           <Typography
             variant="h6"
@@ -155,7 +232,7 @@ export function ViewBooking() {
             Description
           </Typography>
           <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
-            {bookingData.desc}
+            {trainingProgram.desc}
           </Typography>
           <Typography
             variant="h6"
@@ -164,15 +241,9 @@ export function ViewBooking() {
           >
             Slot
           </Typography>
-          {/* <List>
-              {slots.map((slot, index) => (
-                <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <ListItemText primary={slot} />
-                </ListItem>
-              ))}
-            </List> */}
-            {slot}
-            <DeleteBooking id={bookingId} />
+          {bookingData?.slot?.time}
+            {bookingData?.status === false && <DeleteBooking id={bookingId} />}
+            {/* <DeleteBooking id={bookingId} /> */}
         </Paper>
       </Grid>
       <Outlet />

@@ -82,9 +82,9 @@ export function Login () {
           const formData = { email, password }
           const response = await login(formData)
           console.log(response.data)
-          const redirectPath = response.data.userRole === 'Student' ? '/profile' : '/trainerProfile';
+          const redirectPath = response.data.userRole === 'Student' ? '/dashboard' : '/trainerProfile';
           console.log(redirectPath);
-      navigate(`${redirectPath}`);
+          navigate(`${redirectPath}`);
         } catch (error) {
           if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).') {
             setPasswordError("Incorrect email or password");

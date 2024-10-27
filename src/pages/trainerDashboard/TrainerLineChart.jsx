@@ -7,8 +7,9 @@ import { useUser } from "../../contexts/UseContext";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-export default function WaterLineChart() {
-  const [waterData, setStepsData] = useState([]);  // State to store fetched data
+
+export default function TrainerLineChart() {
+  const [sharingTipData, setSharingTipData] = useState([]);
   const [currentStartIndex, setCurrentStartIndex] = useState(0);
   const { user , updateUser, setUser} = useUser();
   const [selectedMonth, setSelectedMonth] = useState(new Date().getUTCMonth());
@@ -16,34 +17,38 @@ export default function WaterLineChart() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
-    const fetchWater = async () => {
+    const fetchSharingTip = async () => {
       try {
         const uid = user?.uid;
         if (!uid) return;
   
-        const response = await axios.get(`http://localhost:3000/auth/getUserById/${uid}`);
-        const waterData = response.data.waterByDay;
-  
-        
-        let fetchedData = Object.entries(waterData).map(([date, water]) => ({
-          date,
-          water,
+        const response = await axios.get(`http://localhost:3000/tips/getAllUserTips/${uid}`);
+        const sharingTips = response.data;
+        let countsByDay = sharingTips.reduce((acc, sharingTip) => {
+          const date = new Date(sharingTip.createdAt).toISOString().split('T')[0];
+          acc[date] = (acc[date] || 0) + 1;
+          return acc;
+        }, {});
+
+        let data = Object.keys(countsByDay).map(key => ({
+          date: key,
+          count: countsByDay[key]
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
-  
-        const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
-        console.log(fetchedData);
+
+        const completedData = getCurrentMonthData(data, selectedMonth, selectedYear);
+        console.log(data)
         console.log(completedData);
         // Find index for the current day
         const todayIndex = completedData.findIndex(d => d.date === new Date().toISOString().split('T')[0]);
         const startIndex = Math.max(todayIndex - 3, 0); // Adjust as needed to center the view or to show previous days
   
-        setStepsData(completedData);
+        setSharingTipData(completedData);
         setCurrentStartIndex(startIndex);
       } catch (error) {
-        console.error('Error fetching water data:', error);
+        console.error('Error fetching steps data:', error);
       }
     };
-    fetchWater();
+    fetchSharingTip();
   }, [user?.uid,selectedMonth, selectedYear]);
 
   const getCurrentMonthData = (data, selectedMonth, selectedYear) => {
@@ -61,7 +66,7 @@ export default function WaterLineChart() {
       const existingEntry = filteredData.find(entry => entry.date === dateString);
       result.push({
         date: dateString,
-        water: existingEntry ? existingEntry.water : 0,
+        count: existingEntry ? existingEntry.count : 0,
       });
     }
   
@@ -73,28 +78,17 @@ export default function WaterLineChart() {
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
   };
 
-  // const getLast7DaysData = () => {
-  //   const startIndex = Math.max(currentStartIndex, 0);
-  //   const endIndex = Math.min(startIndex + 7, waterData.length);
-  //   return waterData.slice(startIndex, endIndex);
-  // };
-
   const handlePreviousWeek = () => {
     setCurrentStartIndex(prev => Math.max(prev - 7, 0));
   };
   
   const handleNextWeek = () => {
-    setCurrentStartIndex(prev => Math.min(prev + 7, waterData.length - 7));
+    setCurrentStartIndex(prev => Math.min(prev + 7, sharingTipData.length - 7));
   };
 
-  const last7DaysData = waterData.slice(currentStartIndex, currentStartIndex + 7); // Adjust the range as needed
-
-  // const handleMonthChange = (event) => {
-  //   setSelectedMonth(event.target.value);
-  // };
+  const last7DaysData = sharingTipData.slice(currentStartIndex, currentStartIndex + 7); // Adjust the range as needed
 
   const handleDateChange = (newValue) => {
-    console.log(newValue);
     setSelectedDate(newValue);
     setSelectedYear(newValue.getUTCFullYear());
     setSelectedMonth(newValue.getUTCMonth());
@@ -104,10 +98,9 @@ export default function WaterLineChart() {
     <Box sx={{ width: '100%', height: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
         <Typography variant="h6" component="h2">
-          Water Consumption Overview
+          Sharing Tips Overview
         </Typography>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <Box>
           <DatePicker
             views={['year', 'month']}
             label="Month and Year"
@@ -116,27 +109,10 @@ export default function WaterLineChart() {
             value={selectedDate}
             onChange={handleDateChange}
             renderInput={(params) => <TextField {...params} helperText={null} />}
-            slotProps={{ textField: { size: 'small'}}}
-          /></Box>
+            slotProps={{ textField: { size: 'small' } }}
+          />
         </LocalizationProvider>
-        {/* <FormControl variant="outlined" size="small">
-          <InputLabel id="month-select-label">Month</InputLabel>
-          <Select
-            labelId="month-select-label"
-            id="month-select"
-            value={selectedMonth}
-            label="Month"
-            onChange={handleMonthChange}
-          >
-            {Array.from({ length: 12 }, (_, i) => (
-              <MenuItem key={i} value={i}>
-                {new Date(0, i).toLocaleString('default', { month: 'long' })}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-       */}
-       </Box>
+      </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
         <ArrowBackIos />
@@ -156,7 +132,7 @@ export default function WaterLineChart() {
                 }}
                 cursor={false}  // Optionally hide the cursor as well
               />
-            <Line type="monotone" dataKey="water" barSize={10} radius={[10, 10, 0, 0]}>
+            <Line type="monotone" dataKey="count" barSize={10} radius={[10, 10, 0, 0]}>
               {last7DaysData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.date === formatDate(new Date().toISOString()) ? '#FF851B' : '#22D3EE'} />
               ))}
@@ -164,7 +140,7 @@ export default function WaterLineChart() {
           </LineChart>
         </ResponsiveContainer>
       </Box>
-      <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= waterData.length}>
+      <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= sharingTipData.length}>
         <ArrowForwardIos />
       </IconButton>
     </Box></Box>

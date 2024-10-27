@@ -13,16 +13,19 @@ import {
     Pagination
 } from "@mui/material";
 
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 
 export function TrainerTrainingPrograms(){
   const navigate = useNavigate();
+  const location = useLocation();
+  //const { currentPage } = location.state;
   const { user , setUser} = useUser();
   const [trainingPrograms, setTrainingPrograms] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
+  
 
       useEffect(() => {
         const fetchTrainingPrograms = async () => {
@@ -45,7 +48,7 @@ export function TrainerTrainingPrograms(){
 
     const handleView = async (trainingProgram) => {
       const trainingProgramId = trainingProgram.id;
-      navigate("/viewTrainerTrainingProgram", { state: { id: trainingProgramId } });
+      navigate("/viewTrainerTrainingProgram", { state: { id: trainingProgramId , page: page} });
     }; 
 
     // Filter programs based on search term

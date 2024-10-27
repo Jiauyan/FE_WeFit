@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListItem, ListItemText, Divider } from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos, Delete } from '@mui/icons-material';
+import { ArrowBackIos, Delete, Cancel, CheckCircle} from '@mui/icons-material';
 
 export function ViewTrainingProgram() {
   const [trainingProgramData, setTrainingProgramData] = useState([]);
@@ -15,7 +15,6 @@ export function ViewTrainingProgram() {
   const location = useLocation();
   const { id, pathName, pathPrev } = location.state;
 
-  console.log(pathPrev);
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
     if (storedUid) {
@@ -130,6 +129,83 @@ export function ViewTrainingProgram() {
               {trainer.username}
             </Typography>
           </Box>
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Training Program Type
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgramData.typeOfTrainingProgram}
+          </Typography>
+          {trainingProgramData.typeOfTrainingProgram === 'Group Classes' && (
+            <Box>
+            <Typography
+              variant="h6"
+              type= "number"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold' }}
+            >
+              Capacity
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              {trainingProgramData.capacity}
+            </Typography> 
+            </Box>
+          )}
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Training Program Fee
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgramData.feeType}
+          </Typography>
+          {trainingProgramData.feeType === 'Paid' && (
+            <Box>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold' }}
+            >
+              Fee Amount
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              RM {trainingProgramData.feeAmount}
+            </Typography> 
+            </Box>
+          )}
+
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Venue Type
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgramData.venueType}
+          </Typography>
+          {trainingProgramData.venueType === 'Physical' && (
+            <Box>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 'bold',textAlign: 'center' }}
+            >
+              Venue
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              {trainingProgramData.venue}
+            </Typography> 
+            </Box>
+          )}
+          
           <Typography
             variant="h6"
             component="h2"
@@ -178,12 +254,36 @@ export function ViewTrainingProgram() {
             Available Slots
           </Typography>
           <List>
-              {slots.map((slot, index) => (
-                <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <ListItemText primary={slot} />
-                </ListItem>
-              ))}
-            </List>
+            {slots.map((slot, index) => (
+              <ListItem 
+                key={index} 
+                sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center',
+                  //backgroundColor: slot.status ? '#ffebee' : '#e8f5e9', // Light red for full, light green for available
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center'}}>
+                      <Typography variant="body1" component="span" sx={{ marginRight: 1 }}>
+                        {slot.time}
+                      </Typography>
+                      {slot.status ? (
+                        <Cancel sx={{ fontSize: '1rem', marginRight: 1, color: slot.status ? 'red' : 'green'  }}/>
+                      ) : (
+                        <CheckCircle sx={{ fontSize: '1rem', marginRight: 1, color: slot.status ? 'red' : 'green'  }}/>
+                      )}
+                      <Typography variant="body1" component="span" sx={{ fontWeight: slot.status ? 'bold' : 'normal' , color: slot.status ? 'red' : 'green' }}>
+                        {slot.status ? "Full" : "Available"}
+                      </Typography>
+                    </Box>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
           <GradientButton
             fullWidth
             variant="contained"
