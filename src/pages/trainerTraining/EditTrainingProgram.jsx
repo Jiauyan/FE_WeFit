@@ -64,6 +64,7 @@ export function EditTrainingProgram() {
   const [currentEndTime, setCurrentEndTime] = useState(null);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); 
+  const [contactNum, setContactNum] = useState('');
   const [updateTrainingProgramStatus, setUpdateTrainingProgramStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
@@ -96,7 +97,7 @@ export function EditTrainingProgram() {
             setTypeOfTrainingProgram(data.typeOfTrainingProgram);
             setCapacity(data.capacity);
             setFeeType(data.feeType);
-            setFeeAmount(data.feeAmount);
+            setFeeAmount(Number(data.feeAmount));
             setVenueType(data.venueType);
             setVenue(data.venue);
             setFitnessLevel(data.fitnessLevel);
@@ -110,6 +111,7 @@ export function EditTrainingProgram() {
             setCurrentEndTime(data.currentEndTime);
             setTrainingProgramImage(data.downloadUrl);
             setPreviewUrl(data.downloadUrl);
+            setContactNum(data.contactNum);
         } catch (error) {
             console.error('There was an error fetching the training program data!', error);
         }
@@ -259,11 +261,12 @@ const isSlotClashing = (newSlot, existingSlots) => {
     const formData = new FormData();
     formData.append('trainingProgramImage', trainingProgramImage); 
     formData.append('uid', uid);
+    formData.append('contactNum', contactNum);
     formData.append('title', title);
     formData.append('typeOfTrainingProgram', typeOfTrainingProgram);
     formData.append('capacity', capacity);
     formData.append('feeType', feeType);
-    formData.append('feeAmount', feeAmount);
+    formData.append('feeAmount', Number(feeAmount));
     formData.append('venueType', venueType);
     formData.append('venue', venue);
     formData.append('fitnessLevel', fitnessLevel);
@@ -538,6 +541,16 @@ const isSlotClashing = (newSlot, existingSlots) => {
               rows={5}
               variant="outlined"
               value={desc}
+            />
+            <TextField
+              required
+              margin="normal"
+              fullWidth
+              name="trainerContactNum"
+              label="Trainer Contact Number"
+              id="trainerContactNum"
+              value={contactNum}
+              onChange={(e) => setContactNum(e.target.value)}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
               <Typography variant="subtitle1">

@@ -104,12 +104,13 @@ export function ViewTip() {
   >
     {tipUser.username}
   </Typography>
-  <Typography
-    variant="body2"
-    color="textSecondary"
-  >
-    {tipData.createdAt}
-  </Typography>
+  <Typography variant="body2" color="textSecondary">
+  {new Date(tipData.createdAt).toLocaleString('en-US', {
+    month: 'long',
+    day: '2-digit',
+    year: 'numeric',
+  })}
+</Typography>
 </Box>
   {tipData.downloadUrl && (
     <img

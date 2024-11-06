@@ -43,7 +43,6 @@ import { FitnessPlan } from '../pages/fitnessPlan/FitnessPlan.jsx';
 import { AddFitnessPlan } from '../pages/fitnessPlan/AddFitnessPlan.jsx';
 import { ViewFitnessPlan } from '../pages/fitnessPlan/ViewFitnessPlan.jsx';
 import { EditFitnessPlan } from '../pages/fitnessPlan/EditFitnessPlan.jsx';
-import { ConsentForm } from '../pages/training/ConsentForm.jsx';
 import { BookingDetails } from '../pages/training/BookingDetails.jsx';
 import { Booking } from '../pages/booking/Booking.jsx';
 import { ViewBooking } from '../pages/booking/ViewBooking.jsx';
@@ -64,6 +63,13 @@ import PendingBooking from '../pages/booking/PendingBooking.jsx';
 import CompletedBooking from '../pages/booking/CompletedBooking.jsx';
 import { ViewPost } from '../pages/community/ViewPost.jsx';
 import { TrainerDashboard } from '../pages/trainerDashboard/TrainerDashboard.jsx';
+import { ScreeningForm } from '../pages/training/ScreeningForm.jsx';
+import { ConsentForm } from '../pages/training/ConsentForm.jsx';
+import { LiabilityForm } from '../pages/training/LiabilityForm.jsx';
+import { Checkout } from '../pages/training/Checkout.jsx';
+import PaymentSuccess from '../components/PaymentSuccess.jsx';
+import PaymentCancel from '../components/PaymentCancel.jsx';
+import BookingSuccess from '../components/BookingSuccess.jsx';
 
 const routes = [
   {
@@ -204,8 +210,8 @@ const routes = [
         element:  <EditFitnessPlan/> ,
       },
       {
-        path: "consentForm",
-        element:  <ConsentForm/> ,
+        path: "screeningForm",
+        element:  <ScreeningForm/> ,
       },
       {
         path: "bookingDetails",
@@ -287,7 +293,30 @@ const routes = [
         path: "trainerDashboard",
         element:  <TrainerDashboard/> ,
       },
-
+      {
+        path: "consentForm",
+        element:  <ConsentForm/> ,
+      },
+      {
+        path: "liabilityForm",
+        element:  <LiabilityForm/> ,
+      },
+      {
+        path: "checkout",
+        element:  <Checkout/> ,
+      },
+      {
+        path: "paymentSuccess",
+        element:  <PaymentSuccess/> ,
+      },
+      {
+        path: "paymentCancel",
+        element:  <PaymentCancel/> ,
+      },
+      {
+        path: "bookingSuccess",
+        element:  <BookingSuccess/> ,
+      },
     ],
   },
   {

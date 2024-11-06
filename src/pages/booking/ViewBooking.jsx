@@ -12,7 +12,7 @@ export function ViewBooking() {
   const [trainingProgram, setTrainingProgram] = useState('');
   const [trainerID, setTrainerID] = useState(null);
   const [trainer, setTrainer] = useState({});
-  //const [slot , setSlot] = useState('');
+  const [transactionId, setTransactionId] = useState('');
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,8 +31,9 @@ export function ViewBooking() {
     axios.get(`http://localhost:3000/trainingClassBooking/getBookingById/${bookingId}`)
       .then(response => {
         setBookingData(response.data.booking);
-        setTrainingProgram(response.data.trainingProgram)
+        setTrainingProgram(response.data.trainingProgram);
         setTrainerID(response.data.trainingProgram.uid);
+        setTransactionId(response.data.booking.transactionId);
       })
       .catch(error => console.error('There was an error!', error));
   }, [user?.uid]);
@@ -242,8 +243,7 @@ export function ViewBooking() {
             Slot
           </Typography>
           {bookingData?.slot?.time}
-            {bookingData?.status === false && <DeleteBooking id={bookingId} />}
-            {/* <DeleteBooking id={bookingId} /> */}
+            {bookingData?.status === false && <DeleteBooking id={bookingId} transactionId={transactionId} feeAmount={trainingProgram.feeAmount}/>}
         </Paper>
       </Grid>
       <Outlet />

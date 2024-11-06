@@ -8,7 +8,11 @@ import {
     Button, 
     Box,
     TextField,
-    Grid
+    Grid,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem
 } from "@mui/material";
 import {  useNavigate, Outlet } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -18,6 +22,7 @@ export function EditProfile() {
     const { user , setUser} = useUser();
     const uid = user?.uid;
     const [username, setUsername] = useState('');
+    const [gender, setGender] = useState('');
     const [age, setAge] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
@@ -34,6 +39,7 @@ export function EditProfile() {
                 const data = response.data;
                 setUserData(data);
                 setUsername(data.username);
+                setGender(data.gender);
                 setAge(data.age);
                 setWeight(data.weight);
                 setHeight(data.height);
@@ -63,11 +69,16 @@ export function EditProfile() {
         }
       };
 
+      const handleGender = async (event) => {
+        setGender(event.target.value);
+      };
+
     const handleSubmit = async (e) => { 
         e.preventDefault();
         const formData = new FormData();
         formData.append('profileImage', profileImage);
         formData.append('username', username);
+        formData.append('gender', gender);
         formData.append('age', age);
         formData.append('weight', weight);
         formData.append('height', height);
@@ -150,6 +161,20 @@ export function EditProfile() {
             variant="outlined"
             sx={{ mb: 1 }}
         />
+        <FormControl margin="normal" fullWidth>
+                    <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                    <Select
+                        required
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={gender}
+                        label="Role"
+                        onChange={handleGender}
+                    >
+                        <MenuItem value="Male">Male</MenuItem>
+                        <MenuItem value="Female">Female</MenuItem>
+                    </Select>
+            </FormControl>
         <TextField
             margin="normal"
             fullWidth

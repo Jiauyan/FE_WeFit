@@ -89,8 +89,6 @@ export function MotivationalQuotes(){
                 if (!uid) return;
                 const response = await axios.get(`http://localhost:3000/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
                 const sortedMotivationalQuote = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                console.log("r",response.data);
-                console.log("sorted", sortedMotivationalQuote);
                 setMotivationalQuotes(sortedMotivationalQuote);
             } catch (error) {
                 console.error('There was an error!', error);

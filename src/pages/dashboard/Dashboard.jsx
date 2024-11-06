@@ -9,6 +9,7 @@ import { CustomCircularProgress } from "../../components/CustomCircularProgress"
 import StepsBarChart from './StepsBarChart';
 import WaterLineChart from './WaterLineChart';
 import TrainingPieChart from './TrainingPieChart';
+import SleepBarChart from './SleepBarChart';
 
 export function Dashboard() {
   
@@ -28,6 +29,8 @@ export function Dashboard() {
   const [fitnessGoal, setFitnessGoal] = useState('');
   const [currentHydration, setCurentHydration] = useState('');
   const [currentMotivationalQuote, setCurrentMotivationalQuote] = useState("");
+  const [sleep, setSleep] = useState("");
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,6 +46,7 @@ export function Dashboard() {
             setFitnessGoal(response.data.fitnessGoal);
             setCurentHydration(response.data.todayWater);
             setCurrentMotivationalQuote(response.data.currentMotivationalQuote);
+            setSleep(response.data.sleepbyDay);
 
             const heightInMeters = response.data.height / 100;
             const weight = response.data.weight;
@@ -168,9 +172,9 @@ export function Dashboard() {
 
   return (
     <Box padding={3}>
-      <Typography variant="h6" gutterBottom>
+      {/* <Typography variant="h6" gutterBottom>
         Dashboard Overview
-      </Typography>
+      </Typography> */}
       <Grid container spacing={3}>
         <Grid item xs={12}>
         <Card sx={{
@@ -196,7 +200,7 @@ export function Dashboard() {
         <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ padding: 2 , backgroundColor: '#1FB2B2'}}>
             <DirectionsWalk sx={{ color: 'white' }} />
-            <Typography variant="h6" sx={{ color: 'white' }}>{steps}</Typography>
+            <Typography variant="h6" sx={{ color: 'white' }}>{steps || 0}</Typography>
             <Typography variant="subtitle1" sx={{ color: 'white' }}>Steps taken</Typography>
           </Card>
         </Grid>
@@ -222,7 +226,7 @@ export function Dashboard() {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={7}>
           <Card sx={{ padding: 2 }}>
             <CardContent>
                 <StepsBarChart/>
@@ -230,7 +234,7 @@ export function Dashboard() {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={5}>
         <Card sx={{ padding: 3 }}>
             <Typography sx={{  mb: 2 }} variant="h6" align="center" >Body Mass Index (BMI)</Typography>
             <Typography sx={{  mb: 2 }} variant="h4" align="right">{BMIValue}</Typography>
@@ -288,27 +292,23 @@ export function Dashboard() {
               </Box>
             </Box>
           </Card>
-          <Card sx={{ padding: 3, mt: 3 }}>
-            <Typography variant="h6">Goals Achievement</Typography>
-            <Box
-            align = "center"
-            marginTop={2}>
-            <CustomCircularProgress value={completionPercentage} />
-            </Box>
-            <Typography align = "center" variant="subtitle1">You have completed {completionPercentage}% of your goals.</Typography>
+          <Card sx={{ padding: 2 ,  mt: 3 }}>
+            <CardContent>
+                <TrainingPieChart/>
+            </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={6}>
           <Card sx={{ padding: 2 }}>
             <CardContent>
                 <WaterLineChart/>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={6}>
           <Card sx={{ padding: 2 }}>
             <CardContent>
-                <TrainingPieChart/>
+              <SleepBarChart/>
             </CardContent>
           </Card>
         </Grid>

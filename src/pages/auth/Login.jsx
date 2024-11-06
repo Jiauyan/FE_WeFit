@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { useNavigate} from 'react-router-dom';
 import axios from 'axios'; 
 import { useUser } from '../../contexts/UseContext';
@@ -27,6 +27,7 @@ import loginBackground from "../../assets/loginBackground.png";
 
 export function Login () {
     const [email, setEmail] = useState('');
+    const [checkUserEmail, setCheckUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [loginStatus, setLoginStatus] = useState('');
@@ -36,6 +37,18 @@ export function Login () {
     
     const { updateUser, login, signInWithGoogle } = useUser();
     const [showPassword, setShowPassword] = useState(false);
+
+    useEffect(() => {
+      axios.post('http://localhost:3000/auth/checkUserEmail',{
+        email : email
+      })
+        .then(response => {
+          console.log(response.data);
+          setCheckUserEmail(response.data);
+        })
+        .catch(error => console.error('There was an error!', error));
+    }, [email]);
+
     const handleTogglePasswordVisibility = () => {
       setShowPassword(!showPassword);
     };
@@ -81,16 +94,17 @@ export function Login () {
         try {
           const formData = { email, password }
           const response = await login(formData)
-          console.log(response.data)
-          const redirectPath = response.data.userRole === 'Student' ? '/dashboard' : '/trainerProfile';
+          const redirectPath = response.data.userRole === 'Student' ? '/dashboard' : '/trainerDashboard';
           console.log(redirectPath);
           navigate(`${redirectPath}`);
         } catch (error) {
-          if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).') {
-            setPasswordError("Incorrect email or password");
-            setEmailError("Incorrect email or password");
+          if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && checkUserEmail === true) {
+            setPasswordError("Incorrect password");
             setLoginStatus(error);
-          } else if (axios.isAxiosError(error) && error.response?.status === 401) {
+          } else if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && checkUserEmail === false){
+            setEmailError("Incorrect email");
+            setLoginStatus(error);
+          }else if (axios.isAxiosError(error) && error.response?.status === 401) {
             setLoginStatus(error);
           } else {
             setLoginStatus('An error occurred');

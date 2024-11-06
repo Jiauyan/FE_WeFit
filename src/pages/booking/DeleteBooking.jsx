@@ -28,35 +28,33 @@ const style = {
   alignItems: 'center'
 };
 
-export function DeleteBooking({id}) {
+export function DeleteBooking({id, transactionId, feeAmount}) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deleteBookingStatus, setDeleteBookingStatus] = useState('');
     
-  const handleSubmit = async (e) => { 
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.delete(`http://localhost:3000/trainingClassBooking/deleteTrainingClassBooking/${id}`);
-        console.log(response.data);
-        setDeleteBookingStatus(response.data.message);
-        handleClose();
-        navigate("/myBooking");
+      if (Number(feeAmount) > 0) {
+        await axios.post('http://localhost:3000/checkout/refundPayment', {
+          paymentIntentId: transactionId
+        });
+        alert('Refund processed successfully.');
+      }
+      await axios.delete(`http://localhost:3000/trainingClassBooking/deleteTrainingClassBooking/${id}`);
+      setDeleteBookingStatus('Booking cancelled successfully');
+      alert('Booking cancelled successfully.');
+      handleClose();
+      navigate("/myBooking");
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            if (error.response) {
-                setDeleteBookingStatus(error.response.data.message);
-            } else {
-                setDeleteBookingStatus('An error occurred');
-            }
-        } else {
-            setDeleteBookingStatus('An unexpected error occurred');
-        }
+      const message = axios.isAxiosError(error) && error.response ? error.response.data.message : 'An unexpected error occurred';
+      setDeleteBookingStatus(message);
+      handleClose();
     }
-};
-
-
+  };
 
   return (
     <div>

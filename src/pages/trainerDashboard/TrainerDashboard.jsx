@@ -92,8 +92,6 @@ export function TrainerDashboard() {
               const fetchedSharingTipCount = response.data.length;
               setSharingTip(fetchedSharingTip);
               setSharingTipCount(fetchedSharingTipCount);
-
-              console.log(fetchedSharingTip)
           } catch (error) {
               console.error('There was an error!', error);
           }
@@ -112,8 +110,6 @@ export function TrainerDashboard() {
               const fetchedTrainingProgramCount = response.data.length;
               setTrainingProgram(fetchedTrainingProgram);
               setTrainingProgramCount(fetchedTrainingProgramCount);
-
-              console.log(fetchedTrainingProgram)
           } catch (error) {
               console.error('There was an error!', error);
           }
@@ -174,9 +170,6 @@ export function TrainerDashboard() {
 
   return (
     <Box padding={3}>
-      <Typography variant="h6" gutterBottom>
-        Dashboard Overview
-      </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
         <Card sx={{

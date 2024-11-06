@@ -8,14 +8,13 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 export default function TrainerPieChart() {
 
-const [createdTrainingPrograms, setCreatedTrainingPrograms] = useState([]);
-const [createdYogaPrograms, setCreatedYogaPrograms] = useState([]);
-const [createdDancePrograms, setCreatedDancePrograms] = useState([]);
-const [createdCardioPrograms, setCreatedCardioPrograms] = useState([]);
-const [createdStrengthPrograms, setCreatedStrengthPrograms] = useState([]);
-const [createdHIITPrograms, setCreatedHIITPrograms] = useState([]);
-const [createdMeditationPrograms, setCreatedMeditationPrograms] = useState([]);
-const [createdFitnessPlans, setCreatedFitnessPlans] = useState([]);
+const [createdTrainingPrograms, setCreatedTrainingPrograms] = useState(0);
+const [createdYogaPrograms, setCreatedYogaPrograms] = useState(0);
+const [createdDancePrograms, setCreatedDancePrograms] = useState(0);
+const [createdCardioPrograms, setCreatedCardioPrograms] = useState(0);
+const [createdStrengthPrograms, setCreatedStrengthPrograms] = useState(0);
+const [createdHIITPrograms, setCreatedHIITPrograms] = useState(0);
+const [createdMeditationPrograms, setCreatedMeditationPrograms] = useState(0);
 const { user , updateUser, setUser} = useUser();
 const [selectedMonth, setSelectedMonth] = useState(new Date().getUTCMonth());
 const [selectedYear, setSelectedYear] = useState(new Date().getUTCFullYear());
@@ -33,8 +32,8 @@ const data = [
   { name: 'Meditation', value: createdMeditationPrograms}
 ];
 
-console.log(createdFitnessPlans);
-console.log(createdTrainingPrograms);
+const totalCompleted = data.reduce((acc, cur) => acc + cur.value, 0);
+
 
 
 
@@ -50,7 +49,6 @@ useEffect(() => {
             // const createdPrograms = getCurrentMonthData(data, selectedMonth, selectedYear);
             // 
             const createdPrograms = getCurrentMonthData(trainingPrograms, selectedMonth, selectedYear);
-            console.log(createdPrograms);
             const createdYogaPrograms = createdPrograms.filter(createdProgram=> createdProgram.typeOfExercise === "Yoga");
             setCreatedYogaPrograms(createdYogaPrograms.length);
 
@@ -93,10 +91,7 @@ const getCurrentMonthData = (data, selectedMonth, selectedYear) => {
  return filteredData;
 };
 
-
-
 const handleDateChange = (newValue) => {
-  console.log(newValue);
   setSelectedDate(newValue);
   setSelectedYear(newValue.getUTCFullYear());
   setSelectedMonth(newValue.getUTCMonth());
@@ -129,6 +124,12 @@ const handleDateChange = (newValue) => {
           />
         </LocalizationProvider></Box>
         </Box>
+        {totalCompleted === 0 ? (
+          <Box height={335} display="flex" alignItems="center" justifyContent="center">
+          <Typography>No training programs found for the selected period.</Typography>
+          </Box>
+            ) : (
+                <>
         <ResponsiveContainer width="100%" height={400}>
           <PieChart padding={{ top: 0, right: 0, bottom: 0, left: 0 }} margin={{ top: -160, right: 0, bottom: 0, left: 0 }}>
             <Pie
@@ -185,6 +186,8 @@ const handleDateChange = (newValue) => {
             </Box>
           ))}
         </Box>
+        </>
+            )}
       </Box>
   );
 }

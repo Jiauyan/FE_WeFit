@@ -41,14 +41,14 @@ export const UserProvider = ({ children }) => {
     const uid = response.data.user.uid;
     const role = response.data.userRole;
     const data= response.data.userData;
-    const consentForm = response.data.consentForm;
+    //const consentForm = response.data.consentForm;
     const token = {
       accessToken : response.data.user.stsTokenManager.accessToken,
       refreshToken : response.data.user.stsTokenManager.refreshToken,
     }
     localStorage.setItem('accessToken', token.accessToken);
     localStorage.setItem('refreshToken', token.refreshToken);
-    updateUser({ uid, role , data, consentForm}); 
+    updateUser({ uid, role , data}); 
     return response;
   };
 

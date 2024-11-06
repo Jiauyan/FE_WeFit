@@ -48,6 +48,7 @@ export function BookingDetails() {
     const [contactNum, setContactNum] = useState('');
     const [slot, setSlot] = useState('');
     const [trainingProgramSlot, setTrainingProgramSlot] = useState([]);
+    const [status, setStatus] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState('');
     const [trainingClassID, setTrainingClassID] = useState('');
     const [addBookingDetailsStatus, setAddBookingDetailsStatus] = useState('');
@@ -56,6 +57,12 @@ export function BookingDetails() {
     const location = useLocation();
     const { id , pathPrev} = location.state;
     const [bookedProgramsSlot, setBookedProgramsSlot] = useState([]);
+    const [feeAmount, setFeeAmount] = useState(0);
+    const [trainingProgram, setTrainingProgram] = useState('');
+    
+  useEffect(() => {
+      window.scrollTo(0, 0); // Scroll to the top of the page when the component loads
+  }, []);
 
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
@@ -71,6 +78,8 @@ export function BookingDetails() {
       .then(response => {
         setTrainingProgramSlot(response.data.slots);
         setTrainingClassID(response.data.id);
+        setFeeAmount(response.data.feeAmount);
+        setTrainingProgram(response.data.title);
       })
       .catch(error => console.error('There was an error!', error));
   }, [user?.uid]);
@@ -95,49 +104,29 @@ export function BookingDetails() {
 }, [user?.uid]);
 
   const handleBack = async () => {
-    navigate("/consentForm", { state: { id , pathPrev} });
+    navigate("/liabilityForm", { state: { id , pathName:"/screeningForm", pathPrev} });
   };
 
-  const handleView = async () => {
-    navigate("/trainingPrograms", { state: { id } });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleConfirm = async () => {
     // Check if the selected slot clashes with existing bookings
-    const slotClash = bookedProgramsSlot.some(booking => booking.slot === slot);
-    console.log(slotClash);
+    const slotClash = bookedProgramsSlot.some(booking => booking.slot === slot.time);
     if (slotClash) {
         alert('Slot clash with an existing booking. Please choose a different slot.');
         return; // Exit the function if there is a clash
     }
 
-    try {
-      const uid = user.uid;
-      const status = false;
-      const response = await axios.post('http://localhost:3000/trainingClassBooking/addTrainingClassBooking', {
-        uid,
-        name,
-        contactNum,
-        slot,
-        trainingClassID,
-        status
-      });
-      setAddBookingDetailsStatus(response.data.message);
-      handleOpen();
-  } catch (error) {
-      if (axios.isAxiosError(error)) {
-          if (error.response) {
-            setAddBookingDetailsStatus(error.response.data.message);
-          } else {
-            setAddBookingDetailsStatus('An error occurred');
-          }
-      } else {
-        setAddBookingDetailsStatus('An unexpected error occurred');
-      }
-  }
-  };
+    navigate('/checkout',  { state: {  
+      id,
+      pathPrev,
+      name,
+      contactNum,
+      slot,
+      trainingClassID,
+      trainingProgram,
+      feeAmount,
+      status
+      } })
+    }
 
 
   return (
@@ -169,13 +158,13 @@ export function BookingDetails() {
               <ArrowBackIos />
             </IconButton>
             <Typography>
-              Step 2 of 2
+              Step 3 of 4
             </Typography>
             </Box>
               <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
                 Training Class Booking
               </Typography>
-             <Box component="form" onSubmit={handleSubmit} noValidate sx={{  width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+             <Box sx={{  width: '100%', justifyContent: 'center', alignItems: 'center' }}>
              <TextField
               required
               margin="normal"
@@ -217,46 +206,17 @@ export function BookingDetails() {
                 </Select>
             </FormControl>
             <GradientButton
-                type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
                 sx={{ mt: 3, mb: 2 }}
+                onClick={handleConfirm}
             >
               Confirm
             </GradientButton>
             </Box>
           </Paper>
         </Grid>
-        <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        
-        <Box sx={style}>
-
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
-                <img src={completeImage} alt="Completed" style={{ width: '100px', marginBottom: '16px' }} /> 
-                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#1A237E', mb:3, mt :3 }}>
-                    Your Training Program Successfully Booked.
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#757575' }}>
-                    You can check your booking in the Training Page. Thank You.
-                </Typography>
-            </Box>
-
-            <GradientButton
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3 }}
-                    onClick={() => handleView()}
-            >
-                Continue
-            </GradientButton>
-        </Box>
-      </Modal>
-    </>
+        </>
   );
 }

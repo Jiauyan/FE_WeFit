@@ -16,6 +16,8 @@
     "@mui/material": "^5.15.15",
     "@mui/x-date-pickers": "^7.9.0",
     "@mui/x-date-pickers-pro": "^7.9.0",
+    "@stripe/react-stripe-js": "^2.8.1",
+    "@stripe/stripe-js": "^4.9.0",
     "axios": "^1.6.8",
     "date-fns": "^2.29.3",
     "dompurify": "^3.1.6",

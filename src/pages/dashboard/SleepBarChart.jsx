@@ -1,15 +1,15 @@
 import { Box, Typography, IconButton, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import { useUser } from "../../contexts/UseContext";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 
-export default function TrainerMotivationalLineChart() {
-  const [quoteData, setQuoteData] = useState([]);
+export default function SleepBarChart() {
+  const [sleepData, setSleepData] = useState([]);  // State to store fetched data
   const [currentStartIndex, setCurrentStartIndex] = useState(0);
   const { user , updateUser, setUser} = useUser();
   const [selectedMonth, setSelectedMonth] = useState(new Date().getUTCMonth());
@@ -17,36 +17,31 @@ export default function TrainerMotivationalLineChart() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
-    const fetchQuote = async () => {
+    const fetchSleep = async () => {
       try {
         const uid = user?.uid;
         if (!uid) return;
   
-        const response = await axios.get(`http://localhost:3000/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
-        const quotes = response.data;
-        let countsByDay = quotes.reduce((acc, quote) => {
-          const date = new Date(quote.createdAt).toISOString().split('T')[0];
-          acc[date] = (acc[date] || 0) + 1;
-          return acc;
-        }, {});
-
-        let data = Object.keys(countsByDay).map(key => ({
-          date: key,
-          count: countsByDay[key]
+        const response = await axios.get(`http://localhost:3000/auth/getUserById/${uid}`);
+        const sleepData = response.data.sleepByDay;
+  
+        let fetchedData = Object.entries(sleepData).map(([date, sleep]) => ({
+          date,
+          sleep
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+        const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
 
-        const completedData = getCurrentMonthData(data, selectedMonth, selectedYear);
-        // Find index for the current day
         const todayIndex = completedData.findIndex(d => d.date === new Date().toISOString().split('T')[0]);
         const startIndex = Math.max(todayIndex - 3, 0); // Adjust as needed to center the view or to show previous days
   
-        setQuoteData(completedData);
+        setSleepData(completedData);
         setCurrentStartIndex(startIndex);
       } catch (error) {
-        console.error('Error fetching steps data:', error);
+        console.error('Error fetching sleep data:', error);
       }
     };
-    fetchQuote();
+    fetchSleep();
   }, [user?.uid,selectedMonth, selectedYear]);
 
   const getCurrentMonthData = (data, selectedMonth, selectedYear) => {
@@ -62,13 +57,28 @@ export default function TrainerMotivationalLineChart() {
     for (let date = new Date(startDate); date <= endOfMonth; date.setUTCDate(date.getUTCDate() + 1)) {
       const dateString = `${date.getUTCFullYear()}-${(date.getUTCMonth() + 1).toString().padStart(2, '0')}-${date.getUTCDate().toString().padStart(2, '0')}`;
       const existingEntry = filteredData.find(entry => entry.date === dateString);
+      
+      // Parse the sleep duration string to a float number of hours
+      const sleepDuration = existingEntry ? parseDuration(existingEntry.sleep.duration) : 0;
+  
       result.push({
         date: dateString,
-        count: existingEntry ? existingEntry.count : 0,
+        sleep: sleepDuration,
       });
     }
   
     return result;
+  };
+
+  const parseDuration = (durationString) => {
+    const hoursMatch = durationString.match(/(\d+)\s+hours?/);
+    const minutesMatch = durationString.match(/(\d+)\s+minutes?/);
+    
+    const hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+    const minutes = minutesMatch ? parseInt(minutesMatch[1], 10) : 0;
+  
+    // Convert total time to hours as a float value (minutes/60)
+    return hours + (minutes / 60);
   };
 
   const formatDate = (dateString) => {
@@ -76,17 +86,20 @@ export default function TrainerMotivationalLineChart() {
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
   };
 
+
   const handlePreviousWeek = () => {
     setCurrentStartIndex(prev => Math.max(prev - 7, 0));
   };
   
   const handleNextWeek = () => {
-    setCurrentStartIndex(prev => Math.min(prev + 7, quoteData.length - 7));
+    setCurrentStartIndex(prev => Math.min(prev + 7, sleepData.length - 7));
   };
 
-  const last7DaysData = quoteData.slice(currentStartIndex, currentStartIndex + 7); // Adjust the range as needed
+  const last7DaysData = sleepData.slice(currentStartIndex, currentStartIndex + 7); 
+
 
   const handleDateChange = (newValue) => {
+    console.log(newValue);
     setSelectedDate(newValue);
     setSelectedYear(newValue.getUTCFullYear());
     setSelectedMonth(newValue.getUTCMonth());
@@ -96,7 +109,7 @@ export default function TrainerMotivationalLineChart() {
     <Box sx={{ width: '100%', height: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
         <Typography variant="h6" component="h2">
-          Motivational Quotes Overview
+          Sleeping Hours Overview
         </Typography>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
@@ -111,17 +124,22 @@ export default function TrainerMotivationalLineChart() {
           />
         </LocalizationProvider>
       </Box>
+      {sleepData.length === 0 ? (
+          <Box height={400} display="flex" alignItems="center" justifyContent="center">
+          <Typography>No sleeping hours found for the selected period.</Typography>
+          </Box>
+            ) : (
+            <>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
         <ArrowBackIos />
       </IconButton>
       <Box sx={{ flexGrow: 1, maxWidth: '90vw' }}>
-
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={last7DaysData}>
+          <BarChart data={last7DaysData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" tickFormatter={formatDate} />
-            <YAxis />
+            <YAxis allowDecimals={false} label={{ value: "Hours", angle: -90, position: 'insideLeft' }} />
             <Tooltip
                 wrapperStyle={{
                   backgroundColor: 'transparent',  // Makes background transparent
@@ -130,17 +148,20 @@ export default function TrainerMotivationalLineChart() {
                 }}
                 cursor={false}  // Optionally hide the cursor as well
               />
-            <Line type="monotone" dataKey="count" barSize={10} radius={[10, 10, 0, 0]}>
+            <Bar type="monotone" dataKey="sleep" barSize={10} radius={[10, 10, 0, 0]}>
               {last7DaysData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.date === formatDate(new Date().toISOString()) ? '#FF851B' : '#22D3EE'} />
               ))}
-            </Line>
-          </LineChart>
+            </Bar>
+          </BarChart>
         </ResponsiveContainer>
       </Box>
-      <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= quoteData.length}>
+      <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= sleepData.length}>
         <ArrowForwardIos />
       </IconButton>
-    </Box></Box>
+    </Box>
+    </>
+  )}
+    </Box>
   );
 }

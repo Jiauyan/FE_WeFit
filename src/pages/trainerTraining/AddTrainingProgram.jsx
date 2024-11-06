@@ -64,6 +64,8 @@ export function AddTrainingProgram() {
   const [currentEndTime, setCurrentEndTime] = useState(null);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); 
+  const [contactNum, setContactNum] = useState('');
+
   const [addTrainingProgramStatus, setAddTrainingProgramStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
@@ -169,11 +171,12 @@ export function AddTrainingProgram() {
     const formData = new FormData();
     formData.append('trainingProgramImage', trainingProgramImage); 
     formData.append('uid', uid);
+    formData.append('contactNum', contactNum);
     formData.append('title', title);
     formData.append('typeOfTrainingProgram', typeOfTrainingProgram);
     formData.append('capacity', capacity);
     formData.append('feeType', feeType);
-    formData.append('feeAmount', feeAmount);
+    formData.append('feeAmount', Number(feeAmount));
     formData.append('venueType', venueType);
     formData.append('venue', venue);
     formData.append('fitnessLevel', fitnessLevel);
@@ -330,9 +333,9 @@ export function AddTrainingProgram() {
                 onChange={(e) => {
                   setFeeType(e.target.value);
                   if (e.target.value === 'Free') {
-                    setFeeAmount('0'); 
+                    setFeeAmount(0); 
                   } else {
-                    setFeeAmount(''); 
+                    setFeeAmount(e.target.value); 
                   }
                 }}
                 fullWidth
@@ -452,7 +455,17 @@ export function AddTrainingProgram() {
               rows={5}
               variant="outlined"
             />
-            
+            <TextField
+              required
+              //type="tel"
+              margin="normal"
+              fullWidth
+              name="trainerContactNum"
+              label="Trainer Contact Number"
+              id="trainerContactNum"
+              //pattern="[+]?[0-9]{1,4}?[-.s]?[(]?[0-9]{1,3}[)]?[-.s]?[0-9]{3,4}[-.s]?[0-9]{4}"
+              onChange={(e) => setContactNum(e.target.value)}
+            />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt:2, mb:2, ml:1 }}>
               <Typography variant="subtitle1">
                 Slots available

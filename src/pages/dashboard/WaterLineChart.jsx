@@ -31,8 +31,6 @@ export default function WaterLineChart() {
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
   
         const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
-        console.log(fetchedData);
-        console.log(completedData);
         // Find index for the current day
         const todayIndex = completedData.findIndex(d => d.date === new Date().toISOString().split('T')[0]);
         const startIndex = Math.max(todayIndex - 3, 0); // Adjust as needed to center the view or to show previous days
@@ -73,12 +71,6 @@ export default function WaterLineChart() {
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
   };
 
-  // const getLast7DaysData = () => {
-  //   const startIndex = Math.max(currentStartIndex, 0);
-  //   const endIndex = Math.min(startIndex + 7, waterData.length);
-  //   return waterData.slice(startIndex, endIndex);
-  // };
-
   const handlePreviousWeek = () => {
     setCurrentStartIndex(prev => Math.max(prev - 7, 0));
   };
@@ -88,10 +80,6 @@ export default function WaterLineChart() {
   };
 
   const last7DaysData = waterData.slice(currentStartIndex, currentStartIndex + 7); // Adjust the range as needed
-
-  // const handleMonthChange = (event) => {
-  //   setSelectedMonth(event.target.value);
-  // };
 
   const handleDateChange = (newValue) => {
     console.log(newValue);
@@ -119,30 +107,18 @@ export default function WaterLineChart() {
             slotProps={{ textField: { size: 'small'}}}
           /></Box>
         </LocalizationProvider>
-        {/* <FormControl variant="outlined" size="small">
-          <InputLabel id="month-select-label">Month</InputLabel>
-          <Select
-            labelId="month-select-label"
-            id="month-select"
-            value={selectedMonth}
-            label="Month"
-            onChange={handleMonthChange}
-          >
-            {Array.from({ length: 12 }, (_, i) => (
-              <MenuItem key={i} value={i}>
-                {new Date(0, i).toLocaleString('default', { month: 'long' })}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-       */}
        </Box>
+       {waterData.length === 0 ? (
+          <Box height={400} display="flex" alignItems="center" justifyContent="center">
+          <Typography>No water consumption found for the selected period.</Typography>
+          </Box>
+            ) : (
+            <>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
         <ArrowBackIos />
       </IconButton>
       <Box sx={{ flexGrow: 1, maxWidth: '90vw' }}>
-
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={last7DaysData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -167,6 +143,9 @@ export default function WaterLineChart() {
       <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= waterData.length}>
         <ArrowForwardIos />
       </IconButton>
-    </Box></Box>
+    </Box>
+    </>
+  )}
+    </Box>
   );
 }

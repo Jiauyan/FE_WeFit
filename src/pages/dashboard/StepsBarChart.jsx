@@ -30,7 +30,7 @@ export default function StepsBarChart() {
           steps,
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
   
-        const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
+       const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
   
         // Find index for the current day
         const todayIndex = completedData.findIndex(d => d.date === new Date().toISOString().split('T')[0]);
@@ -72,12 +72,6 @@ export default function StepsBarChart() {
     return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
   };
 
-  // const getLast7DaysData = () => {
-  //   const startIndex = Math.max(currentStartIndex, 0);
-  //   const endIndex = Math.min(startIndex + 7, stepsData.length);
-  //   return stepsData.slice(startIndex, endIndex);
-  // };
-
   const handlePreviousWeek = () => {
     setCurrentStartIndex(prev => Math.max(prev - 7, 0));
   };
@@ -88,16 +82,7 @@ export default function StepsBarChart() {
 
   const last7DaysData = stepsData.slice(currentStartIndex, currentStartIndex + 7); // Adjust the range as needed
 
-  // const handleMonthChange = (event) => {
-  //   setSelectedMonth(event.target.value);
-  // };
-
-  // const handleYearChange = (event) => {
-  //   setSelectedYear(event.target.value);
-  // };
-
   const handleDateChange = (newValue) => {
-    console.log(newValue);
     setSelectedDate(newValue);
     setSelectedYear(newValue.getUTCFullYear());
     setSelectedMonth(newValue.getUTCMonth());
@@ -105,7 +90,7 @@ export default function StepsBarChart() {
 
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <Typography variant="h6" component="h2">
           Steps Overview
         </Typography>
@@ -121,46 +106,19 @@ export default function StepsBarChart() {
             slotProps={{ textField: { size: 'small' } }}
           />
         </LocalizationProvider>
-        {/* <FormControl variant="outlined" size="small">
-          <InputLabel id="month-select-label">Month</InputLabel>
-          <Select
-            labelId="month-select-label"
-            id="month-select"
-            value={selectedMonth}
-            label="Month"
-            onChange={handleMonthChange}
-          >
-            {Array.from({ length: 12 }, (_, i) => (
-              <MenuItem key={i} value={i}>
-                {new Date(0, i).toLocaleString('default', { month: 'long' })}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" size="small">
-      <InputLabel id="year-select-label">Year</InputLabel>
-      <Select
-        labelId="year-select-label"
-        id="year-select"
-        value={selectedYear}
-        label="Year"
-        onChange={handleYearChange} // Handler for year change
-      >
-        {Array.from({ length: 10 }, (_, i) => (
-          <MenuItem key={i} value={new Date().getUTCFullYear() - i}>
-            {new Date().getUTCFullYear() - i}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl> */}
       </Box>
+      {stepsData.length === 0 ? (
+          <Box height={540} display="flex" alignItems="center" justifyContent="center">
+          <Typography>No steps found for the selected period.</Typography>
+          </Box>
+            ) : (
+            <>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
         <ArrowBackIos />
       </IconButton>
-      <Box sx={{ flexGrow: 1, maxWidth: '90vw' }}>
-
-        <ResponsiveContainer width="100%" height={400}>
+      <Box sx={{ flexGrow: 1, maxWidth: '90vw', marginBottom: 5 }}>
+        <ResponsiveContainer width="100%" height={500}>
           <BarChart data={last7DaysData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" tickFormatter={formatDate} />
@@ -184,6 +142,9 @@ export default function StepsBarChart() {
       <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= stepsData.length}>
         <ArrowForwardIos />
       </IconButton>
-    </Box></Box>
+    </Box>
+    </>
+  )}
+    </Box>
   );
 }

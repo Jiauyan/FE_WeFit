@@ -122,7 +122,16 @@ export function ViewTrainerTrainingProgram() {
               {trainingProgramUser.username}
             </Typography>
           </Box>
-
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Trainer Contact Number
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgramData.contactNum}
+          </Typography>
           <Typography
             variant="h6"
             component="h2"

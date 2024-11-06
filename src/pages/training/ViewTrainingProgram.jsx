@@ -46,9 +46,18 @@ export function ViewTrainingProgram() {
   const handleBack = () => {
     console.log(pathPrev);
     console.log(pathName);
-    if (pathPrev === "/recommend" && pathName === "/consentForm") {
+    if (pathPrev === "/recommend" && pathName === "/screeningForm") {
       navigate("/recommededTrainingPrograms");
-    } else if (pathName === "/consentForm") {
+    } else if (pathPrev === "/beginner" && pathName === "/screeningForm") {
+      navigate("/beginnerTrainingPrograms");
+    }
+    else if (pathPrev === "/intermediate" && pathName === "/screeningForm") {
+      navigate("/intermediateTrainingPrograms");
+    }
+    else if (pathPrev === "/advanced" && pathName === "/screeningForm") {
+      navigate("/advancedTrainingPrograms");
+    }
+    else if (pathName === "/screeningForm") {
       navigate("/trainingPrograms", { state: { id } });
     } else {
       navigate(-1);
@@ -56,8 +65,8 @@ export function ViewTrainingProgram() {
   };
 
   const handleBook = async (id) => {
-    console.log(pathPrev);
-    navigate("/consentForm",{ state: { id, pathPrev } });
+    console.log(id);
+    navigate("/screeningForm",{ state: { id, pathPrev } });
   };
 
   const slots = Array.isArray(trainingProgramData.slots) ? trainingProgramData.slots : [];
@@ -129,7 +138,16 @@ export function ViewTrainingProgram() {
               {trainer.username}
             </Typography>
           </Box>
-
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 'bold' }}
+          >
+            Trainer Contact Number
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {trainingProgramData.contactNum}
+          </Typography>
           <Typography
             variant="h6"
             component="h2"

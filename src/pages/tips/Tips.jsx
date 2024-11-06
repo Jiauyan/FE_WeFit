@@ -109,9 +109,6 @@ export function Tips(){
           <Typography variant="body2" color="text.secondary" align="center">
             {tip.shortDesc}
           </Typography>
-          <Typography variant="body2" color="text.secondary" align="center">
-            {tip.createdAt}
-          </Typography>
       </CardContent>
         </CardActionArea>
       </Card>

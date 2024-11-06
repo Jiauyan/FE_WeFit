@@ -37,7 +37,6 @@ export function TrainerTips(){
                 if (!uid) return;
                 const response = await axios.get(`http://localhost:3000/tips/getAllUserTips/${uid}`);
                 setTips(response.data);
-                console.log(response.data)
             } catch (error) {
                 console.error('There was an error!', error);
             }
@@ -127,9 +126,6 @@ export function TrainerTips(){
             </Typography>
             <Typography variant="body2" color="text.secondary" align="center">
               {tip.shortDesc}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" align="center">
-              {tip.createdAt}
             </Typography>
           </CardContent>
         </CardActionArea>

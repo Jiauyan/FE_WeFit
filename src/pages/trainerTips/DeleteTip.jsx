@@ -35,7 +35,6 @@ export function DeleteTip({id}) {
     e.preventDefault();
     try {
         const response = await axios.delete(`http://localhost:3000/tips/deleteTip/${id}`);
-        console.log(response.data);
         setDeleteTipStatus(response.data.message);
         handleClose();
         navigate("/trainerTips");

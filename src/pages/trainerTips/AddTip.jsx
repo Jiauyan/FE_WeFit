@@ -59,9 +59,6 @@ export function AddTip() {
                 'Content-Type': 'multipart/form-data'
             }
         });
-
-        console.log(response.data);
-        
         setAddTipStatus(response.data.message);
         navigate("/trainerTips");
     } catch (error) {

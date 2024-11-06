@@ -28,11 +28,11 @@ const IntermediateTrainingPrograms = () => {
 
     // Handle program view navigation
     const handleView = (program) => {
-        navigate("/viewTrainingProgram", { state: { id: program.id } });
+        navigate("/viewTrainingProgram", { state: { id: program.id , pathPrev: "/intermediate"} });
     };
 
     const handleBack = () => {
-        navigate(-1); // Go back to the previous page
+        navigate("/trainingPrograms");
     };
 
     useEffect(() => {
