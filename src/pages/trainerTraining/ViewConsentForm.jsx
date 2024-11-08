@@ -39,27 +39,28 @@ export function ViewConsentForm() {
     }, [uid]);
 
     return (
-         <Grid
-            container
-            component="main"
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: 3,
-            }}
-        >
-            <Paper sx={{
-                width: '100%',
-                maxWidth: '800px',
-                height: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
-                borderRadius: 2,
-                padding: 4,
-            }}>
+        <Grid
+        container
+        component="main"
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 3,
+          width: '100%' // Ensures the grid takes full width
+        }}
+      >
+        <Paper sx={{
+            width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+            minHeight: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+            borderRadius: 2,
+            padding: 2,
+            margin: 'auto' // Centers the paper in the viewport
+          }}>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
                     <IconButton onClick={handleBack}>
                         <ArrowBackIos />

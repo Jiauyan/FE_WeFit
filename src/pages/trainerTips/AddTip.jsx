@@ -10,9 +10,10 @@ import {
     TextField,
     Paper,
     Grid,
-    IconButton
+    IconButton,
+    Input,
 }from "@mui/material";
-import { ArrowBackIos } from '@mui/icons-material';
+import { ArrowBackIos, Edit, CloudUpload} from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
 
 export function AddTip() {
@@ -25,8 +26,8 @@ export function AddTip() {
   const [addTipStatus, setAddTipStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
-  const userImageUrl = user.data.photoURL;
-  const username = user.data.username;
+  const userImageUrl = user?.data?.photoURL;
+  const username = user?.data?.username;
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -79,48 +80,121 @@ export function AddTip() {
     }; 
 
   return (
-    <Grid 
-      container 
-      component="main" 
-      sx={{ 
-        //height: '100vh', 
-        // width: '100vw',
+    <Grid
+      container
+      component="main"
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding:3
+        padding: 3,
+        width: '100%'
       }}
     >
-    <Paper sx={{
-        width: '737px', 
-        height: 'auto', 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-        borderRadius: 2,
-        padding: 4 
-      }}>
+      <Paper sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
-      <IconButton
-        onClick={handleBack}
-      >
-        <ArrowBackIos />
-      </IconButton>
-    </Box>
-    
-        <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
-                Add Your Sharing Tip
-        </Typography>
-                      {previewUrl && (
-                          <img src={previewUrl} alt={title} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', marginBottom: '20px' }} />
-                      )}
-                      <input
-                          type="file"
-                          onChange={handleFileChange}
-                          style={{ marginBottom: '20px' }}
-                      />
-                    <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <IconButton onClick={handleBack}>
+              <ArrowBackIos />
+            </IconButton>
+          </Box>
+        
+          <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
+            Add Your Sharing Tip
+          </Typography>
+          {!previewUrl && (
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 2,
+                  border: '1px solid #c4c4c4',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)', // Ensuring it's visually noticeable
+                }}
+              >
+                <label htmlFor="icon-button-file" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }}/>
+                  <IconButton
+                    color="gray"
+                    aria-label="upload picture"
+                    component="span"
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      },
+                    }}
+                  >
+                    <CloudUpload sx={{fontSize: 70}}/>
+                  </IconButton>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      mt: 1,
+                      color: '#686868',
+                      textAlign: 'center',
+                      width: '100%' // Ensure it spans the full width to center text properly
+                    }}
+                  >
+                    Upload Sharing Tip Image
+                  </Typography>
+                </label>
+              </Box>
+            )}
+          {previewUrl && (
+            <Box sx={{
+              position: 'relative',  // Ensures the positioning context for the IconButton
+              width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
+                  borderRadius: 8     // Fixed height for consistency
+            }}>
+              <img
+                src={previewUrl}
+                alt="Preview"
+                style={{
+                  width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
+                  borderRadius: 8
+                }}
+              />
+              <label htmlFor="icon-button-file">
+              <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{display: 'none'}}/>
+              <IconButton
+                color="primary"
+                aria-label="edit picture"
+                component="span"
+                sx={{
+                  position: 'absolute',
+                  bottom: 8,             // Adjust top position here
+                  right: 8,           // Adjust right position here
+                  backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  },
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </label>
+            </Box>
+          )}
+          <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
                     required
                     margin="normal"

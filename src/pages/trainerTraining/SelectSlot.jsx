@@ -20,15 +20,21 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
-  height : 500,
+  width: {
+    xs: '90%', // full width on extra small devices
+    sm: '80%', // slightly smaller on small devices
+    md: '70%', // and even smaller on medium devices
+    lg: 500,   // fixed size on large devices and up
+  },
+  height: 'auto', // makes height dynamic
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 20,
   p: 4,
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center'
+  alignItems: 'center',
+  overflowY: 'auto', // add scroll on Y-axis if content is too long
 };
 
 export function SelectSlot({id}) {
@@ -63,12 +69,12 @@ console.log(trainingProgramSlot);
 
   return (
     <div>
-      <GradientButton
-        fullWidth
-        variant="contained"
-        color="primary"
-        sx={{ mt: 3, mb: 3 }}
-        onClick={handleOpen}>View Students</GradientButton>
+      <MenuItem
+        // fullWidth
+        // variant="contained"
+        // color="primary"
+        // sx={{ mt: 3, mb: 3 }}
+        onClick={handleOpen}>View Students</MenuItem>
       <Modal
         open={open}
         onClose={handleClose}
@@ -83,7 +89,7 @@ console.log(trainingProgramSlot);
                 X
             </Button>
 
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5}} margin={1} >
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5}} >
                 Select the slot
             </Typography>
             <FormControl margin="normal" fullWidth>

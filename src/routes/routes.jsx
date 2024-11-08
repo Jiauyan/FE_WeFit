@@ -20,7 +20,6 @@ import { FavClass } from "../pages/auth/FavClass.jsx";
 import { ForgotPassword } from "../pages/auth/ForgotPassword.jsx";
 import { TrainerProfile } from '../pages/trainerProfile/TrainerProfile.jsx';
 import { TrainerTips } from '../pages/trainerTips/TrainerTips.jsx';
-import { TrainerQuotes } from '../pages/trainerQuotes/TrainerQuotes.jsx';
 import { EditProfile } from '../pages/userProfile/EditProfile.jsx';
 import { EditTrainerProfile } from '../pages/trainerProfile/EditTrainerProfile.jsx';
 import { DeleteTrainerAccount } from '../pages/trainerProfile/DeleteTrainerAccount.jsx';

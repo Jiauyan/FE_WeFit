@@ -19,9 +19,10 @@ import {
     ListItemText,
     Divider,
     Modal,
-    InputAdornment
+    InputAdornment,
+    Input,
 } from "@mui/material";
-import { ArrowBackIos, Upload, Delete, Add } from '@mui/icons-material';
+import { ArrowBackIos, Upload, Delete, Add , Edit, CloudUpload} from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -216,27 +217,28 @@ export function AddTrainingProgram() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Grid 
-        container 
-        component="main" 
-        sx={{ 
+       <Grid
+      container
+      component="main"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 3,
+        width: '100%'
+      }}
+    >
+      <Paper sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
           alignItems: 'center',
-          padding: 4
-        }}
-      >
-        <Paper sx={{
-            width: '100%',
-            maxWidth: '800px', 
-            height: 'auto', 
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-            borderRadius: 2,
-            padding: 4 
-          }}>
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
             <IconButton onClick={handleBack}>
               <ArrowBackIos />
@@ -246,36 +248,89 @@ export function AddTrainingProgram() {
           <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
             Add Your Training Program
           </Typography>
+          {!previewUrl && (
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 2,
+                  border: '1px solid #c4c4c4',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)', // Ensuring it's visually noticeable
+                }}
+              >
+                <label htmlFor="icon-button-file" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }}/>
+                  <IconButton
+                    color="gray"
+                    aria-label="upload picture"
+                    component="span"
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      },
+                    }}
+                  >
+                    <CloudUpload sx={{fontSize: 70}}/>
+                  </IconButton>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      mt: 1,
+                      color: '#686868',
+                      textAlign: 'center',
+                      width: '100%' // Ensure it spans the full width to center text properly
+                    }}
+                  >
+                    Upload Training Program Image
+                  </Typography>
+                </label>
+              </Box>
+            )}
           {previewUrl && (
-            <Box
-              sx={{
-                width: '100%',
-                maxHeight: '300px',
-                overflow: 'hidden',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginBottom: '20px',
-                border: '1px solid #ccc',
-                borderRadius: 1
-              }}
-            >
-              <img src={previewUrl} alt={title} style={{ width: '100%', height: 'auto', objectFit: 'cover' }} />
+            <Box sx={{
+              position: 'relative',  // Ensures the positioning context for the IconButton
+              width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
+                  borderRadius: 8     // Fixed height for consistency
+            }}>
+              <img
+                src={previewUrl}
+                alt="Preview"
+                style={{
+                  width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
+                  borderRadius: 8
+                }}
+              />
+              <label htmlFor="icon-button-file">
+              <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{display: 'none'}}/>
+              <IconButton
+                color="primary"
+                aria-label="edit picture"
+                component="span"
+                sx={{
+                  position: 'absolute',
+                  bottom: 8,             // Adjust top position here
+                  right: 8,           // Adjust right position here
+                  backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  },
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </label>
             </Box>
           )}
-          <Button
-            variant="contained"
-            component="label"
-            sx={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}
-          >
-            <Upload sx={{ marginRight: 1 }} />
-            Upload Training Program Image
-            <input
-              type="file"
-              hidden
-              onChange={handleFileChange}
-            />
-          </Button>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
               required

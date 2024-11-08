@@ -9,11 +9,12 @@ import {
     Box,
     TextField,
     Grid,
-    IconButton
+    IconButton,
+    Input
 } from "@mui/material";
 import {  useNavigate, Outlet, useLocation} from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos } from '@mui/icons-material';
+import { ArrowBackIos, Edit} from '@mui/icons-material';
 
 export function EditTip() {
     const [tipData, setTipData] = useState({});
@@ -99,47 +100,77 @@ export function EditTip() {
 
   return (
     <>
-    <Grid 
-      container 
-      component="main" 
-      sx={{ 
-        //height: '100vh', 
-        // width: '100vw',
+    <Grid
+      container
+      component="main"
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding:3
+        padding: 3,
+        width: '100%'
       }}
     >
-    <Paper sx={{
-        width: '737px', 
-        height: 'auto', 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-        borderRadius: 2,
-        padding: 4 
-      }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
-      <IconButton
-        onClick={handleBack}
-      >
-        <ArrowBackIos />
-      </IconButton>
-    </Box>
-    <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }}  >
+      <Paper sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+            <IconButton onClick={handleBack}>
+              <ArrowBackIos />
+            </IconButton>
+          </Box>
+        
+          <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
             Edit Your Sharing Tip
-        </Typography>
-        {previewUrl && (
-                          <img src={previewUrl} alt={title} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', marginBottom: '20px' }} />
-                      )}
-                      <input
-                          type="file"
-                          onChange={handleFileChange}
-                          style={{ marginBottom: '20px' }}
-        />
-        <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          </Typography>
+          {previewUrl && (
+            <Box sx={{
+              position: 'relative',  // Ensures the positioning context for the IconButton
+              width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
+                  borderRadius: 8     // Fixed height for consistency
+            }}>
+              <img
+                src={previewUrl}
+                alt="Preview"
+                style={{
+                  width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
+                  borderRadius: 8
+                }}
+              />
+            <label htmlFor="icon-button-file">
+            <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{display: 'none'}}/>
+            <IconButton
+                color="primary"
+                aria-label="edit picture"
+                component="span"
+                sx={{
+                position: 'absolute',
+                bottom: 8,             // Adjust top position here
+                right: 8,           // Adjust right position here
+                backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                },
+                }}
+            >
+                <Edit />
+            </IconButton>
+            </label>
+            </Box>
+          )}
+        <Box component="form" onSubmit={handleSubmit} sx={{  mt: 2,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
             margin="normal"
             required

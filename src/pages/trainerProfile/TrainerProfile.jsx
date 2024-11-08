@@ -36,28 +36,28 @@ export function TrainerProfile() {
 
   return (
     <>
-    <Box padding={3}>
-    <Grid 
-      container 
-      component="main" 
-      sx={{ 
-        //height: '100vh', 
-        // width: '100vw',
+    <Grid
+      container
+      component="main"
+      sx={{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding: 3,
+        width: '100%'
       }}
     >
       <Paper sx={{
-        width: '737px', 
-        height: 'auto', 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-        borderRadius: 2,
-        padding: 4 
-      }}>
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
         <Avatar
         alt={userData.username}
         src={userData.photoURL}
@@ -101,7 +101,6 @@ export function TrainerProfile() {
       <DeleteTrainerAccount />
       </Paper>
     </Grid>
-    </Box>
     <Outlet/>
     </>
   );

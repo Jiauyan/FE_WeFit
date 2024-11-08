@@ -6,6 +6,7 @@ import {
     Button,
     Typography,
     Modal,
+    MenuItem
 }from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
 
@@ -14,16 +15,23 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
-  height : 500,
+  width: {
+    xs: '90%', // full width on extra small devices
+    sm: '80%', // slightly smaller on small devices
+    md: '70%', // and even smaller on medium devices
+    lg: 500,   // fixed size on large devices and up
+  },
+  height: 'auto', // makes height dynamic
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 20,
   p: 4,
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center'
+  alignItems: 'center',
+  overflowY: 'auto', // add scroll on Y-axis if content is too long
 };
+
 export function DeleteTip({id}) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -55,15 +63,11 @@ export function DeleteTip({id}) {
 
   return (
     <div>
-      <GradientButton
-      fullWidth
-      variant="contained"
-      color="primary"
-      sx={{ mt: 3, mb: 2, mr: 1 }} 
+      <MenuItem
       onClick={handleOpen} 
       aria-label="delete">
         Delete
-     </GradientButton>
+     </MenuItem>
       <Modal
         open={open}
         onClose={handleClose}
@@ -79,11 +83,11 @@ export function DeleteTip({id}) {
                 X
             </Button>
 
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:10}} margin={1} >
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5 }}>
                 Confirm
             </Typography>
-            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
-                Are you sure you wish to delete sharing tip?
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 , textAlign: 'center'}}>
+                Are you sure you wish to delete this sharing tip?
             </Typography>
             <GradientButton
                     type="submit"

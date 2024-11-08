@@ -9,6 +9,11 @@ import {
     List,
     IconButton,
     Grid,
+    TextField,
+    Card,
+    CardActionArea,
+    CardContent,
+    Pagination
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { AddMotivationalQuote } from "../trainerQuotes/AddMotivationalQuote";
@@ -26,22 +31,13 @@ export function MotivationalQuotes(){
     const { user , setUser} = useUser();
     const uid = user.uid;
     const [randomMotivationalQuote, setRandomMotivationalQuote] = useState("");
+    const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 6;
 
-    const MotivationalQuoteCard = styled(Paper)(({ theme }) => ({
-        width: 737,
-        height: 'auto',
-        padding: theme.spacing(2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        transition: "0.3s",
-        borderRadius: 16,
-        boxShadow: theme.shadows[3],
-        '&:hover': {
-            boxShadow: theme.shadows[6],
-        },
-    }));
-
+    useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, [page]);
 
     // Callback for adding a motivationalQuote
     const addMotivationalQuoteCallback = (newMotivationalQuote) => {
@@ -63,25 +59,6 @@ export function MotivationalQuotes(){
         setMotivationalQuotes(prevMotivationalQuotes => prevMotivationalQuotes.filter(motivationalQuote => motivationalQuote.id !== motivationalQuoteId));
     };
 
-    //  // Callback for randoming a motivationalQuote
-    //  const getRandomMotivationalQuoteCallback = (randomMotivationalQuote) => {
-    //     setRandomMotivationalQuote(randomMotivationalQuote);
-    //     localStorage.setItem('randomMotivationalQuote', JSON.stringify(randomMotivationalQuote));
-    // };
-
-    // useEffect(() => {
-    //     const storedUid = localStorage.getItem('uid');
-    //     if (storedUid) {
-    //         setUser({ ...user, uid: storedUid });
-    //     }
-
-    //     const storedRandomMotivationalQuote = localStorage.getItem('randomMotivationalQuote');
-    //     if (storedRandomMotivationalQuote) {
-    //         setRandomMotivationalQuote(JSON.parse(storedRandomMotivationalQuote));
-    //     }
-    // }, [setUser, user]);
-
-
       useEffect(() => {
         const fetchMotivationalQuotes = async () => {
             try {
@@ -97,50 +74,83 @@ export function MotivationalQuotes(){
         fetchMotivationalQuotes();
     }, [user?.uid]);
 
-    return(
-        <>
-            <Grid
-                container
-                component="main"
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#f0f4f8',
-                    minHeight: '100vh',
-                    padding: 4
-                }}
-            >
-                <Box sx={{ flexGrow: 1, maxWidth: 737 }}>
-                    <Typography variant="h4" align="center" gutterBottom>
-                        Your Motivational Quotes
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', mb: 2 }}>
-                        <AddMotivationalQuote onAddMotivationalQuote={addMotivationalQuoteCallback} />
-                    </Box>
-                    <List dense={dense}>
-                        {motivationalQuotes.map((motivationalQuote, index) => (
-                            <Box key={index} sx={{ marginBottom: 5 }}>
-                                <MotivationalQuoteCard>
-                                    <Box>
-                                        <Typography variant="h6" component="div">
-                                            {motivationalQuote.motivationalQuote}
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ display: 'flex', gap: 1 }}>
-                                        <>
-                                        <EditMotivationalQuote id={motivationalQuote.id} oldMotivationalQuote={motivationalQuote.motivationalQuote} onEditMotivationalQuote={editMotivationalQuoteCallback} />
-                                        </>
-                                        <DeleteMotivationalQuote id={motivationalQuote.id} onDeleteMotivationalQuote={deleteMotivationalQuoteCallback} />
-                                    </Box>
-                                </MotivationalQuoteCard>
-                            </Box>
-                        ))}
-                    </List>
-                </Box>
-            </Grid>
-            <Outlet />
-        </>
+    // Filter programs based on search term
+    const filteredMotivationalQuotes = motivationalQuotes.filter(motivationalQuote=>
+        motivationalQuote.motivationalQuote.toLowerCase().includes(searchTerm.toLowerCase())
     );
+  
+      // Calculate the current programs to display based on the page
+      const startIndex = (page - 1) * itemsPerPage;
+      const currentMotivationalQuotes = filteredMotivationalQuotes.slice(startIndex, startIndex + itemsPerPage);
+      
+
+    return(
+        <Box sx={{ p: 3, width: '100%', boxSizing: 'border-box' }}>
+        <Box sx={{ 
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%'
+        }}>
+          <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
+            My Motivational Quotes
+          </Typography>
+          <AddMotivationalQuote onAddMotivationalQuote={addMotivationalQuoteCallback} />
+        </Box>
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="Search Motivational Quotes"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ mb: 5, mt: 2 }}
+        />
+        {currentMotivationalQuotes.length === 0 || filteredMotivationalQuotes.length === 0 ? (
+          <Typography variant="body1" color="text.secondary" align="center">
+            No Motivational Quote Found.
+          </Typography>
+        ) : (
+          <>
+            <Grid container spacing={2} sx={{  }}>
+            {currentMotivationalQuotes.map((quote) => (
+                <Grid item xs={12} key={quote.id} sx={{ width: '100%',}}>
+                <Card sx={{ width: '100%' }}>
+                    <CardContent sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Grid container item xs={12} >
+                    <Grid item xs={11}>
+                        <Typography 
+                            variant="body1" 
+                            align="left" 
+                            sx={{
+                            wordWrap: 'break-word',
+                            overflowWrap: 'break-word',
+                            wordBreak: 'break-word'
+                            }}
+                        >
+                            {quote.motivationalQuote}
+                        </Typography>
+                        </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                        <EditMotivationalQuote id={quote.id} oldMotivationalQuote={quote.motivationalQuote} onEditMotivationalQuote={editMotivationalQuoteCallback} />
+                        <DeleteMotivationalQuote id={quote.id} onDeleteMotivationalQuote={deleteMotivationalQuoteCallback} />
+                        </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+                </Grid>
+            ))}
+            </Grid>
+            <Pagination
+              count={Math.ceil(filteredMotivationalQuotes.length / itemsPerPage)}
+              page={page}
+              onChange={(event, value) => setPage(value)}
+              color="primary"
+              sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}
+            />
+          </>
+        )}
+        <Outlet/>
+      </Box>
+            );
 
 }

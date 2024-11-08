@@ -19,9 +19,10 @@ import {
     ListItemText,
     Divider,
     Modal,
-    InputAdornment
+    InputAdornment,
+    Input
 } from "@mui/material";
-import { ArrowBackIos, Upload, Delete, Add } from '@mui/icons-material';
+import { ArrowBackIos, Upload, Delete, Add, Edit } from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -88,7 +89,7 @@ export function EditTrainingProgram() {
   };  
 
   useEffect(() => {
-    const fetchTipData = async () => {
+    const fetchTrainingProgramData = async () => {
         try {
             const response = await axios.get(`http://localhost:3000/trainingPrograms/getTrainingProgramById/${id}`);
             const data = response.data;
@@ -118,7 +119,7 @@ export function EditTrainingProgram() {
     };
 
     if (id) {
-        fetchTipData();
+        fetchTrainingProgramData();
     }
 }, []);
   const handleFileChange = (e) => {
@@ -185,7 +186,6 @@ export function EditTrainingProgram() {
         const uid = user?.uid;
         if (!uid) return;
         const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('There was an error!', error);
@@ -233,24 +233,25 @@ const isSlotClashing = (newSlot, existingSlots) => {
 };
   const handleRemoveSlot = async () => {
     if (indexToDelete === null) return;
-    console.log(indexToDelete);
-    // Assuming each slot has a unique identifier like `id`, which should be set when slots are fetched or created
-   // const slotIdToDelete = slotToDelete;
+
     const trainingProgramID = trainingProgramData.id;
-    console.log(trainingProgramID);
     try {
         // If your backend requires, send a request to delete the slot
-        await axios.post('http://localhost:3000/trainingPrograms/deleteSlot', {
+        const response = await axios.post('http://localhost:3000/trainingPrograms/deleteSlot', {
           id : trainingProgramID,
           slotToDelete : slotToDelete
         });
 
-        //Update the local state to reflect this deletion
-        setCurrentSlots(prev => prev.filter((_, index) => index !== indexToDelete));
-        setSlots(prev => prev.filter((_, index) => index !== indexToDelete));
-
-        // Close the delete confirmation modal
-        handleCloseDeleteSlot();
+        if (response.data.success) {
+          // Update the local state to reflect this deletion
+          setCurrentSlots(prev => prev.filter((_, index) => index !== indexToDelete));
+          setSlots(prev => prev.filter((_, index) => index !== indexToDelete));
+    
+          // Close the delete confirmation modal
+          handleCloseDeleteSlot();
+        } else {
+          alert(`Cannot delete slot: ${response.data.reason}`);
+        }
     } catch (error) {
         console.error('There was an error deleting the slot!', error);
     }
@@ -306,27 +307,28 @@ const isSlotClashing = (newSlot, existingSlots) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Grid 
-        container 
-        component="main" 
-        sx={{ 
+      <Grid
+      container
+      component="main"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 3,
+        width: '100%'
+      }}
+    >
+      <Paper sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
           alignItems: 'center',
-          padding: 4
-        }}
-      >
-        <Paper sx={{
-            width: '100%',
-            maxWidth: '800px', 
-            height: 'auto', 
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-            borderRadius: 2,
-            padding: 4 
-          }}>
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
             <IconButton onClick={handleBack}>
               <ArrowBackIos />
@@ -337,36 +339,45 @@ const isSlotClashing = (newSlot, existingSlots) => {
             Edit Your Training Program
           </Typography>
           {previewUrl && (
-            <Box
-              sx={{
-                width: '100%',
-                maxHeight: '300px',
-                overflow: 'hidden',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginBottom: '20px',
-                border: '1px solid #ccc',
-                borderRadius: 1
-              }}
-            >
-              <img src={previewUrl} alt={title} style={{ width: '100%', height: 'auto', objectFit: 'cover' }} />
+            <Box sx={{
+              position: 'relative',  // Ensures the positioning context for the IconButton
+              width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
+                  borderRadius: 8     // Fixed height for consistency
+            }}>
+              <img
+                src={previewUrl}
+                alt="Preview"
+                style={{
+                  width: '100%',
+                  height: '350px',
+                  objectFit: 'cover',
+                  borderRadius: 8
+                }}
+              />
+              <label htmlFor="icon-button-file">
+              <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{display: 'none'}}/>
+              <IconButton
+                color="primary"
+                aria-label="edit picture"
+                component="span"
+                sx={{
+                  position: 'absolute',
+                  bottom: 8,             // Adjust top position here
+                  right: 8,           // Adjust right position here
+                  backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  },
+                }}
+              >
+                <Edit />
+              </IconButton>
+            </label>
             </Box>
           )}
-          <Button
-            variant="contained"
-            component="label"
-            sx={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}
-          >
-            <Upload sx={{ marginRight: 1 }} />
-            Upload Training Program Image
-            <input
-              type="file"
-              hidden
-              onChange={handleFileChange}
-            />
-          </Button>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
               required
               margin="normal"

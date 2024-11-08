@@ -121,7 +121,7 @@ export function TrainerTips(){
          }}
           />
           <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
-            <Typography gutterBottom variant="h5" align="center">
+            <Typography gutterBottom variant="h6" align="center">
               {tip.title}
             </Typography>
             <Typography variant="body2" color="text.secondary" align="center">

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListItem, ListItemText, Divider } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid, IconButton, Divider } from '@mui/material';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos, Delete, Cancel, CheckCircle} from '@mui/icons-material';
+import { ArrowBackIos, Delete, Cancel, CheckCircle, AttachMoney, MoneyOff} from '@mui/icons-material';
 
 export function ViewTrainingProgram() {
   const [trainingProgramData, setTrainingProgramData] = useState([]);
@@ -14,6 +14,10 @@ export function ViewTrainingProgram() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, pathName, pathPrev } = location.state;
+
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, []);
 
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
@@ -70,7 +74,16 @@ export function ViewTrainingProgram() {
   };
 
   const slots = Array.isArray(trainingProgramData.slots) ? trainingProgramData.slots : [];
-
+  const detailItems = [
+      { label: 'Type', value: trainingProgramData.typeOfTrainingProgram },
+      { label: 'Capacity', value: trainingProgramData.capacity },
+      { label: 'Fitness Level', value: trainingProgramData.fitnessLevel },
+      { label: 'Type of Exercise', value: trainingProgramData.typeOfExercise },
+      { label: 'Goal', value: trainingProgramData.fitnessGoal },
+      { label: 'Venue', value: trainingProgramData.venue },
+      { label: 'Trainer', value: trainer.username },
+      { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status ? 'Full' : 'Available'}`).join(', ') },
+    ];
   return (
     <>
       <Grid
@@ -80,237 +93,124 @@ export function ViewTrainingProgram() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: 4
+          padding: 3,
         }}
       >
         <Paper sx={{
-            width: '100%',
-            maxWidth: '800px', 
+            width: '737px', 
             height: 'auto', 
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
             borderRadius: 2,
-            padding: 4 
+            padding: 2 
           }}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+          <Grid container item xs={12}> 
             <IconButton onClick={handleBack}>
               <ArrowBackIos />
             </IconButton>
-          </Box>
-          {trainingProgramData.downloadUrl && (
+          </Grid>
+          <Grid container item xs={12}> 
+            {trainingProgramData.downloadUrl && (
             <img
               src={trainingProgramData.downloadUrl}
               alt={trainingProgramData.title}
               style={{
                 width: '100%',
-                maxHeight: '500px',
-                objectFit: 'contain',
-                marginBottom: '20px'
+                height: '350px',
+                objectFit: 'cover',
+                borderRadius: 8
               }}
             />
           )}
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Title
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgramData.title}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Trainer
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Avatar
-              alt={trainer.username}
-              src={trainer.photoURL}
-              sx={{ width: 40, height: 40, mr: 2 }}
-            />
-            <Typography variant="body1">
-              {trainer.username}
-            </Typography>
-          </Box>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Trainer Contact Number
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgramData.contactNum}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Training Program Type
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgramData.typeOfTrainingProgram}
-          </Typography>
-          {trainingProgramData.typeOfTrainingProgram === 'Group Classes' && (
-            <Box>
-            <Typography
-              variant="h6"
-              type= "number"
-              component="h2"
-              sx={{ mb: 2, fontWeight: 'bold' }}
-            >
-              Capacity
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
-              {trainingProgramData.capacity}
-            </Typography> 
-            </Box>
-          )}
+          </Grid>
+          <Grid container item xs={12}>
+            <Grid item xs={8}>
+              <Typography variant="h3" sx={{ fontWeight: 'bold', fontSize: '1.8rem', mt: 4, mb: 2 }}>
+                {trainingProgramData.title}
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? '#112F91' : '#112F91', mt: 4, mb: 2, mr: 2, textAlign: 'end' }}>
+                <AttachMoney />
+                {trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container item xs={12}>
+          <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap', fontSize: '0.85rem', mr:2 }}>
+                  {trainingProgramData.desc}
+                </Typography>
+            </Grid>
+          <Grid container>
+            <Grid item xs={12}>
+              <Divider sx={{mb: 2}}/>
+            </Grid>
+          </Grid>
 
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Training Program Fee
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgramData.feeType}
-          </Typography>
-          {trainingProgramData.feeType === 'Paid' && (
-            <Box>
-            <Typography
-              variant="h6"
-              component="h2"
-              sx={{ mb: 2, fontWeight: 'bold' }}
-            >
-              Fee Amount
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
-              RM {trainingProgramData.feeAmount}
-            </Typography> 
-            </Box>
-          )}
-
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Venue Type
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgramData.venueType}
-          </Typography>
-          {trainingProgramData.venueType === 'Physical' && (
-            <Box>
-            <Typography
-              variant="h6"
-              component="h2"
-              sx={{ mb: 2, fontWeight: 'bold',textAlign: 'center' }}
-            >
-              Venue
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
-              {trainingProgramData.venue}
-            </Typography> 
-            </Box>
-          )}
-          
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Fitness Level
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgramData.fitnessLevel}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Type of Exercise
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgramData.typeOfExercise}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Goal
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgramData.fitnessGoal}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Description
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
-            {trainingProgramData.desc}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Available Slots
-          </Typography>
-          <List>
-            {slots.map((slot, index) => (
-              <ListItem 
-                key={index} 
-                sx={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  //backgroundColor: slot.status ? '#ffebee' : '#e8f5e9', // Light red for full, light green for available
-                }}
+<Grid container item xs={12} >
+      <TableContainer 
+        component={Paper} 
+        sx={{ 
+          borderRadius: 2, 
+          overflow: 'hidden', 
+          boxShadow: 'none', 
+          width: '100%',
+          border: '1px solid #e0e0e0',
+          mt: 2, mr: 4, ml: 2 
+        }}
+      >
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+          <TableBody>
+            {detailItems.map((item, index) => (
+              <TableRow
+                key={index}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 }, mb: 1 }}
               >
-                <ListItemText
-                  primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                      <Typography variant="body1" component="span" sx={{ marginRight: 1 }}>
-                        {slot.time}
+                <TableCell component="th" scope="row" sx={{ textAlign: 'left', py: 1, pl:4 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {item.label}
+                  </Typography>
+                </TableCell>
+                <TableCell align="left" sx={{ py: 1 }}>
+                  {item.label === 'Slots' ? (
+                    slots.map((slot, idx) => (
+                      <Typography key={idx} variant="subtitle1" sx={{ display: 'block' }}>
+                        {slot.time} - {slot.status ? 'Full' : 'Available'}
                       </Typography>
-                      {slot.status ? (
-                        <Cancel sx={{ fontSize: '1rem', marginRight: 1, color: slot.status ? 'red' : 'green'  }}/>
-                      ) : (
-                        <CheckCircle sx={{ fontSize: '1rem', marginRight: 1, color: slot.status ? 'red' : 'green'  }}/>
-                      )}
-                      <Typography variant="body1" component="span" sx={{ fontWeight: slot.status ? 'bold' : 'normal' , color: slot.status ? 'red' : 'green' }}>
-                        {slot.status ? "Full" : "Available"}
-                      </Typography>
-                    </Box>
-                  }
-                />
-              </ListItem>
+                    ))
+                  ) : (
+                    <Typography variant="subtitle1">
+                      {item.value}
+                    </Typography>
+                  )}
+                </TableCell>
+              </TableRow>
             ))}
-          </List>
-          <GradientButton
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={() => handleBook(id)}
-          >
-            Book
-          </GradientButton>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid>
+    <Grid container xs={12}> 
+
+            <Typography variant="body1" sx={{ mt:3, mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap',fontSize: '0.85rem',  mr:2 }}>
+              For questions or to contact the trainer, call {trainingProgramData.contactNum}.
+            </Typography>
+            
+    </Grid>
+                <Grid container xs={12}> 
+                        <GradientButton
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 2, mb: 2, mr:2}}
+                    onClick={() => handleBook(id)}
+                  >
+                    Book
+                  </GradientButton>
+                  </Grid>
+          
         </Paper>
       </Grid>
       <Outlet />
