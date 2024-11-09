@@ -17,7 +17,12 @@ import {
     FormGroup,
     FormControlLabel,
     Grid,
-    LinearProgress
+    LinearProgress,
+    TextField,
+    Card,
+    CardActionArea,
+    CardContent,
+    Pagination
 } from "@mui/material";
 import { CheckCircle } from '@mui/icons-material';
 import { useNavigate, Outlet } from 'react-router-dom';
@@ -35,21 +40,13 @@ export function Goals(){
     const [userData, setUserData] = useState([]);
     const { user , setUser} = useUser();
     const uid = user.uid;
+    const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 6;
 
-    const GoalCard = styled(Paper)(({ theme }) => ({
-        width: 737,
-        height: 'auto',
-        padding: theme.spacing(2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        transition: "0.3s",
-        borderRadius: 16,
-        boxShadow: theme.shadows[3],
-        '&:hover': {
-            boxShadow: theme.shadows[6],
-        },
-    }));
+    useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, [page]);
 
     const calculateProgress = () => {
         const totalGoals = goals.length;
@@ -148,44 +145,63 @@ export function Goals(){
         fetchGoals();
     }, [user?.uid]);
     
+     // Filter programs based on search term
+     const filteredGoals = goals.filter(goal=>
+        goal.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  
+      // Calculate the current programs to display based on the page
+      const startIndex = (page - 1) * itemsPerPage;
+      const currentGoals = filteredGoals.slice(startIndex, startIndex + itemsPerPage);
+      
+
     return(
-        <>
-            <Grid
-                container
-                component="main"
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#f0f4f8',
-                    minHeight: '100vh',
-                    padding: 4
-                }}
-            >
-                <Box sx={{ flexGrow: 1, maxWidth: 737 }}>
-                    <Typography variant="h4" align="center" gutterBottom>
-                        Your Goals
-                    </Typography>
-                    <Typography variant="h6" align="center" gutterBottom>
-                        "Setting goals is the first step in turning the invisible into the visible." - Tony Robbins
-                    </Typography>
-                    <LinearProgress variant="determinate" value={calculateProgress()} sx={{ height: 10, borderRadius: 5, my: 2 }} />
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', mb: 2 }}>
-                        <AddGoal onAddGoal={addGoalCallback} />
-                    </Box>
-                    <List dense={dense}>
-                        {goals.map((goal, index) => (
-                            <Box key={index} sx={{ marginBottom: 5 }}>
-                                <GoalCard>
-                                    <Box>
-                                        <Typography variant="h6" component="div">
-                                            {goal.title}
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary">
-                                            {secondary ? 'Secondary text' : null}
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ p: 3, width: '100%', boxSizing: 'border-box' }}>
+        <Box sx={{ 
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%'
+        }}>
+          <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
+            My Goals
+          </Typography> 
+          <AddGoal onAddGoal={addGoalCallback} />
+            </Box>
+            <TextField
+            fullWidth
+            variant="outlined"
+            label="Search Goals"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ mb: 5, mt: 2 }}
+            />
+            {currentGoals.length === 0 || filteredGoals.length === 0 ? (
+            <Typography variant="body1" color="text.secondary" align="center">
+                No Goals Found.
+            </Typography>
+            ) : (
+          <>
+            <Grid container spacing={2} sx={{  }}>
+            {currentGoals.map((goal) => (
+                <Grid item xs={12} key={goal.id} sx={{ width: '100%',}}>
+                <Card sx={{ width: '100%' }}>
+                    <CardContent sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Grid container item xs={12} >
+                    <Grid item xs={11}>
+                        <Typography 
+                            variant="body1" 
+                            align="left" 
+                            sx={{
+                            wordWrap: 'break-word',
+                            overflowWrap: 'break-word',
+                            wordBreak: 'break-word'
+                            }}
+                        >
+                            {goal.title}
+                        </Typography>
+                        </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                                         <IconButton
                                             edge="end"
                                             aria-label="complete"
@@ -200,15 +216,24 @@ export function Goals(){
                                             </>
                                         )}
                                         <DeleteGoal id={goal.id} onDeleteGoal={deleteGoalCallback} />
-                                    </Box>
-                                </GoalCard>
-                            </Box>
-                        ))}
-                    </List>
-                </Box>
+                        </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+                </Grid>
+            ))}
             </Grid>
-            <Outlet />
-        </>
-    );
+            <Pagination
+              count={Math.ceil(filteredGoals.length / itemsPerPage)}
+              page={page}
+              onChange={(event, value) => setPage(value)}
+              color="primary"
+              sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}
+            />
+          </>
+        )}
+        <Outlet/>
+      </Box>
+            );
 
 }

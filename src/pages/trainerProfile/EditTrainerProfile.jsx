@@ -31,6 +31,10 @@ export function EditTrainerProfile() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, []);
+      
+    useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/auth/getUserById/${uid}`);
@@ -133,33 +137,33 @@ export function EditTrainerProfile() {
             Edit Your Profile
           </Typography>
             {previewUrl && (
-    <Box sx={{ position: 'relative', mb: 1, display: 'inline-block' }}>
-        <Avatar
-            alt="Preview Image"
-            src={previewUrl}
-            sx={{ width: 200, height: 200 }}
-        />
-        <label htmlFor="icon-button-file">
-            <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }} />
-            <IconButton
-                color="primary"
-                aria-label="edit picture"
-                component="span"
-                sx={{
-                    position: 'absolute',
-                    bottom: 0, // Position at the bottom of the container
-                    right: 0, // Position at the right of the container
-                    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
-                    '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    },
-                }}
-            >
-                <Edit />
-            </IconButton>
-        </label>
-    </Box>
-)}
+            <Box sx={{ position: 'relative', mb: 1, display: 'inline-block' }}>
+                <Avatar
+                    alt="Preview Image"
+                    src={previewUrl}
+                    sx={{ width: 200, height: 200 }}
+                />
+                <label htmlFor="icon-button-file">
+                    <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }} />
+                    <IconButton
+                        color="primary"
+                        aria-label="edit picture"
+                        component="span"
+                        sx={{
+                            position: 'absolute',
+                            bottom: 0, // Position at the bottom of the container
+                            right: 0, // Position at the right of the container
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                            '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            },
+                        }}
+                    >
+                        <Edit />
+                    </IconButton>
+                </label>
+            </Box>
+        )}
         <Box component="form" onSubmit={handleSubmit} sx={{  mt: 2,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
             margin="normal"

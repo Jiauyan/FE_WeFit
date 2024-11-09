@@ -12,10 +12,14 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem
+    MenuItem,
+    IconButton,
+    Input,
 } from "@mui/material";
 import {  useNavigate, Outlet } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
+import { ArrowBackIos, Edit, CloudUpload} from '@mui/icons-material';
+
 
 export function EditProfile() {
     const [userData, setUserData] = useState({});
@@ -31,6 +35,9 @@ export function EditProfile() {
     const [editProfileStatus, setEditProfileStatus] = useState('');
     const navigate = useNavigate();
     
+    useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, []);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -112,44 +119,65 @@ export function EditProfile() {
 
   return (
     <>
-    <Grid 
-      container 
-      component="main" 
-      sx={{ 
-        //height: '100vh', 
-        // width: '100vw',
+   <Grid
+      container
+      component="main"
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding:3
+        padding: 3,
+        width: '100%'
       }}
     >
       <Paper sx={{
-        width: '737px', 
-        height: 'auto', 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-        borderRadius: 2,
-        padding: 4 
-      }}>
-      <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+            <IconButton onClick={handleBack}>
+              <ArrowBackIos />
+            </IconButton>
+          </Box>
+          <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
             Edit Your Profile
-        </Typography>
-        {previewUrl && (
-           <Avatar
-            alt='none'
-            src={previewUrl}
-            sx={{ width: 200, height: 200, mb: 3 }} 
-            />
+          </Typography>
+            {previewUrl && (
+            <Box sx={{ position: 'relative', mb: 1, display: 'inline-block' }}>
+                <Avatar
+                    alt="Preview Image"
+                    src={previewUrl}
+                    sx={{ width: 200, height: 200 }}
+                />
+                <label htmlFor="icon-button-file">
+                    <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }} />
+                    <IconButton
+                        color="primary"
+                        aria-label="edit picture"
+                        component="span"
+                        sx={{
+                            position: 'absolute',
+                            bottom: 0, // Position at the bottom of the container
+                            right: 0, // Position at the right of the container
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                            '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            },
+                        }}
+                    >
+                        <Edit />
+                    </IconButton>
+                </label>
+            </Box>
         )}
-        <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <input
-        style={{ display: 'block', margin: 'auto' }}
-        type="file"
-        onChange={handleFileChange}
-        />
+        <Box component="form" onSubmit={handleSubmit} sx={{  mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
             margin="normal"
             fullWidth
@@ -211,15 +239,6 @@ export function EditProfile() {
             variant="outlined"
             sx={{ mb: 1 }}
         />
-        <Button
-            onClick={handleBack}
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 3, mb: 2, mr: 1 }}
-        >
-            Back
-        </Button>
-    
       <GradientButton
        type="submit"
                fullWidth

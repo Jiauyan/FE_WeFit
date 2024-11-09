@@ -50,83 +50,91 @@ export function ViewTipStudent() {
 
   return (
     <>
-    <Grid 
-      container 
-      component="main" 
-      sx={{ 
-        //height: '100vh', 
-        // width: '100vw',
+    <Grid
+      container
+      component="main"
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding:3
+        padding: 3,
+        width: '100%'
       }}
     >
-    <Paper sx={{
-        width: '737px', 
-        height: 'auto', 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-        borderRadius: 2,
-        padding: 4 
-      }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+      <Paper sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
+      <Grid container item xs={12}>     
       <IconButton
         onClick={handleBack}
       >
         <ArrowBackIos />
       </IconButton>
-    </Box>
-    <Typography
-      variant="h5" 
-      component="h2"  // Semantically correct header tag
-      sx={{ mb: 3, textAlign: 'center' }}  // Centered text for the title
-    >
-      {tipData.title}
-    </Typography>
-    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 3 }}>
-  <Avatar
-    alt={tipUser.username}
-    src={tipUser.photoURL}
-    sx={{ width: 40, height: 40, mr: 2 }} // Added margin-right to separate Avatar from text
-  />
-  <Typography
-    variant="body2"
-    color="textSecondary"
-    sx={{ mr: 2 }}
-  >
-    {tipUser.username}
-  </Typography>
-  <Typography variant="body2" color="textSecondary">
-    {new Date(tipData.createdAt).toLocaleString('en-US', {
-      month: 'long',
-      day: '2-digit',
-      year: 'numeric',
-    })}
-</Typography>
-</Box>
-  {tipData.downloadUrl && (
-    <img
-      src={tipData.downloadUrl}
-      alt={tipData.title}
-      style={{
-        width: '100%',  // Full width of the container
-        maxHeight: '500px',  // Max height to control large images
-        objectFit: 'contain',  // Ensures the image is contained within the element without stretching
-        marginBottom: '20px'
-      }}
-    />
-  )}
-  <Typography
-  variant="body1"  // More appropriate for body text
-  sx={{  textAlign: 'justify', whiteSpace: 'pre-wrap' }}  // Preserves formatting
-  >
-  {tipData.desc}
-</Typography>
-</Paper>
-</Grid>
+      </Grid> 
+      <Grid container item xs={12} justifyContent="center" > 
+          <Typography
+            variant="h5" 
+            component="h2"  // Semantically correct header tag
+            sx={{ mb: 3, textAlign: 'center' }}  // Centered text for the title
+          >
+            {tipData.title}
+          </Typography>
+        </Grid>
+        <Grid container item xs={12} justifyContent="center" > 
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 3 }}>
+        <Avatar
+          alt={tipUser.username}
+          src={tipUser.photoURL}
+          sx={{ width: 40, height: 40, mr: 2 }} // Added margin-right to separate Avatar from text
+        />
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          sx={{ mr: 2 }}
+        >
+          {tipUser.username}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+        {new Date(tipData.createdAt).toLocaleString('en-US', {
+          month: 'long',
+          day: '2-digit',
+          year: 'numeric',
+        })}
+      </Typography>
+      </Box>
+      </Grid>
+      <Grid container item xs={12}>
+          {tipData.downloadUrl && (
+          <img
+            src={tipData.downloadUrl}
+            alt={tipData.title}
+            style={{
+              width: '100%',
+              height: '350px',
+              objectFit: 'cover',
+              borderRadius: 8
+            }}
+          />
+        )}
+      </Grid>
+      <Grid container item xs={12} marginTop={3} marginBottom={2}>
+        <Typography
+          variant="body1"  // More appropriate for body text
+          sx={{  textAlign: 'justify', whiteSpace: 'pre-wrap' }}  // Preserves formatting
+          >
+          {tipData.desc}
+        </Typography>
+      </Grid>
+    </Paper>
+    </Grid>
     <Outlet/>
     </>
   );

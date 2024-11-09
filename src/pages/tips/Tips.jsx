@@ -60,7 +60,7 @@ export function Tips(){
 
     
     return(
-      <Box sx={{ padding: 3 }}>
+      <Box sx={{ padding: 3, mt:2}}>
       <Typography variant="h5" sx={{display: 'flex', alignItems: 'center' }}>  
               Sharing Tips From Experts
       </Typography>

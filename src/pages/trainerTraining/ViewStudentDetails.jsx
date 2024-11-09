@@ -8,8 +8,10 @@ import {
   Paper,
   Grid,
   IconButton,
+  Menu,
+  MenuItem
 } from "@mui/material";
-import { ArrowBackIos } from '@mui/icons-material';
+import { ArrowBackIos, MoreVert} from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
 
 export function ViewStudentDetails() {
@@ -20,7 +22,15 @@ export function ViewStudentDetails() {
   const location = useLocation();
   const { studentData, id, slot} = location.state;
   const [status , setStatus] = useState(location.state.studentData.status);
-
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  console.log(studentData);
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
     if (storedUid) {
@@ -29,8 +39,11 @@ export function ViewStudentDetails() {
   }, []);
 
   const handleBack = async () => {
-    console.log(id);
     navigate("/studentList", { state: { id: id , slot} });
+  };
+
+  const handleViewScreeningForm = async () => {
+    navigate("/viewScreeningForm", { state: { id, uid: studentData.uid, studentData, slot} });
   };
 
   const handleViewConsentForm = async () => {
@@ -78,10 +91,32 @@ export function ViewStudentDetails() {
           padding: 2,
           margin: 'auto' // Centers the paper in the viewport
         }}>
-        <Grid container item xs={12}> 
-        <IconButton onClick={handleBack}>
+        <Grid container item xs={12} justifyContent="space-between" marginBottom={2}>
+          <IconButton onClick={() => handleBack()}>
             <ArrowBackIos />
           </IconButton>
+          <IconButton
+            aria-label="more"
+            id="long-button"
+            aria-controls={open ? 'long-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-haspopup="true"
+            onClick={handleClick}
+          >
+            <MoreVert />
+          </IconButton>
+          <Menu
+            id="long-menu"
+            MenuListProps={{
+              'aria-labelledby': 'long-button',
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >          
+          <MenuItem onClick={() => handleViewScreeningForm()}>View Pre-Participation Screening Form</MenuItem>
+          <MenuItem onClick={() => handleViewConsentForm()}>View Consent Form</MenuItem>
+          </Menu>
         </Grid>
         <Grid container item xs={12} justifyContent="center"> 
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 5 }} >
@@ -138,15 +173,6 @@ export function ViewStudentDetails() {
             </Box>
           </Box>
         </Box>
-        <GradientButton
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 5, mb: 2 }}
-            onClick={() => handleViewConsentForm(studentData.uid)}
-          >
-            View Consent Form
-          </GradientButton>
           {status === false ? (
           <GradientButton
             fullWidth
@@ -158,18 +184,28 @@ export function ViewStudentDetails() {
             Mark as Done
           </GradientButton>
         ) : (
-          <Typography
-            variant="h6"
-            sx={{
-              mt: 3,
-              mb: 2,
-              color: 'green',
-              fontWeight: 'bold',
-              textAlign: 'center'
-            }}
-          >
-            Completed
-          </Typography>
+          <Box
+          component="form"
+          sx={{ 
+            mt: 1, 
+            width: '100%', 
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center', // Center align horizontally
+          }}
+        >
+          <Box sx={{ width: '80%' }}>
+           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+           <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
+                Status:
+              </Typography>
+           <Typography variant="body1">
+           Completed
+           </Typography>
+         </Box>
+         </Box>
+         </Box>
         )}
       </Paper>
     </Grid>

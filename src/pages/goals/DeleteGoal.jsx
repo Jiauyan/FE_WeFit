@@ -16,15 +16,21 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
-  height : 500,
+  width: {
+    xs: '90%', // full width on extra small devices
+    sm: '80%', // slightly smaller on small devices
+    md: '70%', // and even smaller on medium devices
+    lg: 500,   // fixed size on large devices and up
+  },
+  height: 'auto', // makes height dynamic
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 20,
   p: 4,
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center'
+  alignItems: 'center',
+  overflowY: 'auto', // add scroll on Y-axis if content is too long
 };
 
 export function DeleteGoal({id, disabled, onDeleteGoal}) {
@@ -76,10 +82,10 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
                 X
             </Button>
 
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:10}} margin={1} >
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5 }}>
                 Confirm
             </Typography>
-            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 , textAlign: 'center'}}>
                 Are you sure you wish to delete the goal?
             </Typography>
             <GradientButton

@@ -13,6 +13,10 @@ export function TrainerProfile() {
     const navigate = useNavigate();
 
     useEffect(() => {
+      window.scrollTo(0, 0); 
+    }, []);
+    
+    useEffect(() => {
       // Load user ID from local storage or other persistent storage
       const storedUid = localStorage.getItem('uid');
       if (storedUid) {
