@@ -49,9 +49,10 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
             uid,
             motivationalQuote
         });
-        console.log(response.data);
         setAddMotivationalQuoteStatus(response.data.message);
         onAddMotivationalQuote(response.data);
+        setMotivationalQuote('');
+        setWordCount(0);
         handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {

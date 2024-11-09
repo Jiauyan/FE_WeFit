@@ -56,17 +56,17 @@ export function Goals(){
     
     // Callback for adding a goal
     const addGoalCallback = (newGoal) => {
-        setGoals(prevGoals => [...prevGoals, newGoal]);
+        setGoals(prevGoals => [ newGoal, ...prevGoals]);
     };
 
     // Callback for editing a goal
     const editGoalCallback = (updatedGoal) => {
-        setGoals(prevGoals => prevGoals.map(goal => {
-            if (goal.id === updatedGoal.id) {
-                return updatedGoal;
-            }
-            return goal;
-        }));
+        setGoals(prevGoals => {
+            // Remove the updated quote from its current position
+            const filteredGoals = prevGoals.filter(goal => goal.id !== updatedGoal.id);
+            // Insert the updated quote at the beginning
+            return [updatedGoal, ...filteredGoals];
+        });
     };
 
     // Callback for deleting a goal
@@ -76,7 +76,6 @@ export function Goals(){
 
 
     const handleComplete = async (id, title) => {
-        console.log(id);
         try {
             const response = await axios.patch(`http://localhost:3000/goals/updateGoal/${id}`, {
                 uid,
@@ -86,13 +85,19 @@ export function Goals(){
 
             setCompletedGoalsStatus(response.data.message);
 
-            // Update the `goals` state directly
-            setGoals(prevGoals => prevGoals.map(goal => {
-                if (goal.id === id) {
-                    return { ...goal, status: true };
-                }
-                return goal;
-            }));
+            setGoals(prevGoals => {
+                // Update the status of the goal and reorder it to the top
+                const updatedGoals = prevGoals.map(goal => 
+                    goal.id === id ? { ...goal, status: true } : goal
+                );
+    
+                // Find the completed goal and move it to the top
+                const completedGoal = updatedGoals.find(goal => goal.id === id);
+                const otherGoals = updatedGoals.filter(goal => goal.id !== id);
+    
+                // Return the updated list with the completed goal at the top
+                return [completedGoal, ...otherGoals];
+            });
 
             setCompletedGoals(prevState => ({
                 ...prevState,
@@ -130,7 +135,8 @@ export function Goals(){
                 const uid = user?.uid;
                 if (!uid) return;
                 const response = await axios.get(`http://localhost:3000/goals/getAllUserGoals/${uid}`);
-                setGoals(response.data);
+                const sortedGoal = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                setGoals(sortedGoal);
                 // Initialize completedGoals based on fetched data
                 const initialCompletedGoals = {};
                 response.data.forEach(goal => {

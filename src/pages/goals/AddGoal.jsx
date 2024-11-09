@@ -37,6 +37,7 @@ export function AddGoal({onAddGoal}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [title, setTitle] = useState('');
+  const [wordCount, setWordCount] = useState(0);
   const [addGoalStatus, setAddGoalStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
@@ -49,8 +50,10 @@ export function AddGoal({onAddGoal}) {
             title,
             status: false
         });
-        setAddGoalStatus(response.data.message);
         onAddGoal(response.data);
+        setAddGoalStatus(response.data.message);
+        setTitle('');
+        setWordCount(0);
         handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -63,6 +66,14 @@ export function AddGoal({onAddGoal}) {
             setAddGoalStatus('An unexpected error occurred');
         }
     }
+};
+
+const handleWordLimit = (event) => {
+  const inputWords = event.target.value.split(/\s+/).filter(Boolean);
+  if (inputWords.length <= 20) {
+      setTitle(event.target.value);
+      setWordCount(inputWords.length);
+  }
 };
 
   return (
@@ -92,15 +103,19 @@ export function AddGoal({onAddGoal}) {
                Add Your Goal
             </Typography>
             <TextField
-                    multiline
-                    rows={5}
-                    margin="normal"
-                    //required
-                    fullWidth
-                    name="goal"
-                    label="Goal Description"
-                    id="goal"
-                    onChange={(e) => setTitle(e.target.value)}
+                multiline
+                rows={5}
+                margin="normal"
+                fullWidth
+                name="goalTitle"
+                label=" Goal Description"
+                id="goalTitle"
+                value={title}
+                onChange={handleWordLimit}
+                helperText={`${wordCount}/20 words`}
+                FormHelperTextProps={{
+                    style: { textAlign: 'right' }  // Aligns text to the right
+                }}
             />
             <GradientButton
                     type="submit"

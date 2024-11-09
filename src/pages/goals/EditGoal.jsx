@@ -39,9 +39,10 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [editGoalStatus, setEditGoalStatus] = useState('');
-  const [title, setTitle] = useState(oldTitle);
   const { user } = useUser();
   const uid = user.uid;
+  const [title, setTitle] = useState(oldTitle);
+  const [wordCount, setWordCount] = useState(oldTitle.split(/\s+/).filter(Boolean).length);
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
@@ -67,7 +68,14 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
     }
 };
 
-
+const handleChange = (event) => {
+  const text = event.target.value;
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length <= 25) {
+    setTitle(text);
+    setWordCount(words.length);
+  }
+};
 
   return (
     <div>
@@ -93,16 +101,19 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
                 Edit Your Goal
             </Typography>
             <TextField
-            multiline
-            rows={5}
-                    margin="normal"
-                    //required
-                    fullWidth
-                    name="goal"
-                    label="Goal Description"
-                    id="goal"
-                    value ={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                multiline
+                rows={5}
+                margin="normal"
+                fullWidth
+                name="goalTitle"
+                label=" Goal Description"
+                id="goalTitle"
+                value={title}
+                onChange={handleChange}
+                helperText={`${wordCount}/20 words`}
+                FormHelperTextProps={{
+                    style: { textAlign: 'right' }  // Aligns text to the right
+                }}
             />
             <GradientButton
                     type="submit"
