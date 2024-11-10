@@ -64,16 +64,22 @@ export function EditFitnessPlan() {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 500,
+        width: {
+          xs: '90%', // full width on extra small devices
+          sm: '80%', // slightly smaller on small devices
+          md: '70%', // and even smaller on medium devices
+          lg: 500,   // fixed size on large devices and up
+        },
+        height: 'auto', // makes height dynamic
         bgcolor: 'background.paper',
         border: '2px solid #000',
-        boxShadow: 24,
+        boxShadow: 20,
         p: 4,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
-    };
-
+        alignItems: 'center',
+        overflowY: 'auto', // add scroll on Y-axis if content is too long
+      };
     
     useEffect(() => {
         const fetchFitnessPlanData = async () => {
@@ -252,33 +258,32 @@ export function EditFitnessPlan() {
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Grid
-                container
-                component="main"
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: 4
-                }}
-            >
-                <Paper sx={{
-                    width: '100%',
-                    maxWidth: '800px',
-                    height: 'auto',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
-                    borderRadius: 2,
-                    padding: 4
-                }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
-                        <IconButton
-                            onClick={handleBack}
-                        >
-                            <ArrowBackIos />
-                        </IconButton>
-                    </Box>
+      container
+      component="main"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 3,
+        width: '100%'
+      }}
+    >
+      <Paper sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+            <IconButton onClick={handleBack}>
+              <ArrowBackIos />
+            </IconButton>
+        </Box>
 
                     <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2 }} margin={1}>
                         Edit Your Fitness Plan
@@ -355,8 +360,8 @@ export function EditFitnessPlan() {
                         X
                     </IconButton>
 
-                    <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, mt: 5 }} margin={1}>
-                        Add the Fitness Activity
+                    <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, mt: 5 }}>
+                        Add Your Fitness Activity
                     </Typography>
                     <TextField
                         margin="normal"
@@ -400,8 +405,8 @@ export function EditFitnessPlan() {
                     X
                 </IconButton>
 
-                <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, mt: 5 }} margin={1}>
-                    Edit Fitness Activity
+                <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, mt: 5 }}>
+                    Edit Your Fitness Activity
                 </Typography>
                 <TextField
                     margin="normal"
@@ -447,11 +452,11 @@ export function EditFitnessPlan() {
                 X
             </Button>
 
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:10}} margin={1} >
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5 }}>
                 Confirm
             </Typography>
-            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 }} margin={1}>
-                Are you sure you wish to delete the fitness activity?
+            <Typography component="h6" variant="h6" sx={{ fontWeight: 300 , textAlign: 'center'}}>
+                Are you sure you wish to delete this fitness activity?
             </Typography>
             <Button
                     fullWidth

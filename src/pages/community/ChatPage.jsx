@@ -32,16 +32,6 @@ export function ChatPage() {
 
     fetchChatrooms();
   }, [user.uid]);
-  
-  // useEffect(() => {
-  //   const filtered = chatrooms.filter(chatroom => 
-  //       chatroom.chatroomDetails?.messages && Object.values(chatroom.chatroomDetails.messages).some(message => 
-  //         message.receiverUID && message.receiverUID.toLowerCase().includes(searchTerm.toLowerCase())
-  //       )
-  //     );
-  //     setFilteredChatrooms(filtered);
-  //   }, [searchTerm, chatrooms]);
-
 
   useEffect(() => {
     // Sort chatrooms by the timestamp of the last message
@@ -94,36 +84,34 @@ export function ChatPage() {
     navigate('/chat', { state: {chatroomId, chatroomDetails, otherUserDetails } });
   };
 
-  if (loading) {
-    return <CircularProgress />;
-  }
-
   return (
     <Grid
-      container 
-      component="main" 
-      sx={{ 
+      container
+      component="main"
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding:3
+        padding: 3,
+        width: '100%'
       }}
     >
       <Paper sx={{
-          width: '737px', 
-          minHeight: '100vh', 
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
           borderRadius: 2,
-          padding: 4 
+          padding: 2,
+          margin: 'auto' 
         }}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
-          <IconButton onClick={handleBack}>
+      <Grid container item xs={12}>
+      <IconButton onClick={handleBack}>
             <ArrowBackIos />
           </IconButton>
-        </Box>
+        </Grid>
         <TextField
           fullWidth
           variant="outlined"
@@ -153,6 +141,7 @@ export function ChatPage() {
             </IconButton>
           </Tooltip>
         </Box>
+        <Grid container item xs={12}>
         <List sx={{ width: '100%' }}>
           {filteredChatrooms.map((chatroom) => {
           const lastMessage = Object.values(chatroom.chatroomDetails.messages).slice(-1)[0];
@@ -190,6 +179,7 @@ export function ChatPage() {
         );
       })}
 </List>
+</Grid>
       </Paper>
     </Grid>
   );

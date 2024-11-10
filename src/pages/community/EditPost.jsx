@@ -17,15 +17,21 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
-  height : 500,
+  width: {
+    xs: '90%', // full width on extra small devices
+    sm: '80%', // slightly smaller on small devices
+    md: '70%', // and even smaller on medium devices
+    lg: 500,   // fixed size on large devices and up
+  },
+  height: 'auto', // makes height dynamic
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 20,
   p: 4,
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center'
+  alignItems: 'center',
+  overflowY: 'auto', // add scroll on Y-axis if content is too long
 };
 
 
@@ -45,7 +51,6 @@ export function EditPost({id, oldDesc, onEditPost}) {
             uid,
             postDetails
         });
-        console.log(response.data);
         setEditPostStatus(response.data.message);
         onEditPost(response.data);
         handleClose();
@@ -89,7 +94,7 @@ export function EditPost({id, oldDesc, onEditPost}) {
             </Typography>
             <TextField
             multiline
-            rows={10}
+            rows={5}
                     margin="normal"
                     //required
                     fullWidth

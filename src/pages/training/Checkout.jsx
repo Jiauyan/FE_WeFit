@@ -66,7 +66,8 @@ export function Checkout() {
                 trainingClassID: savedData.trainingClassID,
                 status: savedData.status,
                 feeAmount: savedData.feeAmount,
-                paymentStatus: true
+                paymentStatus: true,
+                transactionId: ""
             });
             console.log(bookingResponse.data.message); 
             navigate("/bookingSuccess");
@@ -85,13 +86,13 @@ export function Checkout() {
                 customerEmail : user.email
             });
             const sessionId = response.data.sessionId;
-            const transcationId = response.data.session;
+            const transactionId = response.data.session;
             console.log(response.data);
 
             // Save sessionId to localStorage
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
             bookingData.sessionId = sessionId;
-            bookingData.transcationId = transcationId;
+            bookingData.transactionId = transactionId;
             localStorage.setItem('bookingData', JSON.stringify(bookingData));
 
             // Redirect to Stripe checkout
@@ -105,27 +106,28 @@ export function Checkout() {
 };
 
   return (
-      <Grid
-        container
-        component="main"
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 4
-        }}
-      >
-        <Paper sx={{
-          width: '100%',
-          maxWidth: '800px', 
-          height: 'auto', 
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-          borderRadius: 2,
-          padding: 4 
-        }}>
+    <Grid
+    container
+    component="main"
+    sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 3,
+        width: '100%' 
+    }}
+>
+    <Paper sx={{
+        width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+        minHeight: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+        borderRadius: 2,
+        padding: 2,
+        margin: 'auto' // Centers the paper in the viewport
+    }}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
               <IconButton onClick={handleBack}>
                 <ArrowBackIos />
@@ -135,8 +137,8 @@ export function Checkout() {
               </Typography>
             </Box>
 
-              <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
-                Checkout
+            <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
+              Checkout
               </Typography>
               
               <Box
@@ -150,7 +152,7 @@ export function Checkout() {
                     alignItems: 'center', // Center align horizontally
                   }}
                 >
-                <Box sx={{ width: '80%' }}>
+                <Box sx={{ width: '90%' }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                     <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
                       Name:
@@ -194,17 +196,18 @@ export function Checkout() {
                       RM{feeAmount}
                     </Typography>
                   </Box>
+                  <GradientButton
+                        onClick={handlePayment}
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                    Checkout
+                  </GradientButton>
+              </Box> 
+              
               </Box>
-              </Box>
-            <GradientButton
-                onClick={handlePayment}
-                fullWidth
-                variant="contained"
-                color="primary"
-                sx={{ mt: 3, mb: 2 }}
-            >
-              Checkout
-            </GradientButton>
           </Paper>
         </Grid>
        

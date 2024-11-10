@@ -22,7 +22,7 @@ const CompletedBooking = () => {
     const [completedTrainingPrograms, setCompletedTrainingPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 9; // Number of programs to display per page
+    const itemsPerPage = 6; // Number of programs to display per page
     const { user } = useUser();
     const navigate = useNavigate();
 
@@ -82,12 +82,23 @@ const CompletedBooking = () => {
 
     return (
         <Box padding={3}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
-            <IconButton onClick={handleBack}>
-              <ArrowBackIos />
-            </IconButton>
-                All Completed Bookings
-            </Typography>
+            <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
+                Completed Bookings
+                </Typography>
+                <Button
+                    onClick={handleBack}
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 2, mb: 2 }}
+                >
+                    Back
+                </Button>
+            </Box>
             <TextField
                 fullWidth
                 variant="outlined"

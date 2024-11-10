@@ -53,7 +53,6 @@ export function ScreeningForm() {
       });
       console.log(id)
       setAddScreeningFormStatus(response.data.message);
-      //updateUser(({ ...user, screeningForm: response.data }));
       navigate("/consentForm", { state: { id, pathPrev} });
   } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -78,20 +77,21 @@ export function ScreeningForm() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: 4
+          padding: 3,
+          width: '100%' // Ensures the grid takes full width
         }}
       >
         <Paper sx={{
-          width: '100%',
-          maxWidth: '800px', 
-          height: 'auto', 
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-          borderRadius: 2,
-          padding: '32px'
-        }}>
+            width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+            minHeight: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+            borderRadius: 2,
+            padding: 2,
+            margin: 'auto' // Centers the paper in the viewport
+          }}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
               <IconButton onClick={handleBack}>
                 <ArrowBackIos />
@@ -100,11 +100,13 @@ export function ScreeningForm() {
                 Step 1 of 4
               </Typography>
             </Box>
-              <Typography variant="h6" component="h2" sx={{ mb: 5, fontWeight: 'bold' }}>
-                Pre-Participation Screening Form
-              </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate>
-              <FormControl component="fieldset" sx={{ width: '90%', ml: 5 }}>
+            <Grid container item xs={12} justifyContent="center"> 
+                <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold', textAlign:'center' }}>
+                Pre-Participation Screening Form                
+                </Typography>
+                </Grid>
+            <Box component="form" onSubmit={handleSubmit} noValidate  sx={{ width: '100%', px: 3 }}>
+              <FormControl component="fieldset" >
                 <Typography> 1. Has your doctor ever said that you have a heart condition and that you should only do physical activity recommended by a doctor?</Typography>
                 <Box>
                   <RadioGroup
@@ -125,7 +127,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" sx={{ width: '90%', ml: 5 }}>
+              <FormControl component="fieldset" >
                 <Typography> 2. Do you feel pain in your chest when you do physical activity?</Typography>
                 <Box>
                   <RadioGroup
@@ -146,7 +148,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" sx={{ width: '90%', ml: 5 }}>
+              <FormControl component="fieldset" >
                 <Typography> 3. In the past month, have you had chest pain when you were not doing physical actiivty?</Typography>
                 <Box>
                   <RadioGroup
@@ -167,7 +169,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" sx={{ width: '90%', ml: 5 }}>
+              <FormControl component="fieldset" >
                 <Typography> 4. Do you lose your balance because of dizziness or do you ever lose consciousness?</Typography>
                 <Box>
                   <RadioGroup
@@ -188,7 +190,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" sx={{ width: '90%', ml: 5 }}>
+              <FormControl component="fieldset">
                 <Typography sx={{overflowWrap: 'break-word'}}> 
                   5. Do you have a bone or joint problem (for example, back, knee or hip) that could be made worse by a change in your physical activity?</Typography>
                 <Box>
@@ -210,7 +212,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" sx={{ width: '90%', ml: 5 }}>
+              <FormControl component="fieldset">
                 <Typography> 6. Is your doctor currently prescribing drugs (for example, water pills) for your blood pressure or heart condition?</Typography>
                 <Box>
                   <RadioGroup
@@ -231,7 +233,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" sx={{ width: '90%', ml: 5 }}>
+              <FormControl component="fieldset" >
                 <Typography> 7. Do you know of any other reason why you should not do physical activity?</Typography>
                 <Box>
                   <RadioGroup

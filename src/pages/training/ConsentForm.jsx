@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Button, Grid, Box, IconButton, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField } from "@mui/material";
+import { Typography, Paper, Button, Grid, Box, IconButton, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField, Pagination } from "@mui/material";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { ArrowBackIos } from '@mui/icons-material';
@@ -11,14 +11,20 @@ export function ConsentForm() {
     const [consentFormData, setConsentFormData] = useState({});
     const [trainerID, setTrainerID] = useState(null);
     const [addConsentFormStatus, setAddConsentFormStatus] = useState('');
+    const [name, setName] = useState('');
+    const [date, setDate] = useState('');
+    const [emergencyContactName, setEmergencyContactName] = useState('');
+    const [emergencyContactPhoneNumber, setEmergencyContactPhoneNumber] = useState('');
     const { user, updateUser, setUser } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
     const { id, pathPrev } = location.state;
+    const [page, setPage] = useState(1); // Track current page
 
     useEffect(() => {
       window.scrollTo(0, 0); // Scroll to the top of the page when the component loads
-    }, []);
+    }, [page]);
+
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
     if (storedUid) {
@@ -38,38 +44,67 @@ export function ConsentForm() {
   }, [user?.uid]);
 
   const handleBack = async () => {
-    console.log(pathPrev);
+    if (page === 1) {
     navigate("/screeningForm", { state: { id, pathName:"/screeningForm" , pathPrev} });
+  } else {
+    setPage(page - 1); // Go back to previous page
+}
   };
 
+  const handlePageChange = (event, value) => {
+    setPage(value); // Update page number when pagination changes
+  };
 
-  const handleSubmit = async () => {
-      navigate("/liabilityForm", { state: { id , pathPrev} });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const uid = user.uid;
+      const response = await axios.post('http://localhost:3000/consentForm/upsertConsentForm', {
+        uid,
+        name,
+        date,
+        emergencyContactName,
+        emergencyContactPhoneNumber
+      });
+      setAddConsentFormStatus(response.data.message);
+      navigate("/bookingDetails", { state: { id , pathPrev} });
+  } catch (error) {
+      if (axios.isAxiosError(error)) {
+          if (error.response) {
+            setAddConsentFormStatus(error.response.data.message);
+          } else {
+            setAddConsentFormStatus('An error occurred');
+          }
+      } else {
+        setAddConsentFormStatus('An unexpected error occurred');
+      }
+  }
   };
 
   return (
     <>
       <Grid
-        container
-        component="main"
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 4
-        }}
-      >
-        <Paper sx={{
-          width: '100%',
-          maxWidth: '800px', 
-          height: 'auto', 
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-          borderRadius: 2,
-          padding: '32px'
-        }}>
+            container
+            component="main"
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 3,
+                width: '100%' 
+            }}
+        >
+            <Paper sx={{
+                width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+                minHeight: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+                borderRadius: 2,
+                padding: 2,
+                margin: 'auto' // Centers the paper in the viewport
+            }}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
               <IconButton onClick={handleBack}>
                 <ArrowBackIos />
@@ -78,39 +113,121 @@ export function ConsentForm() {
                 Step 2 of 4
               </Typography>
             </Box>
-              <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
-               UMFitness Training Program Consent Form
-              </Typography>
-              <Box component="form" onSubmit={handleSubmit} noValidate>
-                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
-                    You are participating in a UMFitness training program. Your participation in this program is entirely voluntary. 
-                    Please read the following information carefully. If you have any questions, feel free to approach the trainers or staff.
-                </Typography>
-                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
-                    <strong>Program Overview:</strong> This training program is designed to help participants achieve their fitness goals through tailored training sessions that enhance overall health and wellness. Each participant or group will be assigned a qualified trainer, specified in the training program details, who will ensure correct techniques and safety practices throughout. Trainers are assigned specifically to each program and will supervise participants for the duration of their sessions.
-                </Typography>
-                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
-                    <strong>Potential Risks and Discomforts:</strong> While this program is generally low-risk, some physical discomfort, such as muscle soreness, may occur. Participants confirm that they are physically fit for the program based on the Physical Activity Readiness Questionnaire (PAR-Q) or clearance by a medical professional. All relevant medical conditions or impairments have been disclosed before starting the program. The University of Malaya, its staff, and students are not liable for any injuries or accidents that may occur during the program.
-                </Typography>
-                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
-                    <strong>Benefits:</strong> Regular exercise offers various health benefits, such as improved cardiovascular fitness, enhanced immune and digestive functioning, balanced blood pressure, and better bone density. It can also reduce the risk of diabetes, obesity, heart disease, osteoporosis, and certain cancers while improving posture, mobility, and general well-being.
-                </Typography>
-                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
-                    <strong>Confidentiality:</strong> All information collected as part of this program that can identify participants will remain confidential. Participants are not obligated to disclose any information they are uncomfortable sharing.
-                </Typography>
-                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
-                    <strong>Enquiries:</strong> For any questions or concerns, please contact the trainer via {trainingProgramData.contactNum}. 
-                </Typography>
-                <GradientButton
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    sx={{ mt: 3, mb: 2 }}
-                >
-                    Next
-                </GradientButton>
-            </Box>
+            <Grid container item xs={12} justifyContent="center">
+                    <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
+                        {page === 1 ? "UMFitness Training Program Consent Form" : "Liability Waiver"}
+                    </Typography>
+                </Grid>
+
+                <Box sx={{ width: '100%', px: 3 }}>
+                    {page === 1 ? (
+                        <>
+                                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                    You are participating in a UMFitness training program. Your participation in this program is entirely voluntary. 
+                                    Please read the following information carefully. If you have any questions, feel free to approach the trainers or staff.
+                                </Typography>
+                                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                    <strong>Program Overview:</strong> This training program is designed to help participants achieve their fitness goals through tailored training sessions that enhance overall health and wellness. Each participant or group will be assigned a qualified trainer, specified in the training program details, who will ensure correct techniques and safety practices throughout. Trainers are assigned specifically to each program and will supervise participants for the duration of their sessions.
+                                </Typography>
+                                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                    <strong>Potential Risks and Discomforts:</strong> While this program is generally low-risk, some physical discomfort, such as muscle soreness, may occur. Participants confirm that they are physically fit for the program based on the Physical Activity Readiness Questionnaire (PAR-Q) or clearance by a medical professional. All relevant medical conditions or impairments have been disclosed before starting the program. The University of Malaya, its staff, and students are not liable for any injuries or accidents that may occur during the program.
+                                </Typography>
+                                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                    <strong>Benefits:</strong> Regular exercise offers various health benefits, such as improved cardiovascular fitness, enhanced immune and digestive functioning, balanced blood pressure, and better bone density. It can also reduce the risk of diabetes, obesity, heart disease, osteoporosis, and certain cancers while improving posture, mobility, and general well-being.
+                                </Typography>
+                                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                    <strong>Confidentiality:</strong> All information collected as part of this program that can identify participants will remain confidential. Participants are not obligated to disclose any information they are uncomfortable sharing.
+                                </Typography>
+                                <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                    <strong>Enquiries:</strong> For any questions or concerns, please contact the trainer via {trainingProgramData?.contactNum} 
+                                </Typography>
+                        </>
+                    ) : (
+                        <>
+                            <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                I, the undersigned, acknowledge that I am aware of my own health and physical condition and understand that participating in the training program may 
+                                pose certain risks to my health. Recognizing these potential risks, 
+                                I voluntarily choose to participate in this training program, which may be conducted by different trainers depending on the program type.
+                            </Typography>
+                            <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                I hereby release and hold harmless the University of Malaya (UM), UM4S, program organizers, trainers, agents, and successors from any and 
+                                all liability for injuries, illnesses, or death that may result from my participation in this program. 
+                                I consent to participate in this training program and accept full responsibility for disclosing any physical limitations, 
+                                disabilities, ailments, or impairments that may affect my ability to engage in the activities involved.
+                            </Typography>
+                            <Typography variant="body1" gutterBottom sx={{ width: '90%', ml: 5, mb:2 }}>
+                                I confirm that I understand the statements above and am aware of the potential risks involved. I have no further questions, 
+                                and I willingly agree to participate in this training program. 
+                                I understand that I am free to withdraw from the program at any time without consequence.
+                            </Typography>
+                            <Box component="form" onSubmit={handleSubmit} noValidate>
+                            <TextField
+                            required
+                            margin="normal"
+                            fullWidth
+                            name="name"
+                            label="Name"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            sx={{ width: '90%', ml: 5, mb:2 }}
+                            />
+                            <TextField
+                            required
+                            margin="normal"
+                            fullWidth
+                            name="date"
+                            label="Date"
+                            id="date"
+                            //type="date"
+                            //value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            sx={{ width: '90%', ml: 5, mb:2 }}
+                            />
+                            <TextField
+                            required
+                            margin="normal"
+                            fullWidth
+                            name="emergencyContactPhoneNumber"
+                            label="Emergency Contact Phone Number"
+                            id="emergencyContactPhoneNumber"
+                            value={emergencyContactPhoneNumber}
+                            onChange={(e) => setEmergencyContactPhoneNumber(e.target.value)}
+                            sx={{ width: '90%', ml: 5, mb:2 }}
+                            />
+                            <TextField
+                            required
+                            margin="normal"
+                            fullWidth
+                            name="emergencyContactName"
+                            label="Emergency Contact Name"
+                            id="emergencyContactName"
+                            value={emergencyContactName}
+                            onChange={(e) => setEmergencyContactName(e.target.value)}
+                            sx={{ width: '90%', ml: 5, mb:2 }}
+                            />
+                            <GradientButton
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            sx={{ mt: 3, mb: 2 ,width: '90%', ml: 5,}}
+                            onClick={handleSubmit}
+                            >
+                            Confirm
+                            </GradientButton>
+                            </Box>
+                            </>
+                            )}
+                            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                                <Pagination
+                                    count={2}
+                                    page={page}
+                                    onChange={handlePageChange}
+                                    color="primary"
+                                    sx={{ mb: 3 }}
+                                />
+                            </Box>
+                  </Box>
           </Paper>
         </Grid>
     </>

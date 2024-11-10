@@ -22,23 +22,6 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { ArrowBackIos } from '@mui/icons-material';
-import completeImage from "../../assets/completeImage.png"
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    height : "auto",
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 20,
-    p: 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  };
 
 export function BookingDetails() {
     const [open, setOpen] = React.useState(false);
@@ -104,7 +87,7 @@ export function BookingDetails() {
 }, [user?.uid]);
 
   const handleBack = async () => {
-    navigate("/liabilityForm", { state: { id , pathName:"/screeningForm", pathPrev} });
+    navigate("/consentForm", { state: { id , pathName:"/screeningForm", pathPrev} });
   };
 
   const handleConfirm = async () => {
@@ -132,26 +115,27 @@ export function BookingDetails() {
   return (
     <>
       <Grid
-        container
-        component="main"
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 4
-        }}
-      >
-        <Paper sx={{
-          width: '100%',
-          maxWidth: '800px', 
-          height: 'auto', 
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-          borderRadius: 2,
-          padding: 4 
-        }}>
+            container
+            component="main"
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 3,
+                width: '100%' 
+            }}
+        >
+            <Paper sx={{
+                width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+                minHeight: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+                borderRadius: 2,
+                padding: 2,
+                margin: 'auto' // Centers the paper in the viewport
+            }}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
             
             <IconButton onClick={handleBack}>
@@ -161,7 +145,7 @@ export function BookingDetails() {
               Step 3 of 4
             </Typography>
             </Box>
-              <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
+            <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
                 Training Class Booking
               </Typography>
              <Box sx={{  width: '100%', justifyContent: 'center', alignItems: 'center' }}>

@@ -103,24 +103,23 @@ export function ChatRoom() {
     return acc;
   }, {});
 
-  const isOnline = true;
 
   return (
     <Box component="main" sx={{ 
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight:"80vh"
-      //overflow: 'hidden',  // Prevent scrolling outside the paper
+      minHeight: "80vh"
     }}>
       <Paper sx={{
       display: 'flex',
       flexDirection: 'column',
       boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
       borderRadius: 2,
-      width: '700px',
-      height: '70vh',  // Maximum height set to 100vh
+      width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+      height: { xs: '100%', sm: '90%', md: '73vh' },  // Responsive height
       overflowY: 'auto',  // Enable scroll inside Paper if content overflows
+      margin: 'auto'
     }}>
     {/* Header Section */}
     <Box sx={{ 
@@ -142,22 +141,15 @@ export function ChatRoom() {
           src={otherUserDetails.photoURL}
           alt={otherUserDetails.username}
           sx={{
-            height: 35,
-            width: 35,
+            height: { xs: 25, sm: 35 },  // Responsive avatar size
+            width: { xs: 25, sm: 35 },
             objectFit: 'cover',
             marginRight: 2,
           }}
         />
-        <Typography variant="body1" noWrap component="div">
+        <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }} noWrap>
           {otherUserDetails.username}
         </Typography>
-        {/* <FiberManualRecord
-          sx={{
-            color: isOnline ? 'green' : 'gray',
-            fontSize: 14,
-            ml: 1,
-          }}
-        /> */}
       </Box>
     </Box>
 
@@ -167,7 +159,7 @@ export function ChatRoom() {
         flexGrow: 1, 
         overflowY: 'auto', 
         bgcolor: 'background.paper',
-        padding: 2, // Add padding for the list content
+        padding: 2,  // Add padding for the list content
       }}
     >
       {Object.entries(groupedMessages).map(([date, msgs], index) => (
@@ -236,7 +228,7 @@ export function ChatRoom() {
       borderTop: '1px solid #e0e0e0',
       position: 'sticky', 
       bottom: 0,
-      backgroundColor: 'white', // Ensure the input area is clearly visible
+      backgroundColor: 'white',  // Ensure the input area is clearly visible
     }}
   >
     <TextField
@@ -252,10 +244,10 @@ export function ChatRoom() {
         }
       }}
       multiline
-      maxRows={4} // Limit to 4 visible lines before scrolling
-      sx={{ overflow: 'auto' }} // Enable scrolling within the input
+      maxRows={4}  // Limit to 4 visible lines before scrolling
+      sx={{ overflow: 'auto' }}  // Enable scrolling within the input
     />
-    <Button variant="contained" color="primary" onClick={sendMessage} sx={{ ml: 1 }}>
+    <Button variant="contained" color="primary" onClick={sendMessage} sx={{ ml: { xs: 0.5, sm: 1 } }}>
       Send
     </Button>
   </Box>

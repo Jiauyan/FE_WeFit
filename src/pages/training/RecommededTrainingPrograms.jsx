@@ -88,12 +88,23 @@ const RecommendedTrainingPrograms = () => {
 
     return (
         <Box padding={3}>
-            <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton onClick={handleBack}>
-              <ArrowBackIos />
-            </IconButton>
-                Recommended for You
-            </Typography>
+            <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
+                    Recommended For You
+                </Typography>
+                <Button
+                    onClick={handleBack}
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 2, mb: 2 }}
+                >
+                    Back
+                </Button>
+            </Box>
             <TextField
                 fullWidth
                 variant="outlined"

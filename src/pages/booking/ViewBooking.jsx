@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListItem, ListItemText, Divider } from "@mui/material";
+import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListItem, ListItemText, Divider, TableContainer, Table, TableBody, TableRow, TableCell} from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos, Delete } from '@mui/icons-material';
+import { ArrowBackIos, Delete, AttachMoney } from '@mui/icons-material';
 import { DeleteBooking } from './DeleteBooking';
 
 export function ViewBooking() {
   const [bookingData, setBookingData] = useState('');
-  const [trainingProgram, setTrainingProgram] = useState('');
+  const [trainingProgramData, setTrainingProgramData] = useState('');
   const [trainerID, setTrainerID] = useState(null);
   const [trainer, setTrainer] = useState({});
   const [transactionId, setTransactionId] = useState('');
@@ -17,6 +17,16 @@ export function ViewBooking() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, slot, bookingId } = location.state;
+  const detailItems = [
+    { label: 'Type', value: trainingProgramData?.typeOfTrainingProgram },
+    { label: 'Capacity', value: trainingProgramData?.capacity },
+    { label: 'Fitness Level', value: trainingProgramData?.fitnessLevel },
+    { label: 'Type of Exercise', value: trainingProgramData?.typeOfExercise },
+    { label: 'Goal', value: trainingProgramData?.fitnessGoal },
+    { label: 'Venue', value: trainingProgramData?.venue },
+    { label: 'Trainer', value: trainer?.username },
+    { label: 'Slot', value: bookingData?.slot?.time },
+  ];
 
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
@@ -30,8 +40,9 @@ export function ViewBooking() {
     if (!uid) return;
     axios.get(`http://localhost:3000/trainingClassBooking/getBookingById/${bookingId}`)
       .then(response => {
+        console.log(response.data)
         setBookingData(response.data.booking);
-        setTrainingProgram(response.data.trainingProgram);
+        setTrainingProgramData(response.data.trainingProgram);
         setTrainerID(response.data.trainingProgram.uid);
         setTransactionId(response.data.booking.transactionId);
       })
@@ -55,195 +66,113 @@ export function ViewBooking() {
   return (
     <>
       <Grid
-        container
-        component="main"
-        sx={{
+      container
+      component="main"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 3,
+        width: '100%' // Ensures the grid takes full width
+      }}
+    >
+      <Paper sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
           alignItems: 'center',
-          padding: 4
-        }}
-      >
-        <Paper sx={{
-            width: '100%',
-            maxWidth: '800px', 
-            height: 'auto', 
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-            borderRadius: 2,
-            padding: 4 
-          }}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' // Centers the paper in the viewport
+        }}>
+          <Grid container item xs={12}> 
             <IconButton onClick={handleBack}>
               <ArrowBackIos />
             </IconButton>
-          </Box>
-          {trainingProgram.downloadUrl && (
-            <img
-              src={trainingProgram.downloadUrl}
-              alt={trainingProgram.title}
-              style={{
-                width: '100%',
-                maxHeight: '500px',
-                objectFit: 'contain',
-                marginBottom: '20px'
-              }}
-            />
-          )}
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
+          </Grid>
+          <Grid container item xs={12}> 
+          {trainingProgramData.downloadUrl && (
+          <img
+            src={trainingProgramData.downloadUrl}
+            alt={trainingProgramData.title}
+            style={{
+              width: '100%',
+              height: '350px',
+              objectFit: 'cover',
+              borderRadius: 8
+            }}
+          />
+        )}
+        </Grid>
+          <Grid container item xs={12}>
+            <Grid item xs={8}>
+              <Typography variant="h3" sx={{ fontWeight: 'bold', fontSize: '1.8rem', mt: 4, mb: 2 }}>
+                {trainingProgramData.title}
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? '#112F91' : '#112F91', mt: 4, mb: 2, mr:2, textAlign: 'end' }}>
+                <AttachMoney />
+                {trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container item xs={12}>
+          <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap' , mr:2}}>
+                  {trainingProgramData.desc}
+                </Typography>
+            </Grid>
+            <Grid container item xs={12} >
+            <TableContainer 
+            component={Paper} 
+            sx={{ 
+              borderRadius: 2, 
+              overflow: 'hidden', 
+              boxShadow: 'none', 
+              width: '100%',
+              border: '1px solid #e0e0e0',
+              mt: 1, 
+              mb:2
+            }}
           >
-            Title
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgram.title}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Trainer
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Avatar
-              alt={trainer.username}
-              src={trainer.photoURL}
-              sx={{ width: 40, height: 40, mr: 2 }}
-            />
-            <Typography variant="body1">
-              {trainer.username}
+       <Table sx={{ width: '100%' }} size="small" aria-label="a dense table">
+          <TableBody>
+            {detailItems.map((item, index) => (
+              <TableRow
+                key={index}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 }, mb: 1 }}
+              >
+                <TableCell component="th" scope="row" sx={{ textAlign: 'left', py: 1, pl:4 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {item.label}
+                  </Typography>
+                </TableCell>
+                <TableCell align="left" sx={{ py: 1 }}>
+                    <Typography variant="subtitle1">
+                      {item.value}
+                    </Typography>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid>
+    <Grid container xs={12}> 
+    <Typography variant="body1" sx={{ mb: 3, mt: 2, ml:1, textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
+    For questions or to contact the trainer, call {trainingProgramData.contactNum}.
             </Typography>
-          </Box>
-
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Training Program Type
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgram.typeOfTrainingProgram}
-          </Typography>
-          {trainingProgram.typeOfTrainingProgram === 'Group Classes' && (
-            <Box>
-            <Typography
-              variant="h6"
-              component="h2"
-              sx={{ mb: 2, fontWeight: 'bold' }}
-            >
-              Capacity
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
-              {trainingProgram.capacity}
-            </Typography> 
-            </Box>
+            
+    </Grid>
+    <Grid container sx={{ width: '100%' }}>
+          {bookingData?.status === false && (
+              <Grid item xs={12}>
+                  <DeleteBooking id={bookingId} transactionId={transactionId} feeAmount={trainingProgramData.feeAmount} />
+              </Grid>
           )}
-
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Training Program Fee
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgram.feeType}
-          </Typography>
-          {trainingProgram.feeType === 'Paid' && (
-            <Box>
-            <Typography
-              variant="h6"
-              component="h2"
-              sx={{ mb: 2, fontWeight: 'bold' }}
-            >
-              Fee Amount
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
-              RM {trainingProgram.feeAmount}
-            </Typography> 
-            </Box>
-          )}
-
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Venue Type
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgram.venueType}
-          </Typography>
-          {trainingProgram.venueType === 'Physical' && (
-            <Box>
-            <Typography
-              variant="h6"
-              component="h2"
-              sx={{ mb: 2, fontWeight: 'bold',textAlign: 'center' }}
-            >
-              Venue
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
-              {trainingProgram.venue}
-            </Typography> 
-            </Box>
-          )}
-
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Fitness Level
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgram.fitnessLevel}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Type of Exercise
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgram.typeOfExercise}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Goal
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {trainingProgram.fitnessGoal}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Description
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
-            {trainingProgram.desc}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{ mb: 2, fontWeight: 'bold' }}
-          >
-            Slot
-          </Typography>
-          {bookingData?.slot?.time}
-            {bookingData?.status === false && <DeleteBooking id={bookingId} transactionId={transactionId} feeAmount={trainingProgram.feeAmount}/>}
+      </Grid>
         </Paper>
       </Grid>
       <Outlet />

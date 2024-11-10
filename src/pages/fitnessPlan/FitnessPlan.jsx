@@ -9,6 +9,10 @@ import {
     styled,
     List,
     Grid,
+    TextField,
+    Card,
+    CardContent,
+    Pagination
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 
@@ -20,21 +24,9 @@ export function FitnessPlan(){
     const [userData, setUserData] = useState([]);
     const { user , setUser} = useUser();
     const uid = user.uid;
-
-    const FitnessPlanCard = styled(Paper)(({ theme }) => ({
-        width: 737,
-        height: 'auto',
-        padding: theme.spacing(2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        transition: "0.3s",
-        borderRadius: 16,
-        boxShadow: theme.shadows[3],
-        '&:hover': {
-            boxShadow: theme.shadows[6],
-        },
-    }));
+    const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 6;
 
       useEffect(() => {
         // Load user ID from local storage or other persistent storage
@@ -50,7 +42,8 @@ export function FitnessPlan(){
                 const uid = user?.uid;
                 if (!uid) return;
                 const response = await axios.get(`http://localhost:3000/fitnessPlan/getAllFitnessPlanByUid/${uid}`);
-                setFitnessPlan(response.data);
+                const sortedFitnessPlans = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                setFitnessPlan(sortedFitnessPlans);
             } catch (error) {
                 console.error('There was an error!', error);
             }
@@ -72,73 +65,105 @@ export function FitnessPlan(){
       navigate("/training");
     };
 
+    const filteredFitnessPlans = fitnessPlan.filter(fitnessPlan =>
+      fitnessPlan.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Calculate the current programs to display based on the page
+    const startIndex = (page - 1) * itemsPerPage;
+    const currentFitnessPlans = filteredFitnessPlans.slice(startIndex, startIndex + itemsPerPage);
+
+
     return(
         <>
-            <Grid
-                container
-                component="main"
-                sx={{
+            <Box padding={3}>
+            <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}> 
+            <Typography variant="h5" sx={{display: 'flex', alignItems: 'center' }}>  
+              My Fitness Plans
+            </Typography>
+                <Box sx={{ 
                     display: 'flex',
-                    justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#f0f4f8',
-                    //minHeight: '100vh',
-                    padding: 4,
-                    marginTop: 2
-                }}
-            >
-                <Box sx={{ flexGrow: 1, maxWidth: 737 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mb:2 }}>
-                  <Button
+                    justifyContent: 'end'
+                }}>
+                
+                <Button
                       onClick={handleBack}
                       variant="contained"
                       color="primary"
-                      sx={{ mt: 3, mb: 2 }}
-                    >
+                      sx={{ mt: 3, mb:2 ,mr:2}}
+                      >
                       Back
                     </Button>
-                  <Typography variant="h6" align="left">
-                        My Fitness Plan
-                    </Typography>
                     <Button
                         onClick={handleAdd}
                         variant="contained"
                         color="primary"
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        Add Fitness Plan
+                        sx={{ mt: 3, mb: 2}}
+                        >
+                        Add New
                     </Button>
                     </Box>
-                    <List dense={dense}>
-                        {fitnessPlan.map((fitnessPlan, index) => (
-                            <Box key={index} sx={{ marginBottom: 5 }}>
-                            <FitnessPlanCard>
-                              <Box>
-                                <Typography variant="h6" component="div" sx={{ m: 2 }}>
-                                  {fitnessPlan.title}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary" sx={{ m: 2 }}>
-                                  {fitnessPlan.date}
-                                </Typography>
-                              </Box>
-                              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-start' }}>
-                                <Button
-                                  onClick={() => handleView(fitnessPlan)}
-                                  color="primary"
-                                  sx={{ mt: 3, mb: 2 }}
-                                >
-                                  View More
-                                </Button>
-                                <Typography variant="body2" color="textSecondary" sx={{ alignSelf: 'flex-end' }}>
+            </Box>
+            <TextField
+                fullWidth
+                variant="outlined"
+                label="Search Fitness Plans"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ marginBottom: 5, marginTop: 2 }}
+            />
+             {currentFitnessPlans.length === 0 || filteredFitnessPlans.length === 0 ? ( // Check if there are no programs
+                <Typography variant="body1" color="text.secondary" align="center">
+                    No Fitness Plan Found.
+                </Typography>
+            ) : (
+                <>
+                   <Grid container spacing={2} sx={{  }}>
+                    {currentFitnessPlans.map((fitnessPlan) => (
+                        <Grid item xs={12} key={fitnessPlan.id} sx={{ width: '100%',}}>
+                        <Card sx={{ width: '100%' }}>
+                            <CardContent sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <Grid container item xs={12} >
+                            <Grid item xs={11}>
+                                  <Typography variant="h6" component="div" sx={{ml: 2, mb:2, mt:2}}>
+                                    {fitnessPlan.title}
+                                  </Typography>
+                                  <Typography variant="body2" color="textSecondary" sx={{ml: 2}}>
+                                    {fitnessPlan.date}
+                                  </Typography>
+                              </Grid>
+                              <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  <Button
+                                      onClick={() => handleView(fitnessPlan)}
+                                      color="primary"
+                                  >
+                                    View More
+                                  </Button>
+                                </Grid>
+                                </Grid>
+                                <Typography variant="body2" color="textSecondary" sx={{ alignSelf: 'flex-end', mr:1}}>
                                   {fitnessPlan.completeCount}/{fitnessPlan.totalCount}
                                 </Typography>
-                              </Box>
-                            </FitnessPlanCard>
-                          </Box>
-                        ))}
-                    </List>
+                            </CardContent>
+                        </Card>
+                        </Grid>
+                    ))}
+                    </Grid>
+                    <Pagination
+                      count={Math.ceil(filteredFitnessPlans.length / itemsPerPage)}
+                      page={page}
+                      onChange={(event, value) => setPage(value)}
+                      color="primary"
+                      sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}
+                    />
+                  </>
+                )}
                 </Box>
-            </Grid>
             <Outlet />
         </>
     );

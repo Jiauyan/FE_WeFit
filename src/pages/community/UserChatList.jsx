@@ -76,31 +76,33 @@ export function UserChatList() {
   };
 
   return (
-    <Grid 
-      container 
-      component="main" 
-      sx={{ 
+    <Grid
+      container
+      component="main"
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding:3
+        padding: 3,
+        width: '100%'
       }}
     >
       <Paper sx={{
-          width: '737px', 
-          minHeight: '100vh', 
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
           borderRadius: 2,
-          padding: 4 
+          padding: 2,
+          margin: 'auto' 
         }}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
-          <IconButton onClick={handleBack}>
+      <Grid container item xs={12}>
+      <IconButton onClick={handleBack}>
             <ArrowBackIos />
           </IconButton>
-        </Box>
+        </Grid>
         <TextField
           fullWidth
           variant="outlined"

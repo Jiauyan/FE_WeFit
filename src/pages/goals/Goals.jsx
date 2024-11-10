@@ -162,16 +162,15 @@ export function Goals(){
       
 
     return(
-        <Box sx={{ p: 3, width: '100%', boxSizing: 'border-box' }}>
-        <Box sx={{ 
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%'
-        }}>
-          <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
-            My Goals
-          </Typography> 
+        <Box padding={3}>
+            <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center' }}>
+                    My Goals
+                </Typography>
           <AddGoal onAddGoal={addGoalCallback} />
             </Box>
             <TextField

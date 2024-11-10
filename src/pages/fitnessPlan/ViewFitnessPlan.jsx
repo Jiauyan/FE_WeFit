@@ -11,9 +11,11 @@ import {
   List,
   ListItem,
   ListItemText,
-  Checkbox
+  Checkbox,
+  Menu,
+  MenuItem
 } from "@mui/material";
-import { ArrowBackIos } from '@mui/icons-material';
+import { ArrowBackIos, MoreVert } from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { DeleteFitnessPlan } from './DeleteFitnessPlan';
 
@@ -26,6 +28,18 @@ export function ViewFitnessPlan() {
   const location = useLocation();
   const { id } = location.state;
   const fitnessPlanID = id;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, []);
 
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
@@ -71,32 +85,54 @@ export function ViewFitnessPlan() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 4
+        padding: 3,
+        width: '100%'
       }}
     >
       <Paper sx={{
-        width: '100%',
-        maxWidth: '800px',
-        height: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
-        borderRadius: 2,
-        padding: 4
-      }}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
-          <IconButton
-            onClick={handleBack}
-          >
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' 
+        }}>
+      <Grid container item xs={12} justifyContent="space-between" marginBottom={2}>
+          <IconButton onClick={() => handleBack()}>
             <ArrowBackIos />
           </IconButton>
-        </Box>
-
-        <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2 }} margin={1}>
-          View Your Fitness Plan
+          <IconButton
+            aria-label="more"
+            id="long-button"
+            aria-controls={open ? 'long-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-haspopup="true"
+            onClick={handleClick}
+          >
+            <MoreVert />
+          </IconButton>
+          <Menu
+            id="long-menu"
+            MenuListProps={{
+              'aria-labelledby': 'long-button',
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem  onClick={() => handleEdit(id)}>Edit</MenuItem>
+            <DeleteFitnessPlan id={id} />
+          </Menu>
+        </Grid>
+        <Grid container item xs={12} justifyContent="center" > 
+        <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2}}>
+        View Your Fitness Plan
         </Typography>
-        <Box component="form" sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        </Grid>
+        <Box component="form" sx={{ mt: 1, width: '90%', justifyContent: 'center', alignItems: 'center' }}>
           <Typography
             variant="h6"
             component="h2"
@@ -139,15 +175,6 @@ export function ViewFitnessPlan() {
             ))}
           </List>
           </Box>
-          <GradientButton
-            onClick={() => handleEdit(id)}
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Edit
-          </GradientButton>
-          <DeleteFitnessPlan id={id} />
       </Paper>
     </Grid>
   );

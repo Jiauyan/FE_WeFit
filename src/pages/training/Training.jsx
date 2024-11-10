@@ -1,6 +1,8 @@
-import { Typography, Box, Card, CardContent, CardActionArea } from "@mui/material";
+import { Typography, Box, Card, CardContent, CardActionArea, CardMedia } from "@mui/material";
 import { FitnessCenter, Assignment } from "@mui/icons-material"; // Icons
 import { useNavigate } from 'react-router-dom';
+import joinImage from '../../assets/trainingImage.png';
+import customiseImage from '../../assets/customiseImage.png';
 
 export function Training() {
     const navigate = useNavigate();
@@ -13,29 +15,37 @@ export function Training() {
         navigate("/trainingPrograms");
     };
 
-
     return (
         <Box
             sx={{
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '80vh',
                 width: '100%',
                 boxSizing: 'border-box',
-                gap: 5, // Space between cards
+                gap: 3, // Space between cards
+                padding: 2,
+                flexWrap: 'wrap', // Wrap cards on smaller screens
             }}
         >
             <Card sx={{
-                width: '100%',
-                maxWidth: 600, 
+                width: { xs: '100%', sm: 500 }, // Full width on extra-small devices, 500px on small and above
                 margin: 2,
                 boxShadow: 3, 
                 '&:hover': {
-                    boxShadow: 6}}}>
+                    boxShadow: 6},
+                flex: '1 0 auto', // Allows flexbox to manage width automatically
+                }}>
                 <CardActionArea onClick={handleCustomiseFitnessPlan}>
-                    <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <CardMedia
+                        component="img"
+                        height="200"
+                        image={customiseImage} // Path to your image
+                        alt="Customise Fitness Plan"
+                    />
+                    <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, minHeight: 150 }}>
                         <Assignment fontSize="large" color="primary" />
                         <Box>
                             <Typography variant="h5" component="div" gutterBottom>
@@ -50,15 +60,22 @@ export function Training() {
                 </CardActionArea>
             </Card>
 
-            <Card  sx={{
-                width: '100%',
-                maxWidth: 600, 
+            <Card sx={{
+                width: { xs: '100%', sm: 500 }, // Full width on extra-small devices, 500px on small and above
                 margin: 2, 
                 boxShadow: 3, 
                 '&:hover': {
-                    boxShadow: 6}}}>
+                    boxShadow: 6},
+                flex: '1 0 auto', // Allows flexbox to manage width automatically
+                }}>
                 <CardActionArea onClick={handleJoinTrainingProgram}>
-                    <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <CardMedia
+                        component="img"
+                        height="210"
+                        image={joinImage} // Path to your image
+                        alt="Join Training Program"
+                    />
+                    <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, minHeight: 150 }}>
                         <FitnessCenter fontSize="large" color="primary" />
                         <Box>
                             <Typography variant="h5" component="div" gutterBottom>

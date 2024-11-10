@@ -87,44 +87,46 @@ export function ViewTrainingProgram() {
   return (
     <>
       <Grid
-        container
-        component="main"
-        sx={{
+      container
+      component="main"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 3,
+        width: '100%' // Ensures the grid takes full width
+      }}
+    >
+      <Paper sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
           alignItems: 'center',
-          padding: 3,
-        }}
-      >
-        <Paper sx={{
-            width: '737px', 
-            height: 'auto', 
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-            borderRadius: 2,
-            padding: 2 
-          }}>
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' // Centers the paper in the viewport
+        }}>
           <Grid container item xs={12}> 
             <IconButton onClick={handleBack}>
               <ArrowBackIos />
             </IconButton>
           </Grid>
           <Grid container item xs={12}> 
-            {trainingProgramData.downloadUrl && (
-            <img
-              src={trainingProgramData.downloadUrl}
-              alt={trainingProgramData.title}
-              style={{
-                width: '100%',
-                height: '350px',
-                objectFit: 'cover',
-                borderRadius: 8
-              }}
-            />
-          )}
-          </Grid>
+          {trainingProgramData.downloadUrl && (
+          <img
+            src={trainingProgramData.downloadUrl}
+            alt={trainingProgramData.title}
+            style={{
+              width: '100%',
+              height: '350px',
+              objectFit: 'cover',
+              borderRadius: 8
+            }}
+          />
+        )}
+        </Grid>
           <Grid container item xs={12}>
             <Grid item xs={8}>
               <Typography variant="h3" sx={{ fontWeight: 'bold', fontSize: '1.8rem', mt: 4, mb: 2 }}>
@@ -132,36 +134,31 @@ export function ViewTrainingProgram() {
               </Typography>
             </Grid>
             <Grid item xs={4}>
-              <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? '#112F91' : '#112F91', mt: 4, mb: 2, mr: 2, textAlign: 'end' }}>
+              <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? '#112F91' : '#112F91', mt: 4, mb: 2, mr:2, textAlign: 'end' }}>
                 <AttachMoney />
                 {trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
               </Typography>
             </Grid>
           </Grid>
           <Grid container item xs={12}>
-          <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap', fontSize: '0.85rem', mr:2 }}>
+          <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap' , mr:2}}>
                   {trainingProgramData.desc}
                 </Typography>
             </Grid>
-          <Grid container>
-            <Grid item xs={12}>
-              <Divider sx={{mb: 2}}/>
-            </Grid>
-          </Grid>
-
-<Grid container item xs={12} >
-      <TableContainer 
-        component={Paper} 
-        sx={{ 
-          borderRadius: 2, 
-          overflow: 'hidden', 
-          boxShadow: 'none', 
-          width: '100%',
-          border: '1px solid #e0e0e0',
-          mt: 2, mr: 4, ml: 2 
-        }}
-      >
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <Grid container item xs={12} >
+            <TableContainer 
+            component={Paper} 
+            sx={{ 
+              borderRadius: 2, 
+              overflow: 'hidden', 
+              boxShadow: 'none', 
+              width: '100%',
+              border: '1px solid #e0e0e0',
+              mt: 1, 
+              mb:2
+            }}
+          >
+       <Table sx={{ width: '100%' }} size="small" aria-label="a dense table">
           <TableBody>
             {detailItems.map((item, index) => (
               <TableRow
@@ -193,9 +190,8 @@ export function ViewTrainingProgram() {
       </TableContainer>
     </Grid>
     <Grid container xs={12}> 
-
-            <Typography variant="body1" sx={{ mt:3, mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap',fontSize: '0.85rem',  mr:2 }}>
-              For questions or to contact the trainer, call {trainingProgramData.contactNum}.
+    <Typography variant="body1" sx={{ mb: 3, mt: 2, ml:1, textAlign: 'justify', whiteSpace: 'pre-wrap' }}>
+    For questions or to contact the trainer, call {trainingProgramData.contactNum}.
             </Typography>
             
     </Grid>
@@ -204,7 +200,7 @@ export function ViewTrainingProgram() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    sx={{ mt: 2, mb: 2, mr:2}}
+                    sx={{ mt: 2, mb: 2}}
                     onClick={() => handleBook(id)}
                   >
                     Book
