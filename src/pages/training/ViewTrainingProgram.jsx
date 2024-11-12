@@ -4,7 +4,12 @@ import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid, IconButton, Divider } from '@mui/material';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos, Delete, Cancel, CheckCircle, AttachMoney, MoneyOff} from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import Delete from '@mui/icons-material/Delete';
+import Cancel from '@mui/icons-material/Cancel';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import AttachMoney from '@mui/icons-material/AttachMoney';
+import MoneyOff from '@mui/icons-material/MoneyOff';
 
 export function ViewTrainingProgram() {
   const [trainingProgramData, setTrainingProgramData] = useState([]);

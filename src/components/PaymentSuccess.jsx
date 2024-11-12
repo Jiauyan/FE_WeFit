@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Typography, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from "../contexts/UseContext";
 import axios from 'axios';
-import { CheckCircle } from '@mui/icons-material';
+import CheckCircle from '@mui/icons-material/CheckCircle';
 
 const PaymentSuccess = () => {
     const navigate = useNavigate();
-    const { user } = useUser();
     const [transactionId, setTransactionId] = useState('');
     const savedData = JSON.parse(localStorage.getItem('bookingData') || '{}');
     const sessionId = savedData.sessionId;

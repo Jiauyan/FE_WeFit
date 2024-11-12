@@ -9,7 +9,7 @@ import {
     TextField,
     IconButton,
 }from "@mui/material";
-import { Edit } from '@mui/icons-material';
+import  Edit  from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
 
 const style = {

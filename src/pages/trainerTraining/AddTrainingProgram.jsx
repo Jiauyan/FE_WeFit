@@ -22,7 +22,12 @@ import {
     InputAdornment,
     Input,
 } from "@mui/material";
-import { ArrowBackIos, Upload, Delete, Add , Edit, CloudUpload} from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import Upload from '@mui/icons-material/Upload';
+import Delete from '@mui/icons-material/Delete';
+import Add from '@mui/icons-material/Add';
+import Edit from '@mui/icons-material/Edit';
+import CloudUpload from '@mui/icons-material/CloudUpload';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';

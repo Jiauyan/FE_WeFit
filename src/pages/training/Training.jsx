@@ -1,5 +1,6 @@
 import { Typography, Box, Card, CardContent, CardActionArea, CardMedia } from "@mui/material";
-import { FitnessCenter, Assignment } from "@mui/icons-material"; // Icons
+import FitnessCenter from "@mui/icons-material/FitnessCenter";
+import Assignment from "@mui/icons-material/Assignment";
 import { useNavigate } from 'react-router-dom';
 import joinImage from '../../assets/trainingImage.png';
 import customiseImage from '../../assets/customiseImage.png';

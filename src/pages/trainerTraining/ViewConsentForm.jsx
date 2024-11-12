@@ -3,7 +3,7 @@ import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
 import { Typography, Paper, Grid, Box, IconButton, Pagination } from "@mui/material";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowBackIos } from '@mui/icons-material';
+import  ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 export function ViewConsentForm() {
     const [trainingProgramData, setTrainingProgramData] = useState([]);

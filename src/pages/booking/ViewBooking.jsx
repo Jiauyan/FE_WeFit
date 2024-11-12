@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListItem, ListItemText, Divider, TableContainer, Table, TableBody, TableRow, TableCell} from "@mui/material";
+import { Typography, Paper, Grid, IconButton, TableContainer, Table, TableBody, TableRow, TableCell} from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
-import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos, Delete, AttachMoney } from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import AttachMoney from '@mui/icons-material/AttachMoney';
 import { DeleteBooking } from './DeleteBooking';
 
 export function ViewBooking() {

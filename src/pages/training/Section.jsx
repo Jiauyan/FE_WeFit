@@ -9,7 +9,7 @@ import {
     CardContent,
     CardMedia,
 } from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowForwardIos from "@mui/icons-material/ArrowForwardIos";
 import { useNavigate } from "react-router-dom";
 
 export default function Section({ title, programs, onSeeAll }) {
@@ -36,7 +36,7 @@ export default function Section({ title, programs, onSeeAll }) {
                     {title}
                 </Typography>
                 <Button
-                    endIcon={<ArrowForwardIosIcon />}
+                    endIcon={<ArrowForwardIos />}
                     onClick={onSeeAll}
                     variant="text"
                 >

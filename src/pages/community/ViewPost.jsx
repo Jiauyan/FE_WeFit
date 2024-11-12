@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Typography, Paper, Button, Grid, IconButton, Box, Avatar } from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos } from '@mui/icons-material';
+import  ArrowBackIos  from '@mui/icons-material/ArrowBackIos';
 
 export function ViewPost() {
   const [postData, setPostData] = useState([]);

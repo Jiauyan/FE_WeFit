@@ -9,16 +9,11 @@ import {
     CardActionArea,
     Grid,
     Box,
-    Container,
-    IconButton,
-    TextField,
-    Pagination
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 import { id } from 'date-fns/locale';
 import SectionBooking from './SectionBooking';
-import { ArrowBackIos, Delete } from '@mui/icons-material';
 
 export function Booking() {
     const navigate = useNavigate();

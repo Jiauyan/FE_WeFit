@@ -9,7 +9,7 @@ import {
     TextField,
     IconButton,
 } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
+import Edit from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
 
 const style = {
@@ -80,7 +80,7 @@ export function EditMotivationalQuote({ id, oldMotivationalQuote, onEditMotivati
   return (
     <div>
       <IconButton onClick={handleOpen} edge="end" aria-label="edit">
-        <EditIcon />
+        <Edit />
       </IconButton>
       <Modal
         open={open}

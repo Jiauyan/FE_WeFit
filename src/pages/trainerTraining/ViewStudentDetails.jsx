@@ -11,7 +11,8 @@ import {
   Menu,
   MenuItem
 } from "@mui/material";
-import { ArrowBackIos, MoreVert} from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import MoreVert from '@mui/icons-material/MoreVert';
 import { GradientButton } from '../../contexts/ThemeProvider';
 
 export function ViewStudentDetails() {

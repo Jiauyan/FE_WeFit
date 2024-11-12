@@ -18,19 +18,16 @@ import {
     IconButton,
     
 } from "@mui/material";
-import {
-    Inbox,
-    Mail,
-    FitnessCenter,
-    Dashboard,
-    TrackChanges,
-    Group,
-    TipsAndUpdates,
-    Logout,
-    AccountCircle,
-    Menu,
-    FormatQuote
-} from "@mui/icons-material";
+import FitnessCenter from "@mui/icons-material/FitnessCenter";
+import Dashboard from "@mui/icons-material/Dashboard";
+import TrackChanges from "@mui/icons-material/TrackChanges";
+import Group from "@mui/icons-material/Group";
+import TipsAndUpdates from "@mui/icons-material/TipsAndUpdates";
+import Logout from "@mui/icons-material/Logout";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Menu from "@mui/icons-material/Menu";
+import FormatQuote from "@mui/icons-material/FormatQuote";
+
 import { useNavigate, Outlet } from 'react-router-dom';
 import Footer from './Footer';
 

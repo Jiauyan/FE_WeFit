@@ -6,10 +6,7 @@ import {
     Button,
     Typography,
     Modal,
-    TextField,
-    IconButton,
 }from "@mui/material";
-import {Delete, Edit} from '@mui/icons-material';
 import { GradientButton } from '../../contexts/ThemeProvider';
 
 const style = {

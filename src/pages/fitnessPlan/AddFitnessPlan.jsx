@@ -15,7 +15,10 @@ import {
     ListItemText,
     Checkbox
 }from "@mui/material";
-import { ArrowBackIos, Add, Delete,Edit } from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';

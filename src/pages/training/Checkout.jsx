@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos } from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import { loadStripe } from '@stripe/stripe-js';
 
 

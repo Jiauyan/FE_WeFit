@@ -5,7 +5,8 @@ import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, Menu, MenuIte
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DeleteTip } from './DeleteTip';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos , MoreVert} from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import MoreVert from '@mui/icons-material/MoreVert';
 
 export function ViewTip() {
     const [tipData, setTipData] = useState([]);

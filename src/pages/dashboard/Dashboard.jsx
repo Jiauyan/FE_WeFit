@@ -1,11 +1,12 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
-import { Container, Grid, Card, CardContent, Typography, Box, Button, CircularProgress } from '@mui/material';
-import { DirectionsWalk, WaterDrop, TrackChanges, FitnessCenter } from '@mui/icons-material';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { Grid, Card, CardContent, Typography, Box } from '@mui/material';
+import DirectionsWalk from '@mui/icons-material/DirectionsWalk';
+import WaterDrop from '@mui/icons-material/WaterDrop';
+import TrackChanges from '@mui/icons-material/TrackChanges';
+import FitnessCenter from '@mui/icons-material/FitnessCenter';
 import { GetRandomMotivationalQuote } from '../trainerQuotes/GetRandomMotivationalQuote';
 import { useUser } from "../../contexts/UseContext";
-import { CustomCircularProgress } from "../../components/CustomCircularProgress";
 import StepsBarChart from './StepsBarChart';
 import WaterLineChart from './WaterLineChart';
 import TrainingPieChart from './TrainingPieChart';

@@ -8,7 +8,8 @@ import {
     TextField,
     IconButton,
 }from "@mui/material";
-import {Delete, Edit} from '@mui/icons-material';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
 
 const style = {

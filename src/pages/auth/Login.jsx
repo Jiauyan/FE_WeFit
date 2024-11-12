@@ -17,11 +17,8 @@ import {
     InputAdornment,
     IconButton
 } from "@mui/material";
-import {  
-  Visibility,
-  VisibilityOff,
-} from '@mui/icons-material';
-
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import loginBackground from "../../assets/loginBackground.png";
 
@@ -98,10 +95,10 @@ export function Login () {
           console.log(redirectPath);
           navigate(`${redirectPath}`);
         } catch (error) {
-          if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && checkUserEmail === true) {
+          if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && checkUserEmail == true) {
             setPasswordError("Incorrect password");
             setLoginStatus(error);
-          } else if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && checkUserEmail === false){
+          } else if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && checkUserEmail == false){
             setEmailError("Incorrect email");
             setLoginStatus(error);
           }else if (axios.isAxiosError(error) && error.response?.status === 401) {

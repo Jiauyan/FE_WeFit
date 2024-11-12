@@ -24,7 +24,7 @@ import {
     CardContent,
     Pagination
 } from "@mui/material";
-import { CheckCircle } from '@mui/icons-material';
+import CheckCircle  from '@mui/icons-material/CheckCircle';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { AddGoal } from "../goals/AddGoal";
 import { DeleteGoal } from "../goals/DeleteGoal"

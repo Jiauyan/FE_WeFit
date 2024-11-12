@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Typography, Paper, Button, Grid, Box, IconButton, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField } from "@mui/material";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos } from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 export function LiabilityForm() {
     const [liabilityFormData, setLiabilityFormData] = useState({});

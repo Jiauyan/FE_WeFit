@@ -1,11 +1,10 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
-import { Container, Grid, Card, CardContent, Typography, Box, Button, CircularProgress } from '@mui/material';
-import { Whatshot, School, EventAvailable, FitnessCenter, FormatQuote, TipsAndUpdates } from '@mui/icons-material';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { GetRandomMotivationalQuote } from '../trainerQuotes/GetRandomMotivationalQuote';
+import {  Grid, Card, CardContent, Typography, Box } from '@mui/material';
+import FitnessCenter from '@mui/icons-material/FitnessCenter';
+import FormatQuote from '@mui/icons-material/FormatQuote';
+import TipsAndUpdates from '@mui/icons-material/TipsAndUpdates';
 import { useUser } from "../../contexts/UseContext";
-import { CustomCircularProgress } from "../../components/CustomCircularProgress";
 import TrainerLineChart from './TrainerLineChart';
 import TrainerMotivationalLineChart from './TrainerMotivationalLineChart';
 import TrainerBarChart from './TrainerBarChart';
@@ -16,9 +15,6 @@ export function TrainerDashboard() {
   
   const { user , updateUser, setUser} = useUser();
   const [BMIValue, setBMIValue] = useState(null);
-  const [steps, setSteps] = useState('');
-  const [goals, setGoals] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');

@@ -2,7 +2,8 @@ import { Box, Typography, IconButton, Select, MenuItem, FormControl, InputLabel 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import { useUser } from "../../contexts/UseContext";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';

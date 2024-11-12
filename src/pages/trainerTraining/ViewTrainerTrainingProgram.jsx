@@ -5,7 +5,10 @@ import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListIte
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DeleteTrainingProgram } from './DeleteTrainingProgram';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos, Delete, AttachMoney, MoreVert } from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import Delete from '@mui/icons-material/Delete';
+import AttachMoney from '@mui/icons-material/AttachMoney';
+import MoreVert from '@mui/icons-material/MoreVert';
 import { SelectSlot } from './SelectSlot';
 
 export function ViewTrainerTrainingProgram() {

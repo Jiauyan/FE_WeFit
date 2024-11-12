@@ -10,12 +10,10 @@ import {
     CardContent,
     CardMedia,
     Button,
-    IconButton
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from "react-router-dom";
-import { ArrowBackIos, Delete } from '@mui/icons-material';
 
 const CompletedBooking = () => {
     const [bookings, setBookings] = useState('');

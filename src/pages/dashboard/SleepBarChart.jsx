@@ -2,7 +2,8 @@ import { Box, Typography, IconButton, Select, MenuItem, FormControl, InputLabel 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer } from 'recharts';
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 import { useUser } from "../../contexts/UseContext";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -11,7 +12,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 export default function SleepBarChart() {
   const [sleepData, setSleepData] = useState([]);  // State to store fetched data
   const [currentStartIndex, setCurrentStartIndex] = useState(0);
-  const { user , updateUser, setUser} = useUser();
+  const { user } = useUser();
   const [selectedMonth, setSelectedMonth] = useState(new Date().getUTCMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getUTCFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());

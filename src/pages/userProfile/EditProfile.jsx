@@ -18,8 +18,9 @@ import {
 } from "@mui/material";
 import {  useNavigate, Outlet } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos, Edit, CloudUpload} from '@mui/icons-material';
-
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import Edit from '@mui/icons-material/Edit';
+import CloudUpload from '@mui/icons-material/CloudUpload';
 
 export function EditProfile() {
     const [userData, setUserData] = useState({});

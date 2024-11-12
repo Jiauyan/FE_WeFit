@@ -1,13 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button, Typography, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from "../contexts/UseContext";
-import axios from 'axios';
-import { CheckCircle } from '@mui/icons-material';
+import CheckCircle from '@mui/icons-material/CheckCircle';
 
 const BookingSuccess = () => {
     const navigate = useNavigate();
-    const { user } = useUser();
 
     const handleContinue = async () => {
         try {

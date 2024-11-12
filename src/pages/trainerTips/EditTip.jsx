@@ -14,7 +14,8 @@ import {
 } from "@mui/material";
 import {  useNavigate, Outlet, useLocation} from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ArrowBackIos, Edit} from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import Edit from '@mui/icons-material/Edit';
 
 export function EditTip() {
     const [tipData, setTipData] = useState({});

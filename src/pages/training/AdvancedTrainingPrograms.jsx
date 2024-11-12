@@ -9,13 +9,11 @@ import {
     CardActionArea,
     CardContent,
     CardMedia,
-    Button,
-    IconButton
+    Button
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from "react-router-dom";
-import { ArrowBackIos, Delete } from '@mui/icons-material';
 
 const AdvancedTrainingPrograms = () => {
     const [advancedTrainingPrograms, setAdvancedTrainingPrograms] = useState([]);

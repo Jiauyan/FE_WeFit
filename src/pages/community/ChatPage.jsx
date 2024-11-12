@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Tooltip, IconButton, Box, Paper, Grid, TextField, List, ListItemAvatar, ListItemText, Avatar, CircularProgress, ListItemButton, Typography, ListItemSecondaryAction } from '@mui/material';
 import axios from 'axios';
-import { ArrowBackIos, Add } from '@mui/icons-material';
+import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import Add from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 import { format, isToday, isYesterday, parseISO } from 'date-fns';

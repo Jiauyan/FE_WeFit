@@ -9,14 +9,11 @@ import {
     CardActionArea,
     Grid,
     Box,
-    IconButton,
-    Container,
     TextField,
     Pagination
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
-import { ArrowBackIos } from '@mui/icons-material';
 import Section from './Section';
 
 
