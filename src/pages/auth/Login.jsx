@@ -2,8 +2,6 @@ import React, { useState , useEffect} from 'react';
 import { useNavigate} from 'react-router-dom';
 import axios from 'axios'; 
 import { useUser } from '../../contexts/UseContext';
-import { GoogleAuthProvider, signInWithPopup} from "firebase/auth";
-import { auth } from "../../configs/firebaseDB";
 import {
     Grid,
     Box,
@@ -184,10 +182,6 @@ export function Login () {
               }}
             />
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', width: '100%' }}>
-                {/* <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
-                /> */}
                 <Link href="/forgotPassword" variant="body2">
                   Forgot password?
                 </Link>
@@ -200,14 +194,6 @@ export function Login () {
               >
                 Login
               </GradientButton>
-              {/* <GradientButton
-                onClick={googleSignIn}
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign in With Google
-              </GradientButton> */}
               <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Sign up"}

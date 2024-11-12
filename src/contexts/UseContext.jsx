@@ -1,8 +1,6 @@
 // UserContext.js
 import React, { createContext, useContext, useState, useEffect  } from 'react';
 import { ApiTemplate } from '../api';
-import { GoogleAuthProvider, signInWithPopup} from "firebase/auth";
-import { auth } from "../configs/firebaseDB";
 // Create the context
 const UserContext = createContext();
 
@@ -51,28 +49,6 @@ export const UserProvider = ({ children }) => {
     updateUser({ uid, role , data}); 
     return response;
   };
-
-  // const signInWithGoogle = async () => {
-    
-  //   const provider = new GoogleAuthProvider();
-  //   const userCredential = await signInWithPopup(auth, provider);
-  //   const user = userCredential.user;
-  //   console.log(user);
-
-  //   const method = 'post'
-  //   const route = `auth/signInWithGoogle`
-
-  //   const response = await ApiTemplate(method, route, user)
-  //   console.log(response);
-  //   const token = {
-  //     accessToken : user.stsTokenManager.accessToken,
-  //     refreshToken : user.stsTokenManager.refreshToken,
-  //   }
-  //   localStorage.setItem('accessToken', token.accessToken);
-  //   localStorage.setItem('refreshToken', token.refreshToken);
-  //   updateUser({ user}); 
-  // };
-
   
   const logout = async () => {
     const method = 'post'
