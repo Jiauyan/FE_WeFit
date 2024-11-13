@@ -42,6 +42,7 @@ export function MotivationalQuotes(){
     // Callback for adding a motivationalQuote
     const addMotivationalQuoteCallback = (newMotivationalQuote) => {
         setMotivationalQuotes(prevMotivationalQuotes => [newMotivationalQuote, ...prevMotivationalQuotes]);
+        setPage(1);
     };
 
     // Callback for editing a motivationalQuote
@@ -52,6 +53,7 @@ export function MotivationalQuotes(){
             // Insert the updated quote at the beginning
             return [updatedMotivationalQuote, ...filteredQuotes];
         });
+    setPage(1);
     };
 
     // Callback for deleting a motivationalQuote
@@ -107,7 +109,7 @@ export function MotivationalQuotes(){
         />
         {currentMotivationalQuotes.length === 0 || filteredMotivationalQuotes.length === 0 ? (
           <Typography variant="body1" color="text.secondary" align="center">
-            No Motivational Quote Found.
+            No Motivational Quotes Found.
           </Typography>
         ) : (
           <>

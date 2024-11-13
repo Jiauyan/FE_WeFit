@@ -117,7 +117,7 @@ export function Login () {
           md={6}
           sx={{
             backgroundImage: `url(${loginBackground})`,
-            //backgroundSize: 'cover',
+            backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         />

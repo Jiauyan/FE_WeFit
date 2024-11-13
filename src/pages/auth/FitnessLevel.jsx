@@ -74,7 +74,8 @@ export function FitnessLevel() {
             backgroundPosition: 'center', 
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            backgroundSize: 'cover'
       }}
     >
       <Paper sx={{

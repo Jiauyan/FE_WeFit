@@ -26,8 +26,18 @@ export function Community() {
     const [posts, setPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 12;
+    const itemsPerPage = 6;
   
+    useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, [page]);
+
+    useEffect(() => {
+        // Check if there's a saved page number and set it
+        const savedPage = sessionStorage.getItem('lastPage');
+        setPage(savedPage ? parseInt(savedPage, 10) : 1);
+    }, []);
+
     useEffect(() => {
         // Load user ID from local storage or other persistent storage
         const storedUid = localStorage.getItem('uid');
@@ -54,13 +64,16 @@ export function Community() {
 
     const addPostCallback = (newPost) => {
         setPosts(prevPosts => [newPost, ...prevPosts]);
+        setPage(1);
     };
 
     const handleChat = async () => {
+        sessionStorage.removeItem('lastPage');
         navigate("/chatPage");
     };
 
     const handleMyPost = async () => {
+        sessionStorage.removeItem('lastPage');
         navigate("/myPost");
     };
 
@@ -74,6 +87,7 @@ export function Community() {
       const currentPosts = filteredPosts.slice(startIndex, startIndex + itemsPerPage);
 
     const handleView = (post) => {
+        sessionStorage.setItem('lastPage', page.toString());
         navigate('/viewPost', { state: { id: post.id } });
     };
 
@@ -183,7 +197,7 @@ export function Community() {
             />
              {currentPosts.length === 0 || filteredPosts.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Post Found.
+                    No Posts Found.
                 </Typography>
             ) : (
                 <>

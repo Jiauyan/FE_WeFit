@@ -56,46 +56,57 @@ export function SideBar(props) {
     };
 
     const handleProfile = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate('/profile')
     };
 
     const handleDashboard = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/dashboard")
     };
 
     const handleTraining = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/training")
     };
 
     const handleGoals = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/goals")
     };
 
     const handleCommunity = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/community")
     };
 
     const handleTips = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/tips")
     };
 
     const handleTrainerProfile = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/trainerProfile")
     };
     
     const handleTrainerDashboard = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/trainerDashboard")
     };
 
     const handleTrainerTraining = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/trainerTrainingPrograms")
     };
 
     const handleTrainerTips = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/trainerTips")
     };
 
     const handleTrainerQuotes = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/motivationalQuotes")
     };
 

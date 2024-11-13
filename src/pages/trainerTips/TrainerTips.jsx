@@ -30,6 +30,16 @@ export function TrainerTips(){
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
 
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, [page]);
+
+useEffect(() => {
+    // Check if there's a saved page number and set it
+    const savedPage = sessionStorage.getItem('lastPage');
+    setPage(savedPage ? parseInt(savedPage, 10) : 1);
+}, []);
+
       useEffect(() => {
         const fetchTips = async () => {
             try {
@@ -46,10 +56,12 @@ export function TrainerTips(){
     }, [user?.uid]);
 
     const handleAdd = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/addTip");
     }; 
 
     const handleView = async (tip) => {
+      sessionStorage.setItem('lastPage', page.toString());
       const tipId = tip.id;
       navigate("/viewTip", { state: { id: tipId } });
     }; 
@@ -92,7 +104,7 @@ export function TrainerTips(){
             />
              {currentTips.length === 0 || filteredTips.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Sharing Tip Found.
+                    No Sharing Tips Found.
                 </Typography>
             ) : (
                 <>

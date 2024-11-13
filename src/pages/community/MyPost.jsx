@@ -28,8 +28,18 @@ export function MyPost() {
     const [myPosts, setMyPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 12;
+    const itemsPerPage = 6;
   
+    useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, [page]);
+
+    useEffect(() => {
+        // Check if there's a saved page number and set it
+        const savedPage = sessionStorage.getItem('lastPage');
+        setPage(savedPage ? parseInt(savedPage, 10) : 1);
+    }, []);
+
     useEffect(() => {
         const fetchMyPosts = async () => {
             try {
@@ -48,16 +58,18 @@ export function MyPost() {
         
     // Callback for editing a post
     const editPostCallback = (updatedMyPost) => {
-        setMyPosts(prevMyPosts => prevMyPosts.map(myPost => {
-            if (myPost.id === updatedMyPost.id) {
-                return updatedMyPost;
-            }
-            return myPost;
-        }));
+        setMyPosts(prevMyPosts => {
+            // Remove the updated quote from its current position
+            const filteredMyPosts = prevMyPosts.filter(myPost => myPost.id !== updatedMyPost.id);
+            // Insert the updated quote at the beginning
+            return [updatedMyPost, ...filteredMyPosts];
+        });
+        setPage(1);
     };
 
     const addPostCallback = (newPost) => {
         setMyPosts(prevPosts => [newPost, ...prevPosts]);
+        setPage(1);
     };
 
     // Callback for deleting a post
@@ -66,14 +78,17 @@ export function MyPost() {
     };
    
     const handleView = async (myPost) => {
+        sessionStorage.setItem('lastPage', page.toString());
         navigate("/viewPost", { state: { id: myPost.id} });
     };
 
     const handleChat = async () => {
+        sessionStorage.removeItem('lastPage');
         navigate("/chatPage");
     };
 
     const handleBack = async () => {
+        sessionStorage.removeItem('lastPage');
         navigate("/community");
     };
 
@@ -192,7 +207,7 @@ export function MyPost() {
             />
              {currentMyPosts.length === 0 || filteredMyPosts.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Post Found.
+                    No Posts Found.
                 </Typography>
             ) : (
                 <>

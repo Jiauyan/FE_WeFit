@@ -126,7 +126,7 @@ const handleDateChange = (newValue) => {
         </Box>
         {totalCompleted === 0 ? (
           <Box height={335} display="flex" alignItems="center" justifyContent="center">
-          <Typography>No training programs found for the selected period.</Typography>
+          <Typography>No Training Programs Found for the Selected Period.</Typography>
           </Box>
             ) : (
                 <>

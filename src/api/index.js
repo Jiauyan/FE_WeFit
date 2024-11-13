@@ -1,6 +1,7 @@
 import axios from 'axios'; 
 
-const API_URL = "http://localhost:3000"
+const API_URL = import.meta.env.BE_UMFIT_API_URL || "https://be-um-fitness.vercel.app" || "http://localhost:3000"
+
 //controller auth/logoutAccount
 export const ApiTemplate = async (method, route, formData) => {
     switch(method.toLowerCase()) {
@@ -20,11 +21,3 @@ export const ApiTemplate = async (method, route, formData) => {
         throw new Error(`Unsupported method: ${method}`);
     }
 };
-
-export const ApiGetTemplate = () => {
-    
-}
-
-export const ApiTokenTemplate = () => {
-    
-}

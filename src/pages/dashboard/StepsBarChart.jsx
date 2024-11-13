@@ -110,7 +110,7 @@ export default function StepsBarChart() {
       </Box>
       {stepsData.length === 0 ? (
           <Box height={540} display="flex" alignItems="center" justifyContent="center">
-          <Typography>No steps found for the selected period.</Typography>
+          <Typography>No Steps Found for the Selected Period.</Typography>
           </Box>
             ) : (
             <>

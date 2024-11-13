@@ -26,7 +26,17 @@ export function FitnessPlan(){
     const uid = user.uid;
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 6;
+    const itemsPerPage =6;
+
+    useEffect(() => {
+      window.scrollTo(0, 0); 
+    }, [page]);
+
+  useEffect(() => {
+      // Check if there's a saved page number and set it
+      const savedPage = sessionStorage.getItem('lastPage');
+      setPage(savedPage ? parseInt(savedPage, 10) : 1);
+  }, []);
 
       useEffect(() => {
         // Load user ID from local storage or other persistent storage
@@ -57,11 +67,13 @@ export function FitnessPlan(){
       }; 
 
     const handleView = async (fitnessPlan) => {
+        sessionStorage.setItem('lastPage', page.toString());
         const fitnessPlanId = fitnessPlan.id;
         navigate("/viewFitnessPlan", { state: { id: fitnessPlanId } });
     }; 
 
     const handleBack = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/training");
     };
 
@@ -119,7 +131,7 @@ export function FitnessPlan(){
             />
              {currentFitnessPlans.length === 0 || filteredFitnessPlans.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Fitness Plan Found.
+                    No Fitness Plans Found.
                 </Typography>
             ) : (
                 <>

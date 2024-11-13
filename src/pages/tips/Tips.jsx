@@ -26,7 +26,17 @@ export function Tips(){
   const [tips, setTips] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 1;
+
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, [page]);
+
+useEffect(() => {
+    // Check if there's a saved page number and set it
+    const savedPage = sessionStorage.getItem('lastPage');
+    setPage(savedPage ? parseInt(savedPage, 10) : 1);
+}, []);
 
       useEffect(() => {
         const fetchTips = async () => {
@@ -45,6 +55,7 @@ export function Tips(){
     }, [user?.uid]);
 
     const handleView = async (tip) => {
+      sessionStorage.setItem('lastPage', page.toString());
       const tipId = tip.id;
       navigate("/viewTipStudent", { state: { id: tipId } });
     }; 
@@ -74,7 +85,7 @@ export function Tips(){
             />
              {currentTips.length === 0 || filteredTips.length === 0 ? ( // Check if there are no tips
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Sharing Tip Found.
+                    No Sharing Tips Found.
                 </Typography>
             ) : (
                 <>

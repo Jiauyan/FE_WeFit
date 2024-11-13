@@ -23,12 +23,24 @@ const IntermediateTrainingPrograms = () => {
     const { user } = useUser();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, [page]);
+
+    useEffect(() => {
+        // Check if there's a saved page number and set it
+        const savedPage = sessionStorage.getItem('lastPage');
+        setPage(savedPage ? parseInt(savedPage, 10) : 1);
+    }, []);
+
     // Handle program view navigation
     const handleView = (program) => {
+        sessionStorage.setItem('lastPage', page.toString());
         navigate("/viewTrainingProgram", { state: { id: program.id , pathPrev: "/intermediate"} });
     };
 
     const handleBack = () => {
+        sessionStorage.removeItem('lastPage');
         navigate("/trainingPrograms");
     };
 
@@ -116,7 +128,7 @@ const IntermediateTrainingPrograms = () => {
             />
             {currentPrograms.length === 0 || filteredPrograms.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Intermediate Training Program Found.
+                    No Intermediate Training Programs Found.
                 </Typography>
             ) : (
                 <>

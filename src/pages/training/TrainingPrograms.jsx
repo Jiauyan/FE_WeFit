@@ -208,7 +208,7 @@ export function TrainingPrograms() {
                 /></>
                 ) : searchTerm && filteredTrainingPrograms.length === 0 ? (
                     <Typography variant="body1" color="text.secondary" align="center" marginTop={5}>
-                        No Training Program Found.
+                        No Training Programs Found.
                     </Typography>
                 ) : (
                     <>

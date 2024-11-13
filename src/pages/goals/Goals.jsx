@@ -42,7 +42,7 @@ export function Goals(){
     const uid = user.uid;
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 6;
+    const itemsPerPage = 3;
 
     useEffect(() => {
         window.scrollTo(0, 0); 
@@ -57,6 +57,7 @@ export function Goals(){
     // Callback for adding a goal
     const addGoalCallback = (newGoal) => {
         setGoals(prevGoals => [ newGoal, ...prevGoals]);
+        setPage(1);
     };
 
     // Callback for editing a goal
@@ -67,6 +68,7 @@ export function Goals(){
             // Insert the updated quote at the beginning
             return [updatedGoal, ...filteredGoals];
         });
+        setPage(1);
     };
 
     // Callback for deleting a goal

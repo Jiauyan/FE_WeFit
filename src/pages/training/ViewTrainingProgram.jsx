@@ -18,7 +18,7 @@ export function ViewTrainingProgram() {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
-  const { id, pathName, pathPrev } = location.state;
+  const { id, pathName, pathPrev, page } = location.state;
 
   useEffect(() => {
     window.scrollTo(0, 0); 
@@ -53,6 +53,7 @@ export function ViewTrainingProgram() {
   }, [trainerID]); 
 
   const handleBack = () => {
+    console.log("hi");
     console.log(pathPrev);
     console.log(pathName);
     if (pathPrev === "/recommend" && pathName === "/screeningForm") {
@@ -132,18 +133,21 @@ export function ViewTrainingProgram() {
           />
         )}
         </Grid>
+        <Grid container item xs={12}>
+            <Typography variant="h3" sx={{ fontWeight: 'bold', fontSize: '1.8rem', mt: 4, mb: 2 }}>
+              {trainingProgramData.title}
+            </Typography>
+          </Grid>
           <Grid container item xs={12}>
-            <Grid item xs={8}>
-              <Typography variant="h3" sx={{ fontWeight: 'bold', fontSize: '1.8rem', mt: 4, mb: 2 }}>
-                {trainingProgramData.title}
+            <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? '#112F91' : '#112F91', mt: 2, mb: 2, mr: 2, textAlign: 'end' }}>
+              <AttachMoney />
+              {trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
+            </Typography>
+        </Grid>
+        <Grid container item xs={12}>
+        <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap', mr:2 }}>
+                {trainingProgramData.desc}
               </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? '#112F91' : '#112F91', mt: 4, mb: 2, mr:2, textAlign: 'end' }}>
-                <AttachMoney />
-                {trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
-              </Typography>
-            </Grid>
           </Grid>
           <Grid container item xs={12}>
           <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap' , mr:2}}>

@@ -111,7 +111,7 @@ export default function WaterLineChart() {
        </Box>
        {waterData.length === 0 ? (
           <Box height={400} display="flex" alignItems="center" justifyContent="center">
-          <Typography>No water consumption found for the selected period.</Typography>
+          <Typography>No Water Consumption Found for the Selected Period.</Typography>
           </Box>
             ) : (
             <>

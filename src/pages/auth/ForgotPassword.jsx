@@ -64,7 +64,9 @@ export function ForgotPassword() {
             backgroundPosition: 'center', 
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            backgroundSize: 'cover',
+
       }}
     >
       <Paper sx={{
@@ -79,7 +81,7 @@ export function ForgotPassword() {
         margin: 4  
       }}>
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1} >
-                Reset your password
+                Reset Your Password
             </Typography>
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
                 The reset password link will send via your email

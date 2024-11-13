@@ -73,30 +73,31 @@ export function FavClass() {
 
 
     return (
-        <Grid 
-        container 
-        component="main" 
-        sx={{ 
-            height: '100vh', 
-            width: '100vw',
-            backgroundImage: `url(${backGround})`,
-            backgroundPosition: 'center', 
+        <Grid
+        container
+        component="main"
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 3,
+          width: '100%', // Ensures the grid takes full width,
+          backgroundImage: `url(${backGround})`,
+          backgroundPosition: 'center', 
+          backgroundSize: 'cover',
+        }}
+      >
+        <Paper sx={{
+            width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+            minHeight: '100%',
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-      }}
-    >
-      <Paper sx={{
-        width: 737,
-        height: 'auto', 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-        borderRadius: 2,
-        padding: 4,
-        margin: 4  
-      }}>
+            flexDirection: 'column',
+            alignItems: 'center',
+            boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+            borderRadius: 2,
+            padding: 2,
+            margin: 'auto' // Centers the paper in the viewport
+          }}>
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1} >
                 Select all your favorite type of exercises
             </Typography>

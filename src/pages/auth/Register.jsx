@@ -116,7 +116,7 @@ export function Register() {
           md={6}
           sx={{
             backgroundImage: `url(${registerBackground})`,
-            //backgroundSize: 'cover',
+            backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         />

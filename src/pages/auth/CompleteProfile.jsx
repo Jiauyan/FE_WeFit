@@ -88,30 +88,31 @@ export function CompleteProfile() {
 
 
     return (
-        <Grid 
-        container 
-        component="main" 
-        sx={{ 
-            height: '100vh', 
-            width: 'auto',
-            backgroundImage: `url(${backGround})`,
-            backgroundPosition: 'center', 
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
+      <Grid
+      container
+      component="main"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 3,
+        width: '100%', // Ensures the grid takes full width,
+        backgroundImage: `url(${backGround})`,
+        backgroundPosition: 'center', 
+        backgroundSize: 'cover',
       }}
     >
       <Paper sx={{
-        width: 737,
-        height: 'auto', 
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)', 
-        borderRadius: 2,
-        padding: 4,
-        margin: 4  
-      }}>
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
+          minHeight: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: 2,
+          padding: 2,
+          margin: 'auto' // Centers the paper in the viewport
+        }}>
          <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1}>
                 Let's complete your profile 
             </Typography>
@@ -159,9 +160,16 @@ export function CompleteProfile() {
                     label="Age"
                     name="age"
                     type="number"
-                    onChange={(e) => setAge(parseFloat(e.target.value) || null)}
-            />
-            <FormControl fullWidth>
+                    value={age || ''} // Make sure to bind the value
+                    inputProps={{ min: 1, max: 100 }}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === '' || parseFloat(value) >= 0) {
+                            setAge(value === '' ? null : parseFloat(value));
+                        }
+                    }}
+                />
+            <FormControl margin="normal" fullWidth>
                     <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                     <Select
                         required
@@ -183,7 +191,14 @@ export function CompleteProfile() {
                     label="Weight"
                     id="weight"
                     type="number"
-                    onChange={(e) => setWeight(parseFloat(e.target.value) || null)}
+                    inputProps={{ min: 0 }}
+                    value={weight || ''} // Make sure to bind the value
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === '' || parseFloat(value) >= 0) {
+                            setWeight(value === '' ? null : parseFloat(value));
+                        }
+                    }}
             />
             <TextField
                     margin="normal"
@@ -193,7 +208,13 @@ export function CompleteProfile() {
                     label="Height"
                     id="height"
                     type="number"
-                    onChange={(e) => setHeight(parseFloat(e.target.value) || null)}
+                    inputProps={{ min: 0 }}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === '' || parseFloat(value) >= 0) {
+                            setHeight(value === '' ? null : parseFloat(value));
+                        }
+                    }}
             />
             <GradientButton
                     type="submit"

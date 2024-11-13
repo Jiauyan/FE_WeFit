@@ -26,6 +26,15 @@ export function TrainerTrainingPrograms(){
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
   
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, [page]);
+
+useEffect(() => {
+    // Check if there's a saved page number and set it
+    const savedPage = sessionStorage.getItem('lastPage');
+    setPage(savedPage ? parseInt(savedPage, 10) : 1);
+}, []);
 
       useEffect(() => {
         const fetchTrainingPrograms = async () => {
@@ -33,7 +42,8 @@ export function TrainerTrainingPrograms(){
                 const uid = user?.uid;
                 if (!uid) return;
                 const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
-                setTrainingPrograms(response.data);
+                const sortedTrainingPrograms = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                setTrainingPrograms(sortedTrainingPrograms);
             } catch (error) {
                 console.error('There was an error!', error);
             }
@@ -43,10 +53,12 @@ export function TrainerTrainingPrograms(){
     }, [user?.uid]);
 
     const handleAdd = async () => {
+      sessionStorage.removeItem('lastPage');
       navigate("/addTrainingProgram");
     }; 
 
     const handleView = async (trainingProgram) => {
+      sessionStorage.setItem('lastPage', page.toString());
       const trainingProgramId = trainingProgram.id;
       navigate("/viewTrainerTrainingProgram", { state: { id: trainingProgramId , page: page} });
     }; 

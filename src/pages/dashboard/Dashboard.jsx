@@ -11,6 +11,7 @@ import StepsBarChart from './StepsBarChart';
 import WaterLineChart from './WaterLineChart';
 import TrainingPieChart from './TrainingPieChart';
 import SleepBarChart from './SleepBarChart';
+import { ApiTemplate } from './../../api/index';
 
 export function Dashboard() {
   
@@ -38,7 +39,7 @@ export function Dashboard() {
         try {
             const uid = user?.uid;
             if (!uid) return;
-            const response = await axios.get(`http://localhost:3000/auth/getUserById/${uid}`);
+            const response = await ApiTemplate(`GET`, `auth/getUserById/${uid}`)
             setUserData(response.data);
             setHeight(response.data.height);
             setWeight(response.data.weight);

@@ -20,16 +20,28 @@ const RecommendedTrainingPrograms = () => {
     const [bookedPrograms, setBookedPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 6; // Number of programs to display per page
+    const itemsPerPage = 1; // Number of programs to display per page
     const { user } = useUser();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, [page]);
+
+    useEffect(() => {
+        // Check if there's a saved page number and set it
+        const savedPage = sessionStorage.getItem('lastPage');
+        setPage(savedPage ? parseInt(savedPage, 10) : 1);
+    }, []);
+
     // Handle program view navigation
     const handleView = (program) => {
+        sessionStorage.setItem('lastPage', page.toString());
         navigate("/viewTrainingProgram", { state: { id: program.id , pathPrev: "/recommend"} });
     };
 
     const handleBack = () => {
+        sessionStorage.removeItem('lastPage');
          navigate("/trainingPrograms");
     };
 
@@ -113,7 +125,7 @@ const RecommendedTrainingPrograms = () => {
             />
              {currentPrograms.length === 0 || filteredPrograms.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Recommended Training Program Found.
+                    No Recommended Training Programs Found.
                 </Typography>
             ) : (
                 <>

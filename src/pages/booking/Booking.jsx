@@ -9,6 +9,8 @@ import {
     CardActionArea,
     Grid,
     Box,
+    TextField,
+    Pagination
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
@@ -146,7 +148,7 @@ export function Booking() {
                 /></>
                 ) : searchTerm && filteredBookings.length === 0 ? (
                     <Typography variant="body1" color="text.secondary" align="center" marginTop={5}>
-                        No Booking Found.
+                        No Bookings Found.
                     </Typography>
                 ) : (
                     <>

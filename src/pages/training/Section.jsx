@@ -45,7 +45,7 @@ export default function Section({ title, programs, onSeeAll }) {
             </Stack>
             {displayedPrograms.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    Not found.
+                    Not Found.
                 </Typography>
             ) : (
                 <>

@@ -24,13 +24,26 @@ const CompletedBooking = () => {
     const { user } = useUser();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        window.scrollTo(0, 0); 
+      }, [page]);
+
+    useEffect(() => {
+        // Check if there's a saved page number and set it
+        const savedPage = sessionStorage.getItem('lastPage');
+        setPage(savedPage ? parseInt(savedPage, 10) : 1);
+    }, []);
+
+
     // Handle program view navigation
     const handleView = (trainingProgram) => {
+        sessionStorage.setItem('lastPage', page.toString());
         navigate("/viewBooking", { state: { id: trainingProgram.id, slot: trainingProgram.slot, bookingId : trainingProgram.bookingId} });
     };
 
     const handleBack = () => {
-        navigate(-1); // Go back to the previous page
+        sessionStorage.removeItem('lastPage');
+        navigate("/myBooking");
     };
 
     useEffect(() => {
@@ -65,9 +78,6 @@ const CompletedBooking = () => {
 
         fetchCompletedBookings();
     }, [user?.uid]);
-
-   
-
 
     // Filter programs based on search term
     const filteredPrograms = completedTrainingPrograms.filter(program =>
@@ -107,7 +117,7 @@ const CompletedBooking = () => {
             />
             {currentPrograms.length === 0 || filteredPrograms.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Completed Booking Found.
+                    No Completed Bookings Found.
                 </Typography>
             ) : (
                 <>

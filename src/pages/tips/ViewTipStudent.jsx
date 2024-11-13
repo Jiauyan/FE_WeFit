@@ -13,7 +13,7 @@ export function ViewTipStudent() {
   const { user , setUser} = useUser();
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = location.state;
+  const { id, tipPage } = location.state;
 
     useEffect(() => {
       // Load user ID from local storage or other persistent storage
@@ -45,7 +45,7 @@ export function ViewTipStudent() {
   }, [tipUserID]); 
 
     const handleBack = async () => {
-      navigate("/tips");
+      navigate("/tips", { state: { tipPage:tipPage} });
     }; 
 
   return (
