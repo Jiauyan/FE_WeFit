@@ -37,7 +37,7 @@ export function TrainingPrograms() {
                 if (!uid) return;
 
                 // Fetch booked programs
-                const response = await axios.get(`http://localhost:3000/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
                 setBookedPrograms(bookedProgramIds);
             } catch (error) {
@@ -56,7 +56,7 @@ export function TrainingPrograms() {
                     const fitnessLevel = user.data.fitnessLevel;
                     const fitnessGoal = user.data.fitnessGoal;
                     const favClass = user.data.favClass;
-                    const response = await axios.post('http://localhost:3000/trainingPrograms/getRecommendedTrainingPrograms',{
+                    const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/getRecommendedTrainingPrograms',{
                       fitnessLevel,
                       fitnessGoal,
                       favClass
@@ -78,7 +78,7 @@ export function TrainingPrograms() {
             if (!uid) return;
 
             // Fetch all training programs
-            const response = await axios.get('http://localhost:3000/trainingPrograms/getAllTrainingPrograms');
+            const response = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
 
             // Filter out booked programs
             const availablePrograms = response.data.filter(

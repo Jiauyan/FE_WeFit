@@ -23,7 +23,7 @@ export default function TrainerMotivationalLineChart() {
         const uid = user?.uid;
         if (!uid) return;
   
-        const response = await axios.get(`http://localhost:3000/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
         const quotes = response.data;
         let countsByDay = quotes.reduce((acc, quote) => {
           const date = new Date(quote.createdAt).toISOString().split('T')[0];

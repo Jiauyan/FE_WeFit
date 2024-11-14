@@ -33,7 +33,7 @@ export function ForgotPassword() {
         e.preventDefault(); 
 
         try {
-            const response = await axios.post('http://localhost:3000/auth/forgotPassword', {
+            const response = await axios.post('https://be-um-fitness.vercel.app/auth/forgotPassword', {
                 email
             });
 

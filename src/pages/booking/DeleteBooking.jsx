@@ -42,12 +42,12 @@ export function DeleteBooking({id, transactionId, feeAmount}) {
     e.preventDefault();
     try {
       if (Number(feeAmount) > 0) {
-        await axios.post('http://localhost:3000/checkout/refundPayment', {
+        await axios.post('https://be-um-fitness.vercel.app/checkout/refundPayment', {
           paymentIntentId: transactionId
         });
         alert('Refund processed successfully.');
       }
-      await axios.delete(`http://localhost:3000/trainingClassBooking/deleteTrainingClassBooking/${id}`);
+      await axios.delete(`https://be-um-fitness.vercel.app/trainingClassBooking/deleteTrainingClassBooking/${id}`);
       setDeleteBookingStatus('Booking cancelled successfully');
       alert('Booking cancelled successfully.');
       handleClose();

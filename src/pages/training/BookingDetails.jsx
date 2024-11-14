@@ -57,7 +57,7 @@ export function BookingDetails() {
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return;
-    axios.get(`http://localhost:3000/trainingPrograms/getTrainingProgramById/${id}`)
+    axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`)
       .then(response => {
         setTrainingProgramSlot(response.data.slots);
         setTrainingClassID(response.data.id);
@@ -74,7 +74,7 @@ export function BookingDetails() {
             if (!uid) return;
 
             // Fetch booked programs
-            const response = await axios.get(`http://localhost:3000/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
+            const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
             console.log(response.data);
            // const bookedProgramSlot = response.data.map((booking) => booking.slot);
             setBookedProgramsSlot(response.data);

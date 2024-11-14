@@ -40,7 +40,7 @@ export function ViewTip() {
     useEffect(() => {
         const uid = user?.uid;
         if (!uid) return;
-        axios.get(`http://localhost:3000/tips/getTipById/${id}`)
+        axios.get(`https://be-um-fitness.vercel.app/tips/getTipById/${id}`)
             .then(response => {
                 setTipData(response.data); 
                 setTipUserID(response.data.uid);
@@ -51,7 +51,7 @@ export function ViewTip() {
     useEffect(() => {
       const uid = tipUserID;
       if (!uid) return;
-      axios.get(`http://localhost:3000/auth/getUserById/${uid}`)
+      axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`)
           .then(response => {
               setTipUser(response.data); 
           })

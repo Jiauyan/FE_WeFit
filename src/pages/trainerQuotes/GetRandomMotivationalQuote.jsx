@@ -41,7 +41,7 @@ const handleRandom = async (e) => {
     e.preventDefault(); 
     handleOpen();
     try {
-        const response = await axios.get(`http://localhost:3000/motivationalQuotes/getRandomMotivationalQuote/${id}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/motivationalQuotes/getRandomMotivationalQuote/${id}`);
         //console.log(response.data);
         setRandomMotivationalQuote(response.data);
         setGetRandomMotivationalQuoteStatus(response.data.message);
@@ -64,7 +64,7 @@ const handleSubmit = async (e) => {
     try {
         const uid = user?.uid;
         if (!uid) return;
-        const response = await axios.patch(`http://localhost:3000/profile/updateCurrentMotivationalQuote/${uid}`,{
+        const response = await axios.patch(`https://be-um-fitness.vercel.app/profile/updateCurrentMotivationalQuote/${uid}`,{
             currentMotivationalQuote : randomMotivationalQuote.motivationalQuote
         });
         onGetRandomMotivationalQuote(response.data);

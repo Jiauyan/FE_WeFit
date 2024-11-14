@@ -43,7 +43,7 @@ useEffect(() => {
             const uid = user?.uid;
             if (!uid) return;
 
-            const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+            const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
             const trainingPrograms = response.data;
     
             // const createdPrograms = getCurrentMonthData(data, selectedMonth, selectedYear);

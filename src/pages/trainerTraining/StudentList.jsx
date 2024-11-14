@@ -19,7 +19,7 @@ export function StudentList() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.post(`http://localhost:3000/trainingPrograms/getStudentBySlot`, {
+        const response = await axios.post(`https://be-um-fitness.vercel.app/trainingPrograms/getStudentBySlot`, {
           id,
           slot : slot.time
         });

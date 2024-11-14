@@ -47,7 +47,7 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        const response = await axios.patch(`http://localhost:3000/goals/updateGoal/${id}`, {
+        const response = await axios.patch(`https://be-um-fitness.vercel.app/goals/updateGoal/${id}`, {
             uid,
             title,
             status: false

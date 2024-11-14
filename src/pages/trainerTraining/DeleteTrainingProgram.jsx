@@ -42,7 +42,7 @@ export function DeleteTrainingProgram({id}) {
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        const response = await axios.delete(`http://localhost:3000/trainingPrograms/deleteTrainingProgram/${id}`);
+        const response = await axios.delete(`https://be-um-fitness.vercel.app/trainingPrograms/deleteTrainingProgram/${id}`);
         console.log(response.data);
         setDeleteTrainingProgramStatus(response.data.message);
         handleClose();

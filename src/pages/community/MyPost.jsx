@@ -45,7 +45,7 @@ export function MyPost() {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-                const response = await axios.get(`http://localhost:3000/posts/getAllPostsByUid/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/posts/getAllPostsByUid/${uid}`);
                 const sortedPosts = response.data.sort((a, b) => new Date(b.time) - new Date(a.time));
                 setMyPosts(sortedPosts);
             } catch (error) {

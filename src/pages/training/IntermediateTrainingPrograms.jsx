@@ -51,7 +51,7 @@ const IntermediateTrainingPrograms = () => {
                 if (!uid) return;
 
                 // Fetch booked programs
-                const response = await axios.get(`http://localhost:3000/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
                 setBookedPrograms(bookedProgramIds);
             } catch (error) {
@@ -69,7 +69,7 @@ const IntermediateTrainingPrograms = () => {
                     if (!uid) return;
         
                     // Fetch all training programs
-                    const response = await axios.get('http://localhost:3000/trainingPrograms/getAllTrainingPrograms');
+                    const response = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
         
                     // Filter out booked programs
                     const availablePrograms = response.data.filter(

@@ -49,7 +49,7 @@ export function DeleteTrainerAccount() {
     const uid = user.uid;
     e.preventDefault();
     try {
-        // const response = await axios.delete(`http://localhost:3000/auth/deleteAccount/${uid}`);
+        // const response = await axios.delete(`https://be-um-fitness.vercel.app/auth/deleteAccount/${uid}`);
         // console.log(response.data);
         // setDeleteAccountStatus(response.data.message);
         const response = deleteAccount(uid);

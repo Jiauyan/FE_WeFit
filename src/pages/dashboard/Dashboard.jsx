@@ -69,7 +69,7 @@ export function Dashboard() {
               try {
                   const uid = user?.uid;
                   if (!uid) return;
-                  const response = await axios.get(`http://localhost:3000/steps/getStepCountByUid/${uid}`);
+                  const response = await axios.get(`https://be-um-fitness.vercel.app/steps/getStepCountByUid/${uid}`);
                    // Check if stepCount exists, otherwise set to 0
                   const fetchedSteps = response.data.steps?.stepsToday ?? 0;
                   setSteps(fetchedSteps);
@@ -97,7 +97,7 @@ export function Dashboard() {
       try {
         const uid = user?.uid;
         if (!uid) return;
-        const response = await axios.get(`http://localhost:3000/goals/getAllUserGoals/${uid}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/goals/getAllUserGoals/${uid}`);
         setGoals(response.data);
         
         let completedCount = 0;

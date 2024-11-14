@@ -23,7 +23,7 @@ export function NewChatRoom() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/chat/getMessages/${chatroomId}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/chat/getMessages/${chatroomId}`);
         if (response.data.length !== messages.length) {
           setMessages(response.data);
           setPrevMessageCount(messages.length); // Set previous count to current messages length before update
@@ -61,7 +61,7 @@ export function NewChatRoom() {
         const receiverUID = receiverDetails.uid;
   
         // Send the message to the backend
-        const response = await axios.post(`http://localhost:3000/chat/sendMessage/${chatroomId}`, {
+        const response = await axios.post(`https://be-um-fitness.vercel.app/chat/sendMessage/${chatroomId}`, {
           text: message,
           senderUID: senderUID,
           receiverUID: receiverUID,

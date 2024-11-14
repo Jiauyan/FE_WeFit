@@ -43,7 +43,7 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        const response = await axios.delete(`http://localhost:3000/goals/deleteGoal/${id}`);
+        const response = await axios.delete(`https://be-um-fitness.vercel.app/goals/deleteGoal/${id}`);
         console.log(response.data);
         setDeleteGoalStatus(response.data.message);
         onDeleteGoal(response.data)

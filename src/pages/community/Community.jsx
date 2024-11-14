@@ -51,7 +51,7 @@ export function Community() {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-                const response = await axios.get('http://localhost:3000/posts/getAllPosts');
+                const response = await axios.get('https://be-um-fitness.vercel.app/posts/getAllPosts');
                 const sortedPosts = response.data.sort((a, b) => new Date(b.time) - new Date(a.time));
                 setPosts(sortedPosts);
             } catch (error) {

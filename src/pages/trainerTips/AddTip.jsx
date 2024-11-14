@@ -57,7 +57,7 @@ export function AddTip() {
     formData.append('userImageUrl', userImageUrl);
 
     try {
-        const response = await axios.post('http://localhost:3000/tips/addTip', formData, {
+        const response = await axios.post('https://be-um-fitness.vercel.app/tips/addTip', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

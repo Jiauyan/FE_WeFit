@@ -66,7 +66,7 @@ export function MotivationalQuotes(){
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-                const response = await axios.get(`http://localhost:3000/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
                 const sortedMotivationalQuote = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setMotivationalQuotes(sortedMotivationalQuote);
             } catch (error) {

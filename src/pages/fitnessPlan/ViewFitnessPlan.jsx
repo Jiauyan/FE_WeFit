@@ -52,7 +52,7 @@ export function ViewFitnessPlan() {
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return;
-    axios.get(`http://localhost:3000/fitnessPlan/getFitnessPlanById/${id}`)
+    axios.get(`https://be-um-fitness.vercel.app/fitnessPlan/getFitnessPlanById/${id}`)
       .then(response => {
         setFitnessPlanData(response.data);
       })
@@ -63,7 +63,7 @@ export function ViewFitnessPlan() {
     const uid = user?.uid;
     if (!uid) return;
 
-    axios.get(`http://localhost:3000/fitnessActivity/getAllFitnessActivitiesByUidAndPlanID/${uid}/${fitnessPlanID}`)
+    axios.get(`https://be-um-fitness.vercel.app/fitnessActivity/getAllFitnessActivitiesByUidAndPlanID/${uid}/${fitnessPlanID}`)
       .then(response => {
         setFitnessActivityData(response.data);
       })

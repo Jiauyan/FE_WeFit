@@ -51,7 +51,7 @@ export function FitnessPlan(){
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-                const response = await axios.get(`http://localhost:3000/fitnessPlan/getAllFitnessPlanByUid/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/fitnessPlan/getAllFitnessPlanByUid/${uid}`);
                 const sortedFitnessPlans = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setFitnessPlan(sortedFitnessPlans);
             } catch (error) {

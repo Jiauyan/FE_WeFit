@@ -43,7 +43,7 @@ export function DeleteMotivationalQuote({id, onDeleteMotivationalQuote}) {
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        const response = await axios.delete(`http://localhost:3000/motivationalQuotes/deleteMotivationalQuote/${id}`);
+        const response = await axios.delete(`https://be-um-fitness.vercel.app/motivationalQuotes/deleteMotivationalQuote/${id}`);
         console.log(response.data);
         setDeleteMotivationalQuoteStatus(response.data.message);
         onDeleteMotivationalQuote(response.data)

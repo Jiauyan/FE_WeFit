@@ -38,7 +38,7 @@ export function EditTrainerProfile() {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/auth/getUserById/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`);
                 const data = response.data;
                 setUserData(data);
                 setUsername(data.username);
@@ -80,7 +80,7 @@ export function EditTrainerProfile() {
         formData.append('weight', weight);
         formData.append('height', height);
         try { 
-            const responseUpdate = await axios.post(`http://localhost:3000/profile/uploadProfileImage/${uid}`, formData, {
+            const responseUpdate = await axios.post(`https://be-um-fitness.vercel.app/profile/uploadProfileImage/${uid}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

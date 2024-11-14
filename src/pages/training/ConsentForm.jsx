@@ -35,7 +35,7 @@ export function ConsentForm() {
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return;
-    axios.get(`http://localhost:3000/trainingPrograms/getTrainingProgramById/${id}`)
+    axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`)
       .then(response => {
         setTrainingProgramData(response.data);
         setTrainerID(response.data.uid);
@@ -59,7 +59,7 @@ export function ConsentForm() {
     e.preventDefault();
     try {
       const uid = user.uid;
-      const response = await axios.post('http://localhost:3000/consentForm/upsertConsentForm', {
+      const response = await axios.post('https://be-um-fitness.vercel.app/consentForm/upsertConsentForm', {
         uid,
         name,
         date,

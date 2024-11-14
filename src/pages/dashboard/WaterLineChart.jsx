@@ -22,9 +22,14 @@ export default function WaterLineChart() {
         const uid = user?.uid;
         if (!uid) return;
   
-        const response = await axios.get(`http://localhost:3000/auth/getUserById/${uid}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`);
         const waterData = response.data.waterByDay;
-  
+        
+        // Check if waterData is not null and is an object
+        if (!waterData || typeof waterData !== 'object') {
+          console.log('No water data available.');
+          return; // Early return if no data is available
+        }
         
         let fetchedData = Object.entries(waterData).map(([date, water]) => ({
           date,

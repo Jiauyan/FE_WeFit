@@ -45,7 +45,7 @@ useEffect(() => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-                const response = await axios.get(`http://localhost:3000/tips/getAllUserTips/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/tips/getAllUserTips/${uid}`);
                 setTips(response.data);
             } catch (error) {
                 console.error('There was an error!', error);

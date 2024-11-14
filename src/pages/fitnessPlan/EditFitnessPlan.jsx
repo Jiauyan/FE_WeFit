@@ -87,7 +87,7 @@ export function EditFitnessPlan() {
     useEffect(() => {
         const fetchFitnessPlanData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/fitnessPlan/getFitnessPlanById/${id}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/fitnessPlan/getFitnessPlanById/${id}`);
                 const data = response.data;
                 const fetchedDate = data.date;
                 const parsedDate = parse(fetchedDate, 'dd/MM/yyyy', new Date());
@@ -110,7 +110,7 @@ export function EditFitnessPlan() {
     useEffect(() => {
         const fetchFitnessActivityData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/fitnessActivity/getAllFitnessActivitiesByUidAndPlanID/${uid}/${fitnessPlanID}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/fitnessActivity/getAllFitnessActivitiesByUidAndPlanID/${uid}/${fitnessPlanID}`);
                 const data = response.data;
                 setFitnessActivityData(data);
                 setTotalCount(data.length);
@@ -128,7 +128,7 @@ export function EditFitnessPlan() {
         e.preventDefault();
         try {
             const formattedDate = format(date, 'dd/MM/yyyy');
-            await axios.patch(`http://localhost:3000/fitnessPlan/updateFitnessPlan/${id}`, {
+            await axios.patch(`https://be-um-fitness.vercel.app/fitnessPlan/updateFitnessPlan/${id}`, {
                 uid,
                 title,
                 date: formattedDate,
@@ -138,7 +138,7 @@ export function EditFitnessPlan() {
             });
 
             await Promise.all(fitnessActivityData.map(activity =>
-                axios.patch(`http://localhost:3000/fitnessActivity/updateFitnessActivity/${activity.id}`, activity)
+                axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${activity.id}`, activity)
             ));
 
             setUpdateFitnessPlanStatus('Fitness Plan updated successfully!');
@@ -161,7 +161,7 @@ export function EditFitnessPlan() {
 
         try {
             const timestamp = new Date().toISOString();
-            const response = await axios.post('http://localhost:3000/fitnessActivity/addFitnessActivity', {
+            const response = await axios.post('https://be-um-fitness.vercel.app/fitnessActivity/addFitnessActivity', {
                 uid,
                 task,
                 duration,
@@ -192,7 +192,7 @@ export function EditFitnessPlan() {
         console.log(activityToDelete); 
         const activityId = fitnessActivityData[activityToDelete].id;
         try {
-            await axios.delete(`http://localhost:3000/fitnessActivity/deleteFitnessActivity/${activityId}`);
+            await axios.delete(`https://be-um-fitness.vercel.app/fitnessActivity/deleteFitnessActivity/${activityId}`);
             setFitnessActivityData(prev => prev.filter((_, i) => i !== activityToDelete));
             setTotalCount(prevCount => prevCount - 1);
             setCompleteCount(prev => fitnessActivityData.filter(activity => activity.status).length);
@@ -220,7 +220,7 @@ export function EditFitnessPlan() {
                 duration
             };
 
-            await axios.patch(`http://localhost:3000/fitnessActivity/updateFitnessActivity/${currentActivity.id}`, updatedActivity);
+            await axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${currentActivity.id}`, updatedActivity);
 
             setFitnessActivityData(prev =>
                 prev.map(activity => (activity.id === currentActivity.id ? updatedActivity : activity))
@@ -242,7 +242,7 @@ export function EditFitnessPlan() {
         const totalComplete = updatedActivities.reduce((count, activity) => count + (activity.status ? 1 : 0), 0);
 
         try {
-            await axios.patch(`http://localhost:3000/fitnessActivity/updateFitnessActivity/${fitnessActivityData[index].id}`, {
+            await axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${fitnessActivityData[index].id}`, {
                 ...updatedActivities[index],
                 status: updatedActivities[index].status
             });

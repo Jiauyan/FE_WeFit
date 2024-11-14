@@ -73,7 +73,7 @@ export function AddFitnessPlan() {
 
     try {
         const formattedDate = format(date, 'dd/MM/yyyy');
-        const response = await axios.post('http://localhost:3000/fitnessPlan/addFitnessPlan',{
+        const response = await axios.post('https://be-um-fitness.vercel.app/fitnessPlan/addFitnessPlan',{
            uid,
            title,
            date : formattedDate,
@@ -83,7 +83,7 @@ export function AddFitnessPlan() {
         const fitnessPlanID = response.data.id;
         setFitnessPlanID(fitnessPlanID);
         await Promise.all(fitnessActivities.map(activity =>
-          axios.patch(`http://localhost:3000/fitnessActivity/updateFitnessActivity/${activity.id}`, {
+          axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${activity.id}`, {
             uid,
             ...activity,
             fitnessPlanID,
@@ -109,7 +109,7 @@ export function AddFitnessPlan() {
 
     try {
         const timestamp = new Date().toISOString();
-        const response = await axios.post('http://localhost:3000/fitnessActivity/addFitnessActivity', {
+        const response = await axios.post('https://be-um-fitness.vercel.app/fitnessActivity/addFitnessActivity', {
             uid,
             task,
             duration,
@@ -139,7 +139,7 @@ const handleRemoveFitnessActivity = async (index) => {
     const activityId = fitnessActivities[index].id;
 
     try {
-        await axios.delete(`http://localhost:3000/fitnessActivity/deleteFitnessActivity/${activityId}`);
+        await axios.delete(`https://be-um-fitness.vercel.app/fitnessActivity/deleteFitnessActivity/${activityId}`);
         setFitnessActivities(prev => prev.filter((_, i) => i !== index));
         setTotalCount(prevCount => prevCount - 1);
         setCompleteCount(prev => fitnessActivities.filter(activity => activity.status).length);
@@ -166,7 +166,7 @@ const handleUpdateFitnessActivity = async (e) => {
             duration
         };
 
-        await axios.patch(`http://localhost:3000/fitnessActivity/updateFitnessActivity/${currentActivity.id}`, updatedActivity);
+        await axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${currentActivity.id}`, updatedActivity);
 
         setFitnessActivities(prev =>
             prev.map(activity => (activity.id === currentActivity.id ? updatedActivity : activity))

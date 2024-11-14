@@ -38,7 +38,7 @@ export function ViewBooking() {
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return;
-    axios.get(`http://localhost:3000/trainingClassBooking/getBookingById/${bookingId}`)
+    axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getBookingById/${bookingId}`)
       .then(response => {
         console.log(response.data)
         setBookingData(response.data.booking);
@@ -52,7 +52,7 @@ export function ViewBooking() {
   useEffect(() => {
     const uid = trainerID;
     if (!uid) return;
-    axios.get(`http://localhost:3000/auth/getUserById/${uid}`)
+    axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`)
         .then(response => {
             setTrainer(response.data); 
         })

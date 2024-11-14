@@ -95,7 +95,7 @@ export function EditTrainingProgram() {
   useEffect(() => {
     const fetchTrainingProgramData = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/trainingPrograms/getTrainingProgramById/${id}`);
+            const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
             const data = response.data;
             setTrainingProgramData(data);
             setTitle(data.title);
@@ -189,7 +189,7 @@ export function EditTrainingProgram() {
     try {
         const uid = user?.uid;
         if (!uid) return;
-        const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
         return response.data;
     } catch (error) {
         console.error('There was an error!', error);
@@ -241,7 +241,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
     const trainingProgramID = trainingProgramData.id;
     try {
         // If your backend requires, send a request to delete the slot
-        const response = await axios.post('http://localhost:3000/trainingPrograms/deleteSlot', {
+        const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/deleteSlot', {
           id : trainingProgramID,
           slotToDelete : slotToDelete
         });
@@ -282,7 +282,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
     formData.append(`slots[${index}]`, JSON.stringify(slot));
     });
     try {
-        const response = await axios.patch(`http://localhost:3000/trainingPrograms/updateTrainingProgram/${id}`, formData, {
+        const response = await axios.patch(`https://be-um-fitness.vercel.app/trainingPrograms/updateTrainingProgram/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

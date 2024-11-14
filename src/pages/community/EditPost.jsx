@@ -47,7 +47,7 @@ export function EditPost({id, oldDesc, onEditPost}) {
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        const response = await axios.patch(`http://localhost:3000/posts/updatePost/${id}`, {
+        const response = await axios.patch(`https://be-um-fitness.vercel.app/posts/updatePost/${id}`, {
             uid,
             postDetails
         });

@@ -34,7 +34,7 @@ export function Login () {
     const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
-      axios.post('http://localhost:3000/auth/checkUserEmail',{
+      axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail',{
         email : email
       })
         .then(response => {

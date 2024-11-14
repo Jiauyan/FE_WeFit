@@ -31,7 +31,7 @@ export function TrainerDashboard() {
         try {
             const uid = user?.uid;
             if (!uid) return;
-            const response = await axios.get(`http://localhost:3000/auth/getUserById/${uid}`);
+            const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`);
             setUserData(response.data);
             setHeight(response.data.height);
             setWeight(response.data.weight);
@@ -63,7 +63,7 @@ export function TrainerDashboard() {
           try {
               const uid = user?.uid;
               if (!uid) return;
-              const response = await axios.get(`http://localhost:3000/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
+              const response = await axios.get(`https://be-um-fitness.vercel.app/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
               // Check if stepCount exists, otherwise set to 0
               const fetchedMotivationalQuote = response.data;
               const fetchedMotivationalQuoteCount = response.data.length;
@@ -82,7 +82,7 @@ export function TrainerDashboard() {
           try {
               const uid = user?.uid;
               if (!uid) return;
-              const response = await axios.get(`http://localhost:3000/tips/getAllUserTips/${uid}`);
+              const response = await axios.get(`https://be-um-fitness.vercel.app/tips/getAllUserTips/${uid}`);
               // Check if stepCount exists, otherwise set to 0
               const fetchedSharingTip = response.data;
               const fetchedSharingTipCount = response.data.length;
@@ -100,7 +100,7 @@ export function TrainerDashboard() {
           try {
               const uid = user?.uid;
               if (!uid) return;
-              const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+              const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
               // Check if stepCount exists, otherwise set to 0
               const fetchedTrainingProgram = response.data;
               const fetchedTrainingProgramCount = response.data.length;

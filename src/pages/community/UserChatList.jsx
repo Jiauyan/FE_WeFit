@@ -18,7 +18,7 @@ export function UserChatList() {
     const fetchUsers = async () => {
       try {
         const senderUID = user.uid;
-        const response = await axios.get(`http://localhost:3000/chat/getAllUsersWithoutMessagesFromOrToSender/${senderUID}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/chat/getAllUsersWithoutMessagesFromOrToSender/${senderUID}`);
         setUsers(response.data);
         setFilteredUsers(response.data);
         setLoading(false);
@@ -56,7 +56,7 @@ export function UserChatList() {
         uid: otherUserData.uid
       };
       // Send a POST request to create a new chatroom
-      const response = await axios.post('http://localhost:3000/chat/createChatroom', {
+      const response = await axios.post('https://be-um-fitness.vercel.app/chat/createChatroom', {
         senderUID,
         receiverUID: otherUserData.uid
       });

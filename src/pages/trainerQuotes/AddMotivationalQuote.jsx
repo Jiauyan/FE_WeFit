@@ -45,7 +45,7 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
   const handleSubmit = async (e) => { 
     e.preventDefault(); 
     try {
-        const response = await axios.post('http://localhost:3000/motivationalQuotes/addMotivationalQuote', {
+        const response = await axios.post('https://be-um-fitness.vercel.app/motivationalQuotes/addMotivationalQuote', {
             uid,
             motivationalQuote
         });

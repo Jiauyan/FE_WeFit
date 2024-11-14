@@ -133,7 +133,7 @@ export function AddTrainingProgram() {
     try {
         const uid = user?.uid;
         if (!uid) return;
-        const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -193,7 +193,7 @@ export function AddTrainingProgram() {
     formData.append(`slots[${index}]`, JSON.stringify(slot));
     });
     try {
-        const response = await axios.post('http://localhost:3000/trainingPrograms/addTrainingProgram', formData, {
+        const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/addTrainingProgram', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

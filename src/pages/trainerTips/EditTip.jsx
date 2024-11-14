@@ -34,7 +34,7 @@ export function EditTip() {
     useEffect(() => {
         const fetchTipData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/tips/getTipById/${id}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/tips/getTipById/${id}`);
                 const data = response.data;
                 setTipData(data);
                 setTitle(data.title);
@@ -75,7 +75,7 @@ export function EditTip() {
         formData.append('desc', desc);
         formData.append('shortDesc', shortDesc);
         try {
-            const response = await axios.patch(`http://localhost:3000/tips/updateTip/${id}`, formData, {
+            const response = await axios.patch(`https://be-um-fitness.vercel.app/tips/updateTip/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

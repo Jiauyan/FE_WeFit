@@ -42,7 +42,7 @@ export function DeleteTip({id}) {
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
-        const response = await axios.delete(`http://localhost:3000/tips/deleteTip/${id}`);
+        const response = await axios.delete(`https://be-um-fitness.vercel.app/tips/deleteTip/${id}`);
         setDeleteTipStatus(response.data.message);
         handleClose();
         navigate("/trainerTips");

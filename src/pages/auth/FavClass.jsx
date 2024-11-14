@@ -49,7 +49,7 @@ export function FavClass() {
         e.preventDefault(); 
 
         try {
-            const response = await axios.post(`http://localhost:3000/auth/favClass/${uid}`, {
+            const response = await axios.post(`https://be-um-fitness.vercel.app/auth/favClass/${uid}`, {
                 favClass
             });
 

@@ -18,7 +18,7 @@ const PaymentSuccess = () => {
                     navigate("/errorPage"); // Redirect to an error page or handle this case as needed
                     return;
                 }
-                const response = await axios.post('http://localhost:3000/checkout/completeCheckout', { sessionId : sessionId });
+                const response = await axios.post('https://be-um-fitness.vercel.app/checkout/completeCheckout', { sessionId : sessionId });
                 console.log(response.data);
                 setTransactionId(response.data.session.payment_intent);
             } catch (error) {
@@ -31,7 +31,7 @@ const PaymentSuccess = () => {
     const handleContinue = async () => {
         try {
             await Promise.all([
-                axios.post('http://localhost:3000/trainingClassBooking/addTrainingClassBooking', {
+                axios.post('https://be-um-fitness.vercel.app/trainingClassBooking/addTrainingClassBooking', {
                     uid: savedData.uid,
                     name: savedData.name,
                     contactNum: savedData.contactNum,
@@ -42,7 +42,7 @@ const PaymentSuccess = () => {
                     paymentStatus: true,
                     transactionId
                 }),
-                axios.post('http://localhost:3000/payment/storePaymentStatus', {
+                axios.post('https://be-um-fitness.vercel.app/payment/storePaymentStatus', {
                     uid: savedData.uid, 
                     paymentStatus: true, 
                     refundStatus: false, 

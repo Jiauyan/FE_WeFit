@@ -42,7 +42,7 @@ export function ViewTrainerTrainingProgram() {
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return;
-    axios.get(`http://localhost:3000/trainingPrograms/getTrainingProgramById/${id}`)
+    axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`)
       .then(response => {
         setTrainingProgramData(response.data);
         setTrainingProgramUserID(response.data.uid);
@@ -53,7 +53,7 @@ export function ViewTrainerTrainingProgram() {
   useEffect(() => {
     const uid = trainingProgramUserID;
     if (!uid) return;
-    axios.get(`http://localhost:3000/auth/getUserById/${uid}`)
+    axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`)
       .then(response => {
         setTrainingProgramUser(response.data);
       })

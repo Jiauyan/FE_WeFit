@@ -79,7 +79,7 @@ export function Goals(){
 
     const handleComplete = async (id, title) => {
         try {
-            const response = await axios.patch(`http://localhost:3000/goals/updateGoal/${id}`, {
+            const response = await axios.patch(`https://be-um-fitness.vercel.app/goals/updateGoal/${id}`, {
                 uid,
                 title,
                 status: true
@@ -136,7 +136,7 @@ export function Goals(){
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-                const response = await axios.get(`http://localhost:3000/goals/getAllUserGoals/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/goals/getAllUserGoals/${uid}`);
                 const sortedGoal = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setGoals(sortedGoal);
                 // Initialize completedGoals based on fetched data

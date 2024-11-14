@@ -26,7 +26,7 @@ export function ViewPost() {
     useEffect(() => {
         const uid = user?.uid;
         if (!uid) return;
-        axios.get(`http://localhost:3000/posts/getPostById/${id}`)
+        axios.get(`https://be-um-fitness.vercel.app/posts/getPostById/${id}`)
             .then(response => {
               console.log(response.data)
                 setPostData(response.data); 
@@ -38,7 +38,7 @@ export function ViewPost() {
     useEffect(() => {
       const uid = postUserID;
       if (!uid) return;
-      axios.get(`http://localhost:3000/auth/getUserById/${uid}`)
+      axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`)
           .then(response => {
               setPostUser(response.data); 
           })

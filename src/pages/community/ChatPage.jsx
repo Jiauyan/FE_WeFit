@@ -21,7 +21,7 @@ export function ChatPage() {
     const fetchChatrooms = async () => {
       try {
         const userUID = user.uid;
-        const response = await axios.get(`http://localhost:3000/chat/getChatroomsByUser/${userUID}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/chat/getChatroomsByUser/${userUID}`);
         setChatrooms(response.data);
         setFilteredChatrooms(response.data);
         setLoading(false);

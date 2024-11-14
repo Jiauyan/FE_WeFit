@@ -36,7 +36,7 @@ export function ViewScreeningForm() {
 
     useEffect(() => {
         if (!uid) return;
-        axios.get(`http://localhost:3000/screeningForm/getScreeningFormByUID/${uid}`)
+        axios.get(`https://be-um-fitness.vercel.app/screeningForm/getScreeningFormByUID/${uid}`)
             .then(response => {
                 setScreeningFormData(response.data);
             })

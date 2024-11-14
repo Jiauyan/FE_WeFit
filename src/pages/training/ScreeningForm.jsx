@@ -41,7 +41,7 @@ export function ScreeningForm() {
     e.preventDefault();
     try {
       const uid = user.uid;
-      const response = await axios.post('http://localhost:3000/screeningForm/upsertScreeningForm', {
+      const response = await axios.post('https://be-um-fitness.vercel.app/screeningForm/upsertScreeningForm', {
           uid,
           q1,
           q2,

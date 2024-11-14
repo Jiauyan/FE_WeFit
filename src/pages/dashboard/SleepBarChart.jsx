@@ -23,8 +23,14 @@ export default function SleepBarChart() {
         const uid = user?.uid;
         if (!uid) return;
   
-        const response = await axios.get(`http://localhost:3000/auth/getUserById/${uid}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`);
         const sleepData = response.data.sleepByDay;
+
+        // Check if waterData is not null and is an object
+        if (!sleepData || typeof sleepData !== 'object') {
+          console.log('No sleep data available.');
+          return; // Early return if no data is available
+        }
   
         let fetchedData = Object.entries(sleepData).map(([date, sleep]) => ({
           date,

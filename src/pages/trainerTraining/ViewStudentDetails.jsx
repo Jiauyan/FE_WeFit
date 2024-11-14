@@ -54,7 +54,7 @@ export function ViewStudentDetails() {
   const handleAttendance = async (bookingID) => {
     try {
       // Making the API request to update the booking status to true
-      const response = await axios.post(`http://localhost:3000/trainingClassBooking/updateBooking/${bookingID}`, {
+      const response = await axios.post(`https://be-um-fitness.vercel.app/trainingClassBooking/updateBooking/${bookingID}`, {
         uid: studentData.uid,
         name: studentData.name,
         contactNum: studentData.contactNum,

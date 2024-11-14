@@ -43,7 +43,7 @@ export function FitnessGoal() {
         e.preventDefault(); 
 
         try {
-            const response = await axios.post(`http://localhost:3000/auth/fitnessGoal/${uid}`, {
+            const response = await axios.post(`https://be-um-fitness.vercel.app/auth/fitnessGoal/${uid}`, {
                fitnessGoal
             });
 

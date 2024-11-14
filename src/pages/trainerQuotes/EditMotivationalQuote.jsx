@@ -48,7 +48,7 @@ export function EditMotivationalQuote({ id, oldMotivationalQuote, onEditMotivati
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`http://localhost:3000/motivationalQuotes/updateMotivationalQuote/${id}`, {
+      const response = await axios.patch(`https://be-um-fitness.vercel.app/motivationalQuotes/updateMotivationalQuote/${id}`, {
         uid,
         motivationalQuote
       });

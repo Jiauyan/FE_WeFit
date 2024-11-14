@@ -44,7 +44,7 @@ export function AddPost({onAddPost}) {
   const handleSubmit = async (e) => { 
     e.preventDefault(); 
     try {
-        const response = await axios.post('http://localhost:3000/posts/addPost', {
+        const response = await axios.post('https://be-um-fitness.vercel.app/posts/addPost', {
             uid,
             postDetails
         });

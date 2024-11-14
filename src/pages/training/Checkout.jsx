@@ -58,7 +58,7 @@ export function Checkout() {
 
     if(feeAmount === "0" ){
         try {
-            const bookingResponse = await axios.post('http://localhost:3000/trainingClassBooking/addTrainingClassBooking', {
+            const bookingResponse = await axios.post('https://be-um-fitness.vercel.app/trainingClassBooking/addTrainingClassBooking', {
                 uid: savedData.uid,
                 name: savedData.name,
                 contactNum: savedData.contactNum,
@@ -79,7 +79,7 @@ export function Checkout() {
           // Payment required, proceed with Stripe
           try {
             const stripe = await loadStripe("pk_test_51QFrsIKymqYnhuBpBlgyp9gsHn2m5zvPXV8MvP3u6IYv6WTKmwKbEztxX0O9CXJDpnEdSE9rCJVLe4yx0P0avHCT00IJacHbeN");
-            const response = await axios.post('http://localhost:3000/checkout/createCheckoutSession', {
+            const response = await axios.post('https://be-um-fitness.vercel.app/checkout/createCheckoutSession', {
                 trainingProgram, 
                 feeAmount,
                 customerName : savedData.name,

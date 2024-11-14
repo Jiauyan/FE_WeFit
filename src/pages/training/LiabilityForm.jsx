@@ -37,7 +37,7 @@ export function LiabilityForm() {
     e.preventDefault();
     try {
       const uid = user.uid;
-      const response = await axios.post('http://localhost:3000/consentForm/upsertConsentForm', {
+      const response = await axios.post('https://be-um-fitness.vercel.app/consentForm/upsertConsentForm', {
         uid,
         name,
         date,

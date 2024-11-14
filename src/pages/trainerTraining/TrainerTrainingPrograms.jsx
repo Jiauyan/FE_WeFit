@@ -41,7 +41,7 @@ useEffect(() => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-                const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+                const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
                 const sortedTrainingPrograms = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setTrainingPrograms(sortedTrainingPrograms);
             } catch (error) {

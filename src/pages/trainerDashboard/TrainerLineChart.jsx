@@ -23,7 +23,7 @@ export default function TrainerLineChart() {
         const uid = user?.uid;
         if (!uid) return;
   
-        const response = await axios.get(`http://localhost:3000/tips/getAllUserTips/${uid}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/tips/getAllUserTips/${uid}`);
         const sharingTips = response.data;
         let countsByDay = sharingTips.reduce((acc, sharingTip) => {
           const date = new Date(sharingTip.createdAt).toISOString().split('T')[0];

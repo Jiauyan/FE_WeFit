@@ -23,7 +23,7 @@ export default function TrainerBarChart() {
         const uid = user?.uid;
         if (!uid) return;
   
-        const response = await axios.get(`http://localhost:3000/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
         const trainingPrograms = response.data;
         let countsByDay = trainingPrograms.reduce((acc, trainingProgram) => {
           const date = new Date(trainingProgram.createdAt).toISOString().split('T')[0];

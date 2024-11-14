@@ -40,12 +40,12 @@ useEffect(() => {
             const uid = user?.uid;
             if (!uid) return;
 
-            const response = await axios.get(`http://localhost:3000/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
+            const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
             //setBookings(response.data);
 
             // Fetch training programs details for each booking
             const programPromises = response.data.map(async (booking) => {
-                const programResponse = await axios.get(`http://localhost:3000/trainingPrograms/getTrainingProgramById/${booking.trainingClassID}`);
+                const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${booking.trainingClassID}`);
                 return { 
                     ...booking, 
                     bookingId: booking.id, 

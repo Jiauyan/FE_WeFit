@@ -45,7 +45,7 @@ export function AddGoal({onAddGoal}) {
   const handleSubmit = async (e) => { 
     e.preventDefault(); 
     try {
-        const response = await axios.post('http://localhost:3000/goals/addGoal', {
+        const response = await axios.post('https://be-um-fitness.vercel.app/goals/addGoal', {
             uid,
             title,
             status: false
