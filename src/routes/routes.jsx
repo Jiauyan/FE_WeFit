@@ -74,6 +74,38 @@ import { ViewScreeningForm } from '../pages/trainerTraining/ViewScreeningForm.js
 const routes = [
   {
     path: "/",
+    element: <Navigate to="/login" replace /> // Redirects root path to login
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/forgotPassword",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/completeProfile",
+    element: <CompleteProfile />,
+  },
+  {
+    path: "/fitnessLevel",
+    element: <FitnessLevel />,
+  },
+  {
+    path: "/fitnessGoal",
+    element: <FitnessGoal />,
+  },
+  {
+    path: "/favClass",
+    element: <FavClass />,
+  },
+  {
+    path: "/",
     element: <SideBar />,
     children: [
       {
@@ -322,35 +354,7 @@ const routes = [
         element:  <ViewScreeningForm/> ,
       },
     ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/forgotPassword",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "/completeProfile",
-    element: <CompleteProfile />,
-  },
-  {
-    path: "/fitnessLevel",
-    element: <FitnessLevel />,
-  },
-  {
-    path: "/fitnessGoal",
-    element: <FitnessGoal />,
-  },
-  {
-    path: "/favClass",
-    element: <FavClass />,
-  },
+  }
 ];
 
 export default routes;

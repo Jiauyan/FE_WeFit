@@ -26,7 +26,7 @@ export function Tips(){
   const [tips, setTips] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const itemsPerPage = 1;
+  const itemsPerPage = 6;
 
   useEffect(() => {
     window.scrollTo(0, 0); 
