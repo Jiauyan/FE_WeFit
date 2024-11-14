@@ -1,6 +1,6 @@
 import axios from 'axios'; 
 
-const API_URL = import.meta.env.BE_UMFIT_API_URL
+const API_URL = import.meta.env.BE_UMFIT_API_URL || "https://be-um-fitness.vercel.app" 
 //controller auth/logoutAccount
 export const ApiTemplate = async (method, route, formData) => {
     switch(method.toLowerCase()) {
