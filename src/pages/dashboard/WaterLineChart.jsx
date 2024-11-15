@@ -27,7 +27,6 @@ export default function WaterLineChart() {
         
         // Check if waterData is not null and is an object
         if (!waterData || typeof waterData !== 'object') {
-          console.log('No water data available.');
           return; // Early return if no data is available
         }
         
@@ -88,7 +87,6 @@ export default function WaterLineChart() {
   const last7DaysData = waterData.slice(currentStartIndex, currentStartIndex + 7); // Adjust the range as needed
 
   const handleDateChange = (newValue) => {
-    console.log(newValue);
     setSelectedDate(newValue);
     setSelectedYear(newValue.getUTCFullYear());
     setSelectedMonth(newValue.getUTCMonth());

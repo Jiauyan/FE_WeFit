@@ -28,7 +28,6 @@ export function ViewPost() {
         if (!uid) return;
         axios.get(`https://be-um-fitness.vercel.app/posts/getPostById/${id}`)
             .then(response => {
-              console.log(response.data)
                 setPostData(response.data); 
                 setPostUserID(response.data.uid);
             })
@@ -46,7 +45,7 @@ export function ViewPost() {
   }, [postUserID]); 
 
     const handleBack = async () => {
-      navigate(-1);
+      navigate("/community");
     }; 
 
   return (

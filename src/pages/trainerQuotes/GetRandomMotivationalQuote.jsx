@@ -42,7 +42,6 @@ const handleRandom = async (e) => {
     handleOpen();
     try {
         const response = await axios.get(`https://be-um-fitness.vercel.app/motivationalQuotes/getRandomMotivationalQuote/${id}`);
-        //console.log(response.data);
         setRandomMotivationalQuote(response.data);
         setGetRandomMotivationalQuoteStatus(response.data.message);
         //onGetRandomMotivationalQuote(response.data);

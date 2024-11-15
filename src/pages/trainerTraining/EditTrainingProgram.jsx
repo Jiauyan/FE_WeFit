@@ -181,7 +181,6 @@ export function EditTrainingProgram() {
       setCurrentStartTime(null);
       setCurrentEndTime(null);
       handleClose();
-      console.log(slots);
     }
   };
 
@@ -203,7 +202,6 @@ export function EditTrainingProgram() {
     }
 
     const slotTime = typeof slotString === 'string' ? slotString : slotString.time;
-    console.log("Parsing slot time:", slotTime);
     
     const [datePart, timePart] = slotTime.split(" - ");
     if (!datePart || !timePart) {
@@ -240,7 +238,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
 
     const trainingProgramID = trainingProgramData.id;
     try {
-        // If your backend requires, send a request to delete the slot
+        // If your backend requires, send a request to delete this slot
         const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/deleteSlot', {
           id : trainingProgramID,
           slotToDelete : slotToDelete
@@ -287,9 +285,6 @@ const isSlotClashing = (newSlot, existingSlots) => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-
-        console.log(response.data);
-        
         setUpdateTrainingProgramStatus(response.data.message);
         navigate("/viewTrainerTrainingProgram", { state: { id: id } });
     } catch (error) {

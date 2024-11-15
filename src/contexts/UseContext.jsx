@@ -35,7 +35,6 @@ export const UserProvider = ({ children }) => {
     const route = `auth/loginAcc`
 
     const response = await ApiTemplate(method, route, formData)
-    console.log(response.data);
     const uid = response.data.user.uid;
     const role = response.data.userRole;
     const data= response.data.userData;

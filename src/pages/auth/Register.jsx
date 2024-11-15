@@ -89,7 +89,6 @@ export function Register() {
             setSignupStatus(response.data.message);
             navigate('/completeProfile', { state: { uid }} );
         } catch (error) { 
-          console.log(error)
           if (error.response.data === 'Error while registering Account, Error: FirebaseError: Firebase: Error (auth/email-already-in-use).') {
           setEmailError("Email is already in use. Please choose another email.");
           setSignupStatus(error);

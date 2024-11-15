@@ -38,7 +38,6 @@ export function Login () {
         email : email
       })
         .then(response => {
-          console.log(response.data);
           setCheckUserEmail(response.data);
         })
         .catch(error => console.error('There was an error!', error));
@@ -90,7 +89,6 @@ export function Login () {
           const formData = { email, password }
           const response = await login(formData)
           const redirectPath = response.data.userRole === 'Student' ? '/dashboard' : '/trainerDashboard';
-          console.log(redirectPath);
           navigate(`${redirectPath}`);
         } catch (error) {
           if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && checkUserEmail == true) {

@@ -134,7 +134,7 @@ export function Community() {
                         lineHeight: '1.5em',
                     }}
                 >
-                    {post.postDetails}
+                    {post?.postDetails}
                 </Typography>
     
                 {/* Conditionally render "See more" only if content overflows */}
@@ -142,7 +142,7 @@ export function Community() {
                     <Link
                         component="button"
                         variant="body2"
-                        onClick={() => console.log('See more clicked')}
+                        onClick={() => handleView(post)}
                         sx={{ textDecoration: 'underline' }}
                     >
                         See more

@@ -100,7 +100,6 @@ export function EditProfile() {
             setEditProfileStatus(responseUpdate.data.message);
             navigate("/profile", { state: { uid: uid } } );
         } catch (error) {
-            console.log(error);
             if (axios.isAxiosError(error)) {
                 if (error.response) {
                     setEditProfileStatus(error.response.data.message);

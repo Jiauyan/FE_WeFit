@@ -23,7 +23,6 @@ export function StudentList() {
           id,
           slot : slot.time
         });
-        console.log(response.data.id);
         setStudents(response.data)
         setFilteredStudents(response.data);
       } catch (error) {
@@ -50,7 +49,6 @@ export function StudentList() {
   };
 
   const handleStudentClick = async (studentData) => {
-    console.log(studentData);
     navigate("/viewStudentDetails", { state: { studentData: studentData, id:id , slot} });
   };
 

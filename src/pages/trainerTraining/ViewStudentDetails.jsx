@@ -31,7 +31,6 @@ export function ViewStudentDetails() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(studentData);
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
     if (storedUid) {
@@ -63,7 +62,6 @@ export function ViewStudentDetails() {
         status: true,
       });
       setStatus(true);
-      console.log("Booking status updated successfully:", response.data);
     } catch (error) {
       console.error("Failed to update booking status:", error);
     }

@@ -153,7 +153,7 @@ export function MyPost() {
                     <Link
                         component="button"
                         variant="body2"
-                        onClick={() => console.log('See more clicked')}
+                        onClick={() => handleView(post)}
                         sx={{ textDecoration: 'underline' }}
                     >
                         See more

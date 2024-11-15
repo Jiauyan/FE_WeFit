@@ -44,7 +44,6 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
     e.preventDefault();
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/goals/deleteGoal/${id}`);
-        console.log(response.data);
         setDeleteGoalStatus(response.data.message);
         onDeleteGoal(response.data)
         handleClose();
@@ -87,7 +86,7 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
                 Confirm
             </Typography>
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300 , textAlign: 'center'}}>
-                Are you sure you wish to delete the goal?
+                Are you sure you wish to delete this goal?
             </Typography>
             <GradientButton
                     type="submit"

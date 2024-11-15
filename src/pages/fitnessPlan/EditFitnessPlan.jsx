@@ -189,7 +189,6 @@ export function EditFitnessPlan() {
 
     const handleRemoveFitnessActivity = async () => {
         if (activityToDelete === null) return;
-        console.log(activityToDelete); 
         const activityId = fitnessActivityData[activityToDelete].id;
         try {
             await axios.delete(`https://be-um-fitness.vercel.app/fitnessActivity/deleteFitnessActivity/${activityId}`);

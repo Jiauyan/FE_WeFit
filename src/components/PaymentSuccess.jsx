@@ -19,7 +19,6 @@ const PaymentSuccess = () => {
                     return;
                 }
                 const response = await axios.post('https://be-um-fitness.vercel.app/checkout/completeCheckout', { sessionId : sessionId });
-                console.log(response.data);
                 setTransactionId(response.data.session.payment_intent);
             } catch (error) {
                 console.error("Failed to fetch payment details:", error);

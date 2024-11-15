@@ -68,8 +68,7 @@ export function Checkout() {
                 feeAmount: savedData.feeAmount,
                 paymentStatus: true,
                 transactionId: ""
-            });
-            console.log(bookingResponse.data.message); 
+            }); 
             navigate("/bookingSuccess");
         } catch (error) {
             console.error("Booking Error:", error);
@@ -87,7 +86,6 @@ export function Checkout() {
             });
             const sessionId = response.data.sessionId;
             const transactionId = response.data.session;
-            console.log(response.data);
 
             // Save sessionId to localStorage
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));

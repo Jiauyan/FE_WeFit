@@ -42,7 +42,7 @@ export function Goals(){
     const uid = user.uid;
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 3;
+    const itemsPerPage = 6;
 
     useEffect(() => {
         window.scrollTo(0, 0); 
@@ -189,47 +189,55 @@ export function Goals(){
             </Typography>
             ) : (
           <>
-            <Grid container spacing={2} sx={{  }}>
-            {currentGoals.map((goal) => (
-                <Grid item xs={12} key={goal.id} sx={{ width: '100%',}}>
-                <Card sx={{ width: '100%' }}>
-                    <CardContent sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Grid container item xs={12} >
-                    <Grid item xs={11}>
-                        <Typography 
-                            variant="body1" 
-                            align="left" 
-                            sx={{
-                            wordWrap: 'break-word',
-                            overflowWrap: 'break-word',
-                            wordBreak: 'break-word'
+           <Grid container spacing={2}>
+    {currentGoals.map((goal) => (
+        <Grid item xs={12} key={goal.id}>
+            <Card sx={{ width: '100%' }}>
+                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+                    <Grid container item xs={12}>
+                        <Grid item xs={10}>
+                            <Typography
+                                variant="body1"
+                                align="left"
+                                sx={{
+                                    wordWrap: 'break-word',
+                                    overflowWrap: 'break-word',
+                                    whiteSpace: 'normal',  // Allows text to wrap
+                                }}
+                            >
+                                {goal.title}
+                            </Typography>
+                        </Grid>
+                        <Grid 
+                            item 
+                            xs={2} 
+                            sx={{ 
+                                display: 'flex', 
+                                justifyContent: 'flex-end', 
+                                alignItems: 'center', 
+                                flexWrap: 'wrap'  // Allows icons to wrap to the next line
                             }}
                         >
-                            {goal.title}
-                        </Typography>
+                            <IconButton
+                                edge="end"
+                                aria-label="complete"
+                                onClick={() => handleComplete(goal.id, goal.title)}
+                                disabled={completedGoals[goal.id]}
+                               // size="small"  // Reduces icon size for smaller screens
+                            >
+                                <CheckCircle style={{ color: completedGoals[goal.id] ? 'green' : 'grey' }} />
+                            </IconButton>
+                            {!completedGoals[goal.id] && (
+                                <EditGoal id={goal.id} oldTitle={goal.title} disabled={completedGoals[goal.id]} onEditGoal={editGoalCallback} />
+                            )}
+                            <DeleteGoal id={goal.id} onDeleteGoal={deleteGoalCallback} />
                         </Grid>
-                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                                        <IconButton
-                                            edge="end"
-                                            aria-label="complete"
-                                            onClick={() => handleComplete(goal.id, goal.title)}
-                                            disabled={completedGoals[goal.id]}
-                                        >
-                                            <CheckCircle style={{ color: completedGoals[goal.id] ? 'green' : 'grey' }} />
-                                        </IconButton>
-                                        {!completedGoals[goal.id] && (
-                                            <>
-                                                <EditGoal id={goal.id} oldTitle={goal.title} disabled={completedGoals[goal.id]} onEditGoal={editGoalCallback} />
-                                            </>
-                                        )}
-                                        <DeleteGoal id={goal.id} onDeleteGoal={deleteGoalCallback} />
-                        </Grid>
-                        </Grid>
-                    </CardContent>
-                </Card>
-                </Grid>
-            ))}
-            </Grid>
+                    </Grid>
+                </CardContent>
+            </Card>
+        </Grid>
+    ))}
+</Grid>
             <Pagination
               count={Math.ceil(filteredGoals.length / itemsPerPage)}
               page={page}

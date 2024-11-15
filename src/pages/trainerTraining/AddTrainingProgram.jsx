@@ -134,7 +134,6 @@ export function AddTrainingProgram() {
         const uid = user?.uid;
         if (!uid) return;
         const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('There was an error!', error);
@@ -142,7 +141,6 @@ export function AddTrainingProgram() {
   };
 
   const isSlotClashing = (newSlot, existingSlots) => {
-    console.log(newSlot)
     const [newStart, newEnd] = parseSlotString(newSlot);
   
     return existingSlots.some((slotString) => {
@@ -198,9 +196,6 @@ export function AddTrainingProgram() {
                 'Content-Type': 'multipart/form-data'
             }
         });
-
-        console.log(response.data);
-        
         setAddTrainingProgramStatus(response.data.message);
         navigate("/trainerTrainingPrograms");
     } catch (error) {

@@ -43,7 +43,6 @@ export function DeleteTrainingProgram({id}) {
     e.preventDefault();
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/trainingPrograms/deleteTrainingProgram/${id}`);
-        console.log(response.data);
         setDeleteTrainingProgramStatus(response.data.message);
         handleClose();
         navigate("/trainerTrainingPrograms");

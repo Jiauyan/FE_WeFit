@@ -40,7 +40,6 @@ export function ViewBooking() {
     if (!uid) return;
     axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getBookingById/${bookingId}`)
       .then(response => {
-        console.log(response.data)
         setBookingData(response.data.booking);
         setTrainingProgramData(response.data.trainingProgram);
         setTrainerID(response.data.trainingProgram.uid);

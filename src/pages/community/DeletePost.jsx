@@ -44,7 +44,6 @@ export function DeletePost({id, onDeletePost}) {
     e.preventDefault();
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/posts/deletePost/${id}`);
-        console.log(response.data);
         setDeletePostStatus(response.data.message);
         onDeletePost(response.data)
         handleClose();

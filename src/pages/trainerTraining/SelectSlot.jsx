@@ -65,8 +65,6 @@ export function SelectSlot({id}) {
     navigate('/studentList', { state: { id: id ,slot } });
 };
 
-console.log(trainingProgramSlot);
-
   return (
     <div>
       <MenuItem

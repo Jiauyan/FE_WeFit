@@ -43,7 +43,6 @@ export function DeleteFitnessPlan({id}) {
     e.preventDefault();
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/fitnessPlan/deleteFitnessPlan/${id}`);
-        console.log(response.data);
         setDeleteFitnessPlanStatus(response.data.message);
         handleClose();
         navigate("/fitnessPlan");
@@ -88,7 +87,7 @@ export function DeleteFitnessPlan({id}) {
                 Confirm
             </Typography>
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300 , textAlign: 'center'}}>
-                Are you sure you wish to delete the fitness plan?
+                Are you sure you wish to delete this fitness plan?
             </Typography>
             <GradientButton
                     type="submit"

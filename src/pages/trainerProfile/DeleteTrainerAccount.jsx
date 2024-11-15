@@ -46,16 +46,15 @@ export function DeleteTrainerAccount() {
   const { deleteAccount } = useContext(UserContext);
 
   const handleSubmit = async (e) => { 
-    const uid = user.uid;
-    e.preventDefault();
+    //e.preventDefault();
+    const uid = user?.uid;
+    if (!uid) return;
     try {
-        // const response = await axios.delete(`https://be-um-fitness.vercel.app/auth/deleteAccount/${uid}`);
-        // console.log(response.data);
-        // setDeleteAccountStatus(response.data.message);
         const response = deleteAccount(uid);
         setDeleteAccountStatus(response.data);
         navigate("/login");
     } catch (error) {
+      console.log(error);
         if (axios.isAxiosError(error)) {
             if (error.response) {
                 setDeleteAccountStatus(error.response.data.message);

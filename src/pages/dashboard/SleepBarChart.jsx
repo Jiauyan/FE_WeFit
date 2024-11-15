@@ -28,7 +28,6 @@ export default function SleepBarChart() {
 
         // Check if waterData is not null and is an object
         if (!sleepData || typeof sleepData !== 'object') {
-          console.log('No sleep data available.');
           return; // Early return if no data is available
         }
   
@@ -106,7 +105,6 @@ export default function SleepBarChart() {
 
 
   const handleDateChange = (newValue) => {
-    console.log(newValue);
     setSelectedDate(newValue);
     setSelectedYear(newValue.getUTCFullYear());
     setSelectedMonth(newValue.getUTCMonth());

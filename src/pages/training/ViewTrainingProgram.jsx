@@ -53,9 +53,6 @@ export function ViewTrainingProgram() {
   }, [trainerID]); 
 
   const handleBack = () => {
-    console.log("hi");
-    console.log(pathPrev);
-    console.log(pathName);
     if (pathPrev === "/recommend" && pathName === "/screeningForm") {
       navigate("/recommededTrainingPrograms");
     } else if (pathPrev === "/beginner" && pathName === "/screeningForm") {
@@ -75,7 +72,6 @@ export function ViewTrainingProgram() {
   };
 
   const handleBook = async (id) => {
-    console.log(id);
     navigate("/screeningForm",{ state: { id, pathPrev } });
   };
 

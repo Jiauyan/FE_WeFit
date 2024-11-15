@@ -75,7 +75,6 @@ export function BookingDetails() {
 
             // Fetch booked programs
             const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
-            console.log(response.data);
            // const bookedProgramSlot = response.data.map((booking) => booking.slot);
             setBookedProgramsSlot(response.data);
         } catch (error) {

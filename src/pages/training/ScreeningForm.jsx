@@ -51,7 +51,6 @@ export function ScreeningForm() {
           q6,
           q7
       });
-      console.log(id)
       setAddScreeningFormStatus(response.data.message);
       navigate("/consentForm", { state: { id, pathPrev} });
   } catch (error) {
