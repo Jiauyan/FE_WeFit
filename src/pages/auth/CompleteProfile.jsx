@@ -1,94 +1,78 @@
 import React, { useState } from 'react';
-import axios from 'axios'; 
-import { useNavigate, useLocation} from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
-    Grid,
-    CssBaseline,
-    Box,
-    Avatar,
-    Typography,
-    TextField,
-    FormControlLabel,
-    Button,
-    Link,
-    Paper,
-    Container,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Checkbox,
-    Snackbar,
-    Alert,
-} from "@mui/material";
-
-import { ApiTemplate } from '../../api';
+  Grid,
+  Box,
+  Typography,
+  TextField,
+  Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Snackbar,
+  CircularProgress,
+} from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import backGround from "../../assets/backGround.png";
+import backGround from '../../assets/backGround.png';
+import { ApiTemplate } from '../../api';
 
 export function CompleteProfile() {
-    
-    const [name, setName] = useState('');
-    const [username, setUsername] = useState('');
-    const [age, setAge] = useState(null);
-    const [gender, setGender] = useState('');
-    const [dateOfBirth, setDate] = useState('');
-    const [weight, setWeight] = useState(null);
-    const [height, setHeight] = useState(null);
-    const [role, setRole] = React.useState('');
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [completeProfileStatus, setCompleteProfileStatus] = useState('');
-    const navigate = useNavigate();
-    const location = useLocation();
-    const uid = location.state?.uid; 
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [age, setAge] = useState(null);
+  const [gender, setGender] = useState('');
+  const [weight, setWeight] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [role, setRole] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' });
 
-    const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
-    };
+  const navigate = useNavigate();
+  const location = useLocation();
+  const uid = location.state?.uid;
 
-    const handleGender = async (event) => {
-        setGender(event.target.value);
-      };
+  const handleCloseNotification = () => {
+    setNotification({ ...notification, open: false });
+  };
 
-    const handleRole = async (event) => {
-        setRole(event.target.value);
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-    const handleSubmit = async (e) => { 
-        e.preventDefault(); 
+    try {
+      const method = 'post';
+      const route = `auth/completeProfile/${uid}`;
+      const formData = { role, name, username, age, gender, weight, height };
 
-        try {
-            const method = 'post'
-            const route = `auth/completeProfile/${uid}`
-            const formData = { role, name, username, age, gender, weight, height }
+      const response = await ApiTemplate(method, route, formData);
 
-            const response = await ApiTemplate(method, route, formData)
+      if (role !== 'Student') {
+        setNotification({ open: true, message: "Register successful!", severity: 'success' });
+      }
 
-            setCompleteProfileStatus(response.data.message);
-            if (role === 'Student') {
-                navigate('/fitnessLevel', { state: { uid } });
-            } else {
-                setOpenSnackbar(true);
-                setTimeout(() => {
-                    navigate('/login', { state: { uid } });
-                }, 2000);
-            }
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.response) {
-                    setCompleteProfileStatus(error.response.data.message);
-                } else {
-                    setCompleteProfileStatus('An error occurred');
-                }
-            } else {
-                setCompleteProfileStatus('An unexpected error occurred');
-            }
-        }
-    };
+      setTimeout(() => {
+        navigate(role === 'Student' ? '/fitnessLevel' : '/login', { state: { uid } });
+      }, 1000);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setNotification({
+          open: true,
+          message: error.response?.data.message || 'An error occurred',
+          severity: 'error',
+        });
+      } else {
+        setNotification({ open: true, message: 'An unexpected error occurred', severity: 'error' });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-
-    return (
-      <Grid
+  return (
+    <Grid
       container
       component="main"
       sx={{
@@ -96,150 +80,110 @@ export function CompleteProfile() {
         justifyContent: 'center',
         alignItems: 'center',
         padding: 3,
-        width: '100%', // Ensures the grid takes full width,
+        width: '100%',
         backgroundImage: `url(${backGround})`,
-        backgroundPosition: 'center', 
+        backgroundPosition: 'center',
         backgroundSize: 'cover',
       }}
     >
-      <Paper sx={{
-          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
-          minHeight: '100%',
+      <Paper
+        sx={{
+          width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' },
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           boxShadow: '1px 1px 10px rgba(0, 0, 0, 0.1)',
           borderRadius: 2,
           padding: 2,
-          margin: 'auto' // Centers the paper in the viewport
-        }}>
-         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1}>
-                Let's complete your profile 
-            </Typography>
-            <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
-                It will help us to know more about you!
-            </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                    <Select
-                        required
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={role}
-                        label="Role"
-                        onChange={handleRole}
-                    >
-                        <MenuItem value="Trainer">Trainer</MenuItem>
-                        <MenuItem value="Student">Student</MenuItem>
-                    </Select>
-            </FormControl>
-            <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="name"
-                    label="Name"
-                    name="name"
-                    onChange={(e) => setName(e.target.value)}
-            />
-            <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    onChange={(e) => setUsername(e.target.value)}
-            />
-             <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="age"
-                    label="Age"
-                    name="age"
-                    type="number"
-                    value={age || ''} // Make sure to bind the value
-                    inputProps={{ min: 1, max: 100 }}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || parseFloat(value) >= 0) {
-                            setAge(value === '' ? null : parseFloat(value));
-                        }
-                    }}
-                />
-            <FormControl margin="normal" fullWidth>
-                    <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-                    <Select
-                        required
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={gender}
-                        label="Role"
-                        onChange={handleGender}
-                    >
-                        <MenuItem value="Male">Male</MenuItem>
-                        <MenuItem value="Female">Female</MenuItem>
-                    </Select>
-            </FormControl>
-            <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="weight"
-                    label="Weight"
-                    id="weight"
-                    type="number"
-                    inputProps={{ min: 0 }}
-                    value={weight || ''} // Make sure to bind the value
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || parseFloat(value) >= 0) {
-                            setWeight(value === '' ? null : parseFloat(value));
-                        }
-                    }}
-            />
-            <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="height"
-                    label="Height"
-                    id="height"
-                    type="number"
-                    inputProps={{ min: 0 }}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === '' || parseFloat(value) >= 0) {
-                            setHeight(value === '' ? null : parseFloat(value));
-                        }
-                    }}
-            />
-            <GradientButton
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                >
-                    {role === 'Student' ? 'Next' : 'Confirm'}
-            </GradientButton>
-            <Snackbar 
-                open={openSnackbar} 
-                autoHideDuration={2000} 
-                onClose={handleCloseSnackbar}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                sx={{
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                }}
-            >
-                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                    Registration successful! Redirecting to login page...
-                </Alert>
-            </Snackbar>
-            </Box>
+          margin: 'auto',
+        }}
+      >
+        <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1}>
+          Let's complete your profile
+        </Typography>
+        <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
+          It will help us to know more about you!
+        </Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Role</InputLabel>
+            <Select value={role} onChange={(e) => setRole(e.target.value)} required>
+              <MenuItem value="Trainer">Trainer</MenuItem>
+              <MenuItem value="Student">Student</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Age"
+            type="number"
+            value={age || ''}
+            onChange={(e) => setAge(e.target.value === '' ? null : parseFloat(e.target.value))}
+            inputProps={{ min: 1, max: 100 }}
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Gender</InputLabel>
+            <Select value={gender} onChange={(e) => setGender(e.target.value)} required>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Weight"
+            type="number"
+            value={weight || ''}
+            onChange={(e) => setWeight(e.target.value === '' ? null : parseFloat(e.target.value))}
+            inputProps={{ min: 0 }}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Height"
+            type="number"
+            value={height || ''}
+            onChange={(e) => setHeight(e.target.value === '' ? null : parseFloat(e.target.value))}
+            inputProps={{ min: 0 }}
+          />
+          <GradientButton type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            {loading ? <CircularProgress size={24} color="inherit" /> : role === 'Student' ? 'Next' : 'Confirm'}
+          </GradientButton>
+        </Box>
       </Paper>
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <MuiAlert
+          onClose={handleCloseNotification}
+          severity={notification.severity}
+          sx={{ width: '100%' }}
+        >
+          {notification.message}
+        </MuiAlert>
+      </Snackbar>
     </Grid>
-    );
-};
+  );
+}

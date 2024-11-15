@@ -3,21 +3,11 @@ import axios from 'axios';
 import { useNavigate, useLocation} from 'react-router-dom';
 import {
     Grid,
-    CssBaseline,
     Box,
-    Avatar,
     Typography,
-    TextField,
-    FormControlLabel,
     Button,
-    Link,
     Paper,
-    Container,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Checkbox,
+    CircularProgress
 } from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
 import backGround from "../../assets/backGround.png";
@@ -27,6 +17,7 @@ export function FitnessGoal() {
     
     const [fitnessGoal, setFitnessGoal] = useState('');
     const [fitnessGoalStatus, setFitnessGoalStatus] = useState('');
+    const [loading, setLoading] = useState(false); // Loading state
     const navigate = useNavigate();
     const location = useLocation();
     const uid = location.state?.uid; // Access the ID from the state
@@ -41,7 +32,7 @@ export function FitnessGoal() {
 
     const handleSubmit = async (e) => { 
         e.preventDefault(); 
-
+        setLoading(true); // Start loading
         try {
             const response = await axios.post(`https://be-um-fitness.vercel.app/auth/fitnessGoal/${uid}`, {
                fitnessGoal
@@ -59,7 +50,9 @@ export function FitnessGoal() {
             } else {
                 setFitnessGoalStatus('An unexpected error occurred');
             }
-        }
+        }finally {
+            setLoading(false); // Stop loading
+          }
     };
 
 
@@ -115,8 +108,8 @@ export function FitnessGoal() {
                     disabled={!fitnessGoal}
                     sx={{ mt: 3, mb: 2 }}
                 >
-                    Next
-                </GradientButton >
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Next'}
+                    </GradientButton >
             </Box>
       </Paper>
     </Grid>

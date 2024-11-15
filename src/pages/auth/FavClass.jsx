@@ -3,31 +3,25 @@ import axios from 'axios';
 import { useNavigate, useLocation} from 'react-router-dom';
 import {
     Grid,
-    CssBaseline,
     Box,
-    Avatar,
     Typography,
-    TextField,
-    FormControlLabel,
     Button,
-    Link,
     Paper,
-    Container,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Checkbox,
     Snackbar,
     Alert,
+    CircularProgress
 } from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
 import backGround from "../../assets/backGround.png";
+import MuiAlert from '@mui/material/Alert';
 
 export function FavClass() {
     const [favClass, setFavClass] = useState([]);
     const [favClassStatus, setFavClassStatus] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [loading, setLoading] = useState(false); // Loading state
+    const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -41,12 +35,13 @@ export function FavClass() {
         }
     };
 
-    const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
+    const handleCloseNotification = () => {
+        setNotification({ ...notification, open: false });
     };
 
     const handleSubmit = async (e) => { 
         e.preventDefault(); 
+        setLoading(true); // Start loading
 
         try {
             const response = await axios.post(`https://be-um-fitness.vercel.app/auth/favClass/${uid}`, {
@@ -54,10 +49,10 @@ export function FavClass() {
             });
 
             setFavClassStatus(response.data.message);
-            setOpenSnackbar(true);
+            setNotification({ open: true, message: 'Register successful!', severity: 'success' }); // Set success notification here
             setTimeout(() => {
                 navigate('/login', { state: { uid } });
-            }, 2000); 
+            }, 1000); 
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
@@ -68,7 +63,9 @@ export function FavClass() {
             } else {
                 setFavClassStatus('An unexpected error occurred');
             }
-        }
+        } finally {
+            setLoading(false); // Stop loading
+          }
     };
 
 
@@ -124,24 +121,20 @@ export function FavClass() {
                     disabled={favClass.length === 0}
                     sx={{ mt: 3, mb: 2 }}
                 >
-                    Confirm
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
                 </GradientButton>
-                <Snackbar 
-                open={openSnackbar} 
-                autoHideDuration={2000} 
-                onClose={handleCloseSnackbar}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                sx={{
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                }}
-            >
-                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                    Registration successful! Redirecting to login page...
-                </Alert>
-            </Snackbar>
             </Box>
       </Paper>
+      <Snackbar
+          open={notification.open}
+          autoHideDuration={6000}
+          onClose={handleCloseNotification}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+            {notification.message}
+          </MuiAlert>
+        </Snackbar>
     </Grid>
     );
 };

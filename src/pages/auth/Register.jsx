@@ -3,29 +3,22 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
     Grid,
-    CssBaseline,
     Box,
-    Avatar,
     Typography,
     TextField,
-    FormControlLabel,
-    Button,
     Link,
     Paper,
-    Container,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Checkbox,
     InputAdornment,
-    IconButton
+    IconButton,
+    Snackbar,
+    CircularProgress
 } from "@mui/material";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { ApiTemplate } from '../../api';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import registerBackground from "../../assets/registerBackground.png";
+import MuiAlert from '@mui/material/Alert';
 
 export function Register() {
     
@@ -36,6 +29,9 @@ export function Register() {
     const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false); // Loading state
+    const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+
     const handleTogglePasswordVisibility = () => {
       setShowPassword(!showPassword);
     };
@@ -78,6 +74,7 @@ export function Register() {
 
         if (!isValid) return;
 
+        setLoading(true); // Start loading
         try {
             const method = 'post'
             const route = `auth/registerAcc`
@@ -102,9 +99,10 @@ export function Register() {
             } else {
                 setSignupStatus('An unexpected error occurred');
             }
+        } finally {
+          setLoading(false); // Stop loading
         }
     };
-
 
     return (
         <Grid container component="main" sx={{ height: '100vh', width: '100vw' }}>
@@ -177,13 +175,8 @@ export function Register() {
                 ),
               }}
             />
-              <GradientButton
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Next
+              <GradientButton type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Next'}
               </GradientButton>
               <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
               <Link href="/login" variant="body2">
