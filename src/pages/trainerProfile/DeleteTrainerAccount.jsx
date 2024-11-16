@@ -7,8 +7,7 @@ import {
     Button,
     Typography,
     Modal,
-    TextField,
-    IconButton,
+    CircularProgress
 }from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
 
