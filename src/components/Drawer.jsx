@@ -116,7 +116,7 @@ export function SideBar(props) {
       try {
           const response = logout()
           setLogoutStatus(response.data);
-          navigate('/login');
+          navigate('/logout');
       } catch (error) {
           if (axios.isAxiosError(error)) {
               if (error.response) {

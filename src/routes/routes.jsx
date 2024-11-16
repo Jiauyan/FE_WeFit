@@ -70,6 +70,7 @@ import PaymentSuccess from '../components/PaymentSuccess.jsx';
 import PaymentCancel from '../components/PaymentCancel.jsx';
 import BookingSuccess from '../components/BookingSuccess.jsx';
 import { ViewScreeningForm } from '../pages/trainerTraining/ViewScreeningForm.jsx';
+import { Logout } from '../pages/auth/Logout.jsx';
 
 const routes = [
   {
@@ -103,6 +104,10 @@ const routes = [
   {
     path: "/favClass",
     element: <FavClass />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
   },
   {
     path: "/",
