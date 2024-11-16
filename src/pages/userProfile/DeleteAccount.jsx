@@ -34,20 +34,20 @@ const style = {
 
 import { GradientButton } from '../../contexts/ThemeProvider';
 
-export function DeleteAccount({uid}) {
+export function DeleteAccount() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deleteAccountStatus, setDeleteAccountStatus] = useState('');
-  const { user , setUser} = useUser();
-  const { deleteAccount } = useContext(UserContext);
+  const { deleteAccount, user } = useUser();
   const [loading, setLoading] = useState(false); // Loading state
 
   const handleDelete = async () => { 
     setLoading(true); // Start loading
 
     try {
+        const uid = user?.uid;
         const response = await deleteAccount(uid);
         setDeleteAccountStatus(response.data);
         navigate("/deleteAccountSuccess");
