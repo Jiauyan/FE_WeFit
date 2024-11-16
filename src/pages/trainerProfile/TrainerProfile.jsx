@@ -102,7 +102,7 @@ export function TrainerProfile() {
       >
         Edit
       </GradientButton>
-      <DeleteTrainerAccount uid={uid}/>
+      <DeleteTrainerAccount/>
       </Paper>
     </Grid>
     <Outlet/>

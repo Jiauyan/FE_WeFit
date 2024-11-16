@@ -34,17 +34,19 @@ const style = {
   overflowY: 'auto', // add scroll on Y-axis if content is too long
 };
 
-export function DeleteTrainerAccount({uid}) {
+export function DeleteTrainerAccount() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deleteAccountStatus, setDeleteAccountStatus] = useState('');
   const { deleteAccount, user } = useUser();
+  const [loading, setLoading] = useState(false); // Loading state
 
-  const handleSubmit = async (e) => { 
-    e.preventDefault();
+  const handleDelete = async () => { 
+    setLoading(true); // Start loading
     try {
+        const uid = user?.uid;
         const response = await deleteAccount(uid);
         setDeleteAccountStatus(response.data);
         navigate("/deleteAccountSuccess");
@@ -59,6 +61,8 @@ export function DeleteTrainerAccount({uid}) {
         } else {
             setDeleteAccountStatus('An unexpected error occurred');
         }
+    }finally {
+      setLoading(false); // Stop loading
     }
 };
 
@@ -76,7 +80,7 @@ export function DeleteTrainerAccount({uid}) {
         aria-describedby="modal-modal-description"
       >
         
-        <Box sx={style} component="form" noValidate onSubmit={handleSubmit}>
+        <Box sx={style}>
             <Button 
                 onClick={handleClose}
                 sx={{ position: 'absolute', top: 10, right: 10 }}
@@ -90,14 +94,9 @@ export function DeleteTrainerAccount({uid}) {
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300 , textAlign: 'center'}}>
                Are you sure you wish to delete your account?
             </Typography>
-            <GradientButton
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-            >
-                Confirm
-            </GradientButton>
+            <GradientButton onClick={handleDelete} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
+              </GradientButton>
         </Box>
       </Modal>
     </div>
