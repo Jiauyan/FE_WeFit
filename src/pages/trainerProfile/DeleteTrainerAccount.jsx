@@ -1,6 +1,6 @@
 import React, { useState , useContext} from 'react';
 import axios from 'axios';
-import { useUser, UserContext } from "../../contexts/UseContext";
+import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -34,25 +34,20 @@ const style = {
   overflowY: 'auto', // add scroll on Y-axis if content is too long
 };
 
-
-
-export function DeleteTrainerAccount() {
+export function DeleteTrainerAccount({uid}) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deleteAccountStatus, setDeleteAccountStatus] = useState('');
-  const { user , setUser} = useUser();
-  const { deleteAccount } = useContext(UserContext);
+  const { deleteAccount, user } = useUser();
 
   const handleSubmit = async (e) => { 
-    //e.preventDefault();
-    const uid = user?.uid;
-    if (!uid) return;
+    e.preventDefault();
     try {
-        const response = deleteAccount(uid);
+        const response = await deleteAccount(uid);
         setDeleteAccountStatus(response.data);
-        navigate("/login");
+        navigate("/deleteAccountSuccess");
     } catch (error) {
       console.log(error);
         if (axios.isAxiosError(error)) {

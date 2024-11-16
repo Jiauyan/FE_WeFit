@@ -71,6 +71,8 @@ import PaymentCancel from '../components/PaymentCancel.jsx';
 import BookingSuccess from '../components/BookingSuccess.jsx';
 import { ViewScreeningForm } from '../pages/trainerTraining/ViewScreeningForm.jsx';
 import { Logout } from '../pages/auth/Logout.jsx';
+import { DeleteAccountSuccess } from '../pages/auth/DeleteAccountSuccess.jsx';
+
 
 const routes = [
   {
@@ -108,6 +110,11 @@ const routes = [
   {
     path: "/logout",
     element: <Logout />,
+  },
+  
+  {
+    path: "/deleteAccountSuccess",
+    element: <DeleteAccountSuccess />,
   },
   {
     path: "/",

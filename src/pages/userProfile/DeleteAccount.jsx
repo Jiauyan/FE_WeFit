@@ -7,8 +7,7 @@ import {
     Button,
     Typography,
     Modal,
-    TextField,
-    IconButton,
+    CircularProgress,
 }from "@mui/material";
 
 const style = {
@@ -35,7 +34,7 @@ const style = {
 
 import { GradientButton } from '../../contexts/ThemeProvider';
 
-export function DeleteAccount() {
+export function DeleteAccount({uid}) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -43,15 +42,16 @@ export function DeleteAccount() {
   const [deleteAccountStatus, setDeleteAccountStatus] = useState('');
   const { user , setUser} = useUser();
   const { deleteAccount } = useContext(UserContext);
+  const [loading, setLoading] = useState(false); // Loading state
 
-  const handleSubmit = async (e) => { 
-    e.preventDefault();
-    const uid = user.uid;
+  const handleDelete = async () => { 
+    setLoading(true); // Start loading
+
     try {
-        const response = deleteAccount(uid);
+        const response = await deleteAccount(uid);
         setDeleteAccountStatus(response.data);
-        navigate("/login");
-    } catch (error) {
+        navigate("/deleteAccountSuccess");
+      } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
                 setDeleteAccountStatus(error.response.data.message);
@@ -61,6 +61,8 @@ export function DeleteAccount() {
         } else {
             setDeleteAccountStatus('An unexpected error occurred');
         }
+    }finally {
+      setLoading(false); // Stop loading
     }
 };
 
@@ -78,7 +80,7 @@ export function DeleteAccount() {
         aria-describedby="modal-modal-description"
       >
         
-        <Box sx={style} component="form" noValidate onSubmit={handleSubmit}>
+        <Box sx={style}>
             <Button 
                 onClick={handleClose}
                 sx={{ position: 'absolute', top: 10, right: 10 }}
@@ -92,14 +94,9 @@ export function DeleteAccount() {
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300 , textAlign: 'center'}}>
               Are you sure you wish to delete your account?
             </Typography>
-            <GradientButton 
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                >
-                Confirm
-            </GradientButton >
+            <GradientButton onClick={handleDelete} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
+              </GradientButton>
         </Box>
       </Modal>
     </div>
