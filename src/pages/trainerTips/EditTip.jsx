@@ -86,17 +86,13 @@ export function EditTip() {
 
     const handleSubmit = async (e) => { 
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('downloadUrl', downloadUrl); 
-        formData.append('uid', uid);
-        formData.append('title', title);
-        formData.append('desc', desc);
-        formData.append('shortDesc', shortDesc);
         try {
-            const response = await axios.patch(`https://be-um-fitness.vercel.app/tips/updateTip/${id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+            const response = await axios.patch(`https://be-um-fitness.vercel.app/tips/updateTip/${id}`, {
+              downloadUrl,
+              uid,
+              title,
+              desc,
+              shortDesc
             });
             navigate("/viewTip", { state: { id: id } });
         } catch (error) {

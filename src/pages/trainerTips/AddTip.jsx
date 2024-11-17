@@ -65,20 +65,15 @@ export function AddTip() {
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('uid', uid);
-    formData.append('title', title);
-    formData.append('desc', desc);
-    formData.append('shortDesc', shortDesc);
-    formData.append('username', username);
-    formData.append('userImageUrl', userImageUrl);
-    formData.append('downloadUrl', downloadUrl); 
-
     try {
-        const response = await axios.post('https://be-um-fitness.vercel.app/tips/addTip', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+        const response = await axios.post('https://be-um-fitness.vercel.app/tips/addTip',{
+          uid,
+          title,
+          desc,
+          shortDesc,
+          username,
+          userImageUrl,
+          downloadUrl
         });
         setAddTipStatus(response.data.message);
         navigate("/trainerTips");
