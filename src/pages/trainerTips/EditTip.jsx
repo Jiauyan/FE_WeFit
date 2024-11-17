@@ -16,6 +16,8 @@ import {  useNavigate, Outlet, useLocation} from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Edit from '@mui/icons-material/Edit';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../configs/firebaseDB'; 
 
 export function EditTip() {
     const [tipData, setTipData] = useState({});
@@ -26,6 +28,7 @@ export function EditTip() {
     const [shortDesc, setShortDesc] = useState('');
     const [tipImage, setTipImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null); 
+    const [downloadUrl, setDownloadUrl] = useState(null); 
     const [editTipStatus, setEditTipStatus] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -53,23 +56,38 @@ export function EditTip() {
     }, []);
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          setTipImage(file);
-    
-          // Read the file and set the preview URL
-          const reader = new FileReader();
-          reader.onload = () => {
-            setPreviewUrl(reader.result);
-          };
-          reader.readAsDataURL(file);
-        }
-    };
+      const file = e.target.files[0];
+      if (file) {
+      setTipImage(file);
+  
+      const fileRef = ref(storage, `tipImages/${file.name}`);
+      const uploadTask = uploadBytesResumable(fileRef, file);
+  
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // You can handle progress here if you need to show upload status
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+          console.error("Upload failed", error);
+        },
+        () => {
+          // Handle successful uploads on complete
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          setPreviewUrl(downloadURL);
+          setDownloadUrl(downloadURL);
+      });
+    }
+  );
+  }
+  };
 
     const handleSubmit = async (e) => { 
         e.preventDefault();
         const formData = new FormData();
-        formData.append('tipImage', tipImage); 
+        formData.append('downloadUrl', downloadUrl); 
         formData.append('uid', uid);
         formData.append('title', title);
         formData.append('desc', desc);
@@ -80,7 +98,6 @@ export function EditTip() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            //setEditTipStatus(response.data);
             navigate("/viewTip", { state: { id: id } });
         } catch (error) {
             if (axios.isAxiosError(error)) {

@@ -57,12 +57,6 @@ export function AddTip() {
         console.log("File available at", downloadURL);
         setPreviewUrl(downloadURL);
         setDownloadUrl(downloadURL);
-      // Read the file and set the preview URL
-      // const reader = new FileReader();
-      // reader.onload = () => {
-      //   setPreviewUrl(reader.result);
-      // };
-      // reader.readAsDataURL(file);
     });
   }
 );
