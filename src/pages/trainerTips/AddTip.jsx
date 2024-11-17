@@ -17,8 +17,6 @@ import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Edit from '@mui/icons-material/Edit';
 import CloudUpload from '@mui/icons-material/CloudUpload';
 import { GradientButton } from '../../contexts/ThemeProvider';
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage } from '../../configs/firebaseDB'; 
 
 export function AddTip() {
   const navigate = useNavigate();
@@ -27,7 +25,6 @@ export function AddTip() {
   const [shortDesc, setShortDesc] = useState('');
   const [tipImage, setTipImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); 
-  const [downloadUrl, setDownloadUrl] = useState(null); 
   const [addTipStatus, setAddTipStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
@@ -37,48 +34,27 @@ export function AddTip() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-    setTipImage(file);
+      setTipImage(file);
 
-    const fileRef = ref(storage, `tipImages/${file.name}`);
-    const uploadTask = uploadBytesResumable(fileRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // You can handle progress here if you need to show upload status
-      },
-      (error) => {
-        // Handle unsuccessful uploads
-        console.error("Upload failed", error);
-      },
-      () => {
-        // Handle successful uploads on complete
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        console.log("File available at", downloadURL);
-        setPreviewUrl(downloadURL);
-        setDownloadUrl(downloadURL);
       // Read the file and set the preview URL
-      // const reader = new FileReader();
-      // reader.onload = () => {
-      //   setPreviewUrl(reader.result);
-      // };
-      // reader.readAsDataURL(file);
-    });
-  }
-);
-}
-};
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
     const formData = new FormData();
+    formData.append('tipImage', tipImage); 
     formData.append('uid', uid);
     formData.append('title', title);
     formData.append('desc', desc);
     formData.append('shortDesc', shortDesc);
     formData.append('username', username);
     formData.append('userImageUrl', userImageUrl);
-    formData.append('downloadUrl', downloadUrl); 
 
     try {
         const response = await axios.post('https://be-um-fitness.vercel.app/tips/addTip', formData, {
