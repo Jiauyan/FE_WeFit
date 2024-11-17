@@ -30,6 +30,8 @@ import Edit from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../configs/firebaseDB'; 
 
 const style = {
   position: 'absolute',
@@ -69,6 +71,7 @@ export function EditTrainingProgram() {
   const [currentEndTime, setCurrentEndTime] = useState(null);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); 
+  const [downloadUrl, setDownloadUrl] = useState(null); 
   const [contactNum, setContactNum] = useState('');
   const [updateTrainingProgramStatus, setUpdateTrainingProgramStatus] = useState('');
   const { user } = useUser();
@@ -99,6 +102,7 @@ export function EditTrainingProgram() {
             const data = response.data;
             setTrainingProgramData(data);
             setTitle(data.title);
+            setContactNum(data.contactNum);
             setTypeOfTrainingProgram(data.typeOfTrainingProgram);
             setCapacity(data.capacity);
             setFeeType(data.feeType);
@@ -116,7 +120,6 @@ export function EditTrainingProgram() {
             setCurrentEndTime(data.currentEndTime);
             setTrainingProgramImage(data.downloadUrl);
             setPreviewUrl(data.downloadUrl);
-            setContactNum(data.contactNum);
         } catch (error) {
             console.error('There was an error fetching the training program data!', error);
         }
@@ -126,19 +129,35 @@ export function EditTrainingProgram() {
         fetchTrainingProgramData();
     }
 }, []);
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setTrainingProgramImage(file);
 
-      // Read the file and set the preview URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setTrainingProgramImage(file);
+
+  const fileRef = ref(storage, `trainingProgramImages/${file.name}`);
+  const uploadTask = uploadBytesResumable(fileRef, file);
+
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      // You can handle progress here if you need to show upload status
+    },
+    (error) => {
+      // Handle unsuccessful uploads
+      console.error("Upload failed", error);
+    },
+    () => {
+      // Handle successful uploads on complete
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      console.log("File available at", downloadURL);
+      setPreviewUrl(downloadURL);
+      setDownloadUrl(downloadURL);
+  });
+}
+);
+}
+};
 
   const handleAddSlot = async (e) => {
     e.preventDefault();
@@ -261,29 +280,25 @@ const isSlotClashing = (newSlot, existingSlots) => {
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('trainingProgramImage', trainingProgramImage); 
-    formData.append('uid', uid);
-    formData.append('contactNum', contactNum);
-    formData.append('title', title);
-    formData.append('typeOfTrainingProgram', typeOfTrainingProgram);
-    formData.append('capacity', capacity);
-    formData.append('feeType', feeType);
-    formData.append('feeAmount', Number(feeAmount));
-    formData.append('venueType', venueType);
-    formData.append('venue', venue);
-    formData.append('fitnessLevel', fitnessLevel);
-    formData.append('fitnessGoal', fitnessGoal);
-    formData.append('typeOfExercise', typeOfExercise);
-    formData.append('desc', desc);
-    slots.forEach((slot, index) => {
-    formData.append(`slots[${index}]`, JSON.stringify(slot));
-    });
     try {
-        const response = await axios.patch(`https://be-um-fitness.vercel.app/trainingPrograms/updateTrainingProgram/${id}`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+        const response = await axios.patch(`https://be-um-fitness.vercel.app/trainingPrograms/updateTrainingProgram/${id}`, {
+           updates: {
+            uid : uid,
+            contactNum : contactNum,
+            title : title,
+            typeOfTrainingProgram : typeOfTrainingProgram,
+            capacity : Number(capacity),
+            feeType : feeType,
+            feeAmount : Number(feeAmount),
+            venueType : venueType,
+            venue : venue,
+            fitnessLevel : fitnessLevel,
+            fitnessGoal : fitnessGoal,
+            typeOfExercise : typeOfExercise,
+            desc : desc,
+            slots : slots,
+            downloadUrl : downloadUrl
+           }
         });
         setUpdateTrainingProgramStatus(response.data.message);
         navigate("/viewTrainerTrainingProgram", { state: { id: id } });
