@@ -31,6 +31,8 @@ import CloudUpload from '@mui/icons-material/CloudUpload';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../configs/firebaseDB'; 
 
 const style = {
   position: 'absolute',
@@ -70,24 +72,39 @@ export function AddTrainingProgram() {
   const [currentEndTime, setCurrentEndTime] = useState(null);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); 
+  const [downloadUrl, setDownloadUrl] = useState(null); 
   const [contactNum, setContactNum] = useState('');
-
   const [addTrainingProgramStatus, setAddTrainingProgramStatus] = useState('');
   const { user } = useUser();
-  const uid = user.uid;
+  const uid = user?.uid;
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setTrainingProgramImage(file);
 
-      // Read the file and set the preview URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    const fileRef = ref(storage, `trainingProgramImages/${file.name}`);
+    const uploadTask = uploadBytesResumable(fileRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // You can handle progress here if you need to show upload status
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+        console.error("Upload failed", error);
+      },
+      () => {
+        // Handle successful uploads on complete
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        console.log("File available at", downloadURL);
+        setPreviewUrl(downloadURL);
+        setDownloadUrl(downloadURL);
+    });
+  }
+);
+}
   };
 
   const handleAddSlot = async (e) => {
@@ -172,29 +189,23 @@ export function AddTrainingProgram() {
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('trainingProgramImage', trainingProgramImage); 
-    formData.append('uid', uid);
-    formData.append('contactNum', contactNum);
-    formData.append('title', title);
-    formData.append('typeOfTrainingProgram', typeOfTrainingProgram);
-    formData.append('capacity', capacity);
-    formData.append('feeType', feeType);
-    formData.append('feeAmount', Number(feeAmount));
-    formData.append('venueType', venueType);
-    formData.append('venue', venue);
-    formData.append('fitnessLevel', fitnessLevel);
-    formData.append('fitnessGoal', fitnessGoal);
-    formData.append('typeOfExercise', typeOfExercise);
-    formData.append('desc', desc);
-    slots.forEach((slot, index) => {
-    formData.append(`slots[${index}]`, JSON.stringify(slot));
-    });
     try {
-        const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/addTrainingProgram', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+        const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/addTrainingProgram', {
+          uid : uid,
+          contactNum : contactNum,
+          title : title,
+          typeOfTrainingProgram : typeOfTrainingProgram,
+          capacity : Number(capacity),
+          feeType : feeType,
+          feeAmount : Number(feeAmount),
+          venueType : venueType,
+          venue : venue,
+          fitnessLevel : fitnessLevel,
+          fitnessGoal : fitnessGoal,
+          typeOfExercise : typeOfExercise,
+          desc : desc,
+          slots : slots,
+          downloadUrl : downloadUrl
         });
         setAddTrainingProgramStatus(response.data.message);
         navigate("/trainerTrainingPrograms");
