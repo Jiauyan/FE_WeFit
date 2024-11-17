@@ -6,14 +6,14 @@ import { getDatabase } from "firebase/database";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_DATABASE_URL,
-  projectId: import.meta.env.VITE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_APP_ID,
-  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
+  apiKey: "AIzaSyB8V9R_P0I415Uz7M2mjFsbH7ZuQvDOLE0",
+  authDomain: "wefit-90996.firebaseapp.com",
+  databaseURL: "https://wefit-90996-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "wefit-90996",
+  storageBucket: "wefit-90996.appspot.com",
+  messagingSenderId: "482849020512",
+  appId: "1:482849020512:web:9783b2228c2070914a8105",
+  measurementId: "G-VQ6N5K29JN",
 };
 
 // Initialize Firebase
