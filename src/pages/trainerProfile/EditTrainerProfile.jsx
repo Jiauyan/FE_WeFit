@@ -94,7 +94,7 @@ export function EditTrainerProfile() {
         try { 
             const responseUpdate = await axios.post(`https://be-um-fitness.vercel.app/profile/uploadProfileImage/${uid}`, {
                 updates: {
-                    photoUrl,
+                    photoURL:photoUrl,
                     username,
                     age,
                     weight,
