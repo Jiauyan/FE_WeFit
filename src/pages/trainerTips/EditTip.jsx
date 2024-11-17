@@ -88,11 +88,13 @@ export function EditTip() {
         e.preventDefault();
         try {
             const response = await axios.patch(`https://be-um-fitness.vercel.app/tips/updateTip/${id}`, {
-              downloadUrl,
-              uid,
-              title,
-              desc,
-              shortDesc
+              updates: {
+                downloadUrl,
+                uid,
+                title,
+                desc,
+                shortDesc
+              }
             });
             navigate("/viewTip", { state: { id: id } });
         } catch (error) {
