@@ -69,7 +69,7 @@ export function EditTip() {
     const handleSubmit = async (e) => { 
         e.preventDefault();
         const formData = new FormData();
-        formData.append('downloadUrl', tipImage); 
+        formData.append('tipImage', tipImage); 
         formData.append('uid', uid);
         formData.append('title', title);
         formData.append('desc', desc);
