@@ -25,7 +25,7 @@ export default function StepsBarChart() {
   
         const response = await axios.get(`https://be-um-fitness.vercel.app/steps/getStepCountByUid/${uid}`);
         
-        const stepsData = response.data.steps?.stepsByDay;
+        const stepsData = response.data.steps?.stepsByDay || {};
         console.log(stepsData);
         console.log(stepsData.length);
         let fetchedData = Object.entries(stepsData).map(([date, steps]) => ({
@@ -110,43 +110,42 @@ export default function StepsBarChart() {
           />
         </LocalizationProvider>
       </Box>
-      {stepsData.length === 0 ? (
+      {stepsData.length > 0 ? (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+        <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
+          <ArrowBackIos />
+        </IconButton>
+        <Box sx={{ flexGrow: 1, maxWidth: '90vw', marginBottom: 5 }}>
+          <ResponsiveContainer width="100%" height={500}>
+            <BarChart data={last7DaysData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" tickFormatter={formatDate} />
+              <YAxis />
+              <Tooltip
+                  wrapperStyle={{
+                    backgroundColor: 'transparent',  // Makes background transparent
+                    border: 'none',  // Removes border
+                    boxShadow: 'none'  // Removes shadow
+                  }}
+                  cursor={false}  // Optionally hide the cursor as well
+                />
+              <Bar type="monotone" dataKey="steps" barSize={10} radius={[10, 10, 0, 0]}>
+                {last7DaysData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.date === formatDate(new Date().toISOString()) ? '#FF851B' : '#22D3EE'} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </Box>
+        <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= stepsData.length}>
+          <ArrowForwardIos />
+        </IconButton>
+      </Box>
+          
+            ) : (
           <Box height={540} display="flex" alignItems="center" justifyContent="center">
           <Typography>No Steps Found for the Selected Period.</Typography>
           </Box>
-            ) : (
-            <>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-      <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
-        <ArrowBackIos />
-      </IconButton>
-      <Box sx={{ flexGrow: 1, maxWidth: '90vw', marginBottom: 5 }}>
-        <ResponsiveContainer width="100%" height={500}>
-          <BarChart data={last7DaysData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" tickFormatter={formatDate} />
-            <YAxis />
-            <Tooltip
-                wrapperStyle={{
-                  backgroundColor: 'transparent',  // Makes background transparent
-                  border: 'none',  // Removes border
-                  boxShadow: 'none'  // Removes shadow
-                }}
-                cursor={false}  // Optionally hide the cursor as well
-              />
-            <Bar type="monotone" dataKey="steps" barSize={10} radius={[10, 10, 0, 0]}>
-              {last7DaysData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.date === formatDate(new Date().toISOString()) ? '#FF851B' : '#22D3EE'} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </Box>
-      <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= stepsData.length}>
-        <ArrowForwardIos />
-      </IconButton>
-    </Box>
-    </>
   )}
     </Box>
   );
