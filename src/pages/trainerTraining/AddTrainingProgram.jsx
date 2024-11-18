@@ -197,7 +197,7 @@ export function AddTrainingProgram() {
           typeOfTrainingProgram : typeOfTrainingProgram,
           capacity : Number(capacity),
           feeType : feeType,
-          feeAmount : feeAmount,
+          feeAmount : parseFloat(feeAmount),
           venueType : venueType,
           venue : venue,
           fitnessLevel : fitnessLevel,
@@ -221,15 +221,14 @@ export function AddTrainingProgram() {
         }
     }
   };
-console.log(feeAmount);
+  
   const handleFeeChange = (feeAmount) => {
     let value = parseFloat(feeAmount);
     if (!isNaN(value)) {
-      value = value.toFixed(2); // Formats the number to two decimal places
-      console.log(value);
+      value = value.toFixed(2); 
       setFeeAmount(value);
     } else {
-      setFeeAmount(''); // Reset or handle invalid numbers
+      setFeeAmount('0.00'); // Reset or handle invalid numbers
     }
   };
 
