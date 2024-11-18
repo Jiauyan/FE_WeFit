@@ -221,7 +221,7 @@ export function AddTrainingProgram() {
         }
     }
   };
-
+console.log(feeAmount);
   const handleFeeChange = (feeAmount) => {
     let value = parseFloat(feeAmount);
     if (!isNaN(value)) {
