@@ -120,6 +120,7 @@ export function EditTrainingProgram() {
             setCurrentEndTime(data.currentEndTime);
             setTrainingProgramImage(data.downloadUrl);
             setPreviewUrl(data.downloadUrl);
+            setDownloadUrl(data.downloadUrl);
         } catch (error) {
             console.error('There was an error fetching the training program data!', error);
         }

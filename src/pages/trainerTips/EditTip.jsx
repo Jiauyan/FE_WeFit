@@ -45,6 +45,7 @@ export function EditTip() {
                 setShortDesc(data.shortDesc);
                 setTipImage(data.downloadUrl);
                 setPreviewUrl(data.downloadUrl);
+                setDownloadUrl(data.downloadUrl);
             } catch (error) {
                 console.error('There was an error fetching the tip data!', error);
             }
