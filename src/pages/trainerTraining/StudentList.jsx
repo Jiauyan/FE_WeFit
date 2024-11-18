@@ -109,7 +109,7 @@ export function StudentList() {
               color: "textSecondary", 
             }}
           >
-            {filteredStudents.length} / {slot.capacity}
+            {filteredStudents.length} / {slot.enrolled}
           </Typography>
         </Box>
         {filteredStudents.length === 0 ? (
