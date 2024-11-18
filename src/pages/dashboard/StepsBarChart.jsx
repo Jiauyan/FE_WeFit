@@ -108,7 +108,7 @@ export default function StepsBarChart() {
           />
         </LocalizationProvider>
       </Box>
-      {Object.keys(stepsData).length? (
+      {Object.keys(stepsData).length > 0 ? (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
         <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
           <ArrowBackIos />
