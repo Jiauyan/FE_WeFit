@@ -126,9 +126,11 @@ export function AddTrainingProgram() {
 
       const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
 
-      ///setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
+      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
       const updatedSlots = sortSlots([...currentSlots, newSlot]);
-      if (isSlotClashing(newSlot, updatedSlots)) {
+      console.log(currentSlots);
+      console.log(updatedSlots);
+      if (isSlotClashing(newSlot, currentSlots)) {
         alert("This slot has already been added. Please choose a different time.");
         return;
       }
