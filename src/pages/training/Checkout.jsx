@@ -69,6 +69,7 @@ export function Checkout() {
                 paymentStatus: true,
                 transactionId: ""
             }); 
+            
             navigate("/bookingSuccess");
         } catch (error) {
             console.error("Booking Error:", error);
