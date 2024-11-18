@@ -49,6 +49,7 @@ export function EditTrainerProfile() {
                 const data = response.data;
                 setUserData(data);
                 setUsername(data.username);
+                setGender(data.gender);
                 setAge(data.age);
                 setWeight(data.weight);
                 setHeight(data.height);
