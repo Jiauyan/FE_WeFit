@@ -278,6 +278,16 @@ const isSlotClashing = (newSlot, existingSlots) => {
     }
   };
 
+  const handleFeeChange = (feeAmount) => {
+    let value = parseFloat(feeAmount);
+    if (!isNaN(value)) {
+      value = value.toFixed(2); 
+      setFeeAmount(value);
+    } else {
+      setFeeAmount('0.00'); // Reset or handle invalid numbers
+    }
+  };
+  
   const handleSubmit = async (e) => { 
     e.preventDefault();
     try {
@@ -289,7 +299,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
             typeOfTrainingProgram : typeOfTrainingProgram,
             capacity : Number(capacity),
             feeType : feeType,
-            feeAmount : Number(feeAmount),
+            feeAmount : parseFloat(feeAmount),
             venueType : venueType,
             venue : venue,
             fitnessLevel : fitnessLevel,
@@ -463,19 +473,19 @@ const isSlotClashing = (newSlot, existingSlots) => {
             </FormControl>
 
             {feeType === 'Paid' && (
-              <TextField
+                <TextField
                 margin="normal"
                 fullWidth
                 id="training-fee"
                 label="Enter Fee Amount"
-                type="number"
+                type="text" // Change to text to avoid automatic number handling
                 value={feeAmount}
-                onChange={(e) => setFeeAmount(e.target.value)}
+                onChange={(e) => handleFeeChange(e.target.value)}
                 InputProps={{
-                  inputProps: { min: 0 },  // Ensures no negative values
-                  startAdornment: <InputAdornment position="start">RM</InputAdornment>,  // RM symbol
+                  inputProps: { min: 0 }, // Ensures no negative values
+                  startAdornment: <InputAdornment position="start">RM</InputAdornment>,
                 }}
-              />
+           />
             )}
              <FormControl margin="normal" fullWidth>
                 <InputLabel id="venue-type-label">Venue</InputLabel>
