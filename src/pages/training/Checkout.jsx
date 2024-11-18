@@ -56,7 +56,7 @@ export function Checkout() {
 
     const savedData = JSON.parse(localStorage.getItem('bookingData'));
 
-    if(feeAmount === "0" ){
+    if(feeAmount === "0" || 0 ){
         try {
             const bookingResponse = await axios.post('https://be-um-fitness.vercel.app/trainingClassBooking/addTrainingClassBooking', {
                 uid: savedData.uid,
