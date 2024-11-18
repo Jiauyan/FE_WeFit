@@ -135,9 +135,9 @@ export function ViewTrainingProgram() {
             </Typography>
           </Grid>
           <Grid container item xs={12}>
-            <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? '#112F91' : '#112F91', mt: 2, mb: 2, mr: 2, textAlign: 'end' }}>
+            <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount == 0 ? '#112F91' : '#112F91', mt: 2, mb: 2, mr: 2, textAlign: 'end' }}>
               <AttachMoney />
-              {trainingProgramData.feeAmount === "0" || trainingProgramData.feeAmount === 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
+              { trainingProgramData.feeAmount == 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
             </Typography>
         </Grid>
         <Grid container item xs={12}>
