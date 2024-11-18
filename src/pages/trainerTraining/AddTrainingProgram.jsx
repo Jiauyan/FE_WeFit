@@ -126,9 +126,9 @@ export function AddTrainingProgram() {
 
       const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
 
-      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
-
-      if (isSlotClashing(newSlot, currentSlots)) {
+      ///setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
+      const updatedSlots = sortSlots([...currentSlots, newSlot]);
+      if (isSlotClashing(newSlot, updatedSlots)) {
         alert("This slot has already been added. Please choose a different time.");
         return;
       }
@@ -143,8 +143,10 @@ export function AddTrainingProgram() {
         return;
       }
 
-      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
-      setSlots(prevSlots => [...prevSlots, newSlot]);
+      //setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
+      //setSlots(prevSlots => [...prevSlots, newSlot]);
+      setSlots(updatedSlots);
+      setCurrentSlots(updatedSlots);
       setCurrentDate(null);
       setCurrentStartTime(null);
       setCurrentEndTime(null);
@@ -192,8 +194,22 @@ export function AddTrainingProgram() {
   const handleRemoveSlot = (index) => {
     const newSlots = [...slots];
     newSlots.splice(index, 1);
-    setSlots(newSlots);
-    setCurrentSlots(newSlots);  // Keep currentSlots in sync with slots
+    const sortedSlots = sortSlots(newSlots);
+    setSlots(sortedSlots);
+    setCurrentSlots(sortedSlots);  // Keep currentSlots in sync with slots
+  };
+
+  const parseDateTime = (slotString) => {
+    const [datePart, timePart] = slotTime.split(" - ");
+    const [startTime, endTime] = timePart.split(" to ");
+  
+    // Combine date with start time (end time is not needed for sorting)
+    const dateTime = new Date(`${datePart} ${startTime}`);
+    return dateTime;
+  };
+  
+  const sortSlots = (slots) => {
+    return slots.sort((a, b) => parseDateTime(a.time) - parseDateTime(b.time));
   };
 
   const handleSubmit = async (e) => { 
