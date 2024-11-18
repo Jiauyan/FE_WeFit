@@ -97,6 +97,7 @@ export function Checkout() {
             // Redirect to Stripe checkout
             await stripe.redirectToCheckout({ sessionId });
 
+            navigate("/paymentSuccess");
         } catch (error) {
             console.error("Stripe Error:", error);
             alert('Failed to initiate payment process. Please try again.');
