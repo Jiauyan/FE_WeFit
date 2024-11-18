@@ -11,7 +11,6 @@ import {
     Grid,
     IconButton,
     Input,
-
 } from "@mui/material";
 import {  useNavigate, Outlet } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -25,6 +24,7 @@ export function EditTrainerProfile() {
     const { user , setUser} = useUser();
     const uid = user?.uid;
     const [username, setUsername] = useState('');
+    const [gender, setGender] = useState('');
     const [age, setAge] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
@@ -97,6 +97,7 @@ export function EditTrainerProfile() {
                 updates: {
                     photoURL:photoUrl,
                     username,
+                    gender,
                     age,
                     weight,
                     height
@@ -116,6 +117,10 @@ export function EditTrainerProfile() {
                 setEditProfileStatus('An unexpected error occurred');
             }
         }
+    };
+
+    const handleGender = async (event) => {
+      setGender(event.target.value);
     };
 
     const handleBack = async () => {
@@ -194,6 +199,20 @@ export function EditTrainerProfile() {
             variant="outlined"
             sx={{ mb: 1 }}
         />
+        <FormControl margin="normal" fullWidth>
+                    <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                    <Select
+                        required
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={gender}
+                        label="Role"
+                        onChange={handleGender}
+                    >
+                        <MenuItem value="Male">Male</MenuItem>
+                        <MenuItem value="Female">Female</MenuItem>
+                    </Select>
+          </FormControl>
         <TextField
             margin="normal"
             fullWidth

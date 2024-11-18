@@ -21,6 +21,8 @@ import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Edit from '@mui/icons-material/Edit';
 import CloudUpload from '@mui/icons-material/CloudUpload';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../configs/firebaseDB'; 
 
 export function EditProfile() {
     const [userData, setUserData] = useState({});
@@ -33,6 +35,7 @@ export function EditProfile() {
     const [height, setHeight] = useState('');
     const [profileImage, setProfileImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null); 
+    const [photoUrl, setPhotoUrl] = useState(null);  
     const [editProfileStatus, setEditProfileStatus] = useState('');
     const navigate = useNavigate();
     
@@ -53,6 +56,7 @@ export function EditProfile() {
                 setHeight(data.height);
                 setProfileImage(data.photoURL);
                 setPreviewUrl(data.photoURL);
+                setPhotoUrl(data.photoURL);
             } catch (error) {
                 console.error('There was an error fetching the user data!', error);
             }
@@ -68,14 +72,29 @@ export function EditProfile() {
         if (file) {
           setProfileImage(file);
     
-          // Read the file and set the preview URL
-          const reader = new FileReader();
-          reader.onload = () => {
-            setPreviewUrl(reader.result);
-          };
-          reader.readAsDataURL(file);
+          const fileRef = ref(storage, `profileImages/${file.name}`);
+          const uploadTask = uploadBytesResumable(fileRef, file);
+      
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              // You can handle progress here if you need to show upload status
+            },
+            (error) => {
+              // Handle unsuccessful uploads
+              console.error("Upload failed", error);
+            },
+            () => {
+              // Handle successful uploads on complete
+              getDownloadURL(uploadTask.snapshot.ref).then((photoURL) => {
+              console.log("File available at", photoURL);
+              setPreviewUrl(photoURL);
+              setPhotoUrl(photoURL);
+          });
         }
-      };
+      );
+      }
+    };
 
       const handleGender = async (event) => {
         setGender(event.target.value);
@@ -83,18 +102,16 @@ export function EditProfile() {
 
     const handleSubmit = async (e) => { 
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('profileImage', profileImage);
-        formData.append('username', username);
-        formData.append('gender', gender);
-        formData.append('age', age);
-        formData.append('weight', weight);
-        formData.append('height', height);
         try { 
-            const responseUpdate = await axios.post(`https://be-um-fitness.vercel.app/profile/uploadProfileImage/${uid}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+            const responseUpdate = await axios.post(`https://be-um-fitness.vercel.app/profile/uploadProfileImage/${uid}`, {
+                updates: {
+                    photoURL:photoUrl,
+                    username,
+                    gender,
+                    age,
+                    weight,
+                    height
+                  }
             });
             setUserData(responseUpdate.data);
             setEditProfileStatus(responseUpdate.data.message);
