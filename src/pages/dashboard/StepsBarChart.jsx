@@ -25,14 +25,13 @@ export default function StepsBarChart() {
   
         const response = await axios.get(`https://be-um-fitness.vercel.app/steps/getStepCountByUid/${uid}`);
         
-        const stepsData = response.data.steps?.stepsByDay || [];
-        console.log(stepsData);
-        console.log(stepsData.length);
+        const stepsData = response.data.steps?.stepsByDay || {};
         let fetchedData = Object.entries(stepsData).map(([date, steps]) => ({
           date,
           steps,
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
-  
+        console.log(fetchedData);
+        setStepsData(fetchedData);
        const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
   
         // Find index for the current day
@@ -110,7 +109,7 @@ export default function StepsBarChart() {
           />
         </LocalizationProvider>
       </Box>
-      {stepsData.length > 0 ? (
+      {stepsData.length > 0 || 'undefined'? (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
         <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
           <ArrowBackIos />
