@@ -84,6 +84,10 @@ export function CompleteProfile() {
         backgroundImage: `url(${backGround})`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
+        minHeight: '100vh', // Ensure it covers at least the height of the viewport
+        '@media (max-width: 768px)': {
+          backgroundSize: 'contain', // Adjust background size on smaller screens
+        }
       }}
     >
       <Paper
