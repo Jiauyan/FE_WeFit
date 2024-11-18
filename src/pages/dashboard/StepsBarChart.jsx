@@ -23,9 +23,11 @@ export default function StepsBarChart() {
         const uid = user?.uid;
         if (!uid) return;
   
-        const response = await axios.get(`http://localhost:3000/steps/getStepCountByUid/${uid}`);
-        const stepsData = response.data.steps.stepsByDay;
-  
+        const response = await axios.get(`https://be-um-fitness.vercel.app/steps/getStepCountByUid/${uid}`);
+        console.log(response);
+        const stepsData = response.data.steps?.stepsByDay;
+        console.log(stepsData);
+
         let fetchedData = Object.entries(stepsData).map(([date, steps]) => ({
           date,
           steps,
