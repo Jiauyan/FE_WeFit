@@ -20,7 +20,6 @@ import {  useNavigate, Outlet } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Edit from '@mui/icons-material/Edit';
-import CloudUpload from '@mui/icons-material/CloudUpload';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
 
