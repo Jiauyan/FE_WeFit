@@ -222,8 +222,8 @@ export function AddTrainingProgram() {
     }
   };
 
-  const handleFeeChange = (event) => {
-    let value = parseFloat(event.target.value);
+  const handleFeeChange = (feeAmount) => {
+    let value = parseFloat(feeAmount);
     if (!isNaN(value)) {
       value = value.toFixed(2); // Formats the number to two decimal places
       setFeeAmount(value);
@@ -409,7 +409,7 @@ export function AddTrainingProgram() {
                 onChange={(e) => {
                   setFeeType(e.target.value);
                   if (e.target.value === 'Free') {
-                    handleFeeChange(0); 
+                    handleFeeChange(0.00); 
                   } else {
                     handleFeeChange(e.target.value); 
                   }
@@ -430,7 +430,7 @@ export function AddTrainingProgram() {
                 label="Enter Fee Amount"
                 type="text" // Change to text to avoid automatic number handling
                 value={feeAmount}
-                onChange={handleFeeChange}
+                onChange={(e) => handleFeeChange(e.target.value)}
                 InputProps={{
                   inputProps: { min: 0 }, // Ensures no negative values
                   startAdornment: <InputAdornment position="start">RM</InputAdornment>,
