@@ -30,7 +30,7 @@ export default function StepsBarChart() {
           date,
           steps,
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
-        console.log(fetchedData);
+        console.log(fetchedData.length());
         setStepsData(fetchedData);
        const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
   
