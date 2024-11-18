@@ -30,8 +30,7 @@ export default function StepsBarChart() {
           date,
           steps,
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
-        console.log(fetchedData.length());
-        setStepsData(fetchedData);
+
        const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
   
         // Find index for the current day
@@ -109,7 +108,7 @@ export default function StepsBarChart() {
           />
         </LocalizationProvider>
       </Box>
-      {stepsData.length > 0 || 'undefined'? (
+      {Object.keys(stepsData).length? (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
         <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
           <ArrowBackIos />
