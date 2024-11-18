@@ -197,7 +197,7 @@ export function AddTrainingProgram() {
           typeOfTrainingProgram : typeOfTrainingProgram,
           capacity : Number(capacity),
           feeType : feeType,
-          feeAmount : Number(feeAmount),
+          feeAmount : parseFloat(feeAmount),
           venueType : venueType,
           venue : venue,
           fitnessLevel : fitnessLevel,
@@ -219,6 +219,16 @@ export function AddTrainingProgram() {
         } else {
             setAddTrainingProgramStatus('An unexpected error occurred');
         }
+    }
+  };
+
+  const handleFeeChange = (event) => {
+    let value = parseFloat(event.target.value);
+    if (!isNaN(value)) {
+      value = value.toFixed(2); // Formats the number to two decimal places
+      setFeeAmount(value);
+    } else {
+      setFeeAmount(''); // Reset or handle invalid numbers
     }
   };
 
@@ -399,9 +409,9 @@ export function AddTrainingProgram() {
                 onChange={(e) => {
                   setFeeType(e.target.value);
                   if (e.target.value === 'Free') {
-                    setFeeAmount(0); 
+                    handleFeeChange(0); 
                   } else {
-                    setFeeAmount(e.target.value); 
+                    handleFeeChange(e.target.value); 
                   }
                 }}
                 fullWidth
@@ -413,19 +423,19 @@ export function AddTrainingProgram() {
             </FormControl>
 
             {feeType === 'Paid' && (
-              <TextField
+                <TextField
                 margin="normal"
                 fullWidth
                 id="training-fee"
                 label="Enter Fee Amount"
-                type="number"
+                type="text" // Change to text to avoid automatic number handling
                 value={feeAmount}
-                onChange={(e) => setFeeAmount(e.target.value)}
+                onChange={handleFeeChange}
                 InputProps={{
-                  inputProps: { min: 0 },  // Ensures no negative values
-                  startAdornment: <InputAdornment position="start">RM</InputAdornment>,  // RM symbol
+                  inputProps: { min: 0 }, // Ensures no negative values
+                  startAdornment: <InputAdornment position="start">RM</InputAdornment>,
                 }}
-              />
+           />
             )}
              <FormControl margin="normal" fullWidth>
                 <InputLabel id="venue-type-label">Venue</InputLabel>
