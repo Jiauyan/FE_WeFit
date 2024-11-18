@@ -72,6 +72,7 @@ export function EditTrainingProgram() {
   const [desc, setDesc] = useState('');
   const [slots, setSlots] = useState([]);
   const [currentSlots, setCurrentSlots] = useState([]);
+  const [storedSlots, setStoredSlots] = useState([]);
   const [currentDate, setCurrentDate] = useState(null);
   const [currentStartTime, setCurrentStartTime] = useState(null);
   const [currentEndTime, setCurrentEndTime] = useState(null);
@@ -120,6 +121,7 @@ export function EditTrainingProgram() {
             setTypeOfExercise(data.typeOfExercise);
             setSlots(data.slots);
             setCurrentSlots(data.slots);
+            setStoredSlots(data.slots);
             setDesc(data.desc);
             setCurrentDate(data.currentDate);
             setCurrentStartTime(data.currentStartTime);
@@ -185,11 +187,6 @@ const handleFileChange = (e) => {
         alert("This slot has already been added. Please choose a different time.");
         return;
       }
-      // // Check for duplicate slot in the current session
-      // if (currentSlots.some(slot => slot.time === newSlot.time)) {
-      //   alert("This slot has already been added. Please choose a different time.");
-      //   return;
-      // }
 
       // Fetch existing programs and their slots
       const existingPrograms = await fetchExistingPrograms();
@@ -201,13 +198,33 @@ const handleFileChange = (e) => {
         return;
       }
       
-      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
-      setSlots(prevSlots => [...prevSlots, newSlot]);
+      setCurrentSlots(prevCurrentSlots => {
+        // Add the new slot and then sort all slots
+        const updatedSlots = sortSlots([...prevCurrentSlots, newSlot]);
+        return updatedSlots;
+      });
+  
+      setSlots(prevSlots => {
+        // Add the new slot and then sort all slots
+        const updatedSlots = sortSlots([...prevSlots, newSlot]);
+        return updatedSlots;
+      });
       setCurrentDate(null);
       setCurrentStartTime(null);
       setCurrentEndTime(null);
       handleClose();
     }
+  };
+
+  const parseDateTime = (slot) => {
+    const [datePart, timePart] = slot.time.split(' - ');
+    const startTime = timePart.split(' to ')[0];
+    const dateTime = new Date(`${datePart} ${startTime}`);
+    return dateTime.getTime();  // Use getTime for a straightforward numeric comparison
+  };
+  
+  const sortSlots = (slots) => {
+    return slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
   };
 
   const fetchExistingPrograms = async () => {
@@ -259,29 +276,39 @@ const isSlotClashing = (newSlot, existingSlots) => {
         return (newStart < existingEnd && newEnd > existingStart);
     });
 };
+
   const handleRemoveSlot = async () => {
     if (indexToDelete === null) return;
 
     const trainingProgramID = trainingProgramData.id;
-    try {
-        // If your backend requires, send a request to delete this slot
-        const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/deleteSlot', {
-          id : trainingProgramID,
-          slotToDelete : slotToDelete
-        });
+     // Check if the slot to delete exists in the current slots from the fetched data
+     if (storedSlots.includes(slotToDelete)) {
+      // Slot exists in the backend, proceed to delete from the backend
+      try {
+          const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/deleteSlot', {
+            id: trainingProgramID,
+            slotToDelete: slotToDelete  // Assuming slotToDelete contains sufficient information for deletion
+          });
 
-        if (response.data.success) {
-          // Update the local state to reflect this deletion
-          setCurrentSlots(prev => prev.filter((_, index) => index !== indexToDelete));
-          setSlots(prev => prev.filter((_, index) => index !== indexToDelete));
-    
-          // Close the delete confirmation modal
-          handleCloseDeleteSlot();
-        } else {
-          alert(`Cannot delete slot: ${response.data.reason}`);
-        }
-    } catch (error) {
-        console.error('There was an error deleting the slot!', error);
+          if (response.data.success) {
+            // Update the local state to reflect this deletion
+            const filteredSlots = [...slots];
+            filteredSlots.splice(indexToDelete, 1);
+            setCurrentSlots(filteredSlots);
+            setSlots(filteredSlots);
+            handleCloseDeleteSlot();
+          } else {
+            alert(`Cannot delete slot: ${response.data.reason}`);
+          }
+      } catch (error) {
+          console.error('There was an error deleting the slot!', error);
+      }
+    } else {
+      const newSlots = [...slots];
+      newSlots.splice(indexToDelete, 1);
+      setSlots(newSlots);
+      setCurrentSlots(newSlots);
+      handleCloseDeleteSlot();
     }
   };
 
