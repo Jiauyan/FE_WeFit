@@ -307,7 +307,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
             typeOfExercise : typeOfExercise,
             desc : desc,
             slots : slots,
-            downloadUrl : downloadUrl
+            downloadUrl : previewUrl
            }
         });
         setUpdateTrainingProgramStatus(response.data.message);
