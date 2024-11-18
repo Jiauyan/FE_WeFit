@@ -101,7 +101,7 @@ export function StudentList() {
               color: "textSecondary", 
             }}
           >
-            All Students ( {slot.time} )
+            Student List ( {slot.time} )
           </Typography>
           <Typography 
             variant="body1" 
@@ -109,7 +109,7 @@ export function StudentList() {
               color: "textSecondary", 
             }}
           >
-            {slot.enrolled} / {slot.capacity}
+            {filteredStudents.length} / {slot.capacity}
           </Typography>
         </Box>
         {filteredStudents.length === 0 ? (
