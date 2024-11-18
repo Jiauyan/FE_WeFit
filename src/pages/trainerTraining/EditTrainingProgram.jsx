@@ -51,7 +51,13 @@ const style = {
 export function EditTrainingProgram() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    // Reset all slot input fields when opening the modal
+    setCurrentDate(null);
+    setCurrentStartTime(null);
+    setCurrentEndTime(null);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
   const [title, setTitle] = useState('');
   const [typeOfTrainingProgram, setTypeOfTrainingProgram] = useState('');

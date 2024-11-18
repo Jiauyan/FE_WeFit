@@ -52,7 +52,13 @@ const style = {
 export function AddTrainingProgram() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    // Reset all slot input fields when opening the modal
+    setCurrentDate(null);
+    setCurrentStartTime(null);
+    setCurrentEndTime(null);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
   const [title, setTitle] = useState('');
   const [typeOfTrainingProgram, setTypeOfTrainingProgram] = useState('');
@@ -184,8 +190,10 @@ export function AddTrainingProgram() {
   };
 
   const handleRemoveSlot = (index) => {
-    setSlots(prevSlots => prevSlots.filter((_, i) => i !== index));
-    setCurrentSlots(prevSlots => prevSlots.filter((_, i) => i !== index));
+    const newSlots = [...slots];
+    newSlots.splice(index, 1);
+    setSlots(newSlots);
+    setCurrentSlots(newSlots);  // Keep currentSlots in sync with slots
   };
 
   const handleSubmit = async (e) => { 
