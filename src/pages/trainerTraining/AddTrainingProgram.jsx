@@ -197,7 +197,7 @@ export function AddTrainingProgram() {
           typeOfTrainingProgram : typeOfTrainingProgram,
           capacity : Number(capacity),
           feeType : feeType,
-          feeAmount : parseFloat(feeAmount),
+          feeAmount : feeAmount,
           venueType : venueType,
           venue : venue,
           fitnessLevel : fitnessLevel,
@@ -226,6 +226,7 @@ export function AddTrainingProgram() {
     let value = parseFloat(feeAmount);
     if (!isNaN(value)) {
       value = value.toFixed(2); // Formats the number to two decimal places
+      console.log(value);
       setFeeAmount(value);
     } else {
       setFeeAmount(''); // Reset or handle invalid numbers
