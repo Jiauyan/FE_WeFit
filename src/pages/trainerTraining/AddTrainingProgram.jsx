@@ -127,9 +127,7 @@ export function AddTrainingProgram() {
       const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
 
       setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
-      const updatedSlots = sortSlots([...currentSlots, newSlot]);
-      console.log(currentSlots);
-      console.log(updatedSlots);
+
       if (isSlotClashing(newSlot, currentSlots)) {
         alert("This slot has already been added. Please choose a different time.");
         return;
@@ -144,16 +142,33 @@ export function AddTrainingProgram() {
         alert("This slot overlaps with an existing one. Please choose a different time.");
         return;
       }
-
-      //setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
-      //setSlots(prevSlots => [...prevSlots, newSlot]);
-      setSlots(updatedSlots);
-      setCurrentSlots(updatedSlots);
+      setCurrentSlots(prevCurrentSlots => {
+        // Add the new slot and then sort all slots
+        const updatedSlots = sortSlots([...prevCurrentSlots, newSlot]);
+        return updatedSlots;
+      });
+  
+      setSlots(prevSlots => {
+        // Add the new slot and then sort all slots
+        const updatedSlots = sortSlots([...prevSlots, newSlot]);
+        return updatedSlots;
+      });
       setCurrentDate(null);
       setCurrentStartTime(null);
       setCurrentEndTime(null);
       handleClose();
     }
+  };
+
+  const parseDateTime = (slot) => {
+    const [datePart, timePart] = slot.time.split(' - ');
+    const startTime = timePart.split(' to ')[0];
+    const dateTime = new Date(`${datePart} ${startTime}`);
+    return dateTime.getTime();  // Use getTime for a straightforward numeric comparison
+  };
+  
+  const sortSlots = (slots) => {
+    return slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
   };
 
   const fetchExistingPrograms = async () => {
@@ -196,22 +211,8 @@ export function AddTrainingProgram() {
   const handleRemoveSlot = (index) => {
     const newSlots = [...slots];
     newSlots.splice(index, 1);
-    const sortedSlots = sortSlots(newSlots);
-    setSlots(sortedSlots);
-    setCurrentSlots(sortedSlots);  // Keep currentSlots in sync with slots
-  };
-
-  const parseDateTime = (slotString) => {
-    const [datePart, timePart] = slotTime.split(" - ");
-    const [startTime, endTime] = timePart.split(" to ");
-  
-    // Combine date with start time (end time is not needed for sorting)
-    const dateTime = new Date(`${datePart} ${startTime}`);
-    return dateTime;
-  };
-  
-  const sortSlots = (slots) => {
-    return slots.sort((a, b) => parseDateTime(a.time) - parseDateTime(b.time));
+    setSlots(newSlots);
+    setCurrentSlots(newSlots);  // Keep currentSlots in sync with slots
   };
 
   const handleSubmit = async (e) => { 
