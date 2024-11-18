@@ -74,15 +74,19 @@ export function FavClass() {
         container
         component="main"
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 3,
-          width: '100%', // Ensures the grid takes full width,
-          backgroundImage: `url(${backGround})`,
-          backgroundPosition: 'center', 
-          backgroundSize: 'cover',
-        }}
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 3,
+            width: '100%',
+            backgroundImage: `url(${backGround})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            minHeight: '100vh', // Ensure it covers at least the height of the viewport
+            '@media (max-width: 768px)': {
+              backgroundSize: 'contain', // Adjust background size on smaller screens
+            }
+          }}
       >
         <Paper sx={{
             width: { xs: '100%', sm: '90%', md: '80%', lg: '737px' }, // Responsive width
