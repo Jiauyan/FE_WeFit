@@ -185,7 +185,7 @@ export function AddTrainingProgram() {
 
   const handleRemoveSlot = (index) => {
     setSlots(prevSlots => prevSlots.filter((_, i) => i !== index));
-    setCurrentSlots(prev => prevSlots.filter((_, i) => i !== index));
+    setCurrentSlots(prevSlots => prevSlots.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => { 
