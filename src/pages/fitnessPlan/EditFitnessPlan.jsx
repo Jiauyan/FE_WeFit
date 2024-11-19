@@ -127,10 +127,11 @@ export function EditFitnessPlan() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const formattedDate = format(date, 'dd/MM/yyyy');
             await axios.patch(`https://be-um-fitness.vercel.app/fitnessPlan/updateFitnessPlan/${id}`, {
                 uid,
                 title,
-                date,
+                date : formattedDate,
                 completeCount,
                 totalCount,
                 createdAt
