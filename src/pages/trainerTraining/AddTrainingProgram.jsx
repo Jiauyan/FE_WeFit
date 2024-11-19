@@ -54,7 +54,7 @@ export function AddTrainingProgram() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     // Reset all slot input fields when opening the modal
-    setCurrentDate(null);
+    setCurrentDate(new Date());
     setCurrentStartTime(null);
     setCurrentEndTime(null);
     setOpen(true);
