@@ -628,7 +628,6 @@ export function AddTrainingProgram() {
             sx={{ marginBottom: 2, width: "100%" }} 
             minDate={new Date()}
           />
-
           <TimePicker
             label="Select Start Time"
             value={currentStartTime}
