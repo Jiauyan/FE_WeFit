@@ -127,11 +127,10 @@ export function EditFitnessPlan() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const formattedDate = format(date, 'dd/MM/yyyy');
             await axios.patch(`https://be-um-fitness.vercel.app/fitnessPlan/updateFitnessPlan/${id}`, {
                 uid,
                 title,
-                date: formattedDate,
+                date,
                 completeCount,
                 totalCount,
                 createdAt
@@ -304,10 +303,12 @@ export function EditFitnessPlan() {
                         <DatePicker
                             required
                             label="Date"
+                            format="dd/MM/yyyy"
                             value={date}
                             onChange={(newValue) => setDate(newValue)}
                             slots={{ textField: TextField }}
                             sx={{ marginBottom: 2, width: "100%" }}
+                            minDate={new Date()}
                         />
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
                             <Typography variant="subtitle1">
