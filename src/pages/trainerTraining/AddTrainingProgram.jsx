@@ -54,7 +54,7 @@ export function AddTrainingProgram() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     // Reset all slot input fields when opening the modal
-    setCurrentDate(new Date());
+    setCurrentDate(null);
     setCurrentStartTime(null);
     setCurrentEndTime(null);
     setOpen(true);
@@ -73,7 +73,7 @@ export function AddTrainingProgram() {
   const [venue, setVenue] = useState('');
   const [slots, setSlots] = useState([]);
   const [currentSlots, setCurrentSlots] = useState([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(null);
   const [currentStartTime, setCurrentStartTime] = useState(null);
   const [currentEndTime, setCurrentEndTime] = useState(null);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
@@ -86,14 +86,15 @@ export function AddTrainingProgram() {
 
   useEffect(() => {
     // Only perform the operation if currentDate is not null
-    if (currentDate && currentDate.toDateString() !== new Date().toDateString()) {
+    if (currentDate !== new Date()) {
         setCurrentStartTime(null);
     }
+    return;
 }, [currentDate]);
 
   const getMinStartTime = () => {
     const now = new Date();
-    return currentDate.toDateString() === now.toDateString() ? now : new Date(currentDate.setHours(0, 0, 0, 0));
+    return currentDate === now ? now : new Date(currentDate.setHours(0, 0, 0, 0));
   };
 
   const handleStartDateChange = (newValue) => {
