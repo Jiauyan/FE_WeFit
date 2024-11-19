@@ -32,7 +32,7 @@ import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-picker
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
-import { isToday, setHours, setMinutes, addMinutes } from 'date-fns';
+import { isToday, setHours, setMinutes, addMinutes, format } from 'date-fns';
 
 const style = {
   position: 'absolute',
@@ -172,13 +172,14 @@ const handleFileChange = (e) => {
   const handleAddSlot = async (e) => {
     e.preventDefault();
     if (currentDate && currentStartTime && currentEndTime) {
+      const formattedDate = format(currentDate, 'dd/MM/yyyy');
       const start = new Date(currentDate);
       start.setHours(currentStartTime.getHours(), currentStartTime.getMinutes());
 
       const end = new Date(currentDate);
       end.setHours(currentEndTime.getHours(), currentEndTime.getMinutes());
 
-      const slotString = `${start.toLocaleDateString()} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      const slotString = `${formattedDate} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
       const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
 
@@ -670,6 +671,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
           </Typography>
           <DatePicker
             label="Select Date"
+            format="dd/MM/yyyy"
             value={currentDate}
             onChange={(newValue) => {
               setCurrentDate(newValue);
