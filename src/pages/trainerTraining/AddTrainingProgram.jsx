@@ -85,11 +85,11 @@ export function AddTrainingProgram() {
   const uid = user?.uid;
 
   useEffect(() => {
-    // Update start time to be null if the selected date is not today's date
-    if (currentDate.toDateString() !== new Date().toDateString()) {
-      setCurrentStartTime(null);
+    // Only perform the operation if currentDate is not null
+    if (currentDate && currentDate.toDateString() !== new Date().toDateString()) {
+        setCurrentStartTime(null);
     }
-  }, [currentDate]);
+}, [currentDate]);
 
   const getMinStartTime = () => {
     const now = new Date();
