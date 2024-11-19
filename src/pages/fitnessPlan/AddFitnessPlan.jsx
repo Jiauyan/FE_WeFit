@@ -72,11 +72,11 @@ export function AddFitnessPlan() {
     e.preventDefault();
 
     try {
-        const formattedDate = format(date, 'dd/MM/yyyy');
+        //const formattedDate = format(date, 'dd/MM/yyyy');
         const response = await axios.post('https://be-um-fitness.vercel.app/fitnessPlan/addFitnessPlan',{
            uid,
            title,
-           date : formattedDate,
+           date,
            completeCount : 0,
            totalCount
         });
