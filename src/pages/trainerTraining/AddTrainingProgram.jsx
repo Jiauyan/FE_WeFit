@@ -165,12 +165,15 @@ export function AddTrainingProgram() {
   const parseDateTime = (slot) => {
     const [datePart, timePart] = slot.time.split(' - ');
     const startTime = timePart.split(' to ')[0];
-    const dateTime = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy HH:mm', new Date());
+    const dateTime = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy HH:mm');
+    console.log(`Parsed Date for slot '${slot.time}':`, dateTime);  // Debug output to verify
     return dateTime.getTime();
   };
   
   const sortSlots = (slots) => {
-    return slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
+    const sorted = slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
+    console.log("Sorted slots:", sorted.map(s => s.time));
+    return sorted;
   };
 
 
