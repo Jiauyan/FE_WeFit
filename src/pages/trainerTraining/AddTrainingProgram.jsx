@@ -33,6 +33,7 @@ import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-picker
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
+import { isToday, setHours, setMinutes, addMinutes } from 'date-fns';
 
 const style = {
   position: 'absolute',
@@ -619,25 +620,29 @@ export function AddTrainingProgram() {
           <DatePicker
             label="Select Date"
             value={currentDate}
-            onChange={(newValue) => setCurrentDate(newValue)}
-            slots={{ textField: TextField }}
-            sx={{ marginBottom: 2, width:"100%"}} 
+            onChange={(newValue) => {
+              setCurrentDate(newValue);
+              setCurrentStartTime(null); // Reset start time when date changes
+              setCurrentEndTime(null);   // Reset end time when start time changes
+            }}
+            sx={{ marginBottom: 2, width: "100%" }} 
             minDate={new Date()}
           />
+
           <TimePicker
             label="Select Start Time"
             value={currentStartTime}
             onChange={(newValue) => setCurrentStartTime(newValue)}
-            slots={{ textField: TextField }}
-            sx={{ marginBottom: 2, width:"100%"}} 
+            sx={{ marginBottom: 2, width: "100%" }}
+            minTime={isToday(currentDate) ? new Date() : undefined}
           />
+
           <TimePicker
             label="Select End Time"
             value={currentEndTime}
             onChange={(newValue) => setCurrentEndTime(newValue)}
-            slots={{ textField: TextField }}
-            sx={{ marginBottom: 2, width:"100%"}} 
-            minDate={currentStartTime}
+            sx={{ marginBottom: 2, width: "100%" }}
+            minTime={currentStartTime ? addMinutes(new Date(currentStartTime), 1) : undefined}
           />
           <GradientButton
                     type="submit"
