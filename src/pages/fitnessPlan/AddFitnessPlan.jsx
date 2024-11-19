@@ -227,7 +227,7 @@ const handleUpdateFitnessActivity = async (e) => {
             <DatePicker
             required
             label="Date"
-            inputFormat="DD-MM-YYYY"
+            format="DD-MM-YYYY"
             value={date}
             onChange={(newValue) => setDate(newValue)}
             slots={{ textField: TextField }}
