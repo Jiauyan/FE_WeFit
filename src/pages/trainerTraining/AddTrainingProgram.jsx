@@ -637,6 +637,7 @@ export function AddTrainingProgram() {
             onChange={(newValue) => setCurrentEndTime(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
+            minDate={currentStartTime}
           />
           <GradientButton
                     type="submit"

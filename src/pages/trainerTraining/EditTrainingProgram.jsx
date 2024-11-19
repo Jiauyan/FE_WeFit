@@ -53,7 +53,7 @@ export function EditTrainingProgram() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     // Reset all slot input fields when opening the modal
-    setCurrentDate(new Date());
+    setCurrentDate(null);
     setCurrentStartTime(null);
     setCurrentEndTime(null);
     setOpen(true);
@@ -73,7 +73,7 @@ export function EditTrainingProgram() {
   const [slots, setSlots] = useState([]);
   const [currentSlots, setCurrentSlots] = useState([]);
   const [storedSlots, setStoredSlots] = useState([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(null);
   const [currentStartTime, setCurrentStartTime] = useState(null);
   const [currentEndTime, setCurrentEndTime] = useState(null);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
@@ -89,25 +89,6 @@ export function EditTrainingProgram() {
   const [openDeleteSlot, setOpenDeleteSlot] = useState(false);
   const [indexToDelete, setIndexToDelete] = useState(null);
   const [slotToDelete, setSlotToDelete] = useState(null);
-
-  useEffect(() => {
-    // Only perform the operation if currentDate is not null
-    if (currentDate && currentDate.toDateString() !== new Date().toDateString()) {
-        setCurrentStartTime(null);
-    }
-}, [currentDate]);
-
-  const getMinStartTime = () => {
-    const now = new Date();
-    return currentDate.toDateString() === now.toDateString() ? now : new Date(currentDate.setHours(0, 0, 0, 0));
-  };
-
-  const handleStartDateChange = (newValue) => {
-    setCurrentStartTime(newValue);
-    if (currentEndTime && newValue && newValue >= currentEndTime) {
-      setCurrentEndTime(null); // Reset end time if start time is after or the same as end time
-    }
-  };
 
   const handleOpenDeleteSlot = (index, slot) => {
       setIndexToDelete(index);
@@ -688,7 +669,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
           </Typography>
           <DatePicker
             label="Select Date"
-            //value={currentDate || null}
+            value={currentDate || null}
             onChange={(newValue) => setCurrentDate(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
@@ -699,8 +680,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
             value={currentStartTime || null}
             onChange={(newValue) => setCurrentStartTime(newValue)}
             slots={{ textField: TextField }}
-            sx={{ marginBottom: 2, width:"100%"}}
-            minTime={getMinStartTime()} 
+            sx={{ marginBottom: 2, width:"100%"}} 
           />
           <TimePicker
             label="Select End Time"
@@ -708,7 +688,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
             onChange={(newValue) => setCurrentEndTime(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
-            minTime={currentStartTime ? new Date(currentStartTime.getTime() + 60000) : null} // 1 minute after start time
+            minDate={currentStartTime}
           />
           <GradientButton
                     type="submit"
