@@ -85,18 +85,15 @@ export function AddTrainingProgram() {
   const uid = user?.uid;
 
   useEffect(() => {
-    console.log(currentDate);
-    console.log(new Date())
     // Only perform the operation if currentDate is not null
-    if (currentDate != new Date()) {
+    if (currentDate && currentDate.toDateString() !== new Date().toDateString()) {
         setCurrentStartTime(null);
     }
-    return;
 }, [currentDate]);
 
   const getMinStartTime = () => {
     const now = new Date();
-    return currentDate == now ? now : new Date(currentDate.setHours(0, 0, 0, 0));
+    return currentDate.toDateString() === now.toDateString() ? now : new Date(currentDate.setHours(0, 0, 0, 0));
   };
 
   const handleStartDateChange = (newValue) => {
@@ -641,7 +638,7 @@ export function AddTrainingProgram() {
           </Typography>
           <DatePicker
             label="Select Date"
-            //value={currentDate}
+            value={currentDate}
             onChange={(newValue) => setCurrentDate(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
