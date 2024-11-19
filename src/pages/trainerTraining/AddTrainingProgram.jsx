@@ -85,7 +85,6 @@ export function AddTrainingProgram() {
   const uid = user?.uid;
 
   useEffect(() => {
-    // Only perform the operation if currentDate is not null
     if (currentDate && currentDate.toDateString() !== new Date().toDateString()) {
         setCurrentStartTime(null);
     }
@@ -637,12 +636,15 @@ export function AddTrainingProgram() {
             Add the Slot
           </Typography>
           <DatePicker
-            label="Select Date"
-            value={currentDate}
-            onChange={(newValue) => setCurrentDate(newValue)}
-            slots={{ textField: TextField }}
-            sx={{ marginBottom: 2, width:"100%"}} 
-            minDate={new Date()}
+              label="Select Date"
+              value={currentDate}
+              onChange={(newValue) => {
+                  if(newValue !== null) {
+                      setCurrentDate(newValue);
+                  }
+              }}
+              renderInput={(params) => <TextField {...params} />}
+              minDate={new Date()}
           />
           <TimePicker
             label="Select Start Time"
