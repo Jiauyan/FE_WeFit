@@ -165,7 +165,7 @@ export function AddTrainingProgram() {
   const parseDateTime = (slot) => {
     const [datePart, timePart] = slot.time.split(' - ');
     const startTime = timePart.split(' to ')[0];
-    const dateTime = parse(`${datePart} ${startTime}`, 'MM/dd/yyyy HH:mm', new Date());
+    const dateTime = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy HH:mm', new Date());
     return dateTime.getTime();
   };
   
