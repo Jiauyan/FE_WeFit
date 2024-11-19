@@ -33,7 +33,7 @@ import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-picker
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
-import { isToday, setHours, setMinutes, addMinutes,format} from 'date-fns';
+import { isToday, setHours, setMinutes, addMinutes,format,compareAsc} from 'date-fns';
 
 const style = {
   position: 'absolute',
@@ -144,17 +144,8 @@ export function AddTrainingProgram() {
         alert("This slot overlaps with an existing one. Please choose a different time.");
         return;
       }
-      setCurrentSlots(prevCurrentSlots => {
-        // Add the new slot and then sort all slots
-        const updatedSlots = sortSlots([...prevCurrentSlots, newSlot]);
-        return updatedSlots;
-      });
-  
-      setSlots(prevSlots => {
-        // Add the new slot and then sort all slots
-        const updatedSlots = sortSlots([...prevSlots, newSlot]);
-        return updatedSlots;
-      });
+      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot].sort(sortSlots));
+      setSlots(prevSlots => [...prevSlots, newSlot].sort(sortSlots));
       setCurrentDate(null);
       setCurrentStartTime(null);
       setCurrentEndTime(null);
@@ -165,12 +156,12 @@ export function AddTrainingProgram() {
   const parseDateTime = (slot) => {
     const [datePart, timePart] = slot.time.split(' - ');
     const startTime = timePart.split(' to ')[0];
-    const dateTime = new Date(`${datePart} ${startTime}`);
-    return dateTime.getTime();  // Use getTime for a straightforward numeric comparison
+    const dateTime = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy HH:mm', new Date());
+    return dateTime.getTime();
   };
   
-  const sortSlots = (slots) => {
-    return slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
+  const sortSlots = (a, b) => {
+    return compareAsc(parseDateTime(a), parseDateTime(b));
   };
 
   const fetchExistingPrograms = async () => {
