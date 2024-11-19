@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate, Outlet } from 'react-router-dom';
@@ -54,7 +54,7 @@ export function AddTrainingProgram() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     // Reset all slot input fields when opening the modal
-    setCurrentDate(new Date());
+    setCurrentDate(null);
     setCurrentStartTime(null);
     setCurrentEndTime(null);
     setOpen(true);
@@ -73,7 +73,7 @@ export function AddTrainingProgram() {
   const [venue, setVenue] = useState('');
   const [slots, setSlots] = useState([]);
   const [currentSlots, setCurrentSlots] = useState([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(null);
   const [currentStartTime, setCurrentStartTime] = useState(null);
   const [currentEndTime, setCurrentEndTime] = useState(null);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
@@ -83,25 +83,6 @@ export function AddTrainingProgram() {
   const [addTrainingProgramStatus, setAddTrainingProgramStatus] = useState('');
   const { user } = useUser();
   const uid = user?.uid;
-
-  useEffect(() => {
-    if (currentDate && currentDate.toDateString() !== new Date().toDateString()) {
-        setCurrentStartTime(null);
-    }
-}, [currentDate]);
-
-  const getMinStartTime = () => {
-    const now = new Date();
-    return currentDate.toDateString() === now.toDateString() ? now : new Date(currentDate.setHours(0, 0, 0, 0));
-  };
-
-  const handleStartDateChange = (newValue) => {
-    setCurrentStartTime(newValue);
-    if (currentEndTime && newValue && newValue >= currentEndTime) {
-      setCurrentEndTime(null); // Reset end time if start time is after or the same as end time
-    }
-  };
-
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -636,15 +617,12 @@ export function AddTrainingProgram() {
             Add the Slot
           </Typography>
           <DatePicker
-              label="Select Date"
-              value={currentDate}
-              onChange={(newValue) => {
-                  if(newValue !== null) {
-                      setCurrentDate(newValue);
-                  }
-              }}
-              renderInput={(params) => <TextField {...params} />}
-              minDate={new Date()}
+            label="Select Date"
+            value={currentDate}
+            onChange={(newValue) => setCurrentDate(newValue)}
+            slots={{ textField: TextField }}
+            sx={{ marginBottom: 2, width:"100%"}} 
+            minDate={new Date()}
           />
           <TimePicker
             label="Select Start Time"
@@ -652,7 +630,6 @@ export function AddTrainingProgram() {
             onChange={(newValue) => setCurrentStartTime(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
-            minTime={getMinStartTime()}
           />
           <TimePicker
             label="Select End Time"
@@ -660,7 +637,6 @@ export function AddTrainingProgram() {
             onChange={(newValue) => setCurrentEndTime(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
-            minTime={currentStartTime ? new Date(currentStartTime.getTime() + 60000) : null} // 1 minute after start time
           />
           <GradientButton
                     type="submit"
