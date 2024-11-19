@@ -26,6 +26,19 @@ export function ForgotPassword() {
 
     const handleEmailCheck = async (e) => {
         e.preventDefault();
+
+        // Validation
+        let isValid = true;
+        if (!email) {
+          setEmailError("Email is required");
+          isValid = false;
+        } else if (!validateEmail(email)) {
+          setEmailError("Invalid email address");
+          isValid = false;
+        } else {
+          setEmailError("");
+        }
+        if (!isValid) return;
         setLoading(true);
         try {
             const checkResponse = await axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail', { email });
@@ -72,6 +85,11 @@ export function ForgotPassword() {
     const handleCloseNotification = () => {
         setNotification({ ...notification, open: false });
     };
+
+    const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+      };
 
     return (
         <Grid 
