@@ -26,6 +26,7 @@ export function ForgotPassword() {
 
     const handleEmailCheck = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const checkResponse = await axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail', { email });
             if (checkResponse.data) {
@@ -37,7 +38,9 @@ export function ForgotPassword() {
         } catch (error) {
             setResetPasswordStatus('Error checking email.');
             alert('Error checking email.');
-        }
+        }finally {
+            setLoading(false); // Stop loading
+          }
     };
 
     const sendResetLink = async () => { 
@@ -61,7 +64,9 @@ export function ForgotPassword() {
             } else {
                 setResetPasswordStatus('An unexpected error occurred');
             }
-        }
+        } finally {
+            setLoading(false); // Stop loading
+          }
     };
 
     const handleCloseNotification = () => {
