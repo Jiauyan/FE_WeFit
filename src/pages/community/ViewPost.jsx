@@ -45,7 +45,7 @@ export function ViewPost() {
   }, [postUserID]); 
 
     const handleBack = async () => {
-      navigate("/community");
+      navigate(-1);
     }; 
 
   return (
