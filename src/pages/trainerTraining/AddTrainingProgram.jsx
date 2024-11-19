@@ -73,7 +73,7 @@ export function AddTrainingProgram() {
   const [venue, setVenue] = useState('');
   const [slots, setSlots] = useState([]);
   const [currentSlots, setCurrentSlots] = useState([]);
-  const [currentDate, setCurrentDate] = useState(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [currentStartTime, setCurrentStartTime] = useState(null);
   const [currentEndTime, setCurrentEndTime] = useState(null);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
@@ -83,6 +83,26 @@ export function AddTrainingProgram() {
   const [addTrainingProgramStatus, setAddTrainingProgramStatus] = useState('');
   const { user } = useUser();
   const uid = user?.uid;
+
+  useEffect(() => {
+    // Update start time to be null if the selected date is not today's date
+    if (currentDate.toDateString() !== new Date().toDateString()) {
+      setCurrentStartTime(null);
+    }
+  }, [currentDate]);
+
+  const getMinStartTime = () => {
+    const now = new Date();
+    return currentDate.toDateString() === now.toDateString() ? now : new Date(currentDate.setHours(0, 0, 0, 0));
+  };
+
+  const handleStartDateChange = (newValue) => {
+    setCurrentStartTime(newValue);
+    if (currentEndTime && newValue && newValue >= currentEndTime) {
+      setCurrentEndTime(null); // Reset end time if start time is after or the same as end time
+    }
+  };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -630,6 +650,7 @@ export function AddTrainingProgram() {
             onChange={(newValue) => setCurrentStartTime(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
+            minTime={getMinStartTime()}
           />
           <TimePicker
             label="Select End Time"
@@ -637,6 +658,7 @@ export function AddTrainingProgram() {
             onChange={(newValue) => setCurrentEndTime(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
+            minTime={currentStartTime ? new Date(currentStartTime.getTime() + 60000) : null} // 1 minute after start time
           />
           <GradientButton
                     type="submit"
