@@ -199,7 +199,6 @@ const handleFileChange = (e) => {
         alert("This slot overlaps with an existing one. Please choose a different time.");
         return;
       }
-      
       setCurrentSlots(prevCurrentSlots => {
         // Add the new slot and then sort all slots
         const updatedSlots = sortSlots([...prevCurrentSlots, newSlot]);
