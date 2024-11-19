@@ -117,14 +117,14 @@ export function AddTrainingProgram() {
   const handleAddSlot = async (e) => {
     e.preventDefault();
     if (currentDate && currentStartTime && currentEndTime) {
-      const date = new Date(currentDate);
-      const start = format(date, 'dd/MM/yyyy');
+      const formattedDate = format(currentDate, 'dd/MM/yyyy');
+      const start = new Date(currentDate);
       start.setHours(currentStartTime.getHours(), currentStartTime.getMinutes());
 
       const end = new Date(currentDate);
       end.setHours(currentEndTime.getHours(), currentEndTime.getMinutes());
 
-      const slotString = `${start.toLocaleDateString()} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      const slotString = `${formattedDate} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
       const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
 
@@ -620,6 +620,7 @@ export function AddTrainingProgram() {
           </Typography>
           <DatePicker
             label="Select Date"
+            format="dd/MM/yyyy"
             value={currentDate}
             onChange={(newValue) => {
               setCurrentDate(newValue);
