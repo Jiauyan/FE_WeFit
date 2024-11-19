@@ -227,10 +227,12 @@ const handleUpdateFitnessActivity = async (e) => {
             <DatePicker
             required
             label="Date"
+            inputFormat="DD-MM-YYYY"
             value={date}
             onChange={(newValue) => setDate(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
+            minDate={new Date()}
           />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
               <Typography variant="subtitle1">

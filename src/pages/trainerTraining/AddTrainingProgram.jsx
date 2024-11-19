@@ -33,7 +33,7 @@ import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-picker
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
-import { isToday, setHours, setMinutes, addMinutes } from 'date-fns';
+import { isToday, setHours, setMinutes, addMinutes,format} from 'date-fns';
 
 const style = {
   position: 'absolute',
@@ -117,7 +117,8 @@ export function AddTrainingProgram() {
   const handleAddSlot = async (e) => {
     e.preventDefault();
     if (currentDate && currentStartTime && currentEndTime) {
-      const start = new Date(currentDate);
+      const date = new Date(currentDate);
+      const start = format(date, 'dd/MM/yyyy');
       start.setHours(currentStartTime.getHours(), currentStartTime.getMinutes());
 
       const end = new Date(currentDate);
