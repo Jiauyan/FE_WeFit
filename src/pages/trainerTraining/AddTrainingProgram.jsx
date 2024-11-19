@@ -638,7 +638,7 @@ export function AddTrainingProgram() {
           </Typography>
           <DatePicker
             label="Select Date"
-            value={currentDate}
+            //value={currentDate}
             onChange={(newValue) => setCurrentDate(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
