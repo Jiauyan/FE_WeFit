@@ -144,8 +144,17 @@ export function AddTrainingProgram() {
         alert("This slot overlaps with an existing one. Please choose a different time.");
         return;
       }
-      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot].sort(sortSlots));
-      setSlots(prevSlots => [...prevSlots, newSlot].sort(sortSlots));
+      setCurrentSlots(prevCurrentSlots => {
+        // Add the new slot and then sort all slots
+        const updatedSlots = sortSlots([...prevCurrentSlots, newSlot]);
+        return updatedSlots;
+      });
+  
+      setSlots(prevSlots => {
+        // Add the new slot and then sort all slots
+        const updatedSlots = sortSlots([...prevSlots, newSlot]);
+        return updatedSlots;
+      });
       setCurrentDate(null);
       setCurrentStartTime(null);
       setCurrentEndTime(null);
@@ -156,13 +165,14 @@ export function AddTrainingProgram() {
   const parseDateTime = (slot) => {
     const [datePart, timePart] = slot.time.split(' - ');
     const startTime = timePart.split(' to ')[0];
-    const dateTime = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy HH:mm', new Date());
+    const dateTime = parse(`${datePart} ${startTime}`, 'MM/dd/yyyy HH:mm', new Date());
     return dateTime.getTime();
   };
   
-  const sortSlots = (a, b) => {
-    return compareAsc(parseDateTime(a), parseDateTime(b));
+  const sortSlots = (slots) => {
+    return slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
   };
+
 
   const fetchExistingPrograms = async () => {
     try {
