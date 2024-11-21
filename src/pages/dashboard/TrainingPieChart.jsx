@@ -57,9 +57,7 @@ useEffect(() => {
             const programs = await Promise.all(programPromises);
             
             const completedPrograms = getCompletedMonthPrograms(programs, selectedMonth, selectedYear);
-            console.log(programs);
-            console.log(completedPrograms);
-            console.log()
+
             const completedYogaPrograms = completedPrograms.filter(completedProgram=> completedProgram.typeOfExercise === "Yoga");
             setCompletedYogaPrograms(completedYogaPrograms.length);
 
@@ -92,11 +90,6 @@ const getCompletedMonthPrograms = (data, selectedMonth, selectedYear) => {
   const filteredData = data.filter(entry => {
     const dateString = entry.slot.time.split(' - ')[0]; 
     const [day, month, year] = dateString.split('/');
-    
-    if (parseInt(month) > 12 || parseInt(day) > 31) {
-      console.error("Date format error or invalid date in data:", dateString);
-      return false;
-    }
 
     // Format the date string as "YYYY-MM-DD"
     const isoDateString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
