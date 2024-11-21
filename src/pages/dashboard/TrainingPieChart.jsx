@@ -19,7 +19,7 @@ export default function TrainingPieChart() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getUTCMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getUTCFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
-
+  const [bookings, setBookings] = useState([]);
 
 const COLORS = ['#1FB2B2','#8676FE','#F56081', '#ff7043', '#ffcc43','#22D3EE']; // Color declarations
 
@@ -41,7 +41,7 @@ useEffect(() => {
             if (!uid) return;
 
             const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
-            //setBookings(response.data);
+            setBookings(response.data);
 
             // Fetch training programs details for each booking
             const programPromises = response.data.map(async (booking) => {
@@ -52,11 +52,12 @@ useEffect(() => {
                     ...programResponse.data 
                 };
             });
-
+            
             const programs = await Promise.all(programPromises);
             
             const completedPrograms = getCompletedMonthPrograms(programs, selectedMonth, selectedYear);
-
+            console.log(programs);
+            console.log(completedPrograms);
             const completedYogaPrograms = completedPrograms.filter(completedProgram=> completedProgram.typeOfExercise === "Yoga");
             setCompletedYogaPrograms(completedYogaPrograms.length);
 
