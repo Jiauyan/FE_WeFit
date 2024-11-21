@@ -77,6 +77,8 @@ export function EditTrainingProgram() {
   const [currentDate, setCurrentDate] = useState(null);
   const [currentStartTime, setCurrentStartTime] = useState(null);
   const [currentEndTime, setCurrentEndTime] = useState(null);
+  const [isStartTimeValid, setIsStartTimeValid] = useState(true);
+  const [isEndTimeValid, setIsEndTimeValid] = useState(true);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); 
   const [downloadUrl, setDownloadUrl] = useState(null); 
@@ -169,64 +171,73 @@ const handleFileChange = (e) => {
 }
 };
 
-  const handleAddSlot = async (e) => {
-    e.preventDefault();
-    if (currentDate && currentStartTime && currentEndTime) {
-      const formattedDate = format(currentDate, 'dd/MM/yyyy');
-      const start = new Date(currentDate);
-      start.setHours(currentStartTime.getHours(), currentStartTime.getMinutes());
+const handleAddSlot = async (e) => {
+  e.preventDefault();
 
-      const end = new Date(currentDate);
-      end.setHours(currentEndTime.getHours(), currentEndTime.getMinutes());
+  // Initial checks for completeness of input
+  if (!currentDate || !currentStartTime || !currentEndTime) {
+      alert("Please complete all date and time fields.");
+      return;
+  }
 
-      const slotString = `${formattedDate} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  // Checks for validity of the start and end times
+  if (!isStartTimeValid || !isEndTimeValid) {
+      const message = !isStartTimeValid && !isEndTimeValid
+          ? "Invalid start time and end time."
+          : !isStartTimeValid
+          ? "Invalid start time."
+          : "Invalid end time.";
+      alert(message);
+      return;
+  }
 
-      const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
+  // Format and prepare the new slot
+  const formattedDate = format(currentDate, 'dd/MM/yyyy');
+  const start = new Date(currentDate.setHours(currentStartTime.getHours(), currentStartTime.getMinutes()));
+  const end = new Date(currentDate.setHours(currentEndTime.getHours(), currentEndTime.getMinutes()));
 
-      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
+  const slotString = `${formattedDate} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
 
-      if (isSlotClashing(newSlot, currentSlots)) {
-        alert("This slot has already been added. Please choose a different time.");
-        return;
-      }
+  // Ensure the new slot does not clash with already entered slots
+  if (isSlotClashing(newSlot, currentSlots)) {
+      alert("This slot has already been added or overlaps with another slot. Please choose a different time.");
+      return;
+  }
 
-      // Fetch existing programs and their slots
-      const existingPrograms = await fetchExistingPrograms();
-      const existingSlots = existingPrograms.flatMap(program => program.slots);
-  
-      // Check for slot clash
-      if (isSlotClashing(newSlot, existingSlots)) {
-        alert("This slot overlaps with an existing one. Please choose a different time.");
-        return;
-      }
-      setCurrentSlots(prevCurrentSlots => {
-        // Add the new slot and then sort all slots
-        const updatedSlots = sortSlots([...prevCurrentSlots, newSlot]);
-        return updatedSlots;
-      });
-  
-      setSlots(prevSlots => {
-        // Add the new slot and then sort all slots
-        const updatedSlots = sortSlots([...prevSlots, newSlot]);
-        return updatedSlots;
-      });
-      setCurrentDate(null);
-      setCurrentStartTime(null);
-      setCurrentEndTime(null);
-      handleClose();
-    }
-  };
+  // Check for clashes with existing program slots
+  const existingPrograms = await fetchExistingPrograms();
+  const existingSlots = existingPrograms.flatMap(program => program.slots);
+  if (isSlotClashing(newSlot, existingSlots)) {
+      alert("This slot overlaps with an existing program's slot. Please choose a different time.");
+      return;
+  }
 
-  const parseDateTime = (slot) => {
-    const [datePart, timePart] = slot.time.split(' - ');
-    const startTime = timePart.split(' to ')[0];
-    const dateTime = new Date(`${datePart} ${startTime}`);
-    return dateTime.getTime();  // Use getTime for a straightforward numeric comparison
-  };
-  
-  const sortSlots = (slots) => {
-    return slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
-  };
+  // Update the slots state
+  const updatedSlots = sortSlots([...currentSlots, newSlot]);
+  setCurrentSlots(updatedSlots);
+  setSlots(updatedSlots);
+
+  // Reset fields and close modal
+  setCurrentDate(null);
+  setCurrentStartTime(null);
+  setCurrentEndTime(null);
+  handleClose();
+};
+
+const parseDateTime = (slot) => {
+  const [datePart, timePart] = slot.time.split(' - ');
+  const startTime = timePart.split(' to ')[0];
+  const dateTime = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy hh:mm a', new Date());
+  console.log(`Parsing date: ${datePart} ${startTime} to timestamp: ${dateTime.getTime()}`);
+  return dateTime.getTime();
+};
+
+
+const sortSlots = (slots) => {
+  return slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
+};
+
 
   const fetchExistingPrograms = async () => {
     try {
@@ -239,44 +250,32 @@ const handleFileChange = (e) => {
     }
   };
 
+  const isSlotClashing = (newSlot, existingSlots) => {
+    const [newStart, newEnd] = parseSlotString(newSlot);
+  
+    return existingSlots.some((slotString) => {
+      const [existingStart, existingEnd] = parseSlotString(slotString);
+  
+      // Check if the new slot overlaps with any existing slots
+      return (newStart < existingEnd && newEnd > existingStart);
+    });
+  };
+  
   const parseSlotString = (slotString) => {
-    if (!slotString || typeof slotString !== 'string' && !slotString.time) {
-        console.error("Invalid slot data:", slotString);
-        return [new Date(), new Date()]; // Return default or current dates to prevent further errors
-    }
-
+    console.log(slotString);
     const slotTime = typeof slotString === 'string' ? slotString : slotString.time;
-    
     const [datePart, timePart] = slotTime.split(" - ");
-    if (!datePart || !timePart) {
-        console.error("Slot time format error:", slotTime);
-        return [new Date(), new Date()];
-    }
-
     const [startTime, endTime] = timePart.split(" to ");
-    if (!startTime || !endTime) {
-        console.error("Start/End time format error:", timePart);
-        return [new Date(), new Date()];
-    }
-
+  
     // Parse the date and times into Date objects
     const [month, day, year] = datePart.split("/");
-    const startDate = new Date(`${year}-${month}-${day} ${startTime}`);
-    const endDate = new Date(`${year}-${month}-${day} ${endTime}`);
+  
+    // Combine date with start and end times
+    const startDate = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy hh:mm a', new Date());
+    const endDate = parse(`${datePart} ${endTime}`, 'dd/MM/yyyy hh:mm a', new Date());
 
     return [startDate, endDate];
-};
-
-const isSlotClashing = (newSlot, existingSlots) => {
-    const [newStart, newEnd] = parseSlotString(newSlot);
-
-    return existingSlots.some((slot) => {
-        const [existingStart, existingEnd] = parseSlotString(slot);
-
-        // Check if the new slot overlaps with any existing slots
-        return (newStart < existingEnd && newEnd > existingStart);
-    });
-};
+  };
 
   const handleRemoveSlot = async () => {
     if (indexToDelete === null) return;
@@ -669,6 +668,7 @@ const isSlotClashing = (newSlot, existingSlots) => {
             Add the Slot
           </Typography>
           <DatePicker
+            required
             label="Select Date"
             format="dd/MM/yyyy"
             value={currentDate}
@@ -681,17 +681,25 @@ const isSlotClashing = (newSlot, existingSlots) => {
             minDate={new Date()}
           />
           <TimePicker
+            required
             label="Select Start Time"
             value={currentStartTime}
-            onChange={(newValue) => setCurrentStartTime(newValue)}
+            onChange={(newValue) => {
+              setCurrentStartTime(newValue)
+              setIsStartTimeValid(newValue && (!isToday(currentDate) || newValue > new Date()));
+            }}
             sx={{ marginBottom: 2, width: "100%" }}
             minTime={isToday(currentDate) ? new Date() : undefined}
           />
 
           <TimePicker
+            required
             label="Select End Time"
             value={currentEndTime}
-            onChange={(newValue) => setCurrentEndTime(newValue)}
+            onChange={(newValue) => {
+              setCurrentEndTime(newValue)
+              setIsEndTimeValid(newValue && newValue > currentStartTime);
+            }}
             sx={{ marginBottom: 2, width: "100%" }}
             minTime={currentStartTime ? addMinutes(new Date(currentStartTime), 1) : undefined}
           />

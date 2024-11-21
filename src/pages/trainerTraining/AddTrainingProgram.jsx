@@ -216,8 +216,6 @@ export function AddTrainingProgram() {
     const [month, day, year] = datePart.split("/");
   
     // Combine date with start and end times
-    //const startDate = new Date(`${year}-${month}-${day} ${startTime}`);
-    //const endDate = new Date(`${year}-${month}-${day} ${endTime}`);
     const startDate = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy hh:mm a', new Date());
     const endDate = parse(`${datePart} ${endTime}`, 'dd/MM/yyyy hh:mm a', new Date());
 
