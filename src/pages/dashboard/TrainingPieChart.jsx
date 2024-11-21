@@ -59,6 +59,7 @@ useEffect(() => {
             const completedPrograms = getCompletedMonthPrograms(programs, selectedMonth, selectedYear);
             console.log(programs);
             console.log(completedPrograms);
+            console.log()
             const completedYogaPrograms = completedPrograms.filter(completedProgram=> completedProgram.typeOfExercise === "Yoga");
             setCompletedYogaPrograms(completedYogaPrograms.length);
 
@@ -94,7 +95,9 @@ const getCompletedMonthPrograms = (data, selectedMonth, selectedYear) => {
 
     // Reformat the date string to ISO 8601 format "YYYY-MM-DD"
     const isoDateString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    console.log(isoDateString);
     const entryDate = new Date(isoDateString);
+    console.log(entryDate);
     return entryDate.getMonth() === selectedMonth && entryDate.getFullYear() === selectedYear;
 });
 
