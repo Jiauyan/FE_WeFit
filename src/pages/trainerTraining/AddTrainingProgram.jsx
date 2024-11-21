@@ -188,15 +188,17 @@ export function AddTrainingProgram() {
   };
 
   const isSlotClashing = (newSlot, existingSlots) => {
-    const [newStart, newEnd] = parseSlotString(newSlot);
-  
-    return existingSlots.some((slotString) => {
-      const [existingStart, existingEnd] = parseSlotString(slotString);
-  
-      // Check if the new slot overlaps with any existing slots
-      return (newStart < existingEnd && newEnd > existingStart);
+    const newStart = parse(`${newSlot.datePart} ${newSlot.startTime}`, 'dd/MM/yyyy hh:mm a', new Date());
+    const newEnd = parse(`${newSlot.datePart} ${newSlot.endTime}`, 'dd/MM/yyyy hh:mm a', new Date());
+
+    return existingSlots.some(slot => {
+        const existingStart = parse(`${slot.datePart} ${slot.startTime}`, 'dd/MM/yyyy hh:mm a', new Date());
+        const existingEnd = parse(`${slot.datePart} ${slot.endTime}`, 'dd/MM/yyyy hh:mm a', new Date());
+
+        // Check if the new slot overlaps with any existing slots
+        return (newStart < existingEnd && newEnd > existingStart);
     });
-  };
+};
   
   const parseSlotString = (slotString) => {
     const slotTime = typeof slotString === 'string' ? slotString : slotString.time;
