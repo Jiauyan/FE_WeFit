@@ -16,6 +16,7 @@ export default function SleepBarChart() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getUTCMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getUTCFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [completedData, setCompletedData] = useState([]);  // State to store fetched data
 
   useEffect(() => {
     const fetchSleep = async () => {
@@ -31,7 +32,7 @@ export default function SleepBarChart() {
           return; // Early return if no data is available
         }
   
-        let fetchedData = Object.entries(sleepData).map(([date, sleep]) => ({
+        const fetchedData = Object.entries(sleepData).map(([date, sleep]) => ({
           date,
           sleep
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -42,6 +43,7 @@ export default function SleepBarChart() {
         const startIndex = Math.max(todayIndex - 3, 0); // Adjust as needed to center the view or to show previous days
   
         setSleepData(completedData);
+        setCompletedData(fetchedData);
         setCurrentStartIndex(startIndex);
       } catch (error) {
         console.error('Error fetching sleep data:', error);
