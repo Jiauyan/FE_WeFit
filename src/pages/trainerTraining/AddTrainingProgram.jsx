@@ -199,6 +199,7 @@ export function AddTrainingProgram() {
   };
   
   const parseSlotString = (slotString) => {
+    console.log(slotString);
     const slotTime = typeof slotString === 'string' ? slotString : slotString.time;
     const [datePart, timePart] = slotTime.split(" - ");
     const [startTime, endTime] = timePart.split(" to ");
@@ -209,8 +210,8 @@ export function AddTrainingProgram() {
     // Combine date with start and end times
     //const startDate = new Date(`${year}-${month}-${day} ${startTime}`);
     //const endDate = new Date(`${year}-${month}-${day} ${endTime}`);
-    const startDate = parse(`${newSlot.datePart} ${newSlot.startTime}`, 'dd/MM/yyyy hh:mm a', new Date());
-    const endDate = parse(`${newSlot.datePart} ${newSlot.endTime}`, 'dd/MM/yyyy hh:mm a', new Date());
+    const startDate = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy hh:mm a', new Date());
+    const endDate = parse(`${datePart} ${endTime}`, 'dd/MM/yyyy hh:mm a', new Date());
 
     return [startDate, endDate];
   };
