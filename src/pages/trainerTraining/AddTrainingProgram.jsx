@@ -134,6 +134,11 @@ export function AddTrainingProgram() {
       return;
     }
 
+    if (!isStartTimeValid && !isEndTimeValid) {
+      alert("Invalid start time");
+      return;
+    }
+
     if (currentDate && currentStartTime && currentEndTime) {
       const formattedDate = format(currentDate, 'dd/MM/yyyy');
       const start = new Date(currentDate);
