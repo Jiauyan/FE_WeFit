@@ -91,13 +91,19 @@ useEffect(() => {
 const getCompletedMonthPrograms = (data, selectedMonth, selectedYear) => {
   const filteredData = data.filter(entry => {
     const dateString = entry.slot.time.split(' - ')[0]; 
-    const [month, day, year] = dateString.split('/');
+    const [day, month, year] = dateString.split('/');
+    
+    if (parseInt(month) > 12 || parseInt(day) > 31) {
+      console.error("Date format error or invalid date in data:", dateString);
+      return false;
+    }
 
-    // Reformat the date string to ISO 8601 format "YYYY-MM-DD"
+    // Format the date string as "YYYY-MM-DD"
     const isoDateString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-    console.log(isoDateString);
     const entryDate = new Date(isoDateString);
-    console.log(entryDate);
+
+    // Debugging output
+    console.log(isoDateString, entryDate);
     return entryDate.getMonth() === selectedMonth && entryDate.getFullYear() === selectedYear;
 });
 
