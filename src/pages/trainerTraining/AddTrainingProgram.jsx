@@ -77,6 +77,8 @@ export function AddTrainingProgram() {
   const [currentDate, setCurrentDate] = useState(null);
   const [currentStartTime, setCurrentStartTime] = useState(null);
   const [currentEndTime, setCurrentEndTime] = useState(null);
+  const [isStartTimeValid, setIsStartTimeValid] = useState(true);
+  const [isEndTimeValid, setIsEndTimeValid] = useState(true);
   const [trainingProgramImage, setTrainingProgramImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); 
   const [downloadUrl, setDownloadUrl] = useState(null); 
@@ -116,6 +118,22 @@ export function AddTrainingProgram() {
 
   const handleAddSlot = async (e) => {
     e.preventDefault();
+
+    if (!currentDate || !currentStartTime || !currentEndTime) {
+      alert("Please complete all date and time fields.");
+      return;
+    }
+
+    if (!isStartTimeValid) {
+      alert("Invalid start time");
+      return;
+    }
+
+    if (!isEndTimeValid) {
+      alert("Invalid end time");
+      return;
+    }
+
     if (currentDate && currentStartTime && currentEndTime) {
       const formattedDate = format(currentDate, 'dd/MM/yyyy');
       const start = new Date(currentDate);
@@ -625,6 +643,7 @@ export function AddTrainingProgram() {
             Add the Slot
           </Typography>
           <DatePicker
+            required
             label="Select Date"
             format="dd/MM/yyyy"
             value={currentDate}
@@ -637,17 +656,25 @@ export function AddTrainingProgram() {
             minDate={new Date()}
           />
           <TimePicker
+            required
             label="Select Start Time"
             value={currentStartTime}
-            onChange={(newValue) => setCurrentStartTime(newValue)}
+            onChange={(newValue) => {
+              setCurrentStartTime(newValue)
+              setIsStartTimeValid(newValue && (!isToday(currentDate) || newValue > new Date()));
+            }}
             sx={{ marginBottom: 2, width: "100%" }}
             minTime={isToday(currentDate) ? new Date() : undefined}
           />
 
           <TimePicker
+            required
             label="Select End Time"
             value={currentEndTime}
-            onChange={(newValue) => setCurrentEndTime(newValue)}
+            onChange={(newValue) => {
+              setCurrentEndTime(newValue)
+              setIsEndTimeValid(newValue && newValue > currentStartTime);
+            }}
             sx={{ marginBottom: 2, width: "100%" }}
             minTime={currentStartTime ? addMinutes(new Date(currentStartTime), 1) : undefined}
           />
