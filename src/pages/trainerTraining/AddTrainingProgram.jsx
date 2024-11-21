@@ -166,8 +166,10 @@ export function AddTrainingProgram() {
     const [datePart, timePart] = slot.time.split(' - ');
     const startTime = timePart.split(' to ')[0];
     const dateTime = parse(`${datePart} ${startTime}`, 'dd/MM/yyyy HH:mm', new Date());
+    console.log(`Parsing date: ${datePart} ${startTime} to timestamp: ${dateTime.getTime()}`);
     return dateTime.getTime();
   };
+  
   
   const sortSlots = (slots) => {
     return slots.sort((a, b) => parseDateTime(a) - parseDateTime(b));
