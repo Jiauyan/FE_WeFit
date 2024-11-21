@@ -119,71 +119,56 @@ export function AddTrainingProgram() {
   const handleAddSlot = async (e) => {
     e.preventDefault();
 
+    // Initial checks for completeness of input
     if (!currentDate || !currentStartTime || !currentEndTime) {
-      alert("Please complete all date and time fields.");
-      return;
-    }
-
-    if (!isStartTimeValid) {
-      alert("Invalid start time");
-      return;
-    }
-
-    if (!isEndTimeValid) {
-      alert("Invalid end time");
-      return;
-    }
-
-    if (!isStartTimeValid && !isEndTimeValid) {
-      alert("Invalid start time and end time");
-      return;
-    }
-
-    if (currentDate && currentStartTime && currentEndTime) {
-      const formattedDate = format(currentDate, 'dd/MM/yyyy');
-      const start = new Date(currentDate);
-      start.setHours(currentStartTime.getHours(), currentStartTime.getMinutes());
-
-      const end = new Date(currentDate);
-      end.setHours(currentEndTime.getHours(), currentEndTime.getMinutes());
-
-      const slotString = `${formattedDate} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-
-      const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
-
-      setCurrentSlots(prevCurrentSlots => [...prevCurrentSlots, newSlot]);
-
-      if (isSlotClashing(newSlot, currentSlots)) {
-        alert("This slot has already been added. Please choose a different time.");
+        alert("Please complete all date and time fields.");
         return;
-      }
-
-      // Fetch existing programs and their slots
-      const existingPrograms = await fetchExistingPrograms();
-      const existingSlots = existingPrograms.flatMap(program => program.slots);
-  
-      // Check for slot clash
-      if (isSlotClashing(newSlot, existingSlots)) {
-        alert("This slot overlaps with an existing one. Please choose a different time.");
-        return;
-      }
-      setCurrentSlots(prevCurrentSlots => {
-        // Add the new slot and then sort all slots
-        const updatedSlots = sortSlots([...prevCurrentSlots, newSlot]);
-        return updatedSlots;
-      });
-  
-      setSlots(prevSlots => {
-        // Add the new slot and then sort all slots
-        const updatedSlots = sortSlots([...prevSlots, newSlot]);
-        return updatedSlots;
-      });
-      setCurrentDate(null);
-      setCurrentStartTime(null);
-      setCurrentEndTime(null);
-      handleClose();
     }
-  };
+
+    // Checks for validity of the start and end times
+    if (!isStartTimeValid || !isEndTimeValid) {
+        const message = !isStartTimeValid && !isEndTimeValid
+            ? "Invalid start time and end time."
+            : !isStartTimeValid
+            ? "Invalid start time."
+            : "Invalid end time.";
+        alert(message);
+        return;
+    }
+
+    // Format and prepare the new slot
+    const formattedDate = format(currentDate, 'dd/MM/yyyy');
+    const start = new Date(currentDate.setHours(currentStartTime.getHours(), currentStartTime.getMinutes()));
+    const end = new Date(currentDate.setHours(currentEndTime.getHours(), currentEndTime.getMinutes()));
+
+    const slotString = `${formattedDate} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    const newSlot = { time: slotString, enrolled: 0, capacity: capacity };
+
+    // Ensure the new slot does not clash with already entered slots
+    if (isSlotClashing(newSlot, currentSlots)) {
+        alert("This slot has already been added or overlaps with another slot. Please choose a different time.");
+        return;
+    }
+
+    // Check for clashes with existing program slots
+    const existingPrograms = await fetchExistingPrograms();
+    const existingSlots = existingPrograms.flatMap(program => program.slots);
+    if (isSlotClashing(newSlot, existingSlots)) {
+        alert("This slot overlaps with an existing program's slot. Please choose a different time.");
+        return;
+    }
+
+    // Update the slots state
+    const updatedSlots = sortSlots([...currentSlots, newSlot]);
+    setCurrentSlots(updatedSlots);
+    setSlots(updatedSlots);
+
+    // Reset fields and close modal
+    setCurrentDate(null);
+    setCurrentStartTime(null);
+    setCurrentEndTime(null);
+    handleClose();
+};
 
   const parseDateTime = (slot) => {
     const [datePart, timePart] = slot.time.split(' - ');
