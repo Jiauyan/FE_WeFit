@@ -135,7 +135,7 @@ export function AddTrainingProgram() {
     }
 
     if (!isStartTimeValid && !isEndTimeValid) {
-      alert("Invalid start time");
+      alert("Invalid start time and end time");
       return;
     }
 
