@@ -134,7 +134,7 @@ export function EditFitnessPlan() {
                 date : formattedDate,
                 completeCount,
                 totalCount,
-                createdAt
+                //createdAt
             });
 
             await Promise.all(fitnessActivityData.map(activity =>
