@@ -129,7 +129,7 @@ export default function SleepBarChart() {
           />
         </LocalizationProvider>
       </Box>
-      {sleepData.length === 0 ? (
+      {completedData.length === 0 ? (
           <Box height={400} display="flex" alignItems="center" justifyContent="center">
           <Typography>No Sleeping Hours Found for the Selected Period.</Typography>
           </Box>
