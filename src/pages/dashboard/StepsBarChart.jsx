@@ -16,6 +16,7 @@ export default function StepsBarChart() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getUTCMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getUTCFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [data, setData] = useState([]);  // State to store fetched data
 
   useEffect(() => {
     const fetchSteps = async () => {
