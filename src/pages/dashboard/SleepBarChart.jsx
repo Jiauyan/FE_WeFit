@@ -17,7 +17,7 @@ export default function SleepBarChart() {
   const [selectedYear, setSelectedYear] = useState(new Date().getUTCFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [completedData, setCompletedData] = useState([]);  // State to store fetched data
-  const [oneWeekData, setOneWeekData] = useState([]);  // State to store fetched data
+  const [data, setData] = useState([]);  // State to store fetched data
 
   useEffect(() => {
     const fetchSleep = async () => {
@@ -59,7 +59,8 @@ export default function SleepBarChart() {
       const entryDate = new Date(entry.date + 'T00:00:00Z'); // Ensure the date is treated as UTC
       return entryDate.getUTCMonth() === selectedMonth && entryDate.getUTCFullYear() === selectedYear;
     });
-  
+  console.log("filteredData", filteredData);
+  setData(filteredData);
     const startDate = new Date(Date.UTC(selectedYear, selectedMonth, 1));
     const endOfMonth = new Date(Date.UTC(selectedYear, selectedMonth + 1, 0));
     const result = [];
@@ -76,7 +77,7 @@ export default function SleepBarChart() {
         sleep: sleepDuration,
       });
     }
-    console.log("filteredData", filteredData);
+    
     console.log("existingEntry" , result);
     return result;
   };
@@ -107,7 +108,6 @@ export default function SleepBarChart() {
   };
 
   const last7DaysData = sleepData.slice(currentStartIndex, currentStartIndex + 7); 
-  setOneWeekData(last7DaysData);
 
   const handleDateChange = (newValue) => {
     setSelectedDate(newValue);
@@ -134,7 +134,7 @@ export default function SleepBarChart() {
           />
         </LocalizationProvider>
       </Box>
-      {filteredData.length === 0 ? (
+      {data.length === 0 ? (
           <Box height={400} display="flex" alignItems="center" justifyContent="center">
           <Typography>No Sleeping Hours Found for the Selected Period.</Typography>
           </Box>
