@@ -114,7 +114,7 @@ export default function TrainerBarChart() {
         </LocalizationProvider>
       </Box>
       {data.length === 0 ? (
-          <Box height={400} display="flex" alignItems="center" justifyContent="center">
+          <Box height={540} display="flex" alignItems="center" justifyContent="center">
           <Typography>No Training Programs Found for the Selected Period.</Typography>
           </Box>
             ) : (
