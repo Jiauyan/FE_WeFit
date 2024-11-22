@@ -93,9 +93,6 @@ const getCompletedMonthPrograms = (data, selectedMonth, selectedYear) => {
     // Format the date string as "YYYY-MM-DD"
     const isoDateString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     const entryDate = new Date(isoDateString);
-
-    // Debugging output
-    console.log(isoDateString, entryDate);
     return entryDate.getMonth() === selectedMonth && entryDate.getFullYear() === selectedYear;
 });
 

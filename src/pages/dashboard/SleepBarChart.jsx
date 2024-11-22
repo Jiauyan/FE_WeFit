@@ -42,8 +42,6 @@ export default function SleepBarChart() {
 
         const todayIndex = completedData.findIndex(d => d.date === new Date().toISOString().split('T')[0]);
         const startIndex = Math.max(todayIndex - 3, 0); // Adjust as needed to center the view or to show previous days
-        console.log(fetchedData);
-        console.log(completedData);
         setSleepData(completedData);
         setCompletedData(fetchedData);
         setCurrentStartIndex(startIndex);
