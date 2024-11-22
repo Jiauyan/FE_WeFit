@@ -115,7 +115,7 @@ const handleSubmit = async (e) => {
             <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5, alignText:"center"}} margin={1} >
                 Get Your Motivational Quote
             </Typography>
-            <Typography variant="h6" component="div">
+            <Typography variant="h6" component="div" sx={{alignText:"center"}}>
                     {randomMotivationalQuote.motivationalQuote}
             </Typography>
             <GradientButton
