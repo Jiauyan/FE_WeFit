@@ -134,7 +134,6 @@ export default function SleepBarChart() {
           <Typography>No Sleeping Hours Found for the Selected Period.</Typography>
           </Box>
             ) : (
-            <>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
         <ArrowBackIos />
@@ -165,7 +164,6 @@ export default function SleepBarChart() {
         <ArrowForwardIos />
       </IconButton>
     </Box>
-    </>
   )}
     </Box>
   );

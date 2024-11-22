@@ -118,7 +118,6 @@ export default function WaterLineChart() {
           <Typography>No Water Consumption Found for the Selected Period.</Typography>
           </Box>
             ) : (
-            <>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
         <ArrowBackIos />
@@ -149,7 +148,6 @@ export default function WaterLineChart() {
         <ArrowForwardIos />
       </IconButton>
     </Box>
-    </>
   )}
     </Box>
   );

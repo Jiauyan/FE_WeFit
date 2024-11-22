@@ -16,6 +16,7 @@ export default function TrainerLineChart() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getUTCMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getUTCFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [data, setData] = useState([]);  // State to store fetched data
 
   useEffect(() => {
     const fetchSharingTip = async () => {
@@ -55,7 +56,7 @@ export default function TrainerLineChart() {
       const entryDate = new Date(entry.date + 'T00:00:00Z'); // Ensure the date is treated as UTC
       return entryDate.getUTCMonth() === selectedMonth && entryDate.getUTCFullYear() === selectedYear;
     });
-  
+    setData(filteredData);
     const startDate = new Date(Date.UTC(selectedYear, selectedMonth, 1));
     const endOfMonth = new Date(Date.UTC(selectedYear, selectedMonth + 1, 0));
     const result = [];
@@ -112,12 +113,16 @@ export default function TrainerLineChart() {
           />
         </LocalizationProvider>
       </Box>
+      {data.length === 0 ? (
+          <Box height={400} display="flex" alignItems="center" justifyContent="center">
+          <Typography>No Sharing Tips Found for the Selected Period.</Typography>
+          </Box>
+            ) : (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
       <IconButton onClick={handlePreviousWeek} disabled={currentStartIndex <= 0}>
         <ArrowBackIos />
       </IconButton>
       <Box sx={{ flexGrow: 1, maxWidth: '90vw' }}>
-
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={last7DaysData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -142,6 +147,8 @@ export default function TrainerLineChart() {
       <IconButton onClick={handleNextWeek} disabled={currentStartIndex + 7 >= sharingTipData.length}>
         <ArrowForwardIos />
       </IconButton>
-    </Box></Box>
+    </Box>
+  )}
+    </Box>
   );
 }
