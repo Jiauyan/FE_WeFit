@@ -112,7 +112,7 @@ const handleSubmit = async (e) => {
                 X
             </Button>
 
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5}} margin={1} >
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2, mt:5, alignText:"center"}} margin={1} >
                 Get Your Motivational Quote
             </Typography>
             <Typography variant="h6" component="div">
