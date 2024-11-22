@@ -59,8 +59,7 @@ export default function SleepBarChart() {
       const entryDate = new Date(entry.date + 'T00:00:00Z'); // Ensure the date is treated as UTC
       return entryDate.getUTCMonth() === selectedMonth && entryDate.getUTCFullYear() === selectedYear;
     });
-  console.log("filteredData", filteredData);
-  setData(filteredData);
+    setData(filteredData);
     const startDate = new Date(Date.UTC(selectedYear, selectedMonth, 1));
     const endOfMonth = new Date(Date.UTC(selectedYear, selectedMonth + 1, 0));
     const result = [];
@@ -77,8 +76,6 @@ export default function SleepBarChart() {
         sleep: sleepDuration,
       });
     }
-    
-    console.log("existingEntry" , result);
     return result;
   };
 

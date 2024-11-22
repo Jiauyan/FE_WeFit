@@ -33,7 +33,6 @@ export default function StepsBarChart() {
         })).sort((a, b) => new Date(a.date) - new Date(b.date));
 
        const completedData = getCurrentMonthData(fetchedData, selectedMonth, selectedYear);
-        console.log(completedData)
         // Find index for the current day
         const todayIndex = completedData.findIndex(d => d.date === new Date().toISOString().split('T')[0]);
         const startIndex = Math.max(todayIndex - 3, 0); // Adjust as needed to center the view or to show previous days
@@ -52,7 +51,6 @@ export default function StepsBarChart() {
       const entryDate = new Date(entry.date + 'T00:00:00Z'); // Ensure the date is treated as UTC
       return entryDate.getUTCMonth() === selectedMonth && entryDate.getUTCFullYear() === selectedYear;
     });
-    console.log("filteredData", filteredData);
     setData(filteredData);
     const startDate = new Date(Date.UTC(selectedYear, selectedMonth, 1));
     const endOfMonth = new Date(Date.UTC(selectedYear, selectedMonth + 1, 0));
@@ -66,7 +64,6 @@ export default function StepsBarChart() {
         steps: existingEntry ? existingEntry.steps : 0,
       });
     }
-    console.log("existingEntry" , result);
     return result;
   };
 
