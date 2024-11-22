@@ -32,7 +32,6 @@ const data = [
   { name: 'Meditation', value: completedMeditationPrograms}
 ];
 
-console.log(data);
 const totalCompleted = data.reduce((acc, cur) => acc + cur.value, 0);
 
 useEffect(() => {
