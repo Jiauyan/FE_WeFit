@@ -20,7 +20,7 @@ const RecommendedTrainingPrograms = () => {
     const [bookedPrograms, setBookedPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const itemsPerPage = 1; // Number of programs to display per page
+    const itemsPerPage = 6; // Number of programs to display per page
     const { user } = useUser();
     const navigate = useNavigate();
 
