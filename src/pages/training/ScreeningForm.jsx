@@ -68,7 +68,6 @@ export function ScreeningForm() {
 
 
   return (
-    <>
       <Grid
         container
         component="main"
@@ -260,11 +259,10 @@ export function ScreeningForm() {
                 color="primary"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Next
+                Confirm
               </GradientButton>
             </Box>
           </Paper>
         </Grid>
-    </>
   );
 }
