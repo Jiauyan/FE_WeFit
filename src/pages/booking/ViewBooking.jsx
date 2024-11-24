@@ -105,19 +105,17 @@ export function ViewBooking() {
           />
         )}
         </Grid>
-          <Grid container item xs={12}>
-            <Grid item xs={8}>
-              <Typography variant="h3" sx={{ fontWeight: 'bold', fontSize: '1.8rem', mt: 4, mb: 2 }}>
-                {trainingProgramData.title}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount == 0 ? '#112F91' : '#112F91', mt: 4, mb: 2, mr:2, textAlign: 'end' }}>
-                <AttachMoney />
-                {trainingProgramData.feeAmount == 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
-              </Typography>
-            </Grid>
+        <Grid container item xs={12}>
+            <Typography variant="h3" sx={{ fontWeight: 'bold', fontSize: '1.8rem', mt: 4, mb: 2 }}>
+              {trainingProgramData.title}
+            </Typography>
           </Grid>
+          <Grid container item xs={12}>
+            <Typography variant="h1" sx={{ fontWeight: 'bold', fontSize: '2.0rem', color: trainingProgramData.feeAmount == 0 ? '#112F91' : '#112F91', mt: 2, mb: 2, mr: 2, textAlign: 'end' }}>
+              <AttachMoney />
+              { trainingProgramData.feeAmount == 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
+            </Typography>
+        </Grid>
           <Grid container item xs={12}>
           <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap' , mr:2}}>
                   {trainingProgramData.desc}
