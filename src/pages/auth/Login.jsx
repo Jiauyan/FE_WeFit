@@ -50,7 +50,7 @@ export function Login() {
       return password.length >= 6;
     };
 
-    const debouncedCheckEmail = useCallback(debounce(async (email) => {
+    const debouncedCheckEmail = debounce(async (email) => {
       if (!validateEmail(email)) {
           setCheckUserEmail(null);
           return;
@@ -61,7 +61,7 @@ export function Login() {
       } catch (error) {
           console.error('Error checking email:', error);
       }
-  }, 500), []);
+  }, 500);
 
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -145,7 +145,7 @@ export function Login() {
                 name="email"
                 type="email"
                 autoComplete="current-email"
-                onChange={(e) => doub(e.target.value)}
+                onChange={(e) => debouncedCheckEmail(e.target.value)}
                 error={!!emailError}
                 helperText={emailError}
               />
@@ -158,7 +158,7 @@ export function Login() {
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 autoComplete="current-password"
-                onChange={(e) => debouncedCheckEmail(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 error={!!passwordError}
                 helperText={passwordError}
                 InputProps={{
