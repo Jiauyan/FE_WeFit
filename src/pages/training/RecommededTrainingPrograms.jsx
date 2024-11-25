@@ -103,6 +103,14 @@ const RecommendedTrainingPrograms = () => {
     const startIndex = (page - 1) * itemsPerPage;
     const currentPrograms = filteredPrograms.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+    }
+
     return (
         <Box padding={3}>
             <Box sx={{ 
