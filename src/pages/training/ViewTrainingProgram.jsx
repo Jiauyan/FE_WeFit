@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid, IconButton, Divider,CircularProgress } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid, IconButton, CircularProgress } from '@mui/material';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
-import Delete from '@mui/icons-material/Delete';
-import Cancel from '@mui/icons-material/Cancel';
-import CheckCircle from '@mui/icons-material/CheckCircle';
 import AttachMoney from '@mui/icons-material/AttachMoney';
-import MoneyOff from '@mui/icons-material/MoneyOff';
 
 export function ViewTrainingProgram() {
   const [loading, setLoading] = useState(true);
@@ -94,6 +90,15 @@ export function ViewTrainingProgram() {
       { label: 'Trainer', value: trainer.username },
       { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status ? 'Full' : 'Available'}`).join(', ') },
     ];
+
+    if (loading) {
+      return (
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+          <CircularProgress />
+        </Box>
+      );
+  }
+
   return (
     <>
       <Grid
