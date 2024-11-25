@@ -28,6 +28,10 @@ export function ViewBooking() {
     { label: 'Trainer', value: trainer?.username },
     { label: 'Slot', value: bookingData?.slot?.time },
   ];
+  
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, []);
 
   useEffect(() => {
     const storedUid = localStorage.getItem('uid');
