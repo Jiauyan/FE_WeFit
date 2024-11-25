@@ -33,6 +33,27 @@ export function Dashboard() {
   const [currentMotivationalQuote, setCurrentMotivationalQuote] = useState("");
   const [sleep, setSleep] = useState("");
 
+  useEffect(() => {
+    if (!user?.uid) {
+        setLoading(false);
+        return;
+    }
+    
+    setLoading(true);
+    Promise.all([
+        fetchUserDetails(user.uid),
+        fetchSteps(user.uid),
+        fetchGoals(user.uid)
+    ]).then(([userDetails, userSteps, userGoals]) => {
+        setUserData(userDetails);
+        setSteps(userSteps);
+        setGoals(userGoals);
+    }).catch(error => {
+        console.error('Error fetching data:', error);
+    }).finally(() => {
+        setLoading(false);
+    });
+}, [user?.uid]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -172,11 +193,17 @@ export function Dashboard() {
       return `calc(${interpolatePosition(BMIValue)}% - 5px)`;  // Adjust by half the marker's width
     };
 
+    if (loading) {
+      return (
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+          {/* <CircularProgress /> */}
+          Loading...
+        </Box>
+      );
+    }
+    
   return (
     <Box padding={3}>
-      {/* <Typography variant="h6" gutterBottom>
-        Dashboard Overview
-      </Typography> */}
       <Grid container spacing={3}>
         <Grid item xs={12}>
         <Card sx={{
