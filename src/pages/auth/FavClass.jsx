@@ -100,10 +100,10 @@ export function FavClass() {
             margin: 'auto' // Centers the paper in the viewport
           }}>
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }} margin={1} >
-            Select all your favorite types of exercises.
+            Select all your favourite types of exercises.
             </Typography>
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
-                It will help us to know your favorite types of exercises.
+                It will help us to know your favourite types of exercises.
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
                 {['Yoga', 'Dance', 'Cardio', 'Strength', 'HIIT', 'Meditation'].map((type) => (
