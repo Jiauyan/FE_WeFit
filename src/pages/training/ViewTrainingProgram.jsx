@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid, IconButton, Divider } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid, IconButton, Divider,CircularProgress } from '@mui/material';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
@@ -12,6 +12,7 @@ import AttachMoney from '@mui/icons-material/AttachMoney';
 import MoneyOff from '@mui/icons-material/MoneyOff';
 
 export function ViewTrainingProgram() {
+  const [loading, setLoading] = useState(true);
   const [trainingProgramData, setTrainingProgramData] = useState([]);
   const [trainerID, setTrainerID] = useState(null);
   const [trainer, setTrainer] = useState({});
@@ -33,24 +34,31 @@ export function ViewTrainingProgram() {
 
   useEffect(() => {
     const uid = user?.uid;
-    if (!uid) return;
-    axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`)
-      .then(response => {
-        setTrainingProgramData(response.data);
-        setTrainerID(response.data.uid);
-      })
-      .catch(error => console.error('There was an error!', error));
-  }, [user?.uid]);
+    if (!uid) return; // Ensure there is a user ID before attempting any fetch.
+    setLoading(true);
 
-  useEffect(() => {
-    const uid = trainerID;
-    if (!uid) return;
-    axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`)
-        .then(response => {
-            setTrainer(response.data); 
-        })
-        .catch(error => console.error('There was an error!', error));
-  }, [trainerID]); 
+    const fetchData = async () => {
+        try {
+            // Fetch the training program details
+            const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
+            setTrainingProgramData(programResponse.data);
+
+            // Using the trainer ID from the training program to fetch trainer details
+            const trainerID = programResponse.data.uid;
+            if (!trainerID) {
+                throw new Error('Trainer ID not found in training program data');
+            }
+            const trainerResponse = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${trainerID}`);
+            setTrainer(trainerResponse.data);
+        } catch (error) {
+            console.error('There was an error!', error);
+        } finally {
+          setLoading(false);
+      }
+    };
+
+    fetchData();
+}, [user?.uid, id]);
 
   const handleBack = () => {
     if (pathPrev === "/recommend" && pathName === "/screeningForm") {
