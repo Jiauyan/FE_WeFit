@@ -33,7 +33,7 @@ export function Login() {
     const navigate = useNavigate();
     const { updateUser, login, signInWithGoogle } = useUser();
 
-    const debouncedCheckEmail = debounce(async (email) => {
+    const debouncedCheckEmail = async (email) => {
       if (!validateEmail(email)) {
         setCheckUserEmail(null); // Reset if invalid
         return;
@@ -44,7 +44,7 @@ export function Login() {
       } catch (error) {
         console.error('Error checking email:', error);
       }
-    }); 
+    }; 
 
       // Handle email input change
     const handleEmailChange = (e) => {
