@@ -36,6 +36,23 @@ const RecommendedTrainingPrograms = () => {
         setPage(savedPage ? parseInt(savedPage, 10) : 1);
     }, []);
 
+    useEffect(() => {
+        if (!user?.uid) {
+            setLoading(false);
+            return;
+        }
+        
+        setLoading(true);
+        Promise.all([
+            fetchBookings(),
+            fetchRecommendedTrainingPrograms(),
+        ]).catch(error => {
+            console.error('Error fetching data:', error);
+        }).finally(() => {
+            setLoading(false);
+        });
+    }, [user?.uid]);
+
     // Handle program view navigation
     const handleView = (program) => {
         sessionStorage.setItem('lastPage', page.toString());
@@ -46,33 +63,24 @@ const RecommendedTrainingPrograms = () => {
         sessionStorage.removeItem('lastPage');
          navigate("/trainingPrograms");
     };
+    const fetchBookings = async () => {
+        try {
+            const uid = user?.uid;
+            if (!uid) return;
 
-    useEffect(() => {
-        const fetchBookings = async () => {
-            try {
-                const uid = user?.uid;
-                if (!uid) return;
-                setLoading(true);
-                // Fetch booked programs
-                const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
-                const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
-                setBookedPrograms(bookedProgramIds);
-            } catch (error) {
-                console.error('There was an error!', error);
-            } finally {
-                setLoading(false);
-            };
-        };
+            // Fetch booked programs
+            const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
+            const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
+            setBookedPrograms(bookedProgramIds);
+        } catch (error) {
+            console.error('There was an error!', error);
+        }
+    };
 
-        fetchBookings();
-    }, [user?.uid]);
-
-    useEffect(() => {
-            const fetchRecommendedTrainingPrograms = async () => {
+     const fetchRecommendedTrainingPrograms = async () => {
                 try {
                     const uid = user?.uid;
                     if (!uid) return;
-                    setLoading(true);
                     const fitnessLevel = user.data.fitnessLevel;
                     const fitnessGoal = user.data.fitnessGoal;
                     const favClass = user.data.favClass;
@@ -81,19 +89,13 @@ const RecommendedTrainingPrograms = () => {
                       fitnessGoal,
                       favClass
                     });
-                    const availableRecommendedPrograms = response.data.filter((program) => !bookedPrograms.includes(program.id));
-                    setRecommendedTrainingPrograms(availableRecommendedPrograms);
+                     const availableRecommendedPrograms = response.data.filter((program) => !bookedPrograms.includes(program.id));
+                setRecommendedTrainingPrograms(availableRecommendedPrograms);
                 } catch (error) {
                     console.error('There was an error!', error);
-                } finally {
-                    setLoading(false);
-                };
+                }
             };
-
-            fetchRecommendedTrainingPrograms();
-        }, [user?.uid, bookedPrograms]);
-
-
+            
     // Filter programs based on search term
     const filteredPrograms = recommededTrainingPrograms.filter(program =>
         program.title.toLowerCase().includes(searchTerm.toLowerCase())

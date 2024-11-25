@@ -9,13 +9,15 @@ import {
     CardActionArea,
     CardContent,
     CardMedia,
-    Button
+    Button,
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from "react-router-dom";
 
 const AdvancedTrainingPrograms = () => {
+    const [loading, setLoading] = useState(true);
     const [advancedTrainingPrograms, setAdvancedTrainingPrograms] = useState([]);
     const [bookedPrograms, setBookedPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -50,14 +52,16 @@ const AdvancedTrainingPrograms = () => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-
+                setLoading(true);
                 // Fetch booked programs
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
                 setBookedPrograms(bookedProgramIds);
             } catch (error) {
                 console.error('There was an error!', error);
-            }
+            } finally {
+                setLoading(false);
+            };
         };
 
         fetchBookings();
@@ -68,7 +72,7 @@ const AdvancedTrainingPrograms = () => {
                 try {
                     const uid = user?.uid;
                     if (!uid) return;
-        
+                    setLoading(true);
                     // Fetch all training programs
                     const response = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
         
@@ -84,7 +88,9 @@ const AdvancedTrainingPrograms = () => {
                     setAdvancedTrainingPrograms(advanced);
                 } catch (error) {
                     console.error('There was an error!', error);
-                }
+                } finally {
+                    setLoading(false);
+                };
             };
 
             fetchAdvancedTrainingPrograms();
@@ -100,6 +106,14 @@ const AdvancedTrainingPrograms = () => {
     const startIndex = (page - 1) * itemsPerPage;
     const currentPrograms = filteredPrograms.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+    }
+    
     return (
          <Box padding={3}>
             <Box sx={{ 

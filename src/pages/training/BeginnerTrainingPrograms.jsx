@@ -10,13 +10,14 @@ import {
     CardContent,
     CardMedia,
     Button,
-    IconButton
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from "react-router-dom";
 
 const BeginnerTrainingPrograms = () => {
+    const [loading, setLoading] = useState(true);
     const [beginnerTrainingPrograms, setBeginnerTrainingPrograms] = useState([]);
     const [bookedPrograms, setBookedPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -51,14 +52,16 @@ const BeginnerTrainingPrograms = () => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-
+                setLoading(true);
                 // Fetch booked programs
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
                 setBookedPrograms(bookedProgramIds);
             } catch (error) {
                 console.error('There was an error!', error);
-            }
+            } finally {
+                setLoading(false);
+            };
         };
 
         fetchBookings();
@@ -69,7 +72,7 @@ const BeginnerTrainingPrograms = () => {
                 try {
                     const uid = user?.uid;
                     if (!uid) return;
-        
+                    setLoading(true);
                     // Fetch all training programs
                     const response = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
         
@@ -85,7 +88,9 @@ const BeginnerTrainingPrograms = () => {
                     setBeginnerTrainingPrograms(beginner);
                 } catch (error) {
                     console.error('There was an error!', error);
-                }
+                } finally {
+                    setLoading(false);
+                };
             };
 
             fetchBeginnerTrainingPrograms();
@@ -101,6 +106,14 @@ const BeginnerTrainingPrograms = () => {
     const startIndex = (page - 1) * itemsPerPage;
     const currentPrograms = filteredPrograms.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+    }
+    
     return (
          <Box padding={3}>
             <Box sx={{ 

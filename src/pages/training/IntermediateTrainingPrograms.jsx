@@ -9,12 +9,14 @@ import {
     CardActionArea,
     CardContent,
     CardMedia,
-    Button
+    Button,
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from "react-router-dom";
 const IntermediateTrainingPrograms = () => {
+    const [loading, setLoading] = useState(true);
     const [intermediateTrainingPrograms, setIntermediateTrainingPrograms] = useState([]);
     const [bookedPrograms, setBookedPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -49,14 +51,16 @@ const IntermediateTrainingPrograms = () => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-
+                setLoading(true);
                 // Fetch booked programs
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
                 setBookedPrograms(bookedProgramIds);
             } catch (error) {
                 console.error('There was an error!', error);
-            }
+            } finally {
+                setLoading(false);
+            };
         };
 
         fetchBookings();
@@ -67,7 +71,7 @@ const IntermediateTrainingPrograms = () => {
                 try {
                     const uid = user?.uid;
                     if (!uid) return;
-        
+                    setLoading(true);
                     // Fetch all training programs
                     const response = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
         
@@ -83,7 +87,9 @@ const IntermediateTrainingPrograms = () => {
                     setIntermediateTrainingPrograms(intermediate);
                 } catch (error) {
                     console.error('There was an error!', error);
-                }
+                } finally {
+                    setLoading(false);
+                };
             };
 
             fetchIntermediateTrainingPrograms();
@@ -99,6 +105,14 @@ const IntermediateTrainingPrograms = () => {
     const startIndex = (page - 1) * itemsPerPage;
     const currentPrograms = filteredPrograms.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+    }
+    
     return (
         <Box padding={3}>
             <Box sx={{ 
