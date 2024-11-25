@@ -48,53 +48,35 @@ const BeginnerTrainingPrograms = () => {
     };
 
     useEffect(() => {
-        const fetchBookings = async () => {
+        const fetchData = async () => {
+            if (!user?.uid) {
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
             try {
-                const uid = user?.uid;
-                if (!uid) return;
-                setLoading(true);
                 // Fetch booked programs
-                const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
-                const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
+                const bookingsResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${user.uid}`);
+                const bookedProgramIds = bookingsResponse.data.map((booking) => booking.trainingClassID);
                 setBookedPrograms(bookedProgramIds);
+
+                // Fetch all training programs
+                const programsResponse = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
+                const availablePrograms = programsResponse.data.filter(
+                    (program) => !bookedProgramIds.includes(program.id)
+                );
+                const beginnerPrograms = availablePrograms.filter((program) => program.fitnessLevel === 'Beginner');
+                setBeginnerTrainingPrograms(beginnerPrograms);
             } catch (error) {
                 console.error('There was an error!', error);
             } finally {
                 setLoading(false);
-            };
+            }
         };
 
-        fetchBookings();
+        fetchData();
     }, [user?.uid]);
-
-    useEffect(() => {
-            const fetchBeginnerTrainingPrograms = async () => {
-                try {
-                    const uid = user?.uid;
-                    if (!uid) return;
-                    setLoading(true);
-                    // Fetch all training programs
-                    const response = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
-        
-                    // Filter out booked programs
-                    const availablePrograms = response.data.filter(
-                        (program) => !bookedPrograms.includes(program.id)
-                    );
-        
-                    // Categorize by fitness level
-                    const beginner = availablePrograms.filter((program) => program.fitnessLevel === 'Beginner');
-                    
-                    // Set state
-                    setBeginnerTrainingPrograms(beginner);
-                } catch (error) {
-                    console.error('There was an error!', error);
-                } finally {
-                    setLoading(false);
-                };
-            };
-
-            fetchBeginnerTrainingPrograms();
-        }, [user?.uid, bookedPrograms]);
 
 
     // Filter programs based on search term
@@ -113,7 +95,7 @@ const BeginnerTrainingPrograms = () => {
           </Box>
         );
     }
-    
+
     return (
          <Box padding={3}>
             <Box sx={{ 
