@@ -4,17 +4,14 @@ import {
     Typography,
     Card,
     Button,
-    CardMedia,
     CardContent,
-    CardActionArea,
     Grid,
     Box,
-    IconButton,
-    Container,
     Avatar,
     TextField,
     Pagination,
-    Link
+    Link,
+    CircularProgress
 } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
@@ -23,6 +20,7 @@ import { EditPost } from './EditPost';
 import { AddPost } from '../community/AddPost';
 
 export function MyPost() {
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const { user, setUser } = useUser();
     const [myPosts, setMyPosts] = useState([]);
@@ -45,11 +43,14 @@ export function MyPost() {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
+                setLoading(true);
                 const response = await axios.get(`https://be-um-fitness.vercel.app/posts/getAllPostsByUid/${uid}`);
                 const sortedPosts = response.data.sort((a, b) => new Date(b.time) - new Date(a.time));
                 setMyPosts(sortedPosts);
             } catch (error) {
                 console.error('There was an error!', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -122,6 +123,14 @@ export function MyPost() {
             return () => window.removeEventListener('resize', checkOverflow);
         }, [post]);
     
+        if (loading) {
+            return (
+                <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                    <CircularProgress />
+                </Box>
+            );
+        }
+
         return (
             <Box
                 sx={{

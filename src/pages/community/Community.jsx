@@ -112,15 +112,7 @@ export function Community() {
             window.addEventListener('resize', checkOverflow);
             return () => window.removeEventListener('resize', checkOverflow);
         }, [post]);
-    
-        if (loading) {
-            return (
-                <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-                    <CircularProgress />
-                </Box>
-            );
-        }
-        
+
         return (
             <Box
                 sx={{
@@ -161,7 +153,14 @@ export function Community() {
         );
     };
     
-
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
+    
     return (
         <Box padding={3}>
             <Box sx={{ 
