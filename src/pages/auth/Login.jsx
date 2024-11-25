@@ -41,27 +41,37 @@ export function Login() {
             setNotification({ ...notification, open: false });
         };
 
-    const validateEmail = (email) => {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return re.test(String(email).toLowerCase());
-    };
+    const validateEmail = useCallback((email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    }, []);
 
-    const validatePassword = (password) => {
-      return password.length >= 6;
-    };
+    const validatePassword = useCallback((password) => {
+        return password.length >= 6;
+    }, []);
 
-    const debouncedCheckEmail = debounce(async (email) => {
-      if (!validateEmail(email)) {
+    const handleEmailChange = useCallback((e) => {
+      const emailInput = e.target.value;
+      setEmail(emailInput);
+      if (!validateEmail(emailInput)) {
+          setEmailError("Invalid email address");
           setCheckUserEmail(null);
-          return;
+      } else {
+          setEmailError("");
+          debouncedCheckEmail(emailInput);
       }
-      try {
-          const response = await axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail', { email });
-          setCheckUserEmail(response.data);
-      } catch (error) {
-          console.error('Error checking email:', error);
+  }, [validateEmail, debouncedCheckEmail]);
+
+  const debouncedCheckEmail = useCallback(debounce(async (email) => {
+      if (validateEmail(email)) {
+          try {
+              const response = await axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail', { email });
+              setCheckUserEmail(response.data);
+          } catch (error) {
+              console.error('Error checking email:', error);
+          }
       }
-  }, 500);
+  }, 500), [validateEmail]);
 
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -145,7 +155,7 @@ export function Login() {
                 name="email"
                 type="email"
                 autoComplete="current-email"
-                onChange={(e) => debouncedCheckEmail(e.target.value)}
+                onChange={handleEmailChange}
                 error={!!emailError}
                 helperText={emailError}
               />
