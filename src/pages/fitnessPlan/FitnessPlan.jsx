@@ -4,21 +4,20 @@ import { useUser } from "../../contexts/UseContext";
 import {
     Typography,
     Box,
-    Paper,
     Button,
-    styled,
-    List,
     Grid,
     TextField,
     Card,
     CardContent,
-    Pagination
+    Pagination,
+    CircularProgress
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 
 
 export function FitnessPlan(){
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const [fitnessPlan, setFitnessPlan] = useState([]);
     const [dense, setDense] = React.useState(false);
     const [userData, setUserData] = useState([]);
@@ -51,12 +50,15 @@ export function FitnessPlan(){
             try {
                 const uid = user?.uid;
                 if (!uid) return;
+                setLoading(true);
                 const response = await axios.get(`https://be-um-fitness.vercel.app/fitnessPlan/getAllFitnessPlanByUid/${uid}`);
                 const sortedFitnessPlans = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setFitnessPlan(sortedFitnessPlans);
             } catch (error) {
                 console.error('There was an error!', error);
-            }
+            } finally {
+              setLoading(false);
+          }
         };
     
         fetchFitnessPlan();
@@ -85,6 +87,13 @@ export function FitnessPlan(){
     const startIndex = (page - 1) * itemsPerPage;
     const currentFitnessPlans = filteredFitnessPlans.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+      return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+              <CircularProgress />
+          </Box>
+      );
+    }
 
     return(
         <>
