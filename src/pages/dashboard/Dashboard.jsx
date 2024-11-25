@@ -41,21 +41,16 @@ export function Dashboard() {
     
     setLoading(true);
     Promise.all([
-        fetchUserDetails(user.uid),
-        fetchSteps(user.uid),
-        fetchGoals(user.uid)
-    ]).then(([userDetails, userSteps, userGoals]) => {
-        setUserData(userDetails);
-        setSteps(userSteps);
-        setGoals(userGoals);
-    }).catch(error => {
+        fetchUser(),
+        fetchSteps(),
+        fetchGoals()
+    ]).catch(error => {
         console.error('Error fetching data:', error);
     }).finally(() => {
         setLoading(false);
     });
 }, [user?.uid]);
 
-  useEffect(() => {
     const fetchUser = async () => {
         try {
             const uid = user?.uid;
@@ -82,10 +77,6 @@ export function Dashboard() {
         }
     };
 
-    fetchUser();
-}, [user?.uid]);
-
-  useEffect(() => {
           const fetchSteps = async () => {
               try {
                   const uid = user?.uid;
@@ -98,8 +89,6 @@ export function Dashboard() {
                   console.error('There was an error!', error);
               }
           };
-          fetchSteps();
-      }, [user?.uid]);
 
   useEffect(() => {
       const storedUid = localStorage.getItem('uid');
@@ -113,7 +102,6 @@ export function Dashboard() {
       }
   }, [setUser, user]);
 
-  useEffect(() => {
     const fetchGoals = async () => {
       try {
         const uid = user?.uid;
@@ -132,9 +120,6 @@ export function Dashboard() {
         console.error('There was an error!', error);
       }
     };
-
-    fetchGoals();
-  }, [user?.uid]);
 
   const getRandomMotivationalQuoteCallback = (randomMotivationalQuote) => {
     setCurrentMotivationalQuote(randomMotivationalQuote);
