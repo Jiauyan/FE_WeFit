@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { debounce } from 'lodash';
 import { useUser } from '../../contexts/UseContext';
 import {
     Grid,
@@ -29,34 +30,16 @@ export function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false); // Loading state
     const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
-
     const navigate = useNavigate();
-    const { updateUser, login, signInWithGoogle } = useUser();
-
-    const debouncedCheckEmail = async (email) => {
-      if (!validateEmail(email)) {
-        setCheckUserEmail(null); // Reset if invalid
-        return;
-      }
-      try {
-        const response = await axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail', { email });
-        setCheckUserEmail(response.data);
-      } catch (error) {
-        console.error('Error checking email:', error);
-      }
-    }; 
-
-      // Handle email input change
-    const handleEmailChange = (e) => {
-      const value = e.target.value;
-      setEmail(value);
-      setEmailError(""); // Clear error on input
-      debouncedCheckEmail(value); // Trigger debounce function
-    };
+    const {login} = useUser();
 
     const handleTogglePasswordVisibility = () => {
       setShowPassword(!showPassword);
     };
+
+    const handleCloseNotification = () => {
+            setNotification({ ...notification, open: false });
+        };
 
     const validateEmail = (email) => {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -67,73 +50,69 @@ export function Login() {
       return password.length >= 6;
     };
 
+    const debouncedCheckEmail = useCallback(debounce(async (email) => {
+      if (!validateEmail(email)) {
+          setCheckUserEmail(null);
+          return;
+      }
+      try {
+          const response = await axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail', { email });
+          setCheckUserEmail(response.data);
+      } catch (error) {
+          console.error('Error checking email:', error);
+      }
+  }, 500), []);
+  
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        // Validation
-        let isValid = true;
-        if (!email) {
-          setEmailError("Email is required");
-          isValid = false;
-        } else if (!validateEmail(email)) {
-          setEmailError("Invalid email address");
-          isValid = false;
-        } else {
-          setEmailError("");
-        }
-
-        if (!password) {
-          setPasswordError("Password is required");
-          isValid = false;
-        } else if (!validatePassword(password)) {
-          setPasswordError("Password must be at least 6 characters long");
-          isValid = false;
-        } else {
-          setPasswordError("");
-        }
-
-        if (!isValid) return;
-
-        setLoading(true); // Start loading
-        try {
+      e.preventDefault();
+      let emailValid = validateEmail(email);
+      let passwordValid = validatePassword(password);
+  
+      if (!email || !emailValid || !password || !passwordValid) {
+          // Set all error states at once to ensure consistent state updates
+          setEmailError(email ? (emailValid ? "" : "Invalid email address") : "Email is required");
+          setPasswordError(password ? (passwordValid ? "" : "Password must be at least 6 characters long") : "Password is required");
+          return;
+      }
+  
+      // Proceed with API call
+      setLoading(true);
+      try {
           const formData = { email, password };
           const response = await login(formData);
-          const redirectPath = response.data.userRole === 'Student' ? '/dashboard' : '/trainerDashboard';
-          setNotification({ open: true, message: 'Login successful!', severity: 'success' }); // Set success notification here
-          setTimeout(() => { // Delay navigation
-            navigate(`${redirectPath}`);
-          }, 1000);
-        } catch (error) {
-          if (axios.isAxiosError(error) && error.response) {
-        const errorDetails = error.response.data?.details;
-
-        if (errorDetails?.includes('auth/invalid-credential')) {
-          if (checkUserEmail) {
-            setPasswordError("Incorrect password");
-          } else {
-            setEmailError("No account found with this email");
-          }
-        } else {
-          setNotification({
-            open: true,
-            message: error.response.data?.message || "An error occurred during login",
-            severity: 'error',
-          });
-        }
-      } else {
-        setNotification({
-          open: true,
-          message: 'An unexpected error occurred. Please try again later.',
-          severity: 'error',
-        });
+          // Handle navigation and notification here
+      } catch (error) {
+          // Proper error handling based on API response
+          handleLoginErrors(error);
+      } finally {
+          setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
-    const handleCloseNotification = () => {
-        setNotification({ ...notification, open: false });
     };
+    
+    const handleLoginErrors = (error) => {
+      if (axios.isAxiosError(error) && error.response) {
+          const errorDetails = error.response.data?.details;
+          if (errorDetails?.includes('auth/invalid-credential')) {
+              if (checkUserEmail) {
+                  setPasswordError("Incorrect password");
+              } else {
+                  setEmailError("No account found with this email");
+              }
+          } else {
+              setNotification({
+                  open: true,
+                  message: error.response.data?.message || "An error occurred during login",
+                  severity: 'error',
+              });
+          }
+      } else {
+          setNotification({
+              open: true,
+              message: 'An unexpected error occurred. Please try again later.',
+              severity: 'error',
+          });
+      }
+    }
 
     return (
       <Grid container component="main" sx={{ height: '100vh', width: '100vw' }}>
