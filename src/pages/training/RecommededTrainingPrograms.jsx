@@ -9,13 +9,15 @@ import {
     CardActionArea,
     CardContent,
     CardMedia,
-    Button
+    Button,
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from "react-router-dom";
 
 const RecommendedTrainingPrograms = () => {
+    const [loading, setLoading] = useState(true);
     const [recommededTrainingPrograms, setRecommendedTrainingPrograms] = useState([]);
     const [bookedPrograms, setBookedPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -50,14 +52,16 @@ const RecommendedTrainingPrograms = () => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-
+                setLoading(true);
                 // Fetch booked programs
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
                 setBookedPrograms(bookedProgramIds);
             } catch (error) {
                 console.error('There was an error!', error);
-            }
+            } finally {
+                setLoading(false);
+            };
         };
 
         fetchBookings();
@@ -68,6 +72,7 @@ const RecommendedTrainingPrograms = () => {
                 try {
                     const uid = user?.uid;
                     if (!uid) return;
+                    setLoading(true);
                     const fitnessLevel = user.data.fitnessLevel;
                     const fitnessGoal = user.data.fitnessGoal;
                     const favClass = user.data.favClass;
@@ -80,7 +85,9 @@ const RecommendedTrainingPrograms = () => {
                     setRecommendedTrainingPrograms(availableRecommendedPrograms);
                 } catch (error) {
                     console.error('There was an error!', error);
-                }
+                } finally {
+                    setLoading(false);
+                };
             };
 
             fetchRecommendedTrainingPrograms();

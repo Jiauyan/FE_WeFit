@@ -48,7 +48,7 @@ export function TrainingPrograms() {
         }).finally(() => {
             setLoading(false);
         });
-    }, [user?.uid, bookedPrograms]);
+    }, [user?.uid]);
 
         const fetchBookings = async () => {
             try {
