@@ -7,6 +7,7 @@ import { GradientButton } from '../../contexts/ThemeProvider';
 import  ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 export function ViewTipStudent() {
+  const [loading, setLoading] = useState(true);
   const [tipData, setTipData] = useState([]);
   const [tipUserID, setTipUserID] = useState(null);
   const [tipUser, setTipUser] = useState({});
