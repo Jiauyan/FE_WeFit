@@ -1,13 +1,12 @@
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
-import { Typography, Paper, Button, Grid, IconButton, Box, Avatar, CircularProgress } from "@mui/material";
+import { Typography, Paper, Button, Grid, IconButton, Box, Avatar } from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import  ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 export function ViewTipStudent() {
-  const [loading, setLoading] = useState(true);
   const [tipData, setTipData] = useState([]);
   const [tipUserID, setTipUserID] = useState(null);
   const [tipUser, setTipUser] = useState({});
@@ -25,46 +24,50 @@ export function ViewTipStudent() {
   }, []);
 
   useEffect(() => {
-    if (!user?.uid) {
-        setLoading(false);
-        return;
-    }
-    
     setLoading(true);
-    Promise.all([
-        fetchTipData(),
-        fetchUserData()
-    ]).catch(error => {
-        console.error('Error fetching data:', error);
-    }).finally(() => {
-        setLoading(false);
-    });
-}, [user?.uid, fetchTipData, fetchUserData]); 
-
-    const fetchTipData = async () => {
+    const fetchData = async () => {
       try {
         const response = await axios.get(`https://be-um-fitness.vercel.app/tips/getTipById/${id}`);
         setTipData(response.data);
         setTipUserID(response.data.uid);
       } catch (error) {
-        console.error('There was an error fetching tip data!', error);
+        console.error('There was an error!', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const fetchUserData = async () => {
-      if (!tipUserID) return; // Include this if `tipUserID` can be undefined or null
-      
+    fetchData();
+  }, [id]);
+
+  useEffect(() => {
+    if (!tipUserID) return;
+    setLoading(true);
+    const fetchUser = async () => {
       try {
-          const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${tipUserID}`);
-          setTipUser(response.data);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${tipUserID}`);
+        setTipUser(response.data);
       } catch (error) {
-          console.error('There was an error fetching the user data!', error);
+        console.error('There was an error!', error);
+      } finally {
+        setLoading(false);
       }
-  };
+    };
+
+    fetchUser();
+  }, [tipUserID]); 
 
     const handleBack = async () => {
       navigate("/tips", { state: { tipPage:tipPage} });
     }; 
+
+    if (loading) {
+      return (
+        <Grid container justifyContent="center" alignItems="center" style={{ height: "100vh" }}>
+          <CircularProgress />
+        </Grid>
+      );
+    }
 
   return (
     <>
