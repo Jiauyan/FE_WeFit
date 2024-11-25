@@ -10,12 +10,14 @@ import {
     CardContent,
     CardMedia,
     Button,
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from "react-router-dom";
 
 const CompletedBooking = () => {
+    const [loading, setLoading] = useState(true);
     const [bookings, setBookings] = useState('');
     const [completedTrainingPrograms, setCompletedTrainingPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -51,7 +53,8 @@ const CompletedBooking = () => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-    
+                setLoading(true);
+
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 setBookings(response.data);
     
@@ -73,6 +76,8 @@ const CompletedBooking = () => {
                 setCompletedTrainingPrograms(completedPrograms); 
             } catch (error) {
                 console.error('There was an error!', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -88,6 +93,14 @@ const CompletedBooking = () => {
     const startIndex = (page - 1) * itemsPerPage;
     const currentPrograms = filteredPrograms.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+    }
+    
     return (
         <Box padding={3}>
             <Box sx={{ 

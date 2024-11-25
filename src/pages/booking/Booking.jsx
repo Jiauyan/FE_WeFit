@@ -10,7 +10,8 @@ import {
     Grid,
     Box,
     TextField,
-    Pagination
+    Pagination,
+    CircularProgress
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
@@ -27,13 +28,14 @@ export function Booking() {
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const itemsPerPage = 6;
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBookings = async () => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-    
+                setLoading(true);
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 setBookings(response.data);
     
@@ -57,6 +59,8 @@ export function Booking() {
                 setCompletedTrainingPrograms(completedPrograms); // If you want to store completed separately
             } catch (error) {
                 console.error('There was an error!', error);
+            } finally {
+                setLoading(false);
             }
         };
     
@@ -80,6 +84,13 @@ export function Booking() {
     const startIndex = (page - 1) * itemsPerPage;
     const currentBookings = filteredBookings.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+    }
 
     return (
         <Box padding={3}>

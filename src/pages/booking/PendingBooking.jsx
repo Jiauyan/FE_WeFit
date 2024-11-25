@@ -10,12 +10,14 @@ import {
     CardContent,
     CardMedia,
     Button,
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import { useNavigate } from "react-router-dom";
 
 const PendingBooking = () => {
+    const [loading, setLoading] = useState(true);
     const [bookings, setBookings] = useState('');
     const [pendingTrainingPrograms, setPendingTrainingPrograms] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -50,7 +52,8 @@ const PendingBooking = () => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
-    
+                setLoading(true);
+
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 setBookings(response.data);
     
@@ -72,14 +75,13 @@ const PendingBooking = () => {
                 setPendingTrainingPrograms(pendingPrograms); 
             } catch (error) {
                 console.error('There was an error!', error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchPendingBookings();
     }, [user?.uid]);
-
-   
-
 
     // Filter programs based on search term
     const filteredPrograms = pendingTrainingPrograms.filter(program =>
@@ -89,6 +91,14 @@ const PendingBooking = () => {
     // Calculate the current programs to display based on the page
     const startIndex = (page - 1) * itemsPerPage;
     const currentPrograms = filteredPrograms.slice(startIndex, startIndex + itemsPerPage);
+
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+    }
 
     return (
         <Box padding={3}>
