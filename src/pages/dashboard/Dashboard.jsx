@@ -1,6 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
-import { Grid, Card, CardContent, Typography, Box } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
 import DirectionsWalk from '@mui/icons-material/DirectionsWalk';
 import WaterDrop from '@mui/icons-material/WaterDrop';
 import TrackChanges from '@mui/icons-material/TrackChanges';
@@ -181,8 +181,7 @@ export function Dashboard() {
     if (loading) {
       return (
         <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-          {/* <CircularProgress /> */}
-          Loading...
+          <CircularProgress />
         </Box>
       );
     }
