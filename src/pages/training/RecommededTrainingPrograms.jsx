@@ -49,50 +49,37 @@ const RecommendedTrainingPrograms = () => {
     };
 
     useEffect(() => {
-        const fetchBookings = async () => {
+        const fetchData = async () => {
+            const uid = user?.uid;
+            if (!uid) {
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
             try {
-                const uid = user?.uid;
-                if (!uid) return;
-                setLoading(true);
-                // Fetch booked programs
-                const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
-                const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
+                const bookingsResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
+                const bookedProgramIds = bookingsResponse.data.map((booking) => booking.trainingClassID);
+
+                const recommendationsResponse = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/getRecommendedTrainingPrograms', {
+                    fitnessLevel: user.data.fitnessLevel,
+                    fitnessGoal: user.data.fitnessGoal,
+                    favClass: user.data.favClass
+                });
+                
+                const availableRecommendedPrograms = recommendationsResponse.data.filter(program => !bookedProgramIds.includes(program.id));
+
                 setBookedPrograms(bookedProgramIds);
+                setRecommendedTrainingPrograms(availableRecommendedPrograms);
             } catch (error) {
                 console.error('There was an error!', error);
             } finally {
                 setLoading(false);
-            };
+            }
         };
 
-        fetchBookings();
+        fetchData();
     }, [user?.uid]);
-
-    useEffect(() => {
-            const fetchRecommendedTrainingPrograms = async () => {
-                try {
-                    const uid = user?.uid;
-                    if (!uid) return;
-                    setLoading(true);
-                    const fitnessLevel = user.data.fitnessLevel;
-                    const fitnessGoal = user.data.fitnessGoal;
-                    const favClass = user.data.favClass;
-                    const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/getRecommendedTrainingPrograms',{
-                      fitnessLevel,
-                      fitnessGoal,
-                      favClass
-                    });
-                    const availableRecommendedPrograms = response.data.filter((program) => !bookedPrograms.includes(program.id));
-                    setRecommendedTrainingPrograms(availableRecommendedPrograms);
-                } catch (error) {
-                    console.error('There was an error!', error);
-                } finally {
-                    setLoading(false);
-                };
-            };
-
-            fetchRecommendedTrainingPrograms();
-        }, [user?.uid, bookedPrograms]);
 
 
     // Filter programs based on search term
