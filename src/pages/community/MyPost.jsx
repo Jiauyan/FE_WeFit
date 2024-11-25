@@ -122,14 +122,6 @@ export function MyPost() {
             window.addEventListener('resize', checkOverflow);
             return () => window.removeEventListener('resize', checkOverflow);
         }, [post]);
-    
-        if (loading) {
-            return (
-                <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-                    <CircularProgress />
-                </Box>
-            );
-        }
 
         return (
             <Box
@@ -171,6 +163,14 @@ export function MyPost() {
             </Box>
         );
     };
+
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
     
     return (
         <Box padding={3}>
