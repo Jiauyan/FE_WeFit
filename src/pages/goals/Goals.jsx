@@ -3,26 +3,14 @@ import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
 import {
     Typography,
-    Container,
     Box,
-    Paper,
-    Button,
-    styled,
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemIcon,
-    ListItemText,
     IconButton,
-    FormGroup,
-    FormControlLabel,
     Grid,
-    LinearProgress,
     TextField,
     Card,
-    CardActionArea,
     CardContent,
-    Pagination
+    Pagination,
+    CircularProgress
 } from "@mui/material";
 import CheckCircle  from '@mui/icons-material/CheckCircle';
 import { useNavigate, Outlet } from 'react-router-dom';
@@ -32,6 +20,7 @@ import { EditGoal } from "../goals/EditGoal"
 
 
 export function Goals(){
+    const [loading, setLoading] = useState(true);
     const [goals, setGoals] = useState([]);
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
@@ -121,8 +110,6 @@ export function Goals(){
 
     };
 
-    
-
       useEffect(() => {
         // Load user ID from local storage or other persistent storage
         const storedUid = localStorage.getItem('uid');
@@ -136,6 +123,7 @@ export function Goals(){
             try {
                 const uid = user?.uid;
                 if (!uid) return;
+                setLoading(true);
                 const response = await axios.get(`https://be-um-fitness.vercel.app/goals/getAllUserGoals/${uid}`);
                 const sortedGoal = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setGoals(sortedGoal);
@@ -147,6 +135,8 @@ export function Goals(){
                 setCompletedGoals(initialCompletedGoals);
             } catch (error) {
                 console.error('There was an error!', error);
+            } finally {
+                setLoading(false);
             }
         };
     
@@ -161,7 +151,14 @@ export function Goals(){
       // Calculate the current programs to display based on the page
       const startIndex = (page - 1) * itemsPerPage;
       const currentGoals = filteredGoals.slice(startIndex, startIndex + itemsPerPage);
-      
+    
+      if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return(
         <Box padding={3}>
