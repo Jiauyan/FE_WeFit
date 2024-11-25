@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { debounce } from 'lodash';
@@ -62,7 +62,7 @@ export function Login() {
           console.error('Error checking email:', error);
       }
   }, 500), []);
-  
+
     const handleSubmit = async (e) => {
       e.preventDefault();
       let emailValid = validateEmail(email);
