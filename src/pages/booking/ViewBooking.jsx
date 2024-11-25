@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Grid, IconButton, TableContainer, Table, TableBody, TableRow, TableCell, CircularProgress} from "@mui/material";
+import { Typography, Paper, Grid, IconButton, TableContainer, Table, TableBody, TableRow, TableCell, CircularProgress, Box} from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import AttachMoney from '@mui/icons-material/AttachMoney';

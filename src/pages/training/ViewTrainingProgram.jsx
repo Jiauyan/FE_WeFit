@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid, IconButton, CircularProgress } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Grid, IconButton, CircularProgress, Box } from '@mui/material';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
