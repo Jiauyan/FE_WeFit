@@ -33,13 +33,26 @@ export function Login() {
     const navigate = useNavigate();
     const { updateUser, login, signInWithGoogle } = useUser();
 
-    useEffect(() => {
-      axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail', { email })
-        .then(response => {
-          setCheckUserEmail(response.data);
-        })
-        .catch(error => console.error('There was an error!', error));
-    }, [email]);
+    const debouncedCheckEmail = debounce(async (email) => {
+      if (!validateEmail(email)) {
+        setCheckUserEmail(null); // Reset if invalid
+        return;
+      }
+      try {
+        const response = await axios.post('https://be-um-fitness.vercel.app/auth/checkUserEmail', { email });
+        setCheckUserEmail(response.data);
+      } catch (error) {
+        console.error('Error checking email:', error);
+      }
+    }); 
+
+      // Handle email input change
+    const handleEmailChange = (e) => {
+      const value = e.target.value;
+      setEmail(value);
+      setEmailError(""); // Clear error on input
+      debouncedCheckEmail(value); // Trigger debounce function
+    };
 
     const handleTogglePasswordVisibility = () => {
       setShowPassword(!showPassword);
@@ -91,18 +104,33 @@ export function Login() {
             navigate(`${redirectPath}`);
           }, 1000);
         } catch (error) {
-          if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && checkUserEmail) {
-            setPasswordError("Incorrect password");
-          } else if (error.response.data.details === 'Firebase: Error (auth/invalid-credential).' && !checkUserEmail) {
-            setEmailError("Incorrect email");
-          } else {
-            setNotification({ open: true, message: 'An error occurred during login', severity: 'error' });
-          }
-        } finally {
-          setLoading(false); // Stop loading
-        }
-    };
+          if (axios.isAxiosError(error) && error.response) {
+        const errorDetails = error.response.data?.details;
 
+        if (errorDetails?.includes('auth/invalid-credential')) {
+          if (checkUserEmail) {
+            setPasswordError("Incorrect password");
+          } else {
+            setEmailError("No account found with this email");
+          }
+        } else {
+          setNotification({
+            open: true,
+            message: error.response.data?.message || "An error occurred during login",
+            severity: 'error',
+          });
+        }
+      } else {
+        setNotification({
+          open: true,
+          message: 'An unexpected error occurred. Please try again later.',
+          severity: 'error',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
     const handleCloseNotification = () => {
         setNotification({ ...notification, open: false });
     };
@@ -138,7 +166,7 @@ export function Login() {
                 name="email"
                 type="email"
                 autoComplete="current-email"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 error={!!emailError}
                 helperText={emailError}
               />
