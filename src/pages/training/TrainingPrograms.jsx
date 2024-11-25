@@ -10,7 +10,8 @@ import {
     Grid,
     Box,
     TextField,
-    Pagination
+    Pagination,
+    CircularProgress
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
@@ -19,6 +20,7 @@ import Section from './Section';
 
 export function TrainingPrograms() {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const { user, setUser } = useUser();
     const [trainingPrograms, setTrainingPrograms] = useState([]);
     const [recommendedTrainingPrograms, setRecommendedTrainingPrograms] = useState([]);
@@ -31,6 +33,23 @@ export function TrainingPrograms() {
     const itemsPerPage = 6;
 
     useEffect(() => {
+        if (!user?.uid) {
+            setLoading(false);
+            return;
+        }
+        
+        setLoading(true);
+        Promise.all([
+            fetchBookings(),
+            fetchRecommendedTrainingPrograms(),
+            fetchTrainingPrograms()
+        ]).catch(error => {
+            console.error('Error fetching data:', error);
+        }).finally(() => {
+            setLoading(false);
+        });
+    }, [user?.uid, bookedPrograms]);
+
         const fetchBookings = async () => {
             try {
                 const uid = user?.uid;
@@ -45,11 +64,7 @@ export function TrainingPrograms() {
             }
         };
 
-        fetchBookings();
-    }, [user?.uid]);
-
-    useEffect(() => {
-            const fetchRecommendedTrainingPrograms = async () => {
+        const fetchRecommendedTrainingPrograms = async () => {
                 try {
                     const uid = user?.uid;
                     if (!uid) return;
@@ -68,10 +83,6 @@ export function TrainingPrograms() {
                 }
             };
 
-            fetchRecommendedTrainingPrograms();
-        }, [user?.uid, bookedPrograms]);
-
-    useEffect(() => {
     const fetchTrainingPrograms = async () => {
         try {
             const uid = user?.uid;
@@ -100,10 +111,6 @@ export function TrainingPrograms() {
         }
     };
 
-    fetchTrainingPrograms();
-    }, [user?.uid, bookedPrograms]);
-
-   
     const handleView = async (trainingProgram) => {
         const trainingProgramId = trainingProgram.id;
         navigate("/viewTrainingProgram", { state: { id: trainingProgramId } });
@@ -125,6 +132,13 @@ export function TrainingPrograms() {
     const startIndex = (page - 1) * itemsPerPage;
     const currentTrainingPrograms = filteredTrainingPrograms.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+      }
 
     return (
             <Box padding={3}>
