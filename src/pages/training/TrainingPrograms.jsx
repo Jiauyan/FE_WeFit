@@ -37,15 +37,17 @@ export function TrainingPrograms() {
             setLoading(false);
             return;
         }
-        
+
         setLoading(true);
-        Promise.all([
-            fetchBookings(),
-            fetchRecommendedTrainingPrograms(),
-            fetchTrainingPrograms()
-        ]).catch(error => {
+        fetchBookings().then(() => {
+            Promise.all([
+                fetchTrainingPrograms(),
+                fetchRecommendedTrainingPrograms()
+            ]).finally(() => {
+                setLoading(false);
+            });
+        }).catch(error => {
             console.error('Error fetching data:', error);
-        }).finally(() => {
             setLoading(false);
         });
     }, [user?.uid]);
