@@ -195,6 +195,7 @@ export function EditProfile() {
         )}
         <Box component="form" onSubmit={handleSubmit} sx={{  mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
+            required
             margin="normal"
             fullWidth
             id="username"
@@ -220,6 +221,7 @@ export function EditProfile() {
                     </Select>
             </FormControl>
         <TextField
+            required
             margin="normal"
             fullWidth
             id="age"
@@ -232,6 +234,7 @@ export function EditProfile() {
             sx={{ mb: 1 }}
         />
         <TextField
+            required
             margin="normal"
             fullWidth
             name="weight"
@@ -244,6 +247,7 @@ export function EditProfile() {
             sx={{ mb: 1 }}
         />
         <TextField
+            required
             margin="normal"
             fullWidth
             name="height"
