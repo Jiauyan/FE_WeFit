@@ -140,11 +140,6 @@ export function ViewTrainingProgram() {
               { trainingProgramData.feeAmount == 0 ? 'FREE' : `RM${trainingProgramData.feeAmount}`}
             </Typography>
         </Grid>
-        <Grid container item xs={12}>
-        <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap', mr:2 }}>
-                {trainingProgramData.desc}
-              </Typography>
-          </Grid>
           <Grid container item xs={12}>
           <Typography variant="body1" sx={{ mb: 2, textAlign: 'justify', whiteSpace: 'pre-wrap' , mr:2}}>
                   {trainingProgramData.desc}
