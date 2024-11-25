@@ -24,39 +24,32 @@ export function ViewTipStudent() {
       }
   }, []);
 
+  
   useEffect(() => {
-    setLoading(true);
     const fetchData = async () => {
-      try {
-        const response = await axios.get(`https://be-um-fitness.vercel.app/tips/getTipById/${id}`);
-        setTipData(response.data);
-        setTipUserID(response.data.uid);
-      } catch (error) {
-        console.error('There was an error!', error);
-      } finally {
-        setLoading(false);
-      }
+        setLoading(true);
+        try {
+            // Fetch the tip details
+            const tipResponse = await axios.get(`https://be-um-fitness.vercel.app/tips/getTipById/${id}`);
+            setTipData(tipResponse.data);
+            const tipUserID = tipResponse.data.uid;
+
+            if (!tipUserID) {
+                throw new Error('User ID not found in tip data');
+            }
+
+            // Using the tip's user ID to fetch the user details
+            const userResponse = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${tipUserID}`);
+            setTipUser(userResponse.data);
+        } catch (error) {
+            console.error('There was an error!', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     fetchData();
   }, [id]);
-
-  useEffect(() => {
-    if (!tipUserID) return;
-    setLoading(true);
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${tipUserID}`);
-        setTipUser(response.data);
-      } catch (error) {
-        console.error('There was an error!', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [tipUserID]); 
 
     const handleBack = async () => {
       navigate("/tips", { state: { tipPage:tipPage} });
