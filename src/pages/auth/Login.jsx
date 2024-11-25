@@ -145,7 +145,7 @@ export function Login() {
                 name="email"
                 type="email"
                 autoComplete="current-email"
-                onChange={handleEmailChange}
+                onChange={(e) => doub(e.target.value)}
                 error={!!emailError}
                 helperText={emailError}
               />
@@ -158,7 +158,7 @@ export function Login() {
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 autoComplete="current-password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => debouncedCheckEmail(e.target.value)}
                 error={!!passwordError}
                 helperText={passwordError}
                 InputProps={{
