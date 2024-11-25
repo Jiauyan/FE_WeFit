@@ -19,6 +19,7 @@ import Section from './Section';
 
 export function TrainingPrograms() {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const { user, setUser } = useUser();
     const [trainingPrograms, setTrainingPrograms] = useState([]);
     const [recommendedTrainingPrograms, setRecommendedTrainingPrograms] = useState([]);
@@ -31,78 +32,47 @@ export function TrainingPrograms() {
     const itemsPerPage = 6;
 
     useEffect(() => {
-        const fetchBookings = async () => {
-            try {
-                const uid = user?.uid;
-                if (!uid) return;
+        const fetchData = async () => {
+            if (!user?.uid) return;
+            setLoading(true);
 
-                // Fetch booked programs
-                const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
-                const bookedProgramIds = response.data.map((booking) => booking.trainingClassID);
-                setBookedPrograms(bookedProgramIds);
+            try {
+                const bookingResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${user.uid}`);
+                const bookedProgramIds = bookingResponse.data.map(booking => booking.trainingClassID);
+
+                 // Fetch recommended training programs using user data
+                const fitnessLevel = user.data.fitnessLevel;
+                const fitnessGoal = user.data.fitnessGoal;
+                const favClass = user.data.favClass;
+                const recommendationsResponse = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/getRecommendedTrainingPrograms', {
+                     fitnessLevel,
+                     fitnessGoal,
+                     favClass
+                });
+                const availableRecommendedPrograms = recommendationsResponse.data.filter(program => !bookedProgramIds.includes(program.id));
+ 
+                const trainingResponse = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
+                const availablePrograms = trainingResponse.data.filter(program => !bookedProgramIds.includes(program.id));
+                // Categorize by fitness level
+                const beginner = availablePrograms.filter((program) => program.fitnessLevel === 'Beginner');
+                const intermediate = availablePrograms.filter((program) => program.fitnessLevel === 'Intermediate');
+                const advanced = availablePrograms.filter((program) => program.fitnessLevel === 'Advanced');
+
+                // Set state
+                setTrainingPrograms(availablePrograms);
+                setRecommendedTrainingPrograms(availableRecommendedPrograms);
+                setBeginnerPrograms(beginner);
+                setIntermediatePrograms(intermediate);
+                setAdvancedPrograms(advanced);
             } catch (error) {
-                console.error('There was an error!', error);
+                console.error('Error fetching training programs:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchBookings();
+        fetchData();
     }, [user?.uid]);
-
-    useEffect(() => {
-            const fetchRecommendedTrainingPrograms = async () => {
-                try {
-                    const uid = user?.uid;
-                    if (!uid) return;
-                    const fitnessLevel = user.data.fitnessLevel;
-                    const fitnessGoal = user.data.fitnessGoal;
-                    const favClass = user.data.favClass;
-                    const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/getRecommendedTrainingPrograms',{
-                      fitnessLevel,
-                      fitnessGoal,
-                      favClass
-                    });
-                     const availableRecommendedPrograms = response.data.filter((program) => !bookedPrograms.includes(program.id));
-                setRecommendedTrainingPrograms(availableRecommendedPrograms);
-                } catch (error) {
-                    console.error('There was an error!', error);
-                }
-            };
-
-            fetchRecommendedTrainingPrograms();
-        }, [user?.uid, bookedPrograms]);
-
-    useEffect(() => {
-    const fetchTrainingPrograms = async () => {
-        try {
-            const uid = user?.uid;
-            if (!uid) return;
-
-            // Fetch all training programs
-            const response = await axios.get('https://be-um-fitness.vercel.app/trainingPrograms/getAllTrainingPrograms');
-
-            // Filter out booked programs
-            const availablePrograms = response.data.filter(
-                (program) => !bookedPrograms.includes(program.id)
-            );
-
-            // Categorize by fitness level
-            const beginner = availablePrograms.filter((program) => program.fitnessLevel === 'Beginner');
-            const intermediate = availablePrograms.filter((program) => program.fitnessLevel === 'Intermediate');
-            const advanced = availablePrograms.filter((program) => program.fitnessLevel === 'Advanced');
-
-            // Set state
-            setTrainingPrograms(availablePrograms);
-            setBeginnerPrograms(beginner);
-            setIntermediatePrograms(intermediate);
-            setAdvancedPrograms(advanced);
-        } catch (error) {
-            console.error('There was an error!', error);
-        }
-    };
-
-    fetchTrainingPrograms();
-    }, [user?.uid, bookedPrograms]);
-
    
     const handleView = async (trainingProgram) => {
         const trainingProgramId = trainingProgram.id;
@@ -125,6 +95,13 @@ export function TrainingPrograms() {
     const startIndex = (page - 1) * itemsPerPage;
     const currentTrainingPrograms = filteredTrainingPrograms.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        );
+    }
 
     return (
             <Box padding={3}>
