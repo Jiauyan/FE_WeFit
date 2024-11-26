@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Tooltip, IconButton, Box, Paper, Grid, TextField, List, ListItemAvatar, ListItemText, Avatar, CircularProgress, ListItemButton, Typography } from '@mui/material';
+import { Tooltip, IconButton, Box, Paper, Grid, TextField, List, ListItemAvatar, 
+  ListItemText, Avatar, ListItemButton, Typography,
+  Pagination, CircularProgress
+} from '@mui/material';
 import axios from 'axios';
 import  ArrowBackIos  from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +16,16 @@ export function UserChatList() {
   const navigate = useNavigate();
   const { user } = useUser();
   const [ chatroom, setChatroom] = useState('');
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 6;
+
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, [page]);
 
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         const senderUID = user.uid;
         const response = await axios.get(`https://be-um-fitness.vercel.app/chat/getAllUsersWithoutMessagesFromOrToSender/${senderUID}`);
@@ -24,6 +34,8 @@ export function UserChatList() {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching users:', error);
+        setLoading(false);
+      } finally {
         setLoading(false);
       }
     };
@@ -74,6 +86,14 @@ export function UserChatList() {
       console.error('Error fetching users:', error);
     }
   };
+
+  if (loading) {
+    return (
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+        </Box>
+    );
+}
 
   return (
     <Grid
@@ -127,6 +147,13 @@ export function UserChatList() {
             All Users
           </Typography>
         </Box>
+        {users.length === 0 || filteredUsers.length === 0 ? (
+            <Typography variant="body1" color="text.secondary" align="center">
+                No Users Found.
+            </Typography>
+            ) : (
+          <>
+          <Grid container item xs={12}>
         <List sx={{ width: '100%' }}>
           {filteredUsers.map((user) => (
             <ListItemButton
@@ -145,6 +172,16 @@ export function UserChatList() {
             </ListItemButton>
           ))}
         </List>
+        </Grid>
+        <Pagination
+              count={Math.ceil(filteredUsers.length / itemsPerPage)}
+              page={page}
+              onChange={(event, value) => setPage(value)}
+              color="primary"
+              sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}
+            />
+          </>
+        )}
       </Paper>
     </Grid>
   );
