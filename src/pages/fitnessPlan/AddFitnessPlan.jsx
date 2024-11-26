@@ -49,8 +49,8 @@ export function AddFitnessPlan() {
   const [currentActivity, setCurrentActivity] = useState(null);
   const { user } = useUser();
   const uid = user.uid;
-  const [addPlanError, setAddPlanError] = useState('');
-  const [addActivityError, setAddActivityError] = useState('');
+  const [fitnessPlanError, setFitnessPlanError] = useState('');
+  const [fitnessActivityError, setFitnessActivityError] = useState('');
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
   
   const handleCloseNotification = () => setNotification({ ...notification, open: false });
@@ -78,32 +78,23 @@ export function AddFitnessPlan() {
   };
 
   const validateFitnessPlan = () => {
-    if (!title) {
-        setAddPlanError("Title is required.");
-        return false;
-    }
-    if (!date) {
-        setAddPlanError("Date is required.");
-        return false;
-    }
-     if (!fitnessActivities) {
-        setAddActivityError("Fitness acitvity is required.");
-        return false;
-    }
-    return true
+    const newErrors = {};
+  
+      if (!title.trim()) newErrors.title = 'Title is required';
+      if (!date) newErrors.date = 'Date is required';
+      if (!fitnessActivities) newErrors.fitnessActivities = 'Fitness Activity is required';
+      setFitnessPlanError(newErrors);
+      return Object.keys(newErrors).length === 0;
     };
 
     const validateFitnessActivity = () => {
-        if (!task) {
-            setAddPlanError("Title is required.");
-            return false;
-        }
-        if (!duration) {
-            setAddPlanError("Date is required.");
-            return false;
-        }
-        return true
-    };
+        const newErrors = {};
+      
+          if (!task.trim()) newErrors.task = 'Title is required';
+          if (!duration.trim()) newErrors.duration = 'Date is required';
+          setFitnessActivityError(newErrors);
+          return Object.keys(newErrors).length === 0;
+        };
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
@@ -208,7 +199,10 @@ const handleEditFitnessActivity = (index) => {
 
 const handleUpdateFitnessActivity = async (e) => {
     e.preventDefault();
-
+    if (!validateFitnessActivity()) {
+        return;
+    }
+    setLoading(true);
     try {
         const updatedActivity = {
             ...currentActivity,
@@ -224,7 +218,9 @@ const handleUpdateFitnessActivity = async (e) => {
         handleCloseEdit();
     } catch (error) {
         console.error('There was an error updating the fitness activity!', error);
-    }
+    } finally {
+        setLoading(false)
+      }
 };
 
   const handleBack = async () => {
@@ -273,8 +269,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Title"
                     id="fitnessPlanTitle"
                     onChange={(e) => setTitle(e.target.value)}
-                    error={!!addPlanError}
-                    helperText={addPlanError}
+                    error={!!fitnessPlanError}
+                    helperText={fitnessPlanError}
             />
             <DatePicker
             required
@@ -285,11 +281,11 @@ const handleUpdateFitnessActivity = async (e) => {
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
             minDate={new Date()}
-            error={!!addPlanError}
-            helperText={addPlanError}
+            error={!!fitnessPlanError}
+            helperText={fitnessPlanError}
           />
             <Box 
-            error={!!addPlanError} helperText={addPlanError} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
+            error={!!fitnessPlanError} helperText={fitnessPlanError} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
               <Typography variant="subtitle1">
                 Fitness Activities
               </Typography>
@@ -352,8 +348,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Fitness Activity"
                     id="fitnessActivity"
                     onChange={(e) => setTask(e.target.value)}
-                    error={!!addActivityError}
-                    helperText={addActivityError}
+                    error={!!fitnessActivityError}
+                    helperText={fitnessActivityError}
               />
               <TextField
                     margin="normal"
@@ -363,8 +359,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Duration"
                     id="duration"
                     onChange={(e) => setDuration(e.target.value)}
-                    error={!!addActivityError}
-                    helperText={addActivityError}
+                    error={!!fitnessActivityError}
+                    helperText={fitnessActivityError}
               />
               <GradientButton
                         type="submit"
@@ -402,8 +398,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     id="editFitnessActivity"
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
-                    error={!!addActivityError}
-                    helperText={addActivityError}
+                    error={!!fitnessActivityError}
+                    helperText={fitnessActivityError}
                 />
                 <TextField
                     margin="normal"
@@ -414,8 +410,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     id="editDuration"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    error={!!addActivityError}
-                    helperText={addActivityError}
+                    error={!!fitnessActivityError}
+                    helperText={fitnessActivityError}
                 />
                 <GradientButton
                     type="submit"
