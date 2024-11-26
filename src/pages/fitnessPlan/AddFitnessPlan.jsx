@@ -298,8 +298,8 @@ const handleUpdateFitnessActivity = async (e) => {
             label="Title"
             id="fitnessPlanTitle"
             onChange={(e) => setTitle(e.target.value)}
-            error={!!titleError}
-            helperText={titleError}
+            error={!!titleError.title}
+            helperText={titleError.title}
             />
             <DatePicker
             required
@@ -310,8 +310,8 @@ const handleUpdateFitnessActivity = async (e) => {
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width: "100%" }}
             minDate={new Date()}
-            error={!!dateError}
-            helperText={dateError}
+            error={!!dateError.date}
+            helperText={dateError.date}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
                 border: activitiesError ? '1px solid red' : 'none', // Optional: Visual indicator for error
@@ -385,8 +385,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Fitness Activity"
                     id="fitnessActivity"
                     onChange={(e) => setTask(e.target.value)}
-                    error={!!fitnessActivityError}
-                    helperText={fitnessActivityError}
+                    error={!!fitnessActivityError.task}
+                    helperText={fitnessActivityError.task}
               />
               <TextField
                     margin="normal"
@@ -396,8 +396,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Duration"
                     id="duration"
                     onChange={(e) => setDuration(e.target.value)}
-                    error={!!fitnessActivityError}
-                    helperText={fitnessActivityError}
+                    error={!!fitnessActivityError.duration}
+                    helperText={fitnessActivityError.duration}
               />
               <GradientButton
                         type="submit"
@@ -435,8 +435,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     id="editFitnessActivity"
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
-                    error={!!fitnessActivityError}
-                    helperText={fitnessActivityError}
+                    error={!!fitnessActivityError.task}
+                    helperText={fitnessActivityError.task}
                 />
                 <TextField
                     margin="normal"
@@ -447,8 +447,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     id="editDuration"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    error={!!fitnessActivityError}
-                    helperText={fitnessActivityError}
+                    error={!!fitnessActivityError.duration}
+                    helperText={fitnessActivityError.duration}
                 />
                 <GradientButton
                     type="submit"
