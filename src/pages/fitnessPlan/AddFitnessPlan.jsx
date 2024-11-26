@@ -319,7 +319,7 @@ const handleUpdateFitnessActivity = async (e) => {
               </IconButton>
             </Box>
             {activitiesError && (
-            <Typography color="error" variant="body2" sx={{ fontSize: '0.875rem', mb:2 }}>
+            <Typography color="error" variant="body2" sx={{ fontSize: '0.875rem', mb:2, ml:2 }}>
                 {activitiesError}
             </Typography>
             )}
