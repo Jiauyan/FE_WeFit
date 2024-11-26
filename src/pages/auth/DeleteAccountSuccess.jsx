@@ -50,7 +50,7 @@ export function DeleteAccountSuccess() {
         margin: 4  
       }}>
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold',textAlign: 'center' }} margin={1}>
-            Account Deleted Successful!
+          Account Deleted Successfully!
         </Typography>
         <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem',textAlign: 'center' }} margin={1}>
         Your account has been permanently deleted. You can create a new account by clicking the “Register” button.
