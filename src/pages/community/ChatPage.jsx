@@ -27,43 +27,44 @@ export function ChatPage() {
       window.scrollTo(0, 0); 
     }, [page]);
 
-  useEffect(() => {
-    const fetchAndProcessChatrooms = async () => {
-      const uid = user?.uid;
-        if (!uid) return;
+    useEffect(() => {
+      const fetchChatrooms = async () => {
         setLoading(true);
         try {
-          const response = await axios.get(`https://be-um-fitness.vercel.app/chat/getChatroomsByUser/${uid}`);
-          const newChatrooms = response.data;
-          setChatrooms(newChatrooms);
-
-          // Process chatrooms: sort and filter
-          const sortedChatrooms = newChatrooms
-            .map(chatroom => ({
-              ...chatroom,
-              lastMessage: Object.values(chatroom.chatroomDetails.messages || {}).slice(-1)[0]
-            }))
-            .sort((a, b) => {
-              const timestampA = a.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
-              const timestampB = b.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
-              return timestampB - timestampA;  // Sort by descending order of timestamps
-            });
-
-          // Filter sorted chatrooms by the search term (username)
-          const filtered = sortedChatrooms.filter(chatroom =>
-            chatroom.otherUserDetails.username.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-
-          setFilteredChatrooms(filtered);
+          const userUID = user.uid;
+          const response = await axios.get(`https://be-um-fitness.vercel.app/chat/getChatroomsByUser/${userUID}`);
+          setChatrooms(response.data);
+          setFilteredChatrooms(response.data);
         } catch (error) {
           console.error('Error fetching chatrooms:', error);
         } finally {
           setLoading(false);
         }
-    };
-
-    fetchAndProcessChatrooms();
-  }, [user.uid]);
+      };
+  
+      fetchChatrooms();
+    }, [user.uid]);
+  
+    useEffect(() => {
+      // Sort chatrooms by the timestamp of the last message
+      const sortedChatrooms = chatrooms
+        .map(chatroom => ({
+          ...chatroom,
+          lastMessage: Object.values(chatroom.chatroomDetails.messages || {}).slice(-1)[0]
+        }))
+        .sort((a, b) => {
+          const timestampA = a.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
+          const timestampB = b.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
+          return timestampB - timestampA; // Sort by descending order of timestamps
+        });
+  
+      // Filter sorted chatrooms by the search term (username)
+      const filtered = sortedChatrooms.filter(chatroom =>
+        chatroom.otherUserDetails.username.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+  
+      setFilteredChatrooms(filtered);
+    }, [searchTerm, chatrooms]);
 
   
     const formatDateOrTime = (timestamp) => {

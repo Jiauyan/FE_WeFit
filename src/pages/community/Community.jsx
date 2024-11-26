@@ -16,6 +16,7 @@ import {
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 import { AddPost } from '../community/AddPost';
+import { format, isToday, isYesterday, parseISO } from 'date-fns';
 
 export function Community() {
     const navigate = useNavigate();
@@ -62,6 +63,18 @@ export function Community() {
 
         fetchPosts();
     }, [user?.uid]);
+
+    const formatDateOrTime = (timestamp) => {
+        const date = parseISO(timestamp);
+        
+        if (isToday(date)) {
+          return format(date, 'h:mm aa'); // Time for today
+        }
+        if (isYesterday(date)) {
+          return 'Yesterday'; // "Yesterday" for yesterday's date
+        }
+        return format(date, 'dd/MM/yyyy'); // Date in the format: 31/8/2024 for any other day
+      };
 
     const addPostCallback = (newPost) => {
         setPosts(prevPosts => [newPost, ...prevPosts]);
@@ -241,7 +254,7 @@ export function Community() {
                                             {post.userName}
                                         </Typography>
                                         <Typography variant="body3" color="textSecondary" >
-                                            {post.time}
+                                            {formatDateOrTime(post.time)}
                                         </Typography>
                                     </Box>
                                 </Box>
