@@ -111,7 +111,7 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
       </Modal>
       <Snackbar
       open={notification.open}
-      autoHideDuration={1000}
+      autoHideDuration={3000}
       onClose={handleCloseNotification}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     >
