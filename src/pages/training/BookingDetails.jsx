@@ -167,7 +167,6 @@ export function BookingDetails() {
               onChange={(e) => setName(e.target.value)}
               error={!!errors.name}
               helperText={errors.name}
-              sx={{ width: '90%', ml: 5, mb: 2 }}
               />
             <TextField
               required
@@ -180,9 +179,8 @@ export function BookingDetails() {
               value={contactNum}
               error={!!errors.contactNum}
               helperText={errors.contactNum}
-              sx={{ width: '90%', ml: 5, mb: 2 }}
             />
-            <FormControl margin="normal" fullWidth required error={!!errors.slot} helperText={errors.slot}>
+            <FormControl margin="normal" fullWidth required error={!!errors.slot}>
                 <InputLabel id="demo-simple-select-autowidth-label">Slot</InputLabel>
                 <Select
                     labelId="demo-simple-select-autowidth-label"
@@ -203,6 +201,7 @@ export function BookingDetails() {
                         </MenuItem>
                     ))}
                 </Select>
+                <FormHelperText>{errors.slot}</FormHelperText>
             </FormControl>
             <GradientButton
                 fullWidth
