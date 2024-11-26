@@ -200,7 +200,7 @@ export function ChatPage() {
 </List>
 </Grid>
         <Pagination
-              count={Math.ceil(filteredGoals.length / itemsPerPage)}
+              count={Math.ceil(filteredChatrooms.length / itemsPerPage)}
               page={page}
               onChange={(event, value) => setPage(value)}
               color="primary"
