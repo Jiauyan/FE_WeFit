@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Button, Grid, Box, IconButton, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField, Pagination } from "@mui/material";
+import { Typography, Paper, Button, Grid, Box, 
+  IconButton, Radio, RadioGroup, FormControlLabel, FormControl, 
+  FormLabel, TextField, Pagination, CircularProgress } from "@mui/material";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 export function ConsentForm() {
-  const [trainingProgramData, setTrainingProgramData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [trainingProgramData, setTrainingProgramData] = useState([]);
     const [consentFormData, setConsentFormData] = useState({});
     const [trainerID, setTrainerID] = useState(null);
     const [addConsentFormStatus, setAddConsentFormStatus] = useState('');
@@ -20,6 +23,7 @@ export function ConsentForm() {
     const location = useLocation();
     const { id, pathPrev } = location.state;
     const [page, setPage] = useState(1); // Track current page
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
       window.scrollTo(0, 0); // Scroll to the top of the page when the component loads
@@ -57,6 +61,8 @@ export function ConsentForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setLoading(true);
     try {
       const uid = user.uid;
       const response = await axios.post('https://be-um-fitness.vercel.app/consentForm/upsertConsentForm', {
@@ -78,11 +84,25 @@ export function ConsentForm() {
       } else {
         setAddConsentFormStatus('An unexpected error occurred');
       }
-  }
+  }  finally {
+    setLoading(false);
+}
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!name.trim()) newErrors.name = 'Name is required';
+    if (!date.trim()) newErrors.date = 'Date is required';
+    if (!emergencyContactName.trim()) newErrors.emergencyContactName = 'Emergency contact name is required';
+    if (!emergencyContactPhoneNumber.trim()) {
+      newErrors.emergencyContactPhoneNumber = 'Emergency contact phone number is required';
+    } 
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   return (
-    <>
       <Grid
             container
             component="main"
@@ -161,50 +181,44 @@ export function ConsentForm() {
                                 I understand that I am free to withdraw from the program at any time without consequence.
                             </Typography>
                             <Box component="form" onSubmit={handleSubmit} noValidate>
-                            <TextField
-                            required
-                            margin="normal"
-                            fullWidth
-                            name="name"
-                            label="Name"
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            sx={{ width: '90%', ml: 5, mb:2 }}
+                             <TextField
+                              required
+                              margin="normal"
+                              fullWidth
+                              name="name"
+                              label="Name"
+                              id="name"
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
+                              error={!!errors.name}
+                              helperText={errors.name}
+                              sx={{ width: '90%', ml: 5, mb: 2 }}
+                            />
+                             <TextField
+                              required
+                              margin="normal"
+                              fullWidth
+                              name="emergencyContactPhoneNumber"
+                              label="Emergency Contact Phone Number"
+                              id="emergencyContactPhoneNumber"
+                              value={emergencyContactPhoneNumber}
+                              onChange={(e) => setEmergencyContactPhoneNumber(e.target.value)}
+                              error={!!errors.emergencyContactPhoneNumber}
+                              helperText={errors.emergencyContactPhoneNumber}
+                              sx={{ width: '90%', ml: 5, mb: 2 }}
                             />
                             <TextField
-                            required
-                            margin="normal"
-                            fullWidth
-                            name="date"
-                            label="Date"
-                            id="date"
-                            //type="date"
-                            //value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            sx={{ width: '90%', ml: 5, mb:2 }}
-                            />
-                            <TextField
-                            required
-                            margin="normal"
-                            fullWidth
-                            name="emergencyContactPhoneNumber"
-                            label="Emergency Contact Phone Number"
-                            id="emergencyContactPhoneNumber"
-                            value={emergencyContactPhoneNumber}
-                            onChange={(e) => setEmergencyContactPhoneNumber(e.target.value)}
-                            sx={{ width: '90%', ml: 5, mb:2 }}
-                            />
-                            <TextField
-                            required
-                            margin="normal"
-                            fullWidth
-                            name="emergencyContactName"
-                            label="Emergency Contact Name"
-                            id="emergencyContactName"
-                            value={emergencyContactName}
-                            onChange={(e) => setEmergencyContactName(e.target.value)}
-                            sx={{ width: '90%', ml: 5, mb:2 }}
+                              required
+                              margin="normal"
+                              fullWidth
+                              name="emergencyContactName"
+                              label="Emergency Contact Name"
+                              id="emergencyContactName"
+                              value={emergencyContactName}
+                              onChange={(e) => setEmergencyContactName(e.target.value)}
+                              error={!!errors.emergencyContactName}
+                              helperText={errors.emergencyContactName}
+                              sx={{ width: '90%', ml: 5, mb: 2 }}
                             />
                             <GradientButton
                             fullWidth
@@ -213,7 +227,7 @@ export function ConsentForm() {
                             sx={{ mt: 3, mb: 2 ,width: '90%', ml: 5,}}
                             onClick={handleSubmit}
                             >
-                            Confirm
+                             {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
                             </GradientButton>
                             </Box>
                             </>
@@ -230,6 +244,5 @@ export function ConsentForm() {
                   </Box>
           </Paper>
         </Grid>
-    </>
   );
 }
