@@ -51,7 +51,7 @@ export function DeletePost({id, onDeletePost}) {
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/posts/deletePost/${id}`);
         setDeletePostStatus(response.data.message);
-        setNotification({ open: true, message: 'Goal deleted successfully!', severity: 'success' });
+        setNotification({ open: true, message: 'Post deleted successfully!', severity: 'success' });
             setTimeout(() => {
               onDeletePost(response.data);
               handleClose();

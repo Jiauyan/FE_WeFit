@@ -52,6 +52,7 @@ export function EditPost({id, oldDesc, onEditPost}) {
   const handleCloseNotification = () => setNotification({ ...notification, open: false });
 
   const handleSubmit = async (e) => { 
+    e.preventDefault(); 
     if (!validatePost()) {
       return;
     }
