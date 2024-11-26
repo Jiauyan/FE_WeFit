@@ -129,7 +129,7 @@ export function ScreeningForm() {
                 </Typography>
                 </Grid>
             <Box component="form" onSubmit={handleSubmit} noValidate  sx={{ width: '100%', px: 3 }}>
-              <FormControl component="fieldset" required error={errors.q1}>
+              <FormControl component="fieldset" required error={!!errors.q1} helperText={errors}>
                 <Typography> 1. Has your doctor ever said that you have a heart condition and that you should only do physical activity recommended by a doctor?</Typography>
                 <Box>
                   <RadioGroup
@@ -149,7 +149,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required error={errors.q2}>
+              <FormControl component="fieldset" required error={!!errors.q2} helperText={errors}>
                 <Typography> 2. Do you feel pain in your chest when you do physical activity?</Typography>
                 <Box>
                   <RadioGroup
@@ -169,7 +169,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required  error={errors.q3}>
+              <FormControl component="fieldset" required  error={!!errors.q3} helperText={errors}>
                 <Typography> 3. In the past month, have you had chest pain when you were not doing physical actiivty?</Typography>
                 <Box>
                   <RadioGroup
@@ -189,7 +189,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required error={errors.q4}>
+              <FormControl component="fieldset" required error={!!errors.q4} helperText={errors}>
                 <Typography> 4. Do you lose your balance because of dizziness or do you ever lose consciousness?</Typography>
                 <Box>
                   <RadioGroup
@@ -209,7 +209,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required error={errors.q5}>
+              <FormControl component="fieldset" required error={!!errors.q5} helperText={errors}>
                 <Typography sx={{overflowWrap: 'break-word'}}> 
                   5. Do you have a bone or joint problem (for example, back, knee or hip) that could be made worse by a change in your physical activity?</Typography>
                 <Box>
@@ -230,7 +230,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required error={errors.q6}>
+              <FormControl component="fieldset" required error={!!errors.q6} helperText={errors}>
                 <Typography> 6. Is your doctor currently prescribing drugs (for example, water pills) for your blood pressure or heart condition?</Typography>
                 <Box>
                   <RadioGroup
@@ -250,7 +250,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required error={errors.q7}>
+              <FormControl component="fieldset" required error={!!errors.q7} helperText={errors}>
                 <Typography> 7. Do you know of any other reason why you should not do physical activity?</Typography>
                 <Box>
                   <RadioGroup
