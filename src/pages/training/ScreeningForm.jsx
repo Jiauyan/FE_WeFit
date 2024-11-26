@@ -131,7 +131,14 @@ export function ScreeningForm() {
             <Box component="form" onSubmit={handleSubmit} noValidate  sx={{ width: '100%', px: 3 }}>
             {questions.map((question) => (
             <FormControl key={question.id} component="fieldset" required error={!!errors[question.id]} sx={{ mb: 2 }}>
-              <FormLabel>{question.text}</FormLabel>
+              <FormLabel sx={{ 
+                color: 'black', // Ensures the text is always black
+                '&.Mui-error': {
+                  color: 'black' // Prevents color change on error
+                }
+              }}>
+                {question.text}
+              </FormLabel>
               <RadioGroup value={answers[question.id]} onChange={(e) => handleChange(question.id, e.target.value)}>
                 <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="no" control={<Radio />} label="No" />
