@@ -306,7 +306,7 @@ const handleUpdateFitnessActivity = async (e) => {
             }}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
-                border: activitiesError ? '0.1px solid red' : 'none', // Optional: Visual indicator for error
+                border: activitiesError ? '0.5px solid red' : 'none', // Optional: Visual indicator for error
                 borderRadius: 1, // Optional for styling
                 padding: activitiesError ? 1 : 0,
             }}>
