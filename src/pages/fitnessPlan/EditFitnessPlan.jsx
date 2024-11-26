@@ -14,7 +14,9 @@ import {
     List,
     ListItem,
     ListItemText,
-    Checkbox
+    Checkbox,
+    Snackbar,
+    CircularProgress
 } from "@mui/material";
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Add from '@mui/icons-material/Add';
@@ -24,8 +26,10 @@ import { GradientButton } from '../../contexts/ThemeProvider';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { parse, format } from 'date-fns';
+import MuiAlert from '@mui/material/Alert';
 
 export function EditFitnessPlan() {
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -61,7 +65,14 @@ export function EditFitnessPlan() {
     const location = useLocation();
     const { id } = location.state;
     const fitnessPlanID = id;
-
+    const [fitnessPlanError, setFitnessPlanError] = useState('');
+    const [fitnessActivityError, setFitnessActivityError] = useState('');
+    const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+    const [titleError, setTitleError] = useState('');
+    const [dateError, setDateError] = useState('');
+    const [activitiesError, setActivitiesError] = useState('');
+    const handleCloseNotification = () => setNotification({ ...notification, open: false });
+  
     const style = {
         position: 'absolute',
         top: '50%',
@@ -83,6 +94,42 @@ export function EditFitnessPlan() {
         alignItems: 'center',
         overflowY: 'auto', // add scroll on Y-axis if content is too long
       };
+
+      const validateFitnessPlan = () => {
+        let isValid = true;
+      
+        if (!title.trim()) {
+          setTitleError('Title is required');
+          isValid = false;
+        } else {
+          setTitleError('');
+        }
+      
+        if (!date) {
+          setDateError('Date is required');
+          isValid = false;
+        } else {
+          setDateError('');
+        }
+      
+        if (fitnessActivities.length === 0) {
+          setActivitiesError('At least one fitness activity is required');
+          isValid = false;
+        } else {
+          setActivitiesError('');
+        }
+      
+        return isValid;
+      };
+      
+      const validateFitnessActivity = () => {
+        const newErrors = {};
+        if (!task.trim()) newErrors.task = 'Fitness Activity is required';
+        if (!duration.trim()) newErrors.duration = 'Duration is required';
+        setFitnessActivityError(newErrors);
+        return Object.keys(newErrors).length === 0;
+      };
+    
     
     useEffect(() => {
         const fetchFitnessPlanData = async () => {
@@ -126,6 +173,10 @@ export function EditFitnessPlan() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateFitnessPlan()) {
+            return;
+        }
+        setLoading(true);
         try {
             const formattedDate = format(date, 'dd/MM/yyyy');
             await axios.patch(`https://be-um-fitness.vercel.app/fitnessPlan/updateFitnessPlan/${id}`, {
@@ -134,15 +185,20 @@ export function EditFitnessPlan() {
                 date : formattedDate,
                 completeCount,
                 totalCount,
-                //createdAt
             });
-
-            await Promise.all(fitnessActivityData.map(activity =>
-                axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${activity.id}`, activity)
+            const fitnessPlanID = response.data.id;
+            await Promise.all(fitnessActivities.map(activity =>
+            axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${activity.id}`, {
+                uid,
+                ...activity,
+                fitnessPlanID,
+            })
             ));
-
             setUpdateFitnessPlanStatus('Fitness Plan updated successfully!');
-            navigate("/viewFitnessPlan", { state: { id: id } });
+            setNotification({ open: true, message: 'Fitness plan updated successfully!', severity: 'success' });
+            setTimeout(() => {
+                navigate("/viewFitnessPlan", { state: { id: id } });
+        }, 2000);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
@@ -153,12 +209,17 @@ export function EditFitnessPlan() {
             } else {
                 setUpdateFitnessPlanStatus('An unexpected error occurred');
             }
-        }
+        } finally {
+            setLoading(false)
+          }
     };
 
     const handleAddFitnessActivity = async (e) => {
         e.preventDefault();
-
+        if (!validateFitnessActivity()) {
+            return;
+        }
+        setLoading(true);
         try {
             const timestamp = new Date().toISOString();
             const response = await axios.post('https://be-um-fitness.vercel.app/fitnessActivity/addFitnessActivity', {
@@ -183,8 +244,10 @@ export function EditFitnessPlan() {
                 }
             } else {
                 setAddNewFitnessActivityStatus('An unexpected error occurred');
-            }
-        }
+            } 
+        } finally {
+                setLoading(false)
+              }
     };
 
     const handleRemoveFitnessActivity = async () => {
@@ -212,7 +275,9 @@ export function EditFitnessPlan() {
     const handleUpdateFitnessActivity = async (e) => {
         e.preventDefault();
 
-        try {
+        if (!validateFitnessActivity()) {
+            return;
+        }try {
             const updatedActivity = {
                 ...currentActivity,
                 task,
@@ -227,7 +292,9 @@ export function EditFitnessPlan() {
             handleCloseEdit();
         } catch (error) {
             console.error('There was an error updating the fitness activity!', error);
-        }
+        } finally {
+            setLoading(false)
+          }
     };
 
     const handleToggleActivityStatus = async (index) => {
@@ -291,26 +358,34 @@ export function EditFitnessPlan() {
                         Edit Your Fitness Plan
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                        <TextField
-                            required
-                            margin="normal"
-                            fullWidth
-                            name="fitnessPlanTitle"
-                            label="Title"
-                            id="fitnessPlanTitle"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                        <DatePicker
-                            required
-                            label="Date"
-                            format="dd/MM/yyyy"
-                            value={date}
-                            onChange={(newValue) => setDate(newValue)}
-                            slots={{ textField: TextField }}
-                            sx={{ marginBottom: 2, width: "100%" }}
-                            minDate={new Date()}
-                        />
+                    <TextField
+                    required
+                    margin="normal"
+                    fullWidth
+                    name="fitnessPlanTitle"
+                    label="Title"
+                    id="fitnessPlanTitle"
+                    onChange={(e) => setTitle(e.target.value)}
+                    error={!!titleError}
+                    helperText={titleError}
+                    />
+                    <DatePicker
+                    required
+                    label="Date"
+                    format="dd/MM/yyyy"
+                    value={date}
+                    onChange={(newValue) => setDate(newValue)}
+                    slots={{ textField: TextField }}
+                    sx={{ marginBottom: 2, width: "100%" }}
+                    minDate={new Date()}
+                    onError={!!dateError}
+                    slotProps={{
+                        textField: {
+                        error: !!dateError,
+                        helperText: dateError,
+                        },
+                    }}
+                    />
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
                             <Typography variant="subtitle1">
                                 Fitness Activities
@@ -319,6 +394,11 @@ export function EditFitnessPlan() {
                                 <Add />
                             </IconButton>
                         </Box>
+                        {activitiesError && (
+                        <Typography color="error" variant="body2" sx={{ fontSize: '0.875rem', mb:2, ml:2 }}>
+                            {activitiesError}
+                        </Typography>
+                        )}
                         <List>
                             {fitnessActivityData && fitnessActivityData.map((fitnessActivity, index) => (
                                 <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -345,7 +425,7 @@ export function EditFitnessPlan() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Save
+                           {loading ? <CircularProgress size={24} color="inherit" /> : 'SAVE'}
                         </GradientButton>
                     </Box>
                 </Paper>
@@ -368,22 +448,26 @@ export function EditFitnessPlan() {
                         Add Your Fitness Activity
                     </Typography>
                     <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="fitnessActivity"
-                        label="Fitness Activity"
-                        id="fitnessActivity"
-                        onChange={(e) => setTask(e.target.value)}
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="fitnessActivity"
+                    label="Fitness Activity"
+                    id="fitnessActivity"
+                    onChange={(e) => setTask(e.target.value)}
+                    error={!!fitnessActivityError.task}
+                    helperText={fitnessActivityError.task}
                     />
                     <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="duration"
-                        label="Duration"
-                        id="duration"
-                        onChange={(e) => setDuration(e.target.value)}
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="duration"
+                            label="Duration"
+                            id="duration"
+                            onChange={(e) => setDuration(e.target.value)}
+                            error={!!fitnessActivityError.duration}
+                            helperText={fitnessActivityError.duration}
                     />
                     <GradientButton
                         type="submit"
@@ -391,8 +475,8 @@ export function EditFitnessPlan() {
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                        Add
-                    </GradientButton>
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
+               </GradientButton>
                 </Box>
             </Modal>
             <Modal
@@ -421,6 +505,8 @@ export function EditFitnessPlan() {
                     id="editFitnessActivity"
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
+                    error={!!fitnessActivityError.task}
+                    helperText={fitnessActivityError.task}
                 />
                 <TextField
                     margin="normal"
@@ -431,6 +517,8 @@ export function EditFitnessPlan() {
                     id="editDuration"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
+                    error={!!fitnessActivityError.duration}
+                    helperText={fitnessActivityError.duration}
                 />
                 <GradientButton
                     type="submit"
@@ -438,7 +526,7 @@ export function EditFitnessPlan() {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
-                    Save
+                     {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
                 </GradientButton>
             </Box>
         </Modal>
@@ -472,6 +560,16 @@ export function EditFitnessPlan() {
             </Button>
         </Box>
       </Modal>
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={2000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+        <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+            {notification.message}
+        </MuiAlert>
+        </Snackbar>
         </LocalizationProvider>
     );
 }

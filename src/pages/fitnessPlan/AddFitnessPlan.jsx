@@ -306,11 +306,7 @@ const handleUpdateFitnessActivity = async (e) => {
                 },
             }}
             />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
-                // border: activitiesError ? '1px solid red' : 'none', // Optional: Visual indicator for error
-                // borderRadius: 1, // Optional for styling
-                // padding: activitiesError ? 1 : 0,
-            }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2}}>
               <Typography variant="subtitle1">
                 Fitness Activities
               </Typography>
