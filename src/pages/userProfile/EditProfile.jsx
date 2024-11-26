@@ -25,6 +25,7 @@ import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Edit from '@mui/icons-material/Edit';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
+import MuiAlert from '@mui/material/Alert';
 
 export function EditProfile() {
   const [formValues, setFormValues] = useState({
