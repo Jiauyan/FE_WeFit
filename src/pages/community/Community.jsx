@@ -241,7 +241,7 @@ export function Community() {
                                             {post.userName}
                                         </Typography>
                                         <Typography variant="body3" color="textSecondary" >
-                                            {post.formattedTime}
+                                            {post.time}
                                         </Typography>
                                     </Box>
                                 </Box>

@@ -63,7 +63,7 @@ export function ChatPage() {
     };
 
     fetchAndProcessChatrooms();
-  }, [user.uid, searchTerm]);
+  }, [user.uid]);
 
   
     const formatDateOrTime = (timestamp) => {
