@@ -298,8 +298,12 @@ const handleUpdateFitnessActivity = async (e) => {
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width: "100%" }}
             minDate={new Date()}
-            error={!!dateError}
-            helperText={dateError}
+            onError={!!dateError}
+            slotProps={{
+                textField: {
+                helperText: dateError,
+                },
+            }}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
                 border: activitiesError ? '0.1px solid red' : 'none', // Optional: Visual indicator for error
