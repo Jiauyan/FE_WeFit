@@ -108,7 +108,7 @@ export function AddFitnessPlan() {
   
   const validateFitnessActivity = () => {
     const newErrors = {};
-    if (!task.trim()) newErrors.task = 'Task is required';
+    if (!task.trim()) newErrors.task = 'Fitness Activity is required';
     if (!duration.trim()) newErrors.duration = 'Duration is required';
     setFitnessActivityError(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -290,16 +290,30 @@ const handleUpdateFitnessActivity = async (e) => {
             helperText={titleError}
             />
             <DatePicker
-            required
-            label="Date"
-            format="dd/MM/yyyy"
-            value={date}
-            onChange={(newValue) => setDate(newValue)}
-            slots={{ textField: TextField }}
-            sx={{ marginBottom: 2, width: "100%" }}
-            minDate={new Date()}
-            error={!!dateError}
-            helperText={dateError}
+                label="Date"
+                value={date}
+                onChange={(newValue) => {
+                setDate(newValue);
+                // Clear the date error if the new value is valid or set a new error
+                if (!newValue) {
+                    setDateError('Date is required');
+                } else {
+                    setDateError('');
+                }
+                }}
+                renderInput={(params) => (
+                <TextField 
+                    {...params}
+                    fullWidth
+                    required
+                    error={!!dateError}
+                    helperText={dateError || 'Select a date'}
+                    margin="normal"
+                />
+                )}
+                minDate={new Date()}
+                inputFormat="dd/MM/yyyy"
+                disablePast
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
                 border: activitiesError ? '0.5px solid red' : 'none', // Optional: Visual indicator for error
