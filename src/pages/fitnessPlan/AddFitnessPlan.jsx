@@ -52,7 +52,9 @@ export function AddFitnessPlan() {
   const [fitnessPlanError, setFitnessPlanError] = useState('');
   const [fitnessActivityError, setFitnessActivityError] = useState('');
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
-  
+  const [titleError, setTitleError] = useState('');
+  const [dateError, setDateError] = useState('');
+  const [activitiesError, setActivitiesError] = useState('');
   const handleCloseNotification = () => setNotification({ ...notification, open: false });
 
   const style = {
@@ -81,24 +83,24 @@ export function AddFitnessPlan() {
     let isValid = true;
   
     if (!title.trim()) {
-      setFitnessPlanError('Title is required');
+      setTitleError('Title is required');
       isValid = false;
     } else {
-      setFitnessPlanError('');
+      setTitleError('');
     }
   
     if (!date) {
-      setFitnessPlanError('Date is required');
+      setDateError('Date is required');
       isValid = false;
     } else {
-      setFitnessPlanError('');
+      setDateError('');
     }
   
     if (fitnessActivities.length === 0) {
-      setFitnessPlanError('At least one fitness activity is required');
+      setActivitiesError('At least one fitness activity is required');
       isValid = false;
     } else {
-      setFitnessPlanError('');
+      setActivitiesError('');
     }
   
     return isValid;
@@ -287,48 +289,46 @@ const handleUpdateFitnessActivity = async (e) => {
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
                 Add Your Fitness Plan
         </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
-                required
-                margin="normal"
-                fullWidth
-                name="fitnessPlanTitle"
-                label="Title"
-                id="fitnessPlanTitle"
-                onChange={(e) => setTitle(e.target.value)}
-                error={!!fitnessPlanError && !title}
-                helperText={fitnessPlanError && !title ? fitnessPlanError : ''}
+            required
+            margin="normal"
+            fullWidth
+            name="fitnessPlanTitle"
+            label="Title"
+            id="fitnessPlanTitle"
+            onChange={(e) => setTitle(e.target.value)}
+            error={!!titleError}
+            helperText={titleError}
             />
             <DatePicker
-                required
-                label="Date"
-                inputFormat="dd/MM/yyyy"
-                value={date}
-                onChange={(newValue) => {
-                    setDate(newValue);
-                    if (newValue) setFitnessPlanError('');  // Clear error if date is valid
-                }}
-                renderInput={(params) => <TextField {...params} fullWidth margin="normal" />}
-                minDate={new Date()}
-                disablePast
-                />
-                {fitnessPlanError && !date && (
-                <Typography color="error" variant="body2" sx={{ marginBottom: 2 }}>
-                {fitnessPlanError}
-                </Typography>
-                )}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mb: 2 }}>
-                <Typography variant="subtitle1">
+            required
+            label="Date"
+            format="dd/MM/yyyy"
+            value={date}
+            onChange={(newValue) => setDate(newValue)}
+            slots={{ textField: TextField }}
+            sx={{ marginBottom: 2, width: "100%" }}
+            minDate={new Date()}
+            error={!!dateError}
+            helperText={dateError}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
+                border: activitiesError ? '1px solid red' : 'none', // Optional: Visual indicator for error
+                borderRadius: 1, // Optional for styling
+                padding: activitiesError ? 1 : 0,
+            }}>
+              <Typography variant="subtitle1">
                 Fitness Activities
-                </Typography>
-                <IconButton onClick={handleOpen}>
+              </Typography>
+              <IconButton onClick={handleOpen}>
                 <Add />
-                </IconButton>
+              </IconButton>
             </Box>
-            {fitnessPlanError && fitnessActivities.length === 0 && (
-                <Typography color="error" variant="body2" sx={{ marginBottom: 2 }}>
-                {fitnessPlanError}
-                </Typography>
+            {activitiesError && (
+            <Typography color="error" variant="body2" sx={{ marginBottom: 2 }}>
+                {activitiesError}
+            </Typography>
             )}
             <List>
                 {fitnessActivities && fitnessActivities.map((fitnessActivity, index) => (
