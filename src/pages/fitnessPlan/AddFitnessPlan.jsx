@@ -13,7 +13,9 @@ import {
     List,
     ListItem,
     ListItemText,
-    Checkbox
+    Checkbox,
+    Snackbar,
+    CircularProgress
 }from "@mui/material";
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Add from '@mui/icons-material/Add';
@@ -23,8 +25,10 @@ import { GradientButton } from '../../contexts/ThemeProvider';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
+import MuiAlert from '@mui/material/Alert';
 
 export function AddFitnessPlan() {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -45,6 +49,7 @@ export function AddFitnessPlan() {
   const [currentActivity, setCurrentActivity] = useState(null);
   const { user } = useUser();
   const uid = user.uid;
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
 
   const style = {
     position: 'absolute',
@@ -68,9 +73,40 @@ export function AddFitnessPlan() {
     overflowY: 'auto', // add scroll on Y-axis if content is too long
   };
 
+  const validateFitnessPlan = () => {
+    if (!title.trim()) {
+        setAddPlanError("Title is required.");
+        return false;
+    }
+    if (!date) {
+        setAddPlanError("Date is required.");
+        return false;
+    }
+     if (!fitnessActivities) {
+        setAddActivityError("Fitness acitvity is required.");
+        return false;
+    }
+    return true
+    };
+
+    const validateFitnessActivity = () => {
+        if (!task.trim()) {
+            setAddPlanError("Title is required.");
+            return false;
+        }
+        if (!duration.trim()) {
+            setAddPlanError("Date is required.");
+            return false;
+        }
+        return true
+    };
+
   const handleSubmit = async (e) => { 
     e.preventDefault();
-
+    if (!validateFitnessPlan()) {
+        return;
+    }
+    setLoading(true);
     try {
         const formattedDate = format(date, 'dd/MM/yyyy');
         const response = await axios.post('https://be-um-fitness.vercel.app/fitnessPlan/addFitnessPlan',{
@@ -90,7 +126,10 @@ export function AddFitnessPlan() {
           })
         ));
         setAddFitnessPlanStatus(response.data.message);
-        navigate("/fitnessPlan");
+        setNotification({ open: true, message: 'Fitness plan added successfully!', severity: 'success' });
+            setTimeout(() => {
+                navigate("/fitnessPlan");
+        }, 1000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -101,12 +140,17 @@ export function AddFitnessPlan() {
         } else {
             setAddFitnessPlanStatus('An unexpected error occurred');
         }
-    }
+    } finally {
+        setLoading(false)
+      }
   };
       
   const handleAddFitnessActivity = async (e) => {
     e.preventDefault();
-
+    if (!validateFitnessActivity()) {
+        return;
+    }
+    setLoading(true);
     try {
         const timestamp = new Date().toISOString();
         const response = await axios.post('https://be-um-fitness.vercel.app/fitnessActivity/addFitnessActivity', {
@@ -132,7 +176,9 @@ export function AddFitnessPlan() {
         } else {
             setAddNewFitnessActivityStatus('An unexpected error occurred');
         }
-    }
+    } finally {
+        setLoading(false)
+      }
 };
 
 const handleRemoveFitnessActivity = async (index) => {
@@ -223,6 +269,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Title"
                     id="fitnessPlanTitle"
                     onChange={(e) => setTitle(e.target.value)}
+                    error={!!addPlanError}
+                    helperText={addPlanError}
             />
             <DatePicker
             required
@@ -233,8 +281,11 @@ const handleUpdateFitnessActivity = async (e) => {
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width:"100%"}} 
             minDate={new Date()}
+            error={!!addPlanError}
+            helperText={addPlanError}
           />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
+            <Box 
+            error={!!addPlanError} helperText={addPlanError} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
               <Typography variant="subtitle1">
                 Fitness Activities
               </Typography>
@@ -267,7 +318,7 @@ const handleUpdateFitnessActivity = async (e) => {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Add
+                   {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
             </GradientButton>
             </Box>
             </Paper>
@@ -297,6 +348,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Fitness Activity"
                     id="fitnessActivity"
                     onChange={(e) => setTask(e.target.value)}
+                    error={!!addActivityError}
+                    helperText={addActivityError}
               />
               <TextField
                     margin="normal"
@@ -306,6 +359,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Duration"
                     id="duration"
                     onChange={(e) => setDuration(e.target.value)}
+                    error={!!addActivityError}
+                    helperText={addActivityError}
               />
               <GradientButton
                         type="submit"
@@ -313,7 +368,7 @@ const handleUpdateFitnessActivity = async (e) => {
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                 >
-                    Add
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
               </GradientButton>
               </Box>
             </Modal>
@@ -343,6 +398,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     id="editFitnessActivity"
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
+                    error={!!addActivityError}
+                    helperText={addActivityError}
                 />
                 <TextField
                     margin="normal"
@@ -353,6 +410,8 @@ const handleUpdateFitnessActivity = async (e) => {
                     id="editDuration"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
+                    error={!!addActivityError}
+                    helperText={addActivityError}
                 />
                 <GradientButton
                     type="submit"
@@ -360,10 +419,20 @@ const handleUpdateFitnessActivity = async (e) => {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
-                    Save
+                   {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
                 </GradientButton>
             </Box>
         </Modal>
+        <Snackbar
+        open={notification.open}
+        autoHideDuration={2000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+        <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+            {notification.message}
+        </MuiAlert>
+        </Snackbar>
         </LocalizationProvider>
   );
 }
