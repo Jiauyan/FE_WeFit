@@ -17,12 +17,12 @@ export function ScreeningForm() {
     const [q5, setQ5] = useState('');
     const [q6, setQ6] = useState('');
     const [q7, setQ7] = useState('');
+    const [errors, setErrors] = useState({});
     const [addScreeningFormStatus, setAddScreeningFormStatus] = useState('');
     const { user, updateUser, setUser } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
     const { id, pathPrev } = location.state;
-    //const userScreeningForm = user.screeningForm;
 
     useEffect(() => {
       window.scrollTo(0, 0); // Scroll to the top of the page when the component loads
@@ -40,20 +40,21 @@ export function ScreeningForm() {
   };
 
   const validateForm = () => {
-    if (!q1) {
-        setAddPlanError("Title is required.");
-        return false;
-    }
-    if (!q2) {
-        setAddPlanError("Date is required.");
-        return false;
-    }
-     if (!q3) {
-        setAddActivityError("Fitness acitvity is required.");
-        return false;
-    }
-    return true
-    };
+    let isValid = true;
+    const newErrors = {};
+
+    // Check each question individually
+    if (!q1) { newErrors.q1 = "This question is required."; isValid = false; }
+    if (!q2) { newErrors.q2 = "This question is required."; isValid = false; }
+    if (!q3) { newErrors.q3 = "This question is required."; isValid = false; }
+    if (!q4) { newErrors.q4 = "This question is required."; isValid = false; }
+    if (!q5) { newErrors.q5 = "This question is required."; isValid = false; }
+    if (!q6) { newErrors.q6 = "This question is required."; isValid = false; }
+    if (!q7) { newErrors.q7 = "This question is required."; isValid = false; }
+
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
@@ -128,11 +129,10 @@ export function ScreeningForm() {
                 </Typography>
                 </Grid>
             <Box component="form" onSubmit={handleSubmit} noValidate  sx={{ width: '100%', px: 3 }}>
-              <FormControl component="fieldset" required>
+              <FormControl component="fieldset" required error={errors.q1}>
                 <Typography> 1. Has your doctor ever said that you have a heart condition and that you should only do physical activity recommended by a doctor?</Typography>
                 <Box>
                   <RadioGroup
-                        noValidate
                         value={q1} 
                         onChange={(e) => setQ1(e.target.value)}
                         sx={{
@@ -149,11 +149,10 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required>
+              <FormControl component="fieldset" required error={errors.q2}>
                 <Typography> 2. Do you feel pain in your chest when you do physical activity?</Typography>
                 <Box>
                   <RadioGroup
-                        noValidate
                         value={q2} 
                         onChange={(e) => setQ2(e.target.value)}
                         sx={{
@@ -170,11 +169,10 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required >
+              <FormControl component="fieldset" required  error={errors.q3}>
                 <Typography> 3. In the past month, have you had chest pain when you were not doing physical actiivty?</Typography>
                 <Box>
                   <RadioGroup
-                        noValidate
                         value={q3} 
                         onChange={(e) => setQ3(e.target.value)}
                         sx={{
@@ -191,11 +189,10 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required>
+              <FormControl component="fieldset" required error={errors.q4}>
                 <Typography> 4. Do you lose your balance because of dizziness or do you ever lose consciousness?</Typography>
                 <Box>
                   <RadioGroup
-                        noValidate
                         value={q4} 
                         onChange={(e) => setQ4(e.target.value)}
                         sx={{
@@ -212,12 +209,11 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required>
+              <FormControl component="fieldset" required error={errors.q5}>
                 <Typography sx={{overflowWrap: 'break-word'}}> 
                   5. Do you have a bone or joint problem (for example, back, knee or hip) that could be made worse by a change in your physical activity?</Typography>
                 <Box>
                   <RadioGroup
-                        noValidate
                         value={q5} 
                         onChange={(e) => setQ5(e.target.value)}
                         sx={{
@@ -234,11 +230,10 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required>
+              <FormControl component="fieldset" required error={errors.q6}>
                 <Typography> 6. Is your doctor currently prescribing drugs (for example, water pills) for your blood pressure or heart condition?</Typography>
                 <Box>
                   <RadioGroup
-                        noValidate
                         value={q6} 
                         onChange={(e) => setQ6(e.target.value)}
                         sx={{
@@ -255,11 +250,10 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" required>
+              <FormControl component="fieldset" required error={errors.q7}>
                 <Typography> 7. Do you know of any other reason why you should not do physical activity?</Typography>
                 <Box>
                   <RadioGroup
-                        noValidate
                         value={q7} 
                         onChange={(e) => setQ7(e.target.value)}
                         sx={{
