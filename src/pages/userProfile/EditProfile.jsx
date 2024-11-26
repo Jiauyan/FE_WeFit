@@ -40,7 +40,9 @@ export function EditProfile() {
   const { user } = useUser();
   const uid = user?.uid;
   const navigate = useNavigate();
-    
+  
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   useEffect(() => {
       window.scrollTo(0, 0); 
   }, []);
@@ -286,20 +288,21 @@ export function EditProfile() {
                             sx={{ mt: 3, mb :2, mr:1}}
                             disabled={loading}
                         >
-                            {loading ? <CircularProgress size={24} /> : 'SAVE'}
+                             {loading ? <CircularProgress size={24} color="inherit" /> : 'SAVE'}
                         </GradientButton>
       </Box>
       </Paper>
     </Grid>
     <Snackbar
-                open={notification.open}
-                autoHideDuration={6000}
-                onClose={() => setNotification({ ...notification, open: false })}
-            >
-                <MuiAlert elevation={6} variant="filled" onClose={() => setNotification({ ...notification, open: false })} severity={notification.severity}>
-                    {notification.message}
-                </MuiAlert>
-            </Snackbar>
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </MuiAlert>
+      </Snackbar>
     <Outlet/>
     </>
   );
