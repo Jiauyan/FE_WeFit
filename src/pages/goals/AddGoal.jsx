@@ -6,9 +6,13 @@ import {
     Button,
     Typography,
     Modal,
-    TextField
-}from "@mui/material";
+    TextField,
+    FormHelperText,
+    Snackbar,
+    CircularProgress
+} from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -33,17 +37,26 @@ const style = {
 };
 
 export function AddGoal({onAddGoal}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [title, setTitle] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [addGoalStatus, setAddGoalStatus] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
   const { user } = useUser();
   const uid = user.uid;
 
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const handleSubmit = async (e) => { 
     e.preventDefault(); 
+    if (!validateTitle()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.post('https://be-um-fitness.vercel.app/goals/addGoal', {
             uid,
@@ -54,7 +67,10 @@ export function AddGoal({onAddGoal}) {
         setAddGoalStatus(response.data.message);
         setTitle('');
         setWordCount(0);
-        handleClose();
+        setNotification({ open: true, message: 'Goal added successfully!', severity: 'success' });
+            setTimeout(() => {
+              handleClose();
+        }, 1000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -65,7 +81,21 @@ export function AddGoal({onAddGoal}) {
         } else {
             setAddGoalStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
+};
+
+const validateTitle = () => {
+  if (!title.trim()) {
+    setTitleError('Goal description is required');
+    return false;
+  } else if (wordCount > 20) {
+    setTitleError('Goal description must not exceed 20 words');
+    return false;
+  }
+  setTitleError('');
+  return true;
 };
 
 const handleWordLimit = (event) => {
@@ -73,6 +103,9 @@ const handleWordLimit = (event) => {
   if (inputWords.length <= 20) {
       setTitle(event.target.value);
       setWordCount(inputWords.length);
+      setTitleError(''); // Clears the error if input is corrected
+  } else {
+      setTitleError('Goal description must not exceed 20 words');
   }
 };
 
@@ -108,11 +141,12 @@ const handleWordLimit = (event) => {
                 margin="normal"
                 fullWidth
                 name="goalTitle"
-                label=" Goal Description"
+                label="Goal Description"
                 id="goalTitle"
                 value={title}
                 onChange={handleWordLimit}
-                helperText={`${wordCount}/20 words`}
+                error={!!titleError}
+                helperText={titleError || `${wordCount}/20 words`}
                 FormHelperTextProps={{
                     style: { textAlign: 'right' }  // Aligns text to the right
                 }}
@@ -123,10 +157,21 @@ const handleWordLimit = (event) => {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Add
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
             </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={6000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
+    
   );
 }
