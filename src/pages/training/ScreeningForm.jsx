@@ -39,6 +39,22 @@ export function ScreeningForm() {
     navigate("/viewTrainingProgram", { state: { id, pathName:"/screeningForm" , pathPrev} });
   };
 
+  const validateForm = () => {
+    if (!q1) {
+        setAddPlanError("Title is required.");
+        return false;
+    }
+    if (!q2) {
+        setAddPlanError("Date is required.");
+        return false;
+    }
+     if (!q3) {
+        setAddActivityError("Fitness acitvity is required.");
+        return false;
+    }
+    return true
+    };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); 
     if (!validateForm()) {

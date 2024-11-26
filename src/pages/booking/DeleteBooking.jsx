@@ -6,6 +6,7 @@ import {
     Button,
     Typography,
     Modal,
+    CircularProgress
 }from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
 
@@ -32,6 +33,7 @@ const style = {
 };
 
 export function DeleteBooking({id, transactionId, feeAmount}) {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -40,6 +42,7 @@ export function DeleteBooking({id, transactionId, feeAmount}) {
     
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (Number(feeAmount) > 0) {
         await axios.post('https://be-um-fitness.vercel.app/checkout/refundPayment', {
@@ -56,7 +59,9 @@ export function DeleteBooking({id, transactionId, feeAmount}) {
       const message = axios.isAxiosError(error) && error.response ? error.response.data.message : 'An unexpected error occurred';
       setDeleteBookingStatus(message);
       handleClose();
-    }
+    } finally {
+      setLoading(false)
+     }
   };
 
   return (
@@ -97,7 +102,7 @@ export function DeleteBooking({id, transactionId, feeAmount}) {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Confirm
+               {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
             </GradientButton>
         </Box>
       </Modal>

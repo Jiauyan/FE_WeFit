@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Box, Paper } from '@mui/material';
+import { Button, Typography, Box, Paper,CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CheckCircle from '@mui/icons-material/CheckCircle';
@@ -9,7 +9,8 @@ const PaymentSuccess = () => {
     const [transactionId, setTransactionId] = useState('');
     const savedData = JSON.parse(localStorage.getItem('bookingData') || '{}');
     const sessionId = savedData.sessionId;
-    
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         const fetchPaymentDetails = async () => {
             try {
@@ -28,6 +29,7 @@ const PaymentSuccess = () => {
     }, [sessionId, navigate]);
 
     const handleContinue = async () => {
+        setLoading(true);
         try {
             await Promise.all([
                 axios.post('https://be-um-fitness.vercel.app/trainingClassBooking/addTrainingClassBooking', {
@@ -56,7 +58,9 @@ const PaymentSuccess = () => {
         } catch (error) {
             console.error("Booking Error:", error);
             alert('Failed to add booking details. Please try again.');
-        }
+        } finally {
+            setLoading(false)
+           }
     };
     
     return (
@@ -78,7 +82,7 @@ const PaymentSuccess = () => {
                 Your Training Program Successfully Booked!
                 </Typography>
                 <Button variant="contained" color="primary" onClick={handleContinue}>
-                    Continue
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Continue'}
                 </Button>
             </Paper>
         </Box>

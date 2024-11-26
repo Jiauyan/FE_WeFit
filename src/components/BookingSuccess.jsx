@@ -1,12 +1,15 @@
 import React from 'react';
-import { Button, Typography, Box, Paper } from '@mui/material';
+import { Button, Typography, Box, Paper, CircularProgress} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 
 const BookingSuccess = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleContinue = async () => {
+        
+    setLoading(true);
         try {
             // Clear bookingData from localStorage after successful booking
             localStorage.removeItem('bookingData');
@@ -14,7 +17,9 @@ const BookingSuccess = () => {
         } catch (error) {
             console.error("Booking Error:", error);
             alert('Failed to add booking details. Please try again.');
-        }
+        } finally {
+            setLoading(false)
+           }
     };
     
     return (
@@ -36,7 +41,7 @@ const BookingSuccess = () => {
                 Your Training Program Successfully Booked!
                 </Typography>
                 <Button variant="contained" color="primary" onClick={handleContinue}>
-                    Continue
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Continue'}
                 </Button>
             </Paper>
         </Box>
