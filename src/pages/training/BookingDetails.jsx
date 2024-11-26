@@ -98,8 +98,8 @@ export function BookingDetails() {
             alert('Slot clash with an existing booking. Please choose a different slot.');
             return; // Exit the function if there is a clash
         }
-
-        navigate('/checkout', { 
+        setTimeout(() => { 
+          navigate('/checkout', { 
             state: {  
                 id,
                 pathPrev,
@@ -112,6 +112,8 @@ export function BookingDetails() {
                 status
             } 
         });
+        }, 2000);
+       
     } catch (error) {
         console.error('Error during confirmation:', error);
     } finally {
