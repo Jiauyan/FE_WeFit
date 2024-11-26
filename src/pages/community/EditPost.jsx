@@ -39,16 +39,24 @@ const style = {
 
 
 export function EditPost({id, oldDesc, onEditPost}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [editPostStatus, setEditPostStatus] = useState('');
   const [postDetails, setPostDetails] = useState(oldDesc);
+  const [postError, setPostError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
   const { user } = useUser();
   const uid = user.uid;
 
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const handleSubmit = async (e) => { 
-    e.preventDefault();
+    if (!validatePost()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.patch(`https://be-um-fitness.vercel.app/posts/updatePost/${id}`, {
             uid,
@@ -56,7 +64,10 @@ export function EditPost({id, oldDesc, onEditPost}) {
         });
         setEditPostStatus(response.data.message);
         onEditPost(response.data);
-        handleClose();
+        setNotification({ open: true, message: 'Post updated successfully!', severity: 'success' });
+        setTimeout(() => {
+          handleClose();
+    }, 1000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -67,10 +78,19 @@ export function EditPost({id, oldDesc, onEditPost}) {
         } else {
             setEditPostStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
 };
 
-
+const validatePost = () => {
+  if (!postDetails.trim()) {
+    setTitleError('Post description is required');
+    return false;
+  } 
+  setTitleError('');
+  return true;
+};
 
   return (
     <div>
@@ -99,13 +119,18 @@ export function EditPost({id, oldDesc, onEditPost}) {
             multiline
             rows={5}
                     margin="normal"
-                    //required
+                    required
                     fullWidth
                     name="post"
                     label="Post Description"
                     id="post"
                     value ={postDetails}
                     onChange={(e) => setPostDetails(e.target.value)}
+                    error={!!postError}
+                    helperText={postError}
+                    FormHelperTextProps={{
+                        style: { textAlign: 'right' }  // Aligns text to the right
+                    }}
             />
             <GradientButton
                     type="submit"
@@ -113,10 +138,20 @@ export function EditPost({id, oldDesc, onEditPost}) {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Save
+                      {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
             </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={1000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }
