@@ -360,6 +360,7 @@ export function EditFitnessPlan() {
                     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                     <TextField
                     required
+                    value={title}
                     margin="normal"
                     fullWidth
                     name="fitnessPlanTitle"
