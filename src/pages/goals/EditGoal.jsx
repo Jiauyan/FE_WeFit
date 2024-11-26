@@ -7,10 +7,12 @@ import {
     Typography,
     Modal,
     TextField,
-    IconButton,
-}from "@mui/material";
-import Edit  from '@mui/icons-material/Edit';
+    FormHelperText,
+    Snackbar,
+    CircularProgress
+} from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -35,6 +37,7 @@ const style = {
 };
 
 export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -43,9 +46,17 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
   const uid = user.uid;
   const [title, setTitle] = useState(oldTitle);
   const [wordCount, setWordCount] = useState(oldTitle.split(/\s+/).filter(Boolean).length);
+  const [titleError, setTitleError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
 
   const handleSubmit = async (e) => { 
-    e.preventDefault();
+    e.preventDefault(); 
+    if (!validateTitle()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.patch(`https://be-um-fitness.vercel.app/goals/updateGoal/${id}`, {
             uid,
@@ -54,7 +65,10 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
         });
         setEditGoalStatus(response.data.message);
         onEditGoal(response.data);
-        handleClose();
+        setNotification({ open: true, message: 'Goal updated successfully!', severity: 'success' });
+            setTimeout(() => {
+              handleClose();
+        }, 1000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -65,15 +79,31 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
         } else {
             setEditGoalStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
 };
 
+const validateTitle = () => {
+  if (!title.trim()) {
+    setTitleError('Goal description is required');
+    return false;
+  } else if (wordCount > 20) {
+    setTitleError('Goal description must not exceed 20 words');
+    return false;
+  }
+  setTitleError('');
+  return true;
+};
+
 const handleChange = (event) => {
-  const text = event.target.value;
-  const words = text.split(/\s+/).filter(Boolean);
-  if (words.length <= 25) {
-    setTitle(text);
-    setWordCount(words.length);
+  const inputWords = event.target.value.split(/\s+/).filter(Boolean);
+  if (inputWords.length <= 20) {
+      setTitle(event.target.value);
+      setWordCount(inputWords.length);
+      setTitleError(''); // Clears the error if input is corrected
+  } else {
+      setTitleError('Goal description must not exceed 20 words');
   }
 };
 
@@ -111,7 +141,8 @@ const handleChange = (event) => {
                 id="goalTitle"
                 value={title}
                 onChange={handleChange}
-                helperText={`${wordCount}/20 words`}
+                error={!!titleError}
+                helperText={titleError || `${wordCount}/20 words`}
                 FormHelperTextProps={{
                     style: { textAlign: 'right' }  // Aligns text to the right
                 }}
@@ -122,10 +153,20 @@ const handleChange = (event) => {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Save
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
             </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={1000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }

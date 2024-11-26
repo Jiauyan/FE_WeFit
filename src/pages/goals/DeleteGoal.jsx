@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useUser } from "../../contexts/UseContext";
 import {
     Box,
     Button,
     Typography,
     Modal,
     TextField,
-    IconButton,
-}from "@mui/material";
+    Snackbar,
+    CircularProgress
+} from "@mui/material";
 import Delete from '@mui/icons-material/Delete';
-import Edit from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -35,18 +37,29 @@ const style = {
 };
 
 export function DeleteGoal({id, disabled, onDeleteGoal}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deleteGoalStatus, setDeleteGoalStatus] = useState('');
-    
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const handleSubmit = async (e) => { 
-    e.preventDefault();
+    e.preventDefault(); 
+    if (!validateTitle()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/goals/deleteGoal/${id}`);
         setDeleteGoalStatus(response.data.message);
         onDeleteGoal(response.data)
-        handleClose();
+        setNotification({ open: true, message: 'Goal deleted successfully!', severity: 'success' });
+            setTimeout(() => {
+              handleClose();
+        }, 1000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -57,10 +70,10 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
         } else {
             setDeleteGoalStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
 };
-
-
 
   return (
     <div>
@@ -94,10 +107,20 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Confirm
+                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
             </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={1000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }
