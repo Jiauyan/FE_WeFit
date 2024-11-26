@@ -20,6 +20,12 @@ export function ChatPage() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { user, setUser } = useUser();
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 6;
+
+  useEffect(() => {
+      window.scrollTo(0, 0); 
+    }, [page]);
 
   useEffect(() => {
     const fetchAndProcessChatrooms = async () => {
