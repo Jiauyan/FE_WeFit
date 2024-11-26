@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Tooltip, IconButton, Box, Paper, Grid, TextField, List, ListItemAvatar, ListItemText, Avatar, CircularProgress, ListItemButton, Typography, ListItemSecondaryAction } from '@mui/material';
+import { Tooltip, IconButton, Box, Paper, Grid, TextField, List, 
+  ListItemAvatar, ListItemText, Avatar,
+  ListItemButton, Typography, ListItemSecondaryAction,
+  Pagination, CircularProgress
+} from '@mui/material';
 import axios from 'axios';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Add from '@mui/icons-material/Add';
@@ -18,42 +22,42 @@ export function ChatPage() {
   const { user, setUser } = useUser();
 
   useEffect(() => {
-    const fetchChatrooms = async () => {
-      try {
-        const userUID = user.uid;
-        const response = await axios.get(`https://be-um-fitness.vercel.app/chat/getChatroomsByUser/${userUID}`);
-        setChatrooms(response.data);
-        setFilteredChatrooms(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching chatrooms:', error);
-        setLoading(false);
-      }
+    const fetchAndProcessChatrooms = async () => {
+      const uid = user?.uid;
+        if (!uid) return;
+        setLoading(true);
+        try {
+          const response = await axios.get(`https://be-um-fitness.vercel.app/chat/getChatroomsByUser/${uid}`);
+          const newChatrooms = response.data;
+          setChatrooms(newChatrooms);
+
+          // Process chatrooms: sort and filter
+          const sortedChatrooms = newChatrooms
+            .map(chatroom => ({
+              ...chatroom,
+              lastMessage: Object.values(chatroom.chatroomDetails.messages || {}).slice(-1)[0]
+            }))
+            .sort((a, b) => {
+              const timestampA = a.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
+              const timestampB = b.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
+              return timestampB - timestampA;  // Sort by descending order of timestamps
+            });
+
+          // Filter sorted chatrooms by the search term (username)
+          const filtered = sortedChatrooms.filter(chatroom =>
+            chatroom.otherUserDetails.username.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+
+          setFilteredChatrooms(filtered);
+        } catch (error) {
+          console.error('Error fetching chatrooms:', error);
+        } finally {
+          setLoading(false);
+        }
     };
 
-    fetchChatrooms();
-  }, [user.uid]);
-
-  useEffect(() => {
-    // Sort chatrooms by the timestamp of the last message
-    const sortedChatrooms = chatrooms
-      .map(chatroom => ({
-        ...chatroom,
-        lastMessage: Object.values(chatroom.chatroomDetails.messages || {}).slice(-1)[0]
-      }))
-      .sort((a, b) => {
-        const timestampA = a.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
-        const timestampB = b.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
-        return timestampB - timestampA; // Sort by descending order of timestamps
-      });
-
-    // Filter sorted chatrooms by the search term (username)
-    const filtered = sortedChatrooms.filter(chatroom =>
-      chatroom.otherUserDetails.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setFilteredChatrooms(filtered);
-  }, [searchTerm, chatrooms]);
+    fetchAndProcessChatrooms();
+  }, [user.uid, searchTerm]);
 
   
     const formatDateOrTime = (timestamp) => {
@@ -84,6 +88,14 @@ export function ChatPage() {
     // Navigate to the chat room with the selected user
     navigate('/chat', { state: {chatroomId, chatroomDetails, otherUserDetails } });
   };
+
+  if (loading) {
+    return (
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+        </Box>
+    );
+}
 
   return (
     <Grid
@@ -142,6 +154,12 @@ export function ChatPage() {
             </IconButton>
           </Tooltip>
         </Box>
+        {chatrooms.length === 0 || filteredChatrooms.length === 0 ? (
+            <Typography variant="body1" color="text.secondary" align="center">
+                No Chats Found.
+            </Typography>
+            ) : (
+          <>
         <Grid container item xs={12}>
         <List sx={{ width: '100%' }}>
           {filteredChatrooms.map((chatroom) => {
@@ -181,6 +199,15 @@ export function ChatPage() {
       })}
 </List>
 </Grid>
+        <Pagination
+              count={Math.ceil(filteredGoals.length / itemsPerPage)}
+              page={page}
+              onChange={(event, value) => setPage(value)}
+              color="primary"
+              sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}
+            />
+          </>
+        )}
       </Paper>
     </Grid>
   );
