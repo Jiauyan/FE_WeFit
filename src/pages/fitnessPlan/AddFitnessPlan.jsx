@@ -301,7 +301,6 @@ const handleUpdateFitnessActivity = async (e) => {
             onError={!!dateError}
             slotProps={{
                 textField: {
-                color: 'red',
                 helperText: dateError,
                 },
             }}
