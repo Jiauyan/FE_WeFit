@@ -4,26 +4,22 @@ import axios from 'axios';
 import { 
     Typography, 
     Paper, 
-    Button, 
     Grid, 
     Box, 
     IconButton, 
-    Radio, 
-    RadioGroup, 
-    FormControlLabel, 
     FormControl, 
-    FormLabel, 
     TextField, 
     InputLabel, 
     Select, 
     MenuItem,
-    Modal,
+    CircularProgress
 } from "@mui/material";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 export function BookingDetails() {
+    const [loading, setLoading] = useState(false);
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -42,7 +38,8 @@ export function BookingDetails() {
     const [bookedProgramsSlot, setBookedProgramsSlot] = useState([]);
     const [feeAmount, setFeeAmount] = useState(0);
     const [trainingProgram, setTrainingProgram] = useState('');
-    
+    const [errors, setErrors] = useState({});
+
   useEffect(() => {
       window.scrollTo(0, 0); // Scroll to the top of the page when the component loads
   }, []);
@@ -91,6 +88,8 @@ export function BookingDetails() {
 
   const handleConfirm = async () => {
     // Check if the selected slot clashes with existing bookings
+    if (!validateForm()) return;
+    setLoading(true);
     const slotClash = bookedProgramsSlot.some(booking => booking.slot === slot.time);
     if (slotClash) {
         alert('Slot clash with an existing booking. Please choose a different slot.');
@@ -108,11 +107,20 @@ export function BookingDetails() {
       feeAmount,
       status
       } })
+    setLoading(false);
     }
 
+    const validateForm = () => {
+      const newErrors = {};
+  
+      if (!name.trim()) newErrors.name = 'Name is required';
+      if (!contactNum.trim()) newErrors.contactNum = 'Contact Number is required';
+      if (!slot.trim()) newErrors.slot = 'Slot is required';
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
 
   return (
-    <>
       <Grid
             container
             component="main"
@@ -155,8 +163,12 @@ export function BookingDetails() {
               name="name"
               label="Name"
               id="name"
+              value={name}
               onChange={(e) => setName(e.target.value)}
-            />
+              error={!!errors.name}
+              helperText={errors.name}
+              sx={{ width: '90%', ml: 5, mb: 2 }}
+              />
             <TextField
               required
               margin="normal"
@@ -165,8 +177,12 @@ export function BookingDetails() {
               label="Contact Number"
               id="contactNum"
               onChange={(e) => setContactNum(e.target.value)}
+              value={contactNum}
+              error={!!errors.contactNum}
+              helperText={errors.contactNum}
+              sx={{ width: '90%', ml: 5, mb: 2 }}
             />
-            <FormControl margin="normal" fullWidth>
+            <FormControl margin="normal" fullWidth required error={!!errors.slot} helperText={errors.slot}>
                 <InputLabel id="demo-simple-select-autowidth-label">Slot</InputLabel>
                 <Select
                     labelId="demo-simple-select-autowidth-label"
@@ -195,11 +211,10 @@ export function BookingDetails() {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={handleConfirm}
             >
-              Confirm
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
             </GradientButton>
             </Box>
           </Paper>
         </Grid>
-        </>
   );
 }
