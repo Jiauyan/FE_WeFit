@@ -53,9 +53,9 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/goals/deleteGoal/${id}`);
         setDeleteGoalStatus(response.data.message);
-        onDeleteGoal(response.data)
         setNotification({ open: true, message: 'Goal deleted successfully!', severity: 'success' });
             setTimeout(() => {
+              onDeleteGoal(response.data)
               handleClose();
         }, 3000);
     } catch (error) {
