@@ -1,7 +1,6 @@
-import React, { useState , useEffect} from 'react';
-import { useUser } from "../../contexts/UseContext";
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
-import { 
+import {
     Typography, 
     Paper, 
     Avatar, 
@@ -15,8 +14,12 @@ import {
     MenuItem,
     IconButton,
     Input,
+    FormHelperText,
+    Snackbar,
+    CircularProgress
 } from "@mui/material";
-import {  useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
+import { useUser } from "../../contexts/UseContext";
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Edit from '@mui/icons-material/Edit';
@@ -24,47 +27,53 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
 
 export function EditProfile() {
-    const [userData, setUserData] = useState({});
-    const { user , setUser} = useUser();
-    const uid = user?.uid;
-    const [username, setUsername] = useState('');
-    const [gender, setGender] = useState('');
-    const [age, setAge] = useState('');
-    const [weight, setWeight] = useState('');
-    const [height, setHeight] = useState('');
-    const [profileImage, setProfileImage] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState(null); 
-    const [photoUrl, setPhotoUrl] = useState(null);  
-    const [editProfileStatus, setEditProfileStatus] = useState('');
-    const navigate = useNavigate();
+  const [formValues, setFormValues] = useState({
+    username: '', gender: '', age: '', weight: '', height: ''
+  });
+  const [formErrors, setFormErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' });
+  const [profileImage, setProfileImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null); 
+
+  const { user } = useUser();
+  const uid = user?.uid;
+  const navigate = useNavigate();
     
-    useEffect(() => {
-        window.scrollTo(0, 0); 
-      }, []);
+  useEffect(() => {
+      window.scrollTo(0, 0); 
+  }, []);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`);
-                const data = response.data;
-                setUserData(data);
-                setUsername(data.username);
-                setGender(data.gender);
-                setAge(data.age);
-                setWeight(data.weight);
-                setHeight(data.height);
-                setProfileImage(data.photoURL);
-                setPreviewUrl(data.photoURL);
-                setPhotoUrl(data.photoURL);
-            } catch (error) {
-                console.error('There was an error fetching the user data!', error);
-            }
-        };
-
-        if (uid) {
-            fetchUserData();
+  useEffect(() => {
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`);
+            const data = response.data;
+            setFormValues(prev => ({ ...prev, ...data }));
+            setProfileImage(data.photoURL);
+            setPreviewUrl(data.photoURL);
+        } catch (error) {
+            console.error('There was an error fetching the user data!', error);
+            setNotification({ open: true, message: 'Failed to fetch user data', severity: 'error' });
         }
-    }, [uid]);
+    };
+
+    if (uid) {
+        fetchUserData();
+    }
+  }, [uid]);
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formValues.username.trim()) errors.username = 'Username is required';
+    if (!formValues.gender) errors.gender = 'Gender is required';
+    if (formValues.age <= 0) errors.age = 'Age must be a positive number';
+    if (formValues.weight <= 0) errors.weight = 'Weight must be a positive number';
+    if (formValues.height <= 0) errors.height = 'Height must be a positive number';
+    if (!profileImage) errors.profileImage = 'Profile image is required';
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+};
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -80,51 +89,48 @@ export function EditProfile() {
               // You can handle progress here if you need to show upload status
             },
             (error) => {
-              // Handle unsuccessful uploads
               console.error("Upload failed", error);
+              setFormErrors(prev => ({ ...prev, profileImage: 'Failed to upload image' }));
             },
             () => {
-              // Handle successful uploads on complete
-              getDownloadURL(uploadTask.snapshot.ref).then((photoURL) => {
-              console.log("File available at", photoURL);
-              setPreviewUrl(photoURL);
-              setPhotoUrl(photoURL);
-          });
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setPreviewUrl(downloadURL);
+                setFormErrors(prev => ({ ...prev, profileImage: '' }));
+            });
         }
       );
       }
     };
 
-      const handleGender = async (event) => {
-        setGender(event.target.value);
-      };
+    const handleChange = (field, value) => {
+      setFormValues({ ...formValues, [field]: value });
+      if (formErrors[field]) setFormErrors({ ...formErrors, [field]: '' });
+  };
 
     const handleSubmit = async (e) => { 
-        e.preventDefault();
+      e.preventDefault();
+      if (!validateForm()) return;
+  
+      setLoading(true);
         try { 
-            const responseUpdate = await axios.post(`https://be-um-fitness.vercel.app/profile/uploadProfileImage/${uid}`, {
-                updates: {
-                    photoURL:photoUrl,
-                    username,
-                    gender,
-                    age,
-                    weight,
-                    height
-                  }
+             const responseUpdate = await axios.post(`https://be-um-fitness.vercel.app/profile/uploadProfileImage/${uid}`, {
+              updates: {
+                ...formValues,
+                photoURL: previewUrl
+              }
             });
-            setUserData(responseUpdate.data);
-            setEditProfileStatus(responseUpdate.data.message);
-            navigate("/profile", { state: { uid: uid } } );
+            setNotification({ open: true, message: 'Profile updated successfully!', severity: 'success' });
+            setTimeout(() => {
+              navigate("/profile", { state: { uid: uid } });
+            }, 1000);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.response) {
-                    setEditProfileStatus(error.response.data.message);
-                } else {
-                    setEditProfileStatus('An error occurred');
-                }
-            } else {
-                setEditProfileStatus('An unexpected error occurred');
-            }
+          setNotification({
+              open: true,
+              message: 'Failed to update profile. Please try again.',
+              severity: 'error'
+          });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -191,6 +197,9 @@ export function EditProfile() {
                         <Edit />
                     </IconButton>
                 </label>
+                 {formErrors.profileImage && (
+                                <FormHelperText error>{formErrors.profileImage}</FormHelperText>
+                )}
             </Box>
         )}
         <Box component="form" onSubmit={handleSubmit} sx={{  mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -201,76 +210,95 @@ export function EditProfile() {
             id="username"
             label="Username"
             name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value) || null}
+            value={formValues.username}
+            onChange={(e) => handleChange('username', e.target.value)}
             variant="outlined"
+            error={!!formErrors.username}
+            helperText={formErrors.username}
             sx={{ mb: 1 }}
         />
-        <FormControl margin="normal" fullWidth>
-                    <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-                    <Select
-                        required
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={gender}
-                        label="Role"
-                        onChange={handleGender}
-                    >
-                        <MenuItem value="Male">Male</MenuItem>
-                        <MenuItem value="Female">Female</MenuItem>
-                    </Select>
-            </FormControl>
+        <FormControl margin="normal" fullWidth error={!!formErrors.gender}>
+            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+            <Select
+                  required
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={formValues.gender}
+                  label="Gender"
+                  onChange={(e) => handleChange('gender', e.target.value)}
+            >
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+            </Select>
+            <FormHelperText>{formErrors.gender}</FormHelperText>
+        </FormControl>
         <TextField
-            required
-            margin="normal"
-            fullWidth
-            id="age"
-            label="Age"
-            name="age"
-            value={age}
-            type="number"
-            onChange={(e) => setAge(parseFloat(e.target.value) || null)}
-            variant="outlined"
-            sx={{ mb: 1 }}
-        />
-        <TextField
-            required
-            margin="normal"
-            fullWidth
-            name="weight"
-            label="Weight"
-            id="weight"
-            type="number"
-            value={weight}
-            onChange={(e) => setWeight(parseFloat(e.target.value) || null)}
-            variant="outlined"
-            sx={{ mb: 1 }}
-        />
-        <TextField
-            required
-            margin="normal"
-            fullWidth
-            name="height"
-            label="Height"
-            id="height"
-            type="number"
-            value={height}
-            onChange={(e) => setHeight(parseFloat(e.target.value) || null)}
-            variant="outlined"
-            sx={{ mb: 1 }}
-        />
-      <GradientButton
-       type="submit"
-               fullWidth
-               variant="contained"
-               color="primary"
-               sx={{ mt: 3, mb: 2, mr: 1 }}
-           >
-               Save
-      </GradientButton>
+                            required
+                            margin="normal"
+                            fullWidth
+                            id="age"
+                            label="Age"
+                            name="age"
+                            value={formValues.age}
+                            type="number"
+                            onChange={(e) => handleChange('age', e.target.value)}
+                            variant="outlined"
+                            error={!!formErrors.age}
+                            helperText={formErrors.age}
+                            sx={{ mb: 1 }}
+                        />
+                        <TextField
+                            required
+                            margin="normal"
+                            fullWidth
+                            name="weight"
+                            label="Weight"
+                            id="weight"
+                            type="number"
+                            value={formValues.weight}
+                            onChange={(e) => handleChange('weight', e.target.value)}
+                            variant="outlined"
+                            error={!!formErrors.weight}
+                            helperText={formErrors.weight}
+                            sx={{ mb: 1 }}
+                        />
+                        <TextField
+                            required
+                            margin="normal"
+                            fullWidth
+                            name="height"
+                            label="Height"
+                            id="height"
+                            type="number"
+                            value={formValues.height}
+                            onChange={(e) => handleChange('height', e.target.value)}
+                            variant="outlined"
+                            error={!!formErrors.height}
+                            helperText={formErrors.height}
+                            sx={{ mb :1 }}
+                        />
+                        <GradientButton
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            sx={{ mt: 3, mb :2, mr:1}}
+                            disabled={loading}
+                        >
+                            {loading ? <CircularProgress size={24} /> : 'SAVE'}
+                        </GradientButton>
       </Box>
       </Paper>
     </Grid>
+    <Snackbar
+                open={notification.open}
+                autoHideDuration={6000}
+                onClose={() => setNotification({ ...notification, open: false })}
+            >
+                <MuiAlert elevation={6} variant="filled" onClose={() => setNotification({ ...notification, open: false })} severity={notification.severity}>
+                    {notification.message}
+                </MuiAlert>
+            </Snackbar>
     <Outlet/>
     </>
   );
