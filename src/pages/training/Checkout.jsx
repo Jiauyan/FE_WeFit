@@ -3,21 +3,11 @@ import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
 import { 
     Typography, 
-    Paper, 
-    Button, 
+    Paper,  
     Grid, 
     Box, 
-    IconButton, 
-    Radio, 
-    RadioGroup, 
-    FormControlLabel, 
-    FormControl, 
-    FormLabel, 
-    TextField, 
-    InputLabel, 
-    Select, 
-    MenuItem,
-    Modal,
+    IconButton,
+    CircularProgress 
 } from "@mui/material";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -26,6 +16,7 @@ import { loadStripe } from '@stripe/stripe-js';
 
 
 export function Checkout() {
+    const [loading, setLoading] = useState(false);
     const [addCheckoutStatus, setAddCheckoutStatus] = useState('');
     const { user, updateUser, setUser } = useUser();
     const navigate = useNavigate();
@@ -57,6 +48,7 @@ export function Checkout() {
     const savedData = JSON.parse(localStorage.getItem('bookingData'));
 
     if(feeAmount == 0 ){
+      setLoading(true);
         try {
             const bookingResponse = await axios.post('https://be-um-fitness.vercel.app/trainingClassBooking/addTrainingClassBooking', {
                 uid: savedData.uid,
@@ -74,8 +66,11 @@ export function Checkout() {
         } catch (error) {
             console.error("Booking Error:", error);
             alert('Failed to add booking details. Please try again.');
-        }
+        } finally {
+          setLoading(false);
+      }
     }else{
+        setLoading(true);
           // Payment required, proceed with Stripe
           try {
             const stripe = await loadStripe("pk_test_51QFrsIKymqYnhuBpBlgyp9gsHn2m5zvPXV8MvP3u6IYv6WTKmwKbEztxX0O9CXJDpnEdSE9rCJVLe4yx0P0avHCT00IJacHbeN");
@@ -101,7 +96,9 @@ export function Checkout() {
         } catch (error) {
             console.error("Stripe Error:", error);
             alert('Failed to initiate payment process. Please try again.');
-        }
+        } finally {
+          setLoading(false);
+      }
         }
 };
 
@@ -203,7 +200,7 @@ export function Checkout() {
                         color="primary"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                    Checkout
+                        {loading ? <CircularProgress size={24} color="inherit" /> : 'Checkout'}
                   </GradientButton>
               </Box> 
               
