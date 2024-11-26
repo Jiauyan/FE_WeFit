@@ -6,9 +6,12 @@ import {
     Button,
     Typography,
     Modal,
-    TextField
-}from "@mui/material";
+    TextField,
+    Snackbar,
+    CircularProgress
+} from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -33,23 +36,35 @@ const style = {
 };
 
 export function AddPost({onAddPost}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [postDetails, setPostDetails] = useState('');
   const [addPostStatus, setAddPostStatus] = useState('');
+  const [postError, setPostError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
   const { user } = useUser();
   const uid = user.uid;
 
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const handleSubmit = async (e) => { 
-    e.preventDefault(); 
+     e.preventDefault(); 
+    if (!validatePost()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.post('https://be-um-fitness.vercel.app/posts/addPost', {
             uid,
             postDetails
         });
         onAddPost(response.data);
-        handleClose();
+        setNotification({ open: true, message: 'Post added successfully!', severity: 'success' });
+            setTimeout(() => {
+              handleClose();
+        }, 1000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -60,10 +75,19 @@ export function AddPost({onAddPost}) {
         } else {
             setAddPostStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
 };
 
-
+const validatePost = () => {
+  if (!postDetails.trim()) {
+    setTitleError('Post description is required');
+    return false;
+  } 
+  setTitleError('');
+  return true;
+};
 
   return (
     <div>
@@ -95,12 +119,17 @@ export function AddPost({onAddPost}) {
                     multiline
                     rows={5}
                     margin="normal"
-                    //required
+                    required
                     fullWidth
                     name="post"
                     label="Post Description"
                     id="post"
                     onChange={(e) => setPostDetails(e.target.value)}
+                    error={!!postError}
+                    helperText={postError}
+                    FormHelperTextProps={{
+                        style: { textAlign: 'right' }  // Aligns text to the right
+                    }}
             />
             <GradientButton
                     type="submit"
@@ -108,10 +137,20 @@ export function AddPost({onAddPost}) {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Add
-            </GradientButton>
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
+                </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={1000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }
