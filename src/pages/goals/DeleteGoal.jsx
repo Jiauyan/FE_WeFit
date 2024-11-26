@@ -57,7 +57,7 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
         setNotification({ open: true, message: 'Goal deleted successfully!', severity: 'success' });
             setTimeout(() => {
               handleClose();
-        }, 1000);
+        }, 3000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
