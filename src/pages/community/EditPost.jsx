@@ -7,10 +7,13 @@ import {
     Typography,
     Modal,
     TextField,
-    IconButton,
-}from "@mui/material";
-import  Edit  from '@mui/icons-material/Edit';
+    Snackbar,
+    CircularProgress,
+    IconButton
+} from "@mui/material";
+import Edit from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
