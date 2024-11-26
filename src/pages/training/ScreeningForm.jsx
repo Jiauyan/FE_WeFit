@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Button, Grid, Box, IconButton, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, TextField } from "@mui/material";
+import { Typography, Paper, Button, Grid, Box, IconButton, Radio, 
+  CircularProgress,RadioGroup, FormControlLabel, FormControl, FormLabel, TextField } from "@mui/material";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 export function ScreeningForm() {
+  const [loading, setLoading] = useState(false);
     const [screeningFormData, setScreeningFormData] = useState({});
     const [q1, setQ1] = useState('');
     const [q2, setQ2] = useState('');
@@ -38,7 +40,11 @@ export function ScreeningForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
+    if (!validateForm()) {
+      return;
+    }
+    setLoading(true);
     try {
       const uid = user.uid;
       const response = await axios.post('https://be-um-fitness.vercel.app/screeningForm/upsertScreeningForm', {
@@ -63,7 +69,9 @@ export function ScreeningForm() {
       } else {
         setAddScreeningFormStatus('An unexpected error occurred');
       }
-  }
+  } finally {
+    setLoading(false)
+   }
   };
 
 
@@ -104,7 +112,7 @@ export function ScreeningForm() {
                 </Typography>
                 </Grid>
             <Box component="form" onSubmit={handleSubmit} noValidate  sx={{ width: '100%', px: 3 }}>
-              <FormControl component="fieldset" >
+              <FormControl component="fieldset" required>
                 <Typography> 1. Has your doctor ever said that you have a heart condition and that you should only do physical activity recommended by a doctor?</Typography>
                 <Box>
                   <RadioGroup
@@ -125,7 +133,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" >
+              <FormControl component="fieldset" required>
                 <Typography> 2. Do you feel pain in your chest when you do physical activity?</Typography>
                 <Box>
                   <RadioGroup
@@ -146,7 +154,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" >
+              <FormControl component="fieldset" required >
                 <Typography> 3. In the past month, have you had chest pain when you were not doing physical actiivty?</Typography>
                 <Box>
                   <RadioGroup
@@ -167,7 +175,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" >
+              <FormControl component="fieldset" required>
                 <Typography> 4. Do you lose your balance because of dizziness or do you ever lose consciousness?</Typography>
                 <Box>
                   <RadioGroup
@@ -188,7 +196,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset">
+              <FormControl component="fieldset" required>
                 <Typography sx={{overflowWrap: 'break-word'}}> 
                   5. Do you have a bone or joint problem (for example, back, knee or hip) that could be made worse by a change in your physical activity?</Typography>
                 <Box>
@@ -210,7 +218,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset">
+              <FormControl component="fieldset" required>
                 <Typography> 6. Is your doctor currently prescribing drugs (for example, water pills) for your blood pressure or heart condition?</Typography>
                 <Box>
                   <RadioGroup
@@ -231,7 +239,7 @@ export function ScreeningForm() {
                 </Box>
               </FormControl>
 
-              <FormControl component="fieldset" >
+              <FormControl component="fieldset" required>
                 <Typography> 7. Do you know of any other reason why you should not do physical activity?</Typography>
                 <Box>
                   <RadioGroup
@@ -259,7 +267,7 @@ export function ScreeningForm() {
                 color="primary"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Confirm
+                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
               </GradientButton>
             </Box>
           </Paper>

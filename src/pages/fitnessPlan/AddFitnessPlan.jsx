@@ -78,7 +78,7 @@ export function AddFitnessPlan() {
   };
 
   const validateFitnessPlan = () => {
-    if (!title.trim()) {
+    if (!title) {
         setAddPlanError("Title is required.");
         return false;
     }
@@ -94,11 +94,11 @@ export function AddFitnessPlan() {
     };
 
     const validateFitnessActivity = () => {
-        if (!task.trim()) {
+        if (!task) {
             setAddPlanError("Title is required.");
             return false;
         }
-        if (!duration.trim()) {
+        if (!duration) {
             setAddPlanError("Date is required.");
             return false;
         }
