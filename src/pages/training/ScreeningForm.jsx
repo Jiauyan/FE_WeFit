@@ -8,22 +8,24 @@ import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 export function ScreeningForm() {
-  const [loading, setLoading] = useState(false);
     const [screeningFormData, setScreeningFormData] = useState({});
-    const [q1, setQ1] = useState('');
-    const [q2, setQ2] = useState('');
-    const [q3, setQ3] = useState('');
-    const [q4, setQ4] = useState('');
-    const [q5, setQ5] = useState('');
-    const [q6, setQ6] = useState('');
-    const [q7, setQ7] = useState('');
-    const [errors, setErrors] = useState({});
     const [addScreeningFormStatus, setAddScreeningFormStatus] = useState('');
     const { user, updateUser, setUser } = useUser();
-    const navigate = useNavigate();
     const location = useLocation();
     const { id, pathPrev } = location.state;
-
+    const [loading, setLoading] = useState(false);
+    const questions = [
+      { id: 'q1', text: "Has your doctor ever said that you have a heart condition and that you should only do physical activity recommended by a doctor?" },
+      { id: 'q2', text: "Do you feel pain in your chest when you do physical activity?" },
+      { id: 'q3', text: "In the past month, have you had chest pain when you were not doing physical activity?" },
+      { id: 'q4', text: "Do you lose your balance because of dizziness or do you ever lose consciousness?" },
+      { id: 'q5', text: "Do you have a bone or joint problem (for example, back, knee or hip) that could be made worse by a change in your physical activity?" },
+      { id: 'q6', text: "Is your doctor currently prescribing drugs (for example, water pills) for your blood pressure or heart condition?" },
+      { id: 'q7', text: "Do you know of any other reason why you should not do physical activity?" }
+    ];
+    const [answers, setAnswers] = useState(questions.reduce((acc, question) => ({ ...acc, [question.id]: '' }), {}));
+    const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
     useEffect(() => {
       window.scrollTo(0, 0); // Scroll to the top of the page when the component loads
     }, []);
@@ -40,20 +42,14 @@ export function ScreeningForm() {
   };
 
   const validateForm = () => {
-    let isValid = true;
     const newErrors = {};
-
-    // Check each question individually
-    if (!q1) { newErrors.q1 = "This question is required."; isValid = false; }
-    if (!q2) { newErrors.q2 = "This question is required."; isValid = false; }
-    if (!q3) { newErrors.q3 = "This question is required."; isValid = false; }
-    if (!q4) { newErrors.q4 = "This question is required."; isValid = false; }
-    if (!q5) { newErrors.q5 = "This question is required."; isValid = false; }
-    if (!q6) { newErrors.q6 = "This question is required."; isValid = false; }
-    if (!q7) { newErrors.q7 = "This question is required."; isValid = false; }
-
+    Object.keys(answers).forEach(key => {
+      if (!answers[key]) {
+        newErrors[key] = "This question is required.";
+      }
+    });
     setErrors(newErrors);
-    return isValid;
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
@@ -66,13 +62,13 @@ export function ScreeningForm() {
       const uid = user.uid;
       const response = await axios.post('https://be-um-fitness.vercel.app/screeningForm/upsertScreeningForm', {
           uid,
-          q1,
-          q2,
-          q3,
-          q4,
-          q5,
-          q6,
-          q7
+          q1 : answers.q1,
+          q2 : answers.q2,
+          q3 : answers.q3,
+          q4 : answers.q4,
+          q5 : answers.q5,
+          q6 : answers.q6,
+          q7 : answers.q7
       });
       setAddScreeningFormStatus(response.data.message);
       navigate("/consentForm", { state: { id, pathPrev} });
@@ -91,6 +87,10 @@ export function ScreeningForm() {
    }
   };
 
+  const handleChange = (id, value) => {
+    setAnswers(prev => ({ ...prev, [id]: value }));
+    setErrors(prev => ({ ...prev, [id]: '' }));
+  };
 
   return (
       <Grid
@@ -129,147 +129,16 @@ export function ScreeningForm() {
                 </Typography>
                 </Grid>
             <Box component="form" onSubmit={handleSubmit} noValidate  sx={{ width: '100%', px: 3 }}>
-              <FormControl component="fieldset" required error={!!errors.q1} helperText={errors}>
-                <Typography> 1. Has your doctor ever said that you have a heart condition and that you should only do physical activity recommended by a doctor?</Typography>
-                <Box>
-                  <RadioGroup
-                        value={q1} 
-                        onChange={(e) => setQ1(e.target.value)}
-                        sx={{
-                            '& .MuiSvgIcon-root': {
-                              fontSize: 20,
-                            },
-                            margin:2}}
-                  >
-                <Box>
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                </Box>
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                  </RadioGroup>
-                </Box>
-              </FormControl>
-
-              <FormControl component="fieldset" required error={!!errors.q2} helperText={errors}>
-                <Typography> 2. Do you feel pain in your chest when you do physical activity?</Typography>
-                <Box>
-                  <RadioGroup
-                        value={q2} 
-                        onChange={(e) => setQ2(e.target.value)}
-                        sx={{
-                            '& .MuiSvgIcon-root': {
-                              fontSize: 20,
-                            },
-                            margin:2}}
-                  >
-                <Box>
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                </Box>
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                  </RadioGroup>
-                </Box>
-              </FormControl>
-
-              <FormControl component="fieldset" required  error={!!errors.q3} helperText={errors}>
-                <Typography> 3. In the past month, have you had chest pain when you were not doing physical actiivty?</Typography>
-                <Box>
-                  <RadioGroup
-                        value={q3} 
-                        onChange={(e) => setQ3(e.target.value)}
-                        sx={{
-                            '& .MuiSvgIcon-root': {
-                              fontSize: 20,
-                            },
-                            margin:2}}
-                  >
-                <Box>
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                </Box>
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                  </RadioGroup>
-                </Box>
-              </FormControl>
-
-              <FormControl component="fieldset" required error={!!errors.q4} helperText={errors}>
-                <Typography> 4. Do you lose your balance because of dizziness or do you ever lose consciousness?</Typography>
-                <Box>
-                  <RadioGroup
-                        value={q4} 
-                        onChange={(e) => setQ4(e.target.value)}
-                        sx={{
-                            '& .MuiSvgIcon-root': {
-                              fontSize: 20,
-                            },
-                            margin:2}}
-                  >
-                <Box>
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                </Box>
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                  </RadioGroup>
-                </Box>
-              </FormControl>
-
-              <FormControl component="fieldset" required error={!!errors.q5} helperText={errors}>
-                <Typography sx={{overflowWrap: 'break-word'}}> 
-                  5. Do you have a bone or joint problem (for example, back, knee or hip) that could be made worse by a change in your physical activity?</Typography>
-                <Box>
-                  <RadioGroup
-                        value={q5} 
-                        onChange={(e) => setQ5(e.target.value)}
-                        sx={{
-                            '& .MuiSvgIcon-root': {
-                              fontSize: 20,
-                            },
-                            margin:2}}
-                  >
-                <Box>
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                </Box>
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                  </RadioGroup>
-                </Box>
-              </FormControl>
-
-              <FormControl component="fieldset" required error={!!errors.q6} helperText={errors}>
-                <Typography> 6. Is your doctor currently prescribing drugs (for example, water pills) for your blood pressure or heart condition?</Typography>
-                <Box>
-                  <RadioGroup
-                        value={q6} 
-                        onChange={(e) => setQ6(e.target.value)}
-                        sx={{
-                            '& .MuiSvgIcon-root': {
-                              fontSize: 20,
-                            },
-                            margin:2}}
-                  >
-                <Box>
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                </Box>
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                  </RadioGroup>
-                </Box>
-              </FormControl>
-
-              <FormControl component="fieldset" required error={!!errors.q7} helperText={errors}>
-                <Typography> 7. Do you know of any other reason why you should not do physical activity?</Typography>
-                <Box>
-                  <RadioGroup
-                        value={q7} 
-                        onChange={(e) => setQ7(e.target.value)}
-                        sx={{
-                            '& .MuiSvgIcon-root': {
-                              fontSize: 20,
-                            },
-                            margin:2}}
-                  >
-                <Box>
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                </Box>
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                  </RadioGroup>
-                </Box>
-              </FormControl>
-
+            {questions.map((question) => (
+            <FormControl key={question.id} component="fieldset" required error={!!errors[question.id]} sx={{ mb: 2 }}>
+              <FormLabel>{question.text}</FormLabel>
+              <RadioGroup value={answers[question.id]} onChange={(e) => handleChange(question.id, e.target.value)}>
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+              </RadioGroup>
+              {errors[question.id] && <Typography color="error" sx={{ mt: 1 }}>{errors[question.id]}</Typography>}
+            </FormControl>
+          ))}
               <GradientButton
                 type = "submit"
                 fullWidth
