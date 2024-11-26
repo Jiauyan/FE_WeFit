@@ -289,7 +289,7 @@ const handleUpdateFitnessActivity = async (e) => {
         <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb:2 }} margin={1} >
                 Add Your Fitness Plan
         </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
             required
             margin="normal"
@@ -305,7 +305,7 @@ const handleUpdateFitnessActivity = async (e) => {
             required
             label="Date"
             format="dd/MM/yyyy"
-            value={date}
+            //value={date}
             onChange={(newValue) => setDate(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width: "100%" }}
