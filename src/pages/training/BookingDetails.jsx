@@ -116,7 +116,7 @@ export function BookingDetails() {
   
       if (!name.trim()) newErrors.name = 'Name is required';
       if (!contactNum.trim()) newErrors.contactNum = 'Contact Number is required';
-      if (!slot.trim()) newErrors.slot = 'Slot is required';
+      if (!slot) newErrors.slot = 'Slot is required';
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
     };
