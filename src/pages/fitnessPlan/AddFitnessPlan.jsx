@@ -78,23 +78,51 @@ export function AddFitnessPlan() {
   };
 
   const validateFitnessPlan = () => {
-    const newErrors = {};
+    let isValid = true;
   
-      if (!title.trim()) newErrors.title = 'Title is required';
-      if (!date) newErrors.date = 'Date is required';
-      if (!fitnessActivities) newErrors.fitnessActivities = 'Fitness Activity is required';
-      setFitnessPlanError(newErrors);
-      return Object.keys(newErrors).length === 0;
-    };
-
-    const validateFitnessActivity = () => {
-        const newErrors = {};
-      
-          if (!task.trim()) newErrors.task = 'Title is required';
-          if (!duration.trim()) newErrors.duration = 'Date is required';
-          setFitnessActivityError(newErrors);
-          return Object.keys(newErrors).length === 0;
-        };
+    if (!title.trim()) {
+      setFitnessPlanError('Title is required');
+      isValid = false;
+    } else {
+      setFitnessPlanError('');
+    }
+  
+    if (!date) {
+      setFitnessPlanError('Date is required');
+      isValid = false;
+    } else {
+      setFitnessPlanError('');
+    }
+  
+    if (fitnessActivities.length === 0) {
+      setFitnessPlanError('At least one fitness activity is required');
+      isValid = false;
+    } else {
+      setFitnessPlanError('');
+    }
+  
+    return isValid;
+  };
+  
+  const validateFitnessActivity = () => {
+    let isValid = true;
+  
+    if (!task.trim()) {
+      setFitnessActivityError('Task is required');
+      isValid = false;
+    } else {
+      setFitnessActivityError('');
+    }
+  
+    if (!duration.trim()) {
+      setFitnessActivityError('Duration is required');
+      isValid = false;
+    } else {
+      setFitnessActivityError('');
+    }
+  
+    return isValid;
+  };
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
@@ -262,15 +290,15 @@ const handleUpdateFitnessActivity = async (e) => {
         </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
-                    required
-                    margin="normal"
-                    fullWidth
-                    name="fitnessPlanTitle"
-                    label="Title"
-                    id="fitnessPlanTitle"
-                    onChange={(e) => setTitle(e.target.value)}
-                    error={!!fitnessPlanError}
-                    helperText={fitnessPlanError}
+            required
+            margin="normal"
+            fullWidth
+            name="fitnessPlanTitle"
+            label="Title"
+            id="fitnessPlanTitle"
+            onChange={(e) => setTitle(e.target.value)}
+            error={!!fitnessPlanError && fitnessPlanError === 'Title is required'}
+            helperText={fitnessPlanError === 'Title is required' ? fitnessPlanError : ''}
             />
             <DatePicker
             required
@@ -279,13 +307,16 @@ const handleUpdateFitnessActivity = async (e) => {
             value={date}
             onChange={(newValue) => setDate(newValue)}
             slots={{ textField: TextField }}
-            sx={{ marginBottom: 2, width:"100%"}} 
+            sx={{ marginBottom: 2, width: "100%" }}
             minDate={new Date()}
-            error={!!fitnessPlanError}
-            helperText={fitnessPlanError}
-          />
-            <Box 
-            error={!!fitnessPlanError} helperText={fitnessPlanError} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
+            error={!!fitnessPlanError && fitnessPlanError === 'Date is required'}
+            helperText={fitnessPlanError === 'Date is required' ? fitnessPlanError : ''}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
+                border: fitnessPlanError ? '1px solid red' : 'none', // Optional: Visual indicator for error
+                borderRadius: 1, // Optional for styling
+                padding: fitnessPlanError ? 1 : 0,
+            }}>
               <Typography variant="subtitle1">
                 Fitness Activities
               </Typography>
@@ -293,6 +324,11 @@ const handleUpdateFitnessActivity = async (e) => {
                 <Add />
               </IconButton>
             </Box>
+            {fitnessPlanError && (
+            <Typography color="error" variant="body2" sx={{ marginBottom: 2 }}>
+                {fitnessPlanError}
+            </Typography>
+            )}
             <List>
                 {fitnessActivities && fitnessActivities.map((fitnessActivity, index) => (
                     <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
