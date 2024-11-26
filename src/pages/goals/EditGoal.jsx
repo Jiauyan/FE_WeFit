@@ -101,6 +101,7 @@ const handleChange = (event) => {
                 Edit Your Goal
             </Typography>
             <TextField
+                required
                 multiline
                 rows={5}
                 margin="normal"

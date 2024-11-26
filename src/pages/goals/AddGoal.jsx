@@ -136,6 +136,7 @@ const handleWordLimit = (event) => {
                Add Your Goal
             </Typography>
             <TextField
+                required
                 multiline
                 rows={5}
                 margin="normal"
