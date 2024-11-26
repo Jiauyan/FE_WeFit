@@ -297,8 +297,8 @@ const handleUpdateFitnessActivity = async (e) => {
             label="Title"
             id="fitnessPlanTitle"
             onChange={(e) => setTitle(e.target.value)}
-            error={!!fitnessPlanError && fitnessPlanError === 'Title is required'}
-            helperText={fitnessPlanError === 'Title is required' ? fitnessPlanError : ''}
+            error={!!fitnessPlanError}
+            helperText={fitnessPlanError}
             />
             <DatePicker
             required
@@ -309,8 +309,8 @@ const handleUpdateFitnessActivity = async (e) => {
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width: "100%" }}
             minDate={new Date()}
-            error={!!fitnessPlanError && fitnessPlanError === 'Date is required'}
-            helperText={fitnessPlanError === 'Date is required' ? fitnessPlanError : ''}
+            error={!!fitnessPlanError}
+            helperText={fitnessPlanError}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
                 border: fitnessPlanError ? '1px solid red' : 'none', // Optional: Visual indicator for error
