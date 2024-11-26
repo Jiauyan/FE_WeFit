@@ -57,7 +57,7 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
             setTimeout(() => {
               onDeleteGoal(response.data)
               handleClose();
-        }, 1000);
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -111,7 +111,7 @@ export function DeleteGoal({id, disabled, onDeleteGoal}) {
       </Modal>
       <Snackbar
       open={notification.open}
-      autoHideDuration={1000}
+      autoHideDuration={2000}
       onClose={handleCloseNotification}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     >

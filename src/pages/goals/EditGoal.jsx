@@ -65,11 +65,11 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
             status: false
         });
         setEditGoalStatus(response.data.message);
-        onEditGoal(response.data);
         setNotification({ open: true, message: 'Goal updated successfully!', severity: 'success' });
             setTimeout(() => {
+              onEditGoal(response.data);
               handleClose();
-        }, 1000);
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -160,7 +160,7 @@ const handleChange = (event) => {
       </Modal>
       <Snackbar
       open={notification.open}
-      autoHideDuration={1000}
+      autoHideDuration={2000}
       onClose={handleCloseNotification}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     >

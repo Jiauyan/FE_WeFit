@@ -62,14 +62,14 @@ export function AddGoal({onAddGoal}) {
             title,
             status: false
         });
-        onAddGoal(response.data);
         setAddGoalStatus(response.data.message);
         setTitle('');
         setWordCount(0);
         setNotification({ open: true, message: 'Goal added successfully!', severity: 'success' });
             setTimeout(() => {
+              onAddGoal(response.data);
               handleClose();
-        }, 1000);
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -163,7 +163,7 @@ const handleWordLimit = (event) => {
       </Modal>
       <Snackbar
       open={notification.open}
-      autoHideDuration={1000}
+      autoHideDuration={2000}
       onClose={handleCloseNotification}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     >
