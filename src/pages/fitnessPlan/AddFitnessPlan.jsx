@@ -107,23 +107,11 @@ export function AddFitnessPlan() {
   };
   
   const validateFitnessActivity = () => {
-    let isValid = true;
-  
-    if (!task.trim()) {
-      setFitnessActivityError('Task is required');
-      isValid = false;
-    } else {
-      setFitnessActivityError('');
-    }
-  
-    if (!duration.trim()) {
-      setFitnessActivityError('Duration is required');
-      isValid = false;
-    } else {
-      setFitnessActivityError('');
-    }
-  
-    return isValid;
+    const newErrors = {};
+    if (!task.trim()) newErrors.task = 'Task is required';
+    if (!duration.trim()) newErrors.duration = 'Duration is required';
+    setFitnessActivityError(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => { 
@@ -298,23 +286,23 @@ const handleUpdateFitnessActivity = async (e) => {
             label="Title"
             id="fitnessPlanTitle"
             onChange={(e) => setTitle(e.target.value)}
-            error={!!titleError.title}
-            helperText={titleError.title}
+            error={!!titleError}
+            helperText={titleError}
             />
             <DatePicker
             required
             label="Date"
             format="dd/MM/yyyy"
-            //value={date}
+            value={date}
             onChange={(newValue) => setDate(newValue)}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width: "100%" }}
             minDate={new Date()}
-            error={!!dateError.date}
-            helperText={dateError.date}
+            error={!!dateError}
+            helperText={dateError}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2, 
-                border: activitiesError ? '1px solid red' : 'none', // Optional: Visual indicator for error
+                border: activitiesError ? '0.5px solid red' : 'none', // Optional: Visual indicator for error
                 borderRadius: 1, // Optional for styling
                 padding: activitiesError ? 1 : 0,
             }}>
