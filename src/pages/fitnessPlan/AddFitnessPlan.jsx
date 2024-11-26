@@ -89,7 +89,7 @@ export function AddFitnessPlan() {
       setTitleError('');
     }
   
-    if (!date.trim()) {
+    if (!date) {
       setDateError('Date is required');
       isValid = false;
     } else {
