@@ -98,7 +98,7 @@ export function BookingDetails() {
             alert('Slot clash with an existing booking. Please choose a different slot.');
             return; // Exit the function if there is a clash
         }
-        setTimeout(() => { 
+        await new Promise((resolve) => setTimeout(resolve, 500));
           navigate('/checkout', { 
             state: {  
                 id,
@@ -112,7 +112,6 @@ export function BookingDetails() {
                 status
             } 
         });
-        }, 2000);
        
     } catch (error) {
         console.error('Error during confirmation:', error);
