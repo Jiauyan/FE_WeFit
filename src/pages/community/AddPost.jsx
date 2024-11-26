@@ -60,11 +60,11 @@ export function AddPost({onAddPost}) {
             uid,
             postDetails
         });
-        onAddPost(response.data);
         setNotification({ open: true, message: 'Post added successfully!', severity: 'success' });
             setTimeout(() => {
+              onAddPost(response.data);
               handleClose();
-        }, 1000);
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -82,10 +82,10 @@ export function AddPost({onAddPost}) {
 
 const validatePost = () => {
   if (!postDetails.trim()) {
-    setTitleError('Post description is required');
+    setPostError('Post description is required');
     return false;
   } 
-  setTitleError('');
+  setPostError('');
   return true;
 };
 
@@ -143,7 +143,7 @@ const validatePost = () => {
       </Modal>
       <Snackbar
       open={notification.open}
-      autoHideDuration={1000}
+      autoHideDuration={2000}
       onClose={handleCloseNotification}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     >

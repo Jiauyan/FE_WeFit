@@ -37,7 +37,6 @@ const style = {
   overflowY: 'auto', // add scroll on Y-axis if content is too long
 };
 
-
 export function EditPost({id, oldDesc, onEditPost}) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -63,11 +62,11 @@ export function EditPost({id, oldDesc, onEditPost}) {
             postDetails
         });
         setEditPostStatus(response.data.message);
-        onEditPost(response.data);
         setNotification({ open: true, message: 'Post updated successfully!', severity: 'success' });
         setTimeout(() => {
+          onEditPost(response.data);
           handleClose();
-    }, 1000);
+    }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -85,12 +84,13 @@ export function EditPost({id, oldDesc, onEditPost}) {
 
 const validatePost = () => {
   if (!postDetails.trim()) {
-    setTitleError('Post description is required');
+    setPostError('Post description is required');
     return false;
   } 
-  setTitleError('');
+  setPostError('');
   return true;
 };
+
 
   return (
     <div>
@@ -144,7 +144,7 @@ const validatePost = () => {
       </Modal>
       <Snackbar
       open={notification.open}
-      autoHideDuration={1000}
+      autoHideDuration={2000}
       onClose={handleCloseNotification}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     >

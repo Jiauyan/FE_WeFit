@@ -5,12 +5,13 @@ import {
     Button,
     Typography,
     Modal,
-    TextField,
-    IconButton,
+    Snackbar,
+    CircularProgress,
+    IconButton
 }from "@mui/material";
 import Delete from '@mui/icons-material/Delete';
-import Edit from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -35,18 +36,26 @@ const style = {
 };
 
 export function DeletePost({id, onDeletePost}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deletePostStatus, setDeletePostStatus] = useState('');
-    
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const handleSubmit = async (e) => { 
     e.preventDefault();
+    setLoading(true);
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/posts/deletePost/${id}`);
         setDeletePostStatus(response.data.message);
-        onDeletePost(response.data)
-        handleClose();
+        setNotification({ open: true, message: 'Goal deleted successfully!', severity: 'success' });
+            setTimeout(() => {
+              onDeletePost(response.data);
+              handleClose();
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -57,10 +66,10 @@ export function DeletePost({id, onDeletePost}) {
         } else {
             setDeletePostStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
 };
-
-
 
   return (
     <div>
@@ -94,10 +103,20 @@ export function DeletePost({id, onDeletePost}) {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Confirm
+                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
             </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={2000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }
