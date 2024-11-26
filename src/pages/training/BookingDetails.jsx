@@ -88,28 +88,36 @@ export function BookingDetails() {
   };
 
   const handleConfirm = async () => {
-    // Check if the selected slot clashes with existing bookings
     if (!validateForm()) return;
-    setLoading(true);
-    const slotClash = bookedProgramsSlot.some(booking => booking.slot === slot.time);
-    if (slotClash) {
-        alert('Slot clash with an existing booking. Please choose a different slot.');
-        return; // Exit the function if there is a clash
-    }
 
-    navigate('/checkout',  { state: {  
-      id,
-      pathPrev,
-      name,
-      contactNum,
-      slot,
-      trainingClassID,
-      trainingProgram,
-      feeAmount,
-      status
-      } })
-    setLoading(false);
+    setLoading(true); // Start loading indicator
+
+    try {
+        const slotClash = bookedProgramsSlot.some(booking => booking.slot === slot.time);
+        if (slotClash) {
+            alert('Slot clash with an existing booking. Please choose a different slot.');
+            return; // Exit the function if there is a clash
+        }
+
+        navigate('/checkout', { 
+            state: {  
+                id,
+                pathPrev,
+                name,
+                contactNum,
+                slot,
+                trainingClassID,
+                trainingProgram,
+                feeAmount,
+                status
+            } 
+        });
+    } catch (error) {
+        console.error('Error during confirmation:', error);
+    } finally {
+        setLoading(false); // Ensure loading is stopped regardless of the outcome
     }
+};
 
     const validateForm = () => {
       const newErrors = {};
