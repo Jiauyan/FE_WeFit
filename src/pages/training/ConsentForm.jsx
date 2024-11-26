@@ -198,6 +198,19 @@ export function ConsentForm() {
                               required
                               margin="normal"
                               fullWidth
+                              name="date"
+                              label="Date"
+                              id="date"
+                              value={date}
+                              onChange={(e) => setDate(e.target.value)}
+                              error={!!errors.date}
+                              helperText={errors.date}
+                              sx={{ width: '90%', ml: 5, mb: 2 }}
+                            />
+                             <TextField
+                              required
+                              margin="normal"
+                              fullWidth
                               name="emergencyContactPhoneNumber"
                               label="Emergency Contact Phone Number"
                               id="emergencyContactPhoneNumber"
@@ -227,7 +240,7 @@ export function ConsentForm() {
                             sx={{ mt: 3, mb: 2 ,width: '90%', ml: 5,}}
                             onClick={handleSubmit}
                             >
-                             {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
+                           {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
                             </GradientButton>
                             </Box>
                             </>
