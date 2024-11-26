@@ -164,7 +164,7 @@ const handleWordLimit = (event) => {
       </Modal>
       <Snackbar
       open={notification.open}
-      autoHideDuration={3000}
+      autoHideDuration={1000}
       onClose={handleCloseNotification}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     >
