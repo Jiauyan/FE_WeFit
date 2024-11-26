@@ -49,6 +49,10 @@ export function AddFitnessPlan() {
   const [currentActivity, setCurrentActivity] = useState(null);
   const { user } = useUser();
   const uid = user.uid;
+  const [addPlanError, setAddPlanError] = useState('');
+  const [addActivityError, setAddActivityError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
   const handleCloseNotification = () => setNotification({ ...notification, open: false });
 
   const style = {
