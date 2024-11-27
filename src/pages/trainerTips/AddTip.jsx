@@ -193,6 +193,9 @@ export function AddTip() {
                     Upload Sharing Tip Image
                   </Typography>
                 </label>
+                {tipError.tipImage && (
+                                <FormHelperText error>{tipError.tipImage}</FormHelperText>
+                )}
               </Box>
             )}
           {previewUrl && (
@@ -232,9 +235,6 @@ export function AddTip() {
                 <Edit />
               </IconButton>
             </label>
-            {tipError.tipImage && (
-                                <FormHelperText error>{tipError.tipImage}</FormHelperText>
-                )}
             </Box>
           )}
           <Box component="form" onSubmit={handleSubmit}  noValidate sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
