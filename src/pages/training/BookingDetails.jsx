@@ -174,7 +174,10 @@ export function BookingDetails() {
               label="Name"
               id="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                setErrors({ ...errors, name: '' });
+              }}
               error={!!errors.name}
               helperText={errors.name}
               />
@@ -185,7 +188,10 @@ export function BookingDetails() {
               name="contactNum"
               label="Contact Number"
               id="contactNum"
-              onChange={(e) => setContactNum(e.target.value)}
+              onChange={(e) => {
+                setContactNum(e.target.value);
+                setErrors({ ...errors, contactNum: '' });
+              }}
               value={contactNum}
               error={!!errors.contactNum}
               helperText={errors.contactNum}
@@ -196,7 +202,10 @@ export function BookingDetails() {
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
                     value={slot}
-                    onChange={(e) => setSlot(e.target.value)}
+                    onChange={(e) => {
+                      setSlot(e.target.value);
+                      setErrors({ ...errors, slot: '' });
+                    }}
                     fullWidth
                     label="Slot"
                 >
