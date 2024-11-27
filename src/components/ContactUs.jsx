@@ -63,10 +63,10 @@ export function ContactUs() {
                 <Typography variant="body1" sx={{ mb: 2 }}>
                     Universiti Malaya, 50603 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ mb: 1}}>
                     <strong>Phone</strong>
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
+                <Typography variant="body1" sx={{ mb: 2 }}>
                       03 79673210
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
