@@ -189,7 +189,10 @@ export function ConsentForm() {
                               label="Name"
                               id="name"
                               value={name}
-                              onChange={(e) => setName(e.target.value)}
+                              onChange={(e) => {
+                                setName(e.target.value);
+                                setErrors({ ...errors, name: '' });
+                              }}
                               error={!!errors.name}
                               helperText={errors.name}
                               sx={{ width: '90%', ml: 5, mb: 2 }}
@@ -202,7 +205,10 @@ export function ConsentForm() {
                               label="Date"
                               id="date"
                               value={date}
-                              onChange={(e) => setDate(e.target.value)}
+                              onChange={(e) => {
+                                setDate(e.target.value);
+                                setErrors({ ...errors, date: '' });
+                              }}
                               error={!!errors.date}
                               helperText={errors.date}
                               sx={{ width: '90%', ml: 5, mb: 2 }}
@@ -215,7 +221,10 @@ export function ConsentForm() {
                               label="Emergency Contact Phone Number"
                               id="emergencyContactPhoneNumber"
                               value={emergencyContactPhoneNumber}
-                              onChange={(e) => setEmergencyContactPhoneNumber(e.target.value)}
+                              onChange={(e) => {
+                                setEmergencyContactPhoneNumber(e.target.value);
+                                setErrors({ ...errors, emergencyContactPhoneNumber: '' });
+                              }}
                               error={!!errors.emergencyContactPhoneNumber}
                               helperText={errors.emergencyContactPhoneNumber}
                               sx={{ width: '90%', ml: 5, mb: 2 }}
@@ -228,7 +237,10 @@ export function ConsentForm() {
                               label="Emergency Contact Name"
                               id="emergencyContactName"
                               value={emergencyContactName}
-                              onChange={(e) => setEmergencyContactName(e.target.value)}
+                              onChange={(e) => {
+                                setEmergencyContactName(e.target.value);
+                                setErrors({ ...errors, emergencyContactName: '' });
+                              }}
                               error={!!errors.emergencyContactName}
                               helperText={errors.emergencyContactName}
                               sx={{ width: '90%', ml: 5, mb: 2 }}

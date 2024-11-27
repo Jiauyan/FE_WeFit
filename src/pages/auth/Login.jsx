@@ -180,7 +180,10 @@ export function Login() {
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 autoComplete="current-password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setPasswordError("");
+                }}
                 error={!!passwordError}
                 helperText={passwordError}
                 InputProps={{

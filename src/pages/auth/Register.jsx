@@ -150,7 +150,10 @@ export function Register() {
                 label="Email"
                 name="email"
                 type= "email"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError("");
+                }}
                 error={!!emailError}
                 helperText={emailError}
               />
@@ -162,7 +165,10 @@ export function Register() {
               label="Password"
               type={showPassword ? 'text' : 'password'}
               id="password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setPasswordError("");
+              }}
               error={!!passwordError}
               helperText={passwordError}
               InputProps={{
