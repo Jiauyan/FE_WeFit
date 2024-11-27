@@ -64,7 +64,7 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
         setAddMotivationalQuoteStatus(response.data.message);
         setMotivationalQuote('');
         setWordCount(0);
-        setNotification({ open: true, message: 'Goal added successfully!', severity: 'success' });
+        setNotification({ open: true, message: 'Motivational quote added successfully!', severity: 'success' });
             setTimeout(() => {
               onAddMotivationalQuote(response.data);
               handleClose();
@@ -91,17 +91,17 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
         setWordCount(inputWords.length);
         setMotivationalQuoteError(''); // Clears the error if input is corrected
     } else {
-      setMotivationalQuoteError('Motivational Quote must not exceed 25 words');
+      setMotivationalQuoteError('Motivational quote must not exceed 25 words');
     }
   };
   
 
   const validateMotivationalQuote = () => {
     if (!motivationalQuote.trim()) {
-      setMotivationalQuoteError('Motivational Quote is required');
+      setMotivationalQuoteError('Motivational quote is required');
       return false;
     } else if (wordCount > 25) {
-      setMotivationalQuoteError('Motivational Quote must not exceed 25 words');
+      setMotivationalQuoteError('Motivational quote must not exceed 25 words');
       return false;
     }
     setMotivationalQuoteError('');

@@ -16,8 +16,6 @@ import {
     Pagination,
     CircularProgress
 } from "@mui/material";
-
-import gym from "../../assets/gym.png";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 

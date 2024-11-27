@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
-import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, Menu, MenuItem } from "@mui/material";
+import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, Menu, MenuItem, CircularProgress } from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DeleteTip } from './DeleteTip';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -9,6 +9,7 @@ import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import MoreVert from '@mui/icons-material/MoreVert';
 
 export function ViewTip() {
+    const [loading, setLoading] = useState(true);
     const [tipData, setTipData] = useState([]);
     const [tipUserID, setTipUserID] = useState(null);
     const [tipUser, setTipUser] = useState({});
@@ -38,25 +39,30 @@ export function ViewTip() {
     }, []);
 
     useEffect(() => {
-        const uid = user?.uid;
-        if (!uid) return;
-        axios.get(`https://be-um-fitness.vercel.app/tips/getTipById/${id}`)
-            .then(response => {
-                setTipData(response.data); 
-                setTipUserID(response.data.uid);
-            })
-            .catch(error => console.error('There was an error!', error));
-    }, [user?.uid]); 
- 
-    useEffect(() => {
-      const uid = tipUserID;
-      if (!uid) return;
-      axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`)
-          .then(response => {
-              setTipUser(response.data); 
-          })
-          .catch(error => console.error('There was an error!', error));
-  }, [tipUserID]); 
+      const fetchData = async () => {
+          setLoading(true);
+          try {
+              // Fetch the tip details
+              const tipResponse = await axios.get(`https://be-um-fitness.vercel.app/tips/getTipById/${id}`);
+              setTipData(tipResponse.data);
+              const tipUserID = tipResponse.data.uid;
+  
+              if (!tipUserID) {
+                  throw new Error('User ID not found in tip data');
+              }
+  
+              // Using the tip's user ID to fetch the user details
+              const userResponse = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${tipUserID}`);
+              setTipUser(userResponse.data);
+          } catch (error) {
+              console.error('There was an error!', error);
+          } finally {
+              setLoading(false);
+          }
+      };
+  
+      fetchData();
+    }, [id]);
 
     const handleEdit = async (id) => {
       navigate("/editTip", { state: { id: id } });
@@ -66,6 +72,14 @@ export function ViewTip() {
       navigate("/trainerTips");
     }; 
 
+    if (loading) {
+      return (
+        <Grid container justifyContent="center" alignItems="center" style={{ height: "100vh" }}>
+          <CircularProgress />
+        </Grid>
+      );
+    }
+    
   return (
     <>
     <Grid

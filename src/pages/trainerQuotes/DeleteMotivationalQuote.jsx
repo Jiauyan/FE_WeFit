@@ -53,7 +53,7 @@ export function DeleteMotivationalQuote({id, onDeleteMotivationalQuote}) {
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/motivationalQuotes/deleteMotivationalQuote/${id}`);
         setDeleteMotivationalQuoteStatus(response.data.message);
-        setNotification({ open: true, message: 'Goal deleted successfully!', severity: 'success' });
+        setNotification({ open: true, message: 'Motivational quote deleted successfully!', severity: 'success' });
             setTimeout(() => {
               onDeleteMotivationalQuote(response.data);
               handleClose();

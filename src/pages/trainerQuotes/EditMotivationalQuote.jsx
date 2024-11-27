@@ -91,16 +91,16 @@ export function EditMotivationalQuote({ id, oldMotivationalQuote, onEditMotivati
         setWordCount(inputWords.length);
         setMotivationalQuoteError(''); // Clears the error if input is corrected
     } else {
-      setMotivationalQuoteError('Motivational Quote must not exceed 25 words');
+      setMotivationalQuoteError('Motivational quote must not exceed 25 words');
     }
   };
   
   const validateMotivationalQuote = () => {
     if (!motivationalQuote.trim()) {
-      setMotivationalQuoteError('Motivational Quote is required');
+      setMotivationalQuoteError('Motivational quote is required');
       return false;
     } else if (wordCount > 25) {
-      setMotivationalQuoteError('Motivational Quote must not exceed 25 words');
+      setMotivationalQuoteError('Motivational quote must not exceed 25 words');
       return false;
     }
     setMotivationalQuoteError('');

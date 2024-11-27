@@ -14,14 +14,14 @@ import {
     Grid,
     Box,
     TextField,
-    Pagination
+    Pagination,
+    CircularProgress
 } from "@mui/material";
-
-import gym from "../../assets/gym.png";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 
 export function TrainerTips(){
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { user , setUser} = useUser();
   const uid = user.uid;
@@ -45,11 +45,14 @@ useEffect(() => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
+                setLoading(true);
                 const response = await axios.get(`https://be-um-fitness.vercel.app/tips/getAllUserTips/${uid}`);
                 setTips(response.data);
             } catch (error) {
                 console.error('There was an error!', error);
-            }
+            } finally {
+              setLoading(false);
+          }
         };
 
         fetchTips();
@@ -75,6 +78,14 @@ useEffect(() => {
     const startIndex = (page - 1) * itemsPerPage;
     const currentTips = filteredTips.slice(startIndex, startIndex + itemsPerPage);
     
+    if (loading) {
+      return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+              <CircularProgress />
+          </Box>
+      );
+  }
+  
     return(
        <Box padding={3}>
             <Box sx={{ 
