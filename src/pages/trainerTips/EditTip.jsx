@@ -219,6 +219,7 @@ export function EditTip() {
           )}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{  mt: 2,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
+                    value={title}
                     required
                     margin="normal"
                     fullWidth
@@ -234,6 +235,7 @@ export function EditTip() {
                     helperText={tipError.title}
             />
             <TextField
+                value={shortDesc}
                 required
                 margin="normal"
                 fullWidth
@@ -249,6 +251,7 @@ export function EditTip() {
                 helperText={tipError.shortDesc}
                 />
              <TextField
+                value={desc}
                 required
                 margin="normal"
                 fullWidth
