@@ -561,7 +561,7 @@ export function EditFitnessPlan() {
                     sx={{ mt: 3, mb: 2 }}
                     onClick={handleRemoveFitnessActivity}
             >
-                {deleteActivityLoading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
+                {deleteActivityLoading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
             </Button>
         </Box>
       </Modal>
