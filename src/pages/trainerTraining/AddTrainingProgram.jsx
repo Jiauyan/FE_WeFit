@@ -13,11 +13,9 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Button,
     List,
     ListItem,
     ListItemText,
-    Divider,
     Modal,
     InputAdornment,
     Input,
@@ -120,7 +118,7 @@ export function AddTrainingProgram() {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setPreviewUrl(downloadURL);
           setDownloadUrl(downloadURL);
-          setTipError(prev => ({ ...prev, trainingProgramImage: '' }));
+          setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: '' }));
       });
   }
 );

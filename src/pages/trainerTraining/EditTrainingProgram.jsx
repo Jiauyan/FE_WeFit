@@ -17,10 +17,12 @@ import {
     List,
     ListItem,
     ListItemText,
-    Divider,
     Modal,
     InputAdornment,
-    Input
+    Input,
+    Snackbar,
+    CircularProgress,
+    FormHelperText
 } from "@mui/material";
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Upload from '@mui/icons-material/Upload';
@@ -33,6 +35,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
 import { isToday, setHours, setMinutes, addMinutes,format,compareAsc, parse} from 'date-fns';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -92,6 +95,12 @@ export function EditTrainingProgram() {
   const [openDeleteSlot, setOpenDeleteSlot] = useState(false);
   const [indexToDelete, setIndexToDelete] = useState(null);
   const [slotToDelete, setSlotToDelete] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+  const [trainingProgramError, setTrainingProgramError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
 
   const handleOpenDeleteSlot = (index, slot) => {
       setIndexToDelete(index);
@@ -158,14 +167,14 @@ const handleFileChange = (e) => {
     (error) => {
       // Handle unsuccessful uploads
       console.error("Upload failed", error);
+      setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: 'Failed to upload image' }));
     },
     () => {
-      // Handle successful uploads on complete
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-      console.log("File available at", downloadURL);
-      setPreviewUrl(downloadURL);
-      setDownloadUrl(downloadURL);
-  });
+        setPreviewUrl(downloadURL);
+        setDownloadUrl(downloadURL);
+        setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: '' }));
+    });
 }
 );
 }
@@ -173,7 +182,7 @@ const handleFileChange = (e) => {
 
 const handleAddSlot = async (e) => {
   e.preventDefault();
-
+  setTrainingProgramError({ ...trainingProgramError, slots: '' });
   // Initial checks for completeness of input
   if (!currentDate || !currentStartTime || !currentEndTime) {
       alert("Please complete all date and time fields.");
@@ -324,6 +333,10 @@ const sortSlots = (slots) => {
   
   const handleSubmit = async (e) => { 
     e.preventDefault();
+    if (!validateTrainingProgram()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.patch(`https://be-um-fitness.vercel.app/trainingPrograms/updateTrainingProgram/${id}`, {
            updates: {
@@ -345,7 +358,10 @@ const sortSlots = (slots) => {
            }
         });
         setUpdateTrainingProgramStatus(response.data.message);
-        navigate("/viewTrainerTrainingProgram", { state: { id: id } });
+        setNotification({ open: true, message: 'Training program added successfully!', severity: 'success' });
+            setTimeout(() => {
+              navigate("/viewTrainerTrainingProgram", { state: { id: id } });
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -356,11 +372,34 @@ const sortSlots = (slots) => {
         } else {
             setUpdateTrainingProgramStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
   };
 
   const handleBack = async () => {
     navigate("/viewTrainerTrainingProgram", { state: { id: id } });
+  };
+
+  const validateTrainingProgram = () => {
+    const errors = {};
+    if (!trainingProgramImage) errors.trainingProgramImage = 'Training program image is required';
+    if (!title.trim()) errors.title = 'Training program title is required';
+    if (!typeOfTrainingProgram.trim()) errors.typeOfTrainingProgram = 'Training program type is required';
+    if (!capacity) errors.capacity = 'Training program capacity is required';
+    if (!feeType) errors.feeType = 'Training program fee type is required';
+    if (!feeAmount) errors.feeAmount = 'Training program fee amount is required';
+    if (!venueType) errors.venueType = 'Training program venue type is required';
+    if (!venue) errors.venue = 'Training program venue is required';
+    if (!fitnessLevel) errors.fitnessLevel = 'Fitness level is required';
+    if (!fitnessGoal) errors.fitnessGoal = 'Fitness goal is required';
+    if (!typeOfExercise) errors.typeOfExercise = 'Type of exercise is required';
+    if (!desc) errors.desc = 'Training program description is required';
+    if (!contactNum) errors.contactNum = 'Trainer contact number is required';
+    if (slots.length === 0) errors.slots = 'At least one slot is required';
+
+    setTrainingProgramError(errors);
+    return Object.keys(errors).length === 0;
   };
 
   return (
@@ -398,6 +437,7 @@ const sortSlots = (slots) => {
           </Typography>
           {previewUrl && (
             <Box sx={{
+              border: `1px solid ${trainingProgramError.trainingProgramImage ? 'red' : '#c4c4c4'}`,
               position: 'relative',  // Ensures the positioning context for the IconButton
               width: '100%',
                   height: '350px',
@@ -433,20 +473,32 @@ const sortSlots = (slots) => {
                 <Edit />
               </IconButton>
             </label>
+            {trainingProgramError.trainingProgramImage && (
+                                <FormHelperText error>{trainingProgramError.trainingProgramImage}</FormHelperText>
+                )}
             </Box>
           )}
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-            <TextField
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+           <TextField
               required
               margin="normal"
               fullWidth
+              value= {title}
               name="trainingProgramTitle"
               label="Training Program Title"
               id="trainingProgramTitle"
-              value= {title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                 setTitle(e.target.value);
+                 setTrainingProgramError({ ...trainingProgramError, title: '' });
+              }}
+              variant="outlined"
+              error={!!trainingProgramError.title}
+              helperText={trainingProgramError.title}
             />
-            <FormControl margin="normal" fullWidth>
+           <FormControl 
+                  margin="normal" 
+                  fullWidth 
+                  error={!!trainingProgramError.typeOfTrainingProgram}>
               <InputLabel id="type-of-training-program-label">Training Program Type</InputLabel>
               <Select
                   labelId="type-of-training-program-label"
@@ -457,8 +509,9 @@ const sortSlots = (slots) => {
                     if (e.target.value === 'Personal Training') {
                       setCapacity(1); // Set capacity to 1 for Personal Training
                     } else {
-                      setCapacity(''); // Clear capacity for Group Classes to allow user input
+                      setCapacity(0); // Clear capacity for Group Classes to allow user input
                     }
+                    setTrainingProgramError({ ...trainingProgramError, typeOfTrainingProgram: '' });
                   }}
                   fullWidth
                   label="Type of Training Program"
@@ -466,25 +519,36 @@ const sortSlots = (slots) => {
                 <MenuItem value="Personal Training">Personal Training</MenuItem>
                 <MenuItem value="Group Classes">Group Classes</MenuItem>
               </Select>
+              {trainingProgramError.typeOfTrainingProgram && (
+                <FormHelperText>{trainingProgramError.typeOfTrainingProgram}</FormHelperText>
+              )}
             </FormControl>
 
             {typeOfTrainingProgram === 'Group Classes' && (
-              <TextField
-                margin="normal"
-                fullWidth
-                id="class-capacity"
-                label="Enter Class Capacity"
-                type="number"
-                value={capacity}
-                onChange={(e) => setCapacity(e.target.value)}
-                InputProps={{
-                  inputProps: { 
-                    min: 1  // Ensures no zero or negative values, assuming at least one person must be in a class
-                  }
-                }}
-              />
+               <TextField
+               margin="normal"
+               fullWidth
+               id="class-capacity"
+               label="Enter Class Capacity"
+               type="number"
+               value={capacity}
+               onChange={(e) => {
+                 setCapacity(e.target.value);
+                 setTrainingProgramError({ ...trainingProgramError, capacity: '' });
+               }}
+               error={!!trainingProgramError.capacity}
+               helperText={trainingProgramError.capacity}
+               InputProps={{
+                 inputProps: { 
+                   min: 1  // Ensures no zero or negative values, assuming at least one person must be in a class
+                 }
+               }}
+             />
             )}
-            <FormControl margin="normal" fullWidth>
+            <FormControl 
+                  margin="normal" 
+                  fullWidth 
+                  error={!!trainingProgramError.feeType}>
               <InputLabel id="training-fee-label">Training Program Fee</InputLabel>
               <Select
                 labelId="training-fee-label"
@@ -493,10 +557,11 @@ const sortSlots = (slots) => {
                 onChange={(e) => {
                   setFeeType(e.target.value);
                   if (e.target.value === 'Free') {
-                    setFeeAmount('0'); 
+                    handleFeeChange(0.00); 
                   } else {
-                    setFeeAmount(''); 
+                    handleFeeChange(e.target.value); 
                   }
+                  setTrainingProgramError({ ...trainingProgramError, feeType: '' });
                 }}
                 fullWidth
                 label="Training Program Fee"
@@ -504,6 +569,9 @@ const sortSlots = (slots) => {
                 <MenuItem value="Free">Free</MenuItem>
                 <MenuItem value="Paid">Paid</MenuItem>
               </Select>
+              {trainingProgramError.feeType && (
+                <FormHelperText>{trainingProgramError.feeType}</FormHelperText>
+              )}
             </FormControl>
 
             {feeType === 'Paid' && (
@@ -514,26 +582,44 @@ const sortSlots = (slots) => {
                 label="Enter Fee Amount"
                 type="text" // Change to text to avoid automatic number handling
                 value={feeAmount}
-                onChange={(e) => handleFeeChange(e.target.value)}
+                onChange={(e) => {
+                  handleFeeChange(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, feeAmount: '' });
+                }}
+                error={!!trainingProgramError.feeAmount}
+                helperText={trainingProgramError.feeAmount}
                 InputProps={{
                   inputProps: { min: 0 }, // Ensures no negative values
                   startAdornment: <InputAdornment position="start">RM</InputAdornment>,
                 }}
            />
             )}
-             <FormControl margin="normal" fullWidth>
+              <FormControl 
+                margin="normal" 
+                fullWidth 
+                error={!!trainingProgramError.venueType}
+                >
                 <InputLabel id="venue-type-label">Venue</InputLabel>
                 <Select
                   labelId="venue-type-label"
                   id="venue-type-select"
                   value={venueType}
-                  onChange={(e) => setVenueType(e.target.value)}
+                  onChange={(e) => {
+                    setVenueType(e.target.value);
+                    if (e.target.value === 'Online') {
+                      setVenue("Online"); 
+                    }
+                    setTrainingProgramError({ ...trainingProgramError, venueType: '' });
+                  }}
                   fullWidth
                   label="Venue"
                 >
                   <MenuItem value="Online">Online</MenuItem>
                   <MenuItem value="Physical">Physical</MenuItem>
                 </Select>
+                {trainingProgramError.venueType && (
+                <FormHelperText>{trainingProgramError.venueType}</FormHelperText>
+              )}
               </FormControl>
 
               {venueType === 'Physical' && (
@@ -544,17 +630,29 @@ const sortSlots = (slots) => {
                   label="Enter Venue"
                   type="text"
                   value={venue}
-                  onChange={(e) => setVenue(e.target.value)}
+                  onChange={(e) => {
+                    setVenue(e.target.value);
+                    setTrainingProgramError({ ...trainingProgramError, venue: '' });
+                  }}
+                error={!!trainingProgramError.venue}
+                helperText={trainingProgramError.venue}
                 />
               )}
 
-            <FormControl margin="normal" fullWidth>
+<FormControl 
+                margin="normal" 
+                fullWidth 
+                error={!!trainingProgramError.fitnessLevel}
+                >
               <InputLabel id="demo-simple-select-autowidth-label">Fitness Level</InputLabel>
               <Select
                 labelId="demo-simple-select-autowidth-label"
                 id="demo-simple-select-autowidth"
                 value={fitnessLevel}
-                onChange={(e) => setFitnessLevel(e.target.value)}
+                onChange={(e) => {
+                  setFitnessLevel(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, fitnessLevel: '' });
+                }}
                 fullWidth
                 label="Fitness Level"
               >
@@ -562,14 +660,24 @@ const sortSlots = (slots) => {
                 <MenuItem value={"Intermediate"}>Intermediate</MenuItem>
                 <MenuItem value={"Advanced"}>Advanced</MenuItem>
               </Select>
+              {trainingProgramError.fitnessLevel && (
+                <FormHelperText>{trainingProgramError.fitnessLevel}</FormHelperText>
+              )}
             </FormControl>
-            <FormControl margin="normal" fullWidth>
+            <FormControl 
+                margin="normal" 
+                fullWidth 
+                error={!!trainingProgramError.fitnessGoal}
+                >
               <InputLabel id="demo-simple-select-autowidth-label">Fitness Goal</InputLabel>
               <Select
                 labelId="demo-simple-select-autowidth-label"
                 id="demo-simple-select-autowidth"
                 value={fitnessGoal}
-                onChange={(e) => setFitnessGoal(e.target.value)}
+                onChange={(e) => {
+                  setFitnessGoal(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, fitnessGoal: '' });
+                }}
                 fullWidth
                 label="Fitness Goal"
               >
@@ -579,14 +687,24 @@ const sortSlots = (slots) => {
                 <MenuItem value={"Reduce stress"}>Reduce stress</MenuItem>
                 <MenuItem value={"Build muscle"}>Build muscle</MenuItem>
               </Select>
+              {trainingProgramError.fitnessGoal && (
+                <FormHelperText>{trainingProgramError.fitnessGoal}</FormHelperText>
+              )}
             </FormControl>
-            <FormControl margin="normal" fullWidth>
+            <FormControl 
+                margin="normal" 
+                fullWidth 
+                error={!!trainingProgramError.typeOfExercise}
+                >
               <InputLabel id="demo-simple-select-autowidth-label">Type of Exercise</InputLabel>
               <Select
                 labelId="demo-simple-select-autowidth-label"
                 id="demo-simple-select-autowidth"
                 value={typeOfExercise}
-                onChange={(e) => setTypeOfExercise(e.target.value)}
+                onChange={(e) => {
+                  setTypeOfExercise(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, typeOfExercise: '' });
+                }}
                 fullWidth
                 label="Type of Exercise"
               >
@@ -597,6 +715,9 @@ const sortSlots = (slots) => {
                 <MenuItem value={"HIIT"}>HIIT</MenuItem>
                 <MenuItem value={"Meditation"}>Meditation</MenuItem>
               </Select>
+              {trainingProgramError.typeOfExercise && (
+                <FormHelperText>{trainingProgramError.typeOfExercise}</FormHelperText>
+              )}
             </FormControl>
             <TextField
               required
@@ -605,11 +726,16 @@ const sortSlots = (slots) => {
               name="trainingProgramDesc"
               label="Training Program Description"
               id="trainingProgramDesc"
-              onChange={(e) => setDesc(e.target.value)}
+              onChange={(e) => {
+                setDesc(e.target.value);
+                setTrainingProgramError({ ...trainingProgramError, desc: '' });
+              }}
               multiline
               rows={5}
               variant="outlined"
               value={desc}
+              error={!!trainingProgramError.desc}
+              helperText={trainingProgramError.desc}
             />
             <TextField
               required
@@ -619,7 +745,12 @@ const sortSlots = (slots) => {
               label="Trainer Contact Number"
               id="trainerContactNum"
               value={contactNum}
-              onChange={(e) => setContactNum(e.target.value)}
+              onChange={(e) => {
+                setContactNum(e.target.value);
+                setTrainingProgramError({ ...trainingProgramError, contactNum: '' });
+              }}
+              error={!!trainingProgramError.contactNum}
+              helperText={trainingProgramError.contactNum}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 2 }}>
               <Typography variant="subtitle1">
@@ -629,6 +760,11 @@ const sortSlots = (slots) => {
                 <Add />
               </IconButton>
             </Box>
+            {trainingProgramError.slots && (
+            <Typography color="error" variant="body2" sx={{ fontSize: '0.875rem', mb:2, ml:2 }}>
+                {trainingProgramError.slots}
+            </Typography>
+            )}
             <List>
               {slots.map((slot, index) => (
                 <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -743,6 +879,16 @@ const sortSlots = (slots) => {
               </Button>
           </Box>
       </Modal>
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </MuiAlert>
+      </Snackbar>
     </LocalizationProvider>
   );
 }
