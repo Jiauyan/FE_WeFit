@@ -298,14 +298,27 @@ export function AddTrainingProgram() {
 
   const validateTrainingProgram = () => {
     const errors = {};
+
     if (!trainingProgramImage) errors.trainingProgramImage = 'Training program image is required';
     if (!title.trim()) errors.title = 'Training program title is required';
     if (!typeOfTrainingProgram.trim()) errors.typeOfTrainingProgram = 'Training program type is required';
-    if (!capacity) errors.capacity = 'Training program capacity is required';
+
+    if (typeOfTrainingProgram === 'Group Classes' && !capacity) {
+      errors.capacity = 'Training program capacity is required';
+    }
+
     if (!feeType) errors.feeType = 'Training program fee type is required';
-    if (!feeAmount) errors.feeAmount = 'Training program fee amount is required';
+    // Fee amount validation based on fee type
+    if (feeType === 'Paid' && !feeAmount) {
+        errors.feeAmount = 'Training program fee amount is required';
+    }
+
     if (!venueType) errors.venueType = 'Training program venue type is required';
-    if (!venue) errors.venue = 'Training program venue is required';
+    // Venue validation based on venue type
+    if (venueType === 'Physical' && !venue) {
+        errors.venue = 'Training program venue is required';
+    }
+
     if (!fitnessLevel) errors.fitnessLevel = 'Fitness level is required';
     if (!fitnessGoal) errors.fitnessGoal = 'Fitness goal is required';
     if (!typeOfExercise) errors.typeOfExercise = 'Type of exercise is required';
@@ -315,7 +328,8 @@ export function AddTrainingProgram() {
 
     setTrainingProgramError(errors);
     return Object.keys(errors).length === 0;
-  };
+};
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
