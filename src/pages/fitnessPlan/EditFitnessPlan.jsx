@@ -194,7 +194,7 @@ export function EditFitnessPlan() {
                 fitnessPlanID,
             })
             ));
-            setUpdateFitnessPlanStatus('Fitness Plan updated successfully!');
+            //setUpdateFitnessPlanStatus('Fitness Plan updated successfully!');
             setNotification({ open: true, message: 'Fitness plan updated successfully!', severity: 'success' });
             setTimeout(() => {
                 navigate("/viewFitnessPlan", { state: { id: id } });
