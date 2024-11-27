@@ -30,6 +30,7 @@ import MuiAlert from '@mui/material/Alert';
 
 export function EditFitnessPlan() {
     const [loading, setLoading] = useState(false);
+    const [planLoading, setPlanLoading] = useState(false);
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -176,7 +177,7 @@ export function EditFitnessPlan() {
         if (!validateFitnessPlan()) {
             return;
         }
-        setLoading(true);
+        setPlanLoading(true);
         try {
             const formattedDate = format(date, 'dd/MM/yyyy');
             await axios.patch(`https://be-um-fitness.vercel.app/fitnessPlan/updateFitnessPlan/${id}`, {
@@ -206,7 +207,7 @@ export function EditFitnessPlan() {
                 setUpdateFitnessPlanStatus('An unexpected error occurred');
             }
         } finally {
-            setLoading(false)
+            setPlanLoading(false)
           }
     };
 
@@ -273,8 +274,9 @@ export function EditFitnessPlan() {
 
         if (!validateFitnessActivity()) {
             return;
-            setLoading(true)
-        }try {
+        }
+        setLoading(true)
+        try {
             const updatedActivity = {
                 ...currentActivity,
                 task,
@@ -423,7 +425,7 @@ export function EditFitnessPlan() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                           {loading ? <CircularProgress size={24} color="inherit" /> : 'SAVE'}
+                           {planLoading ? <CircularProgress size={24} color="inherit" /> : 'SAVE'}
                         </GradientButton>
                     </Box>
                 </Paper>
