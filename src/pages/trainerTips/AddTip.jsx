@@ -57,13 +57,13 @@ export function AddTip() {
         },
         (error) => {
           console.error("Upload failed", error);
-          setTipError(prev => ({ ...prev, profileImage: 'Failed to upload image' }));
+          setTipError(prev => ({ ...prev, tipImage: 'Failed to upload image' }));
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setPreviewUrl(downloadURL);
             setDownloadUrl(downloadURL);
-            setTipError(prev => ({ ...prev, profileImage: '' }));
+            setTipError(prev => ({ ...prev, tipImage: '' }));
         });
     }
   );

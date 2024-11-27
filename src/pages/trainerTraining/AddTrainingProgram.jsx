@@ -21,6 +21,9 @@ import {
     Modal,
     InputAdornment,
     Input,
+    Snackbar,
+    CircularProgress,
+    FormHelperText
 } from "@mui/material";
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Upload from '@mui/icons-material/Upload';
@@ -34,6 +37,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
 import { isToday, setHours, setMinutes, addMinutes,format,compareAsc, parse} from 'date-fns';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -87,6 +91,13 @@ export function AddTrainingProgram() {
   const { user } = useUser();
   const uid = user?.uid;
 
+  const [loading, setLoading] = useState(false);
+  const [trainingProgramError, setTrainingProgramError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -103,14 +114,14 @@ export function AddTrainingProgram() {
       (error) => {
         // Handle unsuccessful uploads
         console.error("Upload failed", error);
+        setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: 'Failed to upload image' }));
       },
       () => {
-        // Handle successful uploads on complete
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        console.log("File available at", downloadURL);
-        setPreviewUrl(downloadURL);
-        setDownloadUrl(downloadURL);
-    });
+          setPreviewUrl(downloadURL);
+          setDownloadUrl(downloadURL);
+          setTipError(prev => ({ ...prev, trainingProgramImage: '' }));
+      });
   }
 );
 }
@@ -231,6 +242,10 @@ export function AddTrainingProgram() {
 
   const handleSubmit = async (e) => { 
     e.preventDefault();
+    if (!validateTrainingProgram()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.post('https://be-um-fitness.vercel.app/trainingPrograms/addTrainingProgram', {
           uid : uid,
@@ -250,7 +265,10 @@ export function AddTrainingProgram() {
           downloadUrl : downloadUrl
         });
         setAddTrainingProgramStatus(response.data.message);
-        navigate("/trainerTrainingPrograms");
+        setNotification({ open: true, message: 'Training program added successfully!', severity: 'success' });
+            setTimeout(() => {
+              navigate("/trainerTrainingPrograms");
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -261,6 +279,8 @@ export function AddTrainingProgram() {
         } else {
             setAddTrainingProgramStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
   };
   
@@ -276,6 +296,27 @@ export function AddTrainingProgram() {
 
   const handleBack = async () => {
     navigate(-1);
+  };
+
+  const validateTrainingProgram = () => {
+    const errors = {};
+    if (!trainingProgramImage) errors.trainingProgramImage = 'Training program image is required';
+    if (!title.trim()) errors.title = 'Training program title is required';
+    if (!typeOfTrainingProgram.trim()) errors.typeOfTrainingProgram = 'Training program type is required';
+    if (!capacity) errors.capacity = 'Training program capacity is required';
+    if (!feeType) errors.feeType = 'Training program fee type is required';
+    if (!feeAmount) errors.feeAmount = 'Training program fee amount is required';
+    if (!venueType) errors.venueType = 'Training program venue type is required';
+    if (!venue) errors.venue = 'Training program venue is required';
+    if (!fitnessLevel) errors.fitnessLevel = 'Fitness level is required';
+    if (!fitnessGoal) errors.fitnessGoal = 'Fitness goal is required';
+    if (!typeOfExercise) errors.typeOfExercise = 'Type of exercise is required';
+    if (!desc) errors.desc = 'Training program description is required';
+    if (!contactNum) errors.contactNum = 'Trainer contact number is required';
+    if (slots.length === 0) errors.slots = 'At least one slot is required';
+
+    setTrainingProgramError(errors);
+    return Object.keys(errors).length === 0;
   };
 
   return (
@@ -323,6 +364,7 @@ export function AddTrainingProgram() {
                   justifyContent: 'center',
                   borderRadius: 2,
                   border: '1px solid #c4c4c4',
+                  border: `1px solid ${trainingProgramError.trainingProgramImage ? 'red' : '#c4c4c4'}`,
                   backgroundColor: 'rgba(255, 255, 255, 0.9)', // Ensuring it's visually noticeable
                 }}
               >
@@ -353,6 +395,9 @@ export function AddTrainingProgram() {
                     Upload Training Program Image
                   </Typography>
                 </label>
+                {trainingProgramError.trainingProgramImage && (
+                                <FormHelperText error>{trainingProgramError.trainingProgramImage}</FormHelperText>
+                )}
               </Box>
             )}
           {previewUrl && (
@@ -394,7 +439,7 @@ export function AddTrainingProgram() {
             </label>
             </Box>
           )}
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
               required
               margin="normal"
@@ -402,9 +447,19 @@ export function AddTrainingProgram() {
               name="trainingProgramTitle"
               label="Training Program Title"
               id="trainingProgramTitle"
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                 setTitle(e.target.value);
+                 setTrainingProgramError({ ...trainingProgramError, title: '' });
+              }}
+              variant="outlined"
+              error={!!trainingProgramError.title}
+              helperText={trainingProgramError.title}
             />
-           <FormControl margin="normal" fullWidth>
+           <FormControl 
+                  margin="normal" 
+                  fullWidth 
+                  error={!!trainingProgramError.typeOfTrainingProgram}
+                  helperText={trainingProgramError.typeOfTrainingProgram}>
               <InputLabel id="type-of-training-program-label">Training Program Type</InputLabel>
               <Select
                   labelId="type-of-training-program-label"
@@ -417,9 +472,11 @@ export function AddTrainingProgram() {
                     } else {
                       setCapacity(0); // Clear capacity for Group Classes to allow user input
                     }
+                    setTrainingProgramError({ ...trainingProgramError, typeOfTrainingProgram: '' });
                   }}
-                  fullWidth
-                  label="Type of Training Program"
+                variant="outlined"
+                fullWidth
+                label="Type of Training Program"
                 >
                 <MenuItem value="Personal Training">Personal Training</MenuItem>
                 <MenuItem value="Group Classes">Group Classes</MenuItem>
@@ -434,7 +491,12 @@ export function AddTrainingProgram() {
                 label="Enter Class Capacity"
                 type="number"
                 value={capacity}
-                onChange={(e) => setCapacity(e.target.value)}
+                onChange={(e) => {
+                  setCapacity(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, capacity: '' });
+                }}
+                error={!!trainingProgramError.capacity}
+                helperText={trainingProgramError.capacity}
                 InputProps={{
                   inputProps: { 
                     min: 1  // Ensures no zero or negative values, assuming at least one person must be in a class
@@ -442,7 +504,11 @@ export function AddTrainingProgram() {
                 }}
               />
             )}
-            <FormControl margin="normal" fullWidth>
+            <FormControl  
+                  margin="normal" 
+                  fullWidth 
+                  error={!!trainingProgramError.feeType}
+                  helperText={trainingProgramError.feeType}>
               <InputLabel id="training-fee-label">Training Program Fee</InputLabel>
               <Select
                 labelId="training-fee-label"
@@ -455,6 +521,7 @@ export function AddTrainingProgram() {
                   } else {
                     handleFeeChange(e.target.value); 
                   }
+                  setTrainingProgramError({ ...trainingProgramError, feeType: '' });
                 }}
                 fullWidth
                 label="Training Program Fee"
@@ -472,14 +539,24 @@ export function AddTrainingProgram() {
                 label="Enter Fee Amount"
                 type="text" // Change to text to avoid automatic number handling
                 value={feeAmount}
-                onChange={(e) => handleFeeChange(e.target.value)}
+                onChange={(e) => {
+                  handleFeeChange(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, feeAmount: '' });
+                }}
+                error={!!trainingProgramError.feeAmount}
+                helperText={trainingProgramError.feeAmount}
                 InputProps={{
                   inputProps: { min: 0 }, // Ensures no negative values
                   startAdornment: <InputAdornment position="start">RM</InputAdornment>,
                 }}
            />
             )}
-             <FormControl margin="normal" fullWidth>
+             <FormControl 
+                margin="normal" 
+                fullWidth 
+                error={!!trainingProgramError.venueType}
+                helperText={trainingProgramError.venueType}
+                >
                 <InputLabel id="venue-type-label">Venue</InputLabel>
                 <Select
                   labelId="venue-type-label"
@@ -490,6 +567,7 @@ export function AddTrainingProgram() {
                     if (e.target.value === 'Online') {
                       setVenue("Online"); 
                     }
+                    setTrainingProgramError({ ...trainingProgramError, venueType: '' });
                   }}
                   fullWidth
                   label="Venue"
@@ -507,17 +585,30 @@ export function AddTrainingProgram() {
                   label="Enter Venue"
                   type="text"
                   value={venue}
-                  onChange={(e) => setVenue(e.target.value)}
+                  onChange={(e) => {
+                    setVenue(e.target.value);
+                    setTrainingProgramError({ ...trainingProgramError, venue: '' });
+                  }}
+                error={!!trainingProgramError.venue}
+                helperText={trainingProgramError.venue}
                 />
               )}
 
-            <FormControl margin="normal" fullWidth>
+            <FormControl 
+                margin="normal" 
+                fullWidth 
+                error={!!trainingProgramError.fitnessLevel}
+                helperText={trainingProgramError.fitnessLevel}
+                >
               <InputLabel id="demo-simple-select-autowidth-label">Fitness Level</InputLabel>
               <Select
                 labelId="demo-simple-select-autowidth-label"
                 id="demo-simple-select-autowidth"
                 value={fitnessLevel}
-                onChange={(e) => setFitnessLevel(e.target.value)}
+                onChange={(e) => {
+                  setFitnessLevel(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, fitnessLevel: '' });
+                }}
                 fullWidth
                 label="Fitness Level"
               >
@@ -526,13 +617,21 @@ export function AddTrainingProgram() {
                 <MenuItem value={"Advanced"}>Advanced</MenuItem>
               </Select>
             </FormControl>
-            <FormControl margin="normal" fullWidth>
+            <FormControl 
+                margin="normal" 
+                fullWidth 
+                error={!!trainingProgramError.fitnessGoal}
+                helperText={trainingProgramError.fitnessGoal}
+                >
               <InputLabel id="demo-simple-select-autowidth-label">Fitness Goal</InputLabel>
               <Select
                 labelId="demo-simple-select-autowidth-label"
                 id="demo-simple-select-autowidth"
                 value={fitnessGoal}
-                onChange={(e) => setFitnessGoal(e.target.value)}
+                onChange={(e) => {
+                  setFitnessGoal(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, fitnessGoal: '' });
+                }}
                 fullWidth
                 label="Fitness Goal"
               >
@@ -543,13 +642,21 @@ export function AddTrainingProgram() {
                 <MenuItem value={"Build muscle"}>Build muscle</MenuItem>
               </Select>
             </FormControl>
-            <FormControl margin="normal" fullWidth>
+            <FormControl 
+                margin="normal" 
+                fullWidth 
+                error={!!trainingProgramError.typeOfExercise}
+                helperText={trainingProgramError.typeOfExercise}
+                >
               <InputLabel id="demo-simple-select-autowidth-label">Type of Exercise</InputLabel>
               <Select
                 labelId="demo-simple-select-autowidth-label"
                 id="demo-simple-select-autowidth"
                 value={typeOfExercise}
-                onChange={(e) => setTypeOfExercise(e.target.value)}
+                onChange={(e) => {
+                  setTypeOfExercise(e.target.value);
+                  setTrainingProgramError({ ...trainingProgramError, typeOfExercise: '' });
+                }}
                 fullWidth
                 label="Type of Exercise"
               >
@@ -568,10 +675,15 @@ export function AddTrainingProgram() {
               name="trainingProgramDesc"
               label="Training Program Description"
               id="trainingProgramDesc"
-              onChange={(e) => setDesc(e.target.value)}
+              onChange={(e) => {
+                setDesc(e.target.value);
+                setTrainingProgramError({ ...trainingProgramError, desc: '' });
+              }}
               multiline
               rows={5}
               variant="outlined"
+              error={!!trainingProgramError.desc}
+              helperText={trainingProgramError.desc}
             />
             <TextField
               required
@@ -581,8 +693,12 @@ export function AddTrainingProgram() {
               name="trainerContactNum"
               label="Trainer Contact Number"
               id="trainerContactNum"
-              //pattern="[+]?[0-9]{1,4}?[-.s]?[(]?[0-9]{1,3}[)]?[-.s]?[0-9]{3,4}[-.s]?[0-9]{4}"
-              onChange={(e) => setContactNum(e.target.value)}
+              onChange={(e) => {
+                setContactNum(e.target.value);
+                setTrainingProgramError({ ...trainingProgramError, contactNum: '' });
+              }}
+              error={!!trainingProgramError.contactNum}
+              helperText={trainingProgramError.contactNum}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt:2, mb:2, ml:1 }}>
               <Typography variant="subtitle1">
@@ -592,6 +708,11 @@ export function AddTrainingProgram() {
                 <Add />
               </IconButton>
             </Box>
+            {trainingProgramError.slots && (
+            <Typography color="error" variant="body2" sx={{ fontSize: '0.875rem', mb:2, ml:2 }}>
+                {trainingProgramError.slots}
+            </Typography>
+            )}
             <List>
               {slots.map((slot, index) => (
                 <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -608,7 +729,7 @@ export function AddTrainingProgram() {
               variant="contained"
               sx={{ mt: 3, mb: 2, backgroundColor: '#007bff', color: 'white' }}
             >
-              Add
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
             </GradientButton>
           </Box>
         </Paper>

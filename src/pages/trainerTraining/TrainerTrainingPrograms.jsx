@@ -10,13 +10,14 @@ import {
     Grid,
     Box,
     TextField,
-    Pagination
+    Pagination,
+    CircularProgress
 } from "@mui/material";
-
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 
 export function TrainerTrainingPrograms(){
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   //const { currentPage } = location.state;
@@ -41,12 +42,15 @@ useEffect(() => {
             try {
                 const uid = user?.uid;
                 if (!uid) return;
+                setLoading(true);
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getAllUserTrainingPrograms/${uid}`);
                 const sortedTrainingPrograms = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setTrainingPrograms(sortedTrainingPrograms);
             } catch (error) {
                 console.error('There was an error!', error);
-            }
+            } finally {
+              setLoading(false);
+          }
         };
 
         fetchTrainingPrograms();
@@ -72,6 +76,13 @@ useEffect(() => {
     const startIndex = (page - 1) * itemsPerPage;
     const currentPrograms = filteredPrograms.slice(startIndex, startIndex + itemsPerPage);
 
+    if (loading) {
+      return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+              <CircularProgress />
+          </Box>
+      );
+    }
     
     return(
         <>

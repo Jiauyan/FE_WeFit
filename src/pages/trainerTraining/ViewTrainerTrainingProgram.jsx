@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListItem, ListItemText, Divider, TableContainer, Table, TableBody, TableRow, TableCell, Menu, MenuItem} from "@mui/material";
+import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListItem, ListItemText, Divider, TableContainer, Table, TableBody, TableRow, TableCell, Menu, MenuItem, CircularProgress} from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DeleteTrainingProgram } from './DeleteTrainingProgram';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -42,23 +42,25 @@ export function ViewTrainerTrainingProgram() {
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return;
+  
+    setLoading(true);
+  
     axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`)
       .then(response => {
         setTrainingProgramData(response.data);
-        setTrainingProgramUserID(response.data.uid);
+        setTrainingProgramUserID(response.data.uid); // Set this to fetch the user details in the next step
+        return axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${response.data.uid}`);
       })
-      .catch(error => console.error('There was an error!', error));
-  }, [user?.uid]);
-
-  useEffect(() => {
-    const uid = trainingProgramUserID;
-    if (!uid) return;
-    axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`)
       .then(response => {
         setTrainingProgramUser(response.data);
       })
-      .catch(error => console.error('There was an error!', error));
-  }, [trainingProgramUserID]);
+      .catch(error => {
+        console.error('There was an error!', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [user?.uid, id]);
 
   const handleEdit = async (id) => {
     navigate("/editTrainingProgram", { state: { id: id } });
@@ -80,6 +82,14 @@ export function ViewTrainerTrainingProgram() {
     { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status ? 'Full' : 'Available'}`).join(', ') },
   ];
 
+  if (loading) {
+    return (
+      <Grid container justifyContent="center" alignItems="center" style={{ height: "100vh" }}>
+        <CircularProgress />
+      </Grid>
+    );
+  }
+  
   return (
     <>
     <Grid
