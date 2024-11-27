@@ -458,8 +458,7 @@ export function AddTrainingProgram() {
            <FormControl 
                   margin="normal" 
                   fullWidth 
-                  error={!!trainingProgramError.typeOfTrainingProgram}
-                  helperText={trainingProgramError.typeOfTrainingProgram}>
+                  error={!!trainingProgramError.typeOfTrainingProgram}>
               <InputLabel id="type-of-training-program-label">Training Program Type</InputLabel>
               <Select
                   labelId="type-of-training-program-label"
@@ -481,6 +480,9 @@ export function AddTrainingProgram() {
                 <MenuItem value="Personal Training">Personal Training</MenuItem>
                 <MenuItem value="Group Classes">Group Classes</MenuItem>
               </Select>
+              {trainingProgramError.typeOfTrainingProgram && (
+                <FormHelperText>{trainingProgramError.typeOfTrainingProgram}</FormHelperText>
+              )}
             </FormControl>
 
             {typeOfTrainingProgram === 'Group Classes' && (
@@ -507,8 +509,7 @@ export function AddTrainingProgram() {
             <FormControl  
                   margin="normal" 
                   fullWidth 
-                  error={!!trainingProgramError.feeType}
-                  helperText={trainingProgramError.feeType}>
+                  error={!!trainingProgramError.feeType}>
               <InputLabel id="training-fee-label">Training Program Fee</InputLabel>
               <Select
                 labelId="training-fee-label"
@@ -529,6 +530,9 @@ export function AddTrainingProgram() {
                 <MenuItem value="Free">Free</MenuItem>
                 <MenuItem value="Paid">Paid</MenuItem>
               </Select>
+              {trainingProgramError.feeType && (
+                <FormHelperText>{trainingProgramError.feeType}</FormHelperText>
+              )}
             </FormControl>
 
             {feeType === 'Paid' && (
@@ -555,7 +559,6 @@ export function AddTrainingProgram() {
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.venueType}
-                helperText={trainingProgramError.venueType}
                 >
                 <InputLabel id="venue-type-label">Venue</InputLabel>
                 <Select
@@ -575,6 +578,9 @@ export function AddTrainingProgram() {
                   <MenuItem value="Online">Online</MenuItem>
                   <MenuItem value="Physical">Physical</MenuItem>
                 </Select>
+                {trainingProgramError.venueType && (
+                <FormHelperText>{trainingProgramError.venueType}</FormHelperText>
+              )}
               </FormControl>
 
               {venueType === 'Physical' && (
@@ -598,7 +604,6 @@ export function AddTrainingProgram() {
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.fitnessLevel}
-                helperText={trainingProgramError.fitnessLevel}
                 >
               <InputLabel id="demo-simple-select-autowidth-label">Fitness Level</InputLabel>
               <Select
@@ -616,12 +621,14 @@ export function AddTrainingProgram() {
                 <MenuItem value={"Intermediate"}>Intermediate</MenuItem>
                 <MenuItem value={"Advanced"}>Advanced</MenuItem>
               </Select>
+              {trainingProgramError.fitnessLevel && (
+                <FormHelperText>{trainingProgramError.fitnessLevel}</FormHelperText>
+              )}
             </FormControl>
             <FormControl 
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.fitnessGoal}
-                helperText={trainingProgramError.fitnessGoal}
                 >
               <InputLabel id="demo-simple-select-autowidth-label">Fitness Goal</InputLabel>
               <Select
@@ -641,12 +648,14 @@ export function AddTrainingProgram() {
                 <MenuItem value={"Reduce stress"}>Reduce stress</MenuItem>
                 <MenuItem value={"Build muscle"}>Build muscle</MenuItem>
               </Select>
+              {trainingProgramError.fitnessGoal && (
+                <FormHelperText>{trainingProgramError.fitnessGoal}</FormHelperText>
+              )}
             </FormControl>
             <FormControl 
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.typeOfExercise}
-                helperText={trainingProgramError.typeOfExercise}
                 >
               <InputLabel id="demo-simple-select-autowidth-label">Type of Exercise</InputLabel>
               <Select
@@ -667,6 +676,9 @@ export function AddTrainingProgram() {
                 <MenuItem value={"HIIT"}>HIIT</MenuItem>
                 <MenuItem value={"Meditation"}>Meditation</MenuItem>
               </Select>
+              {trainingProgramError.typeOfExercise && (
+                <FormHelperText>{trainingProgramError.typeOfExercise}</FormHelperText>
+              )}
             </FormControl>
             <TextField
               required
