@@ -14,7 +14,7 @@ export default function Footer() {
     }}
 >
 <Container maxWidth="lg" sx={{ mx: 'auto' }}>
-                <Grid container justifyContent="center" spacing={2}>
+                <Grid container justifyContent="center" spacing={2} marginBottom={2}>
                     {/* Adjusting the grid items to be closer by using smaller spacing */}
                     <Grid item>
                         <Link href="/contactUs" color="inherit" sx={{ textDecoration: 'underline', mr: 2 }}>

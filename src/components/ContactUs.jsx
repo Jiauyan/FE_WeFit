@@ -49,31 +49,31 @@ export function ContactUs() {
                     <img
                         src={UMFitnessLogo} // Adjust path as necessary
                         alt="UMFitness Logo"
-                        style={{ width: '100%', height: 'auto' }}
+                       // style={{ width: '100%', height: 'auto' }}
                     />
                 </Box>
-                <Typography variant="h6" sx={{ mt: 2, mb: 1, fontWeight: 'bold' }}>
-                    Contact Us
+                <Typography variant="body1" sx={{ mt: 2, mb: 1, fontWeight: 'bold' }}>
+                    Adress
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>
+                <Typography variant="body1" sx={{ mb: 2 }}>
                     Universiti Malaya, 50603 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>
+                <Typography variant="body1" sx={{ mb: 2 }}>
                     <strong>Phone</strong>: 03 79673210
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>
+                <Typography variant="body1" sx={{ mb: 2 }}>
                     <strong>Hours Open</strong>
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
                     Mon - Wed: 10 am - 5 pm
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
                     Thurs & Fri: 11 am - 5:30 pm
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
                     Sat & Sun: 10 am - 4 pm
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
                     Public Holiday OFF!
                 </Typography>
             </Paper>
