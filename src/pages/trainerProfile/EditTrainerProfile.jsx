@@ -204,7 +204,7 @@ const handleSubmit = async (e) => {
                 )}
             </Box>
         )}
-        <Box component="form" onSubmit={handleSubmit} sx={{  mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{  mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
             required
             margin="normal"

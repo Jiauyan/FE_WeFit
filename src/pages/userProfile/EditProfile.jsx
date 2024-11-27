@@ -205,7 +205,7 @@ export function EditProfile() {
                 )}
             </Box>
         )}
-        <Box component="form" onSubmit={handleSubmit} sx={{  mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{  mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
             required
             margin="normal"
