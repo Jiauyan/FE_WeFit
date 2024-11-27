@@ -8,9 +8,12 @@ import {
     Modal,
     TextField,
     IconButton,
+    Snackbar,
+    CircularProgress,
 } from "@mui/material";
 import Edit from '@mui/icons-material/Edit';
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -35,26 +38,37 @@ const style = {
 };
 
 export function EditMotivationalQuote({ id, oldMotivationalQuote, onEditMotivationalQuote }) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [editMotivationalQuoteStatus, setEditMotivationalQuoteStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;
-
   const [motivationalQuote, setMotivationalQuote] = useState(oldMotivationalQuote);
   const [wordCount, setWordCount] = useState(oldMotivationalQuote.split(/\s+/).filter(Boolean).length);
+  const [motivationalQuoteError, setMotivationalQuoteError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+ 
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
+    if (!validateMotivationalQuote()) {
+      return;
+    }
+    setLoading(true);
     try {
       const response = await axios.patch(`https://be-um-fitness.vercel.app/motivationalQuotes/updateMotivationalQuote/${id}`, {
         uid,
         motivationalQuote
       });
       setEditMotivationalQuoteStatus(response.data.message);
-      onEditMotivationalQuote(response.data);
-      handleClose();
+      setNotification({ open: true, message: 'Motivational quote updated successfully!', severity: 'success' });
+            setTimeout(() => {
+              onEditMotivationalQuote(response.data);
+              handleClose();
+        }, 2000);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
@@ -65,16 +79,32 @@ export function EditMotivationalQuote({ id, oldMotivationalQuote, onEditMotivati
       } else {
         setEditMotivationalQuoteStatus('An unexpected error occurred');
       }
+    } finally {
+      setLoading(false)
     }
   };
 
   const handleChange = (event) => {
-    const text = event.target.value;
-    const words = text.split(/\s+/).filter(Boolean);
-    if (words.length <= 25) {
-      setMotivationalQuote(text);
-      setWordCount(words.length);
+    const inputWords = event.target.value.split(/\s+/).filter(Boolean);
+    if (inputWords.length <= 25) {
+        setMotivationalQuote(event.target.value);
+        setWordCount(inputWords.length);
+        setMotivationalQuoteError(''); // Clears the error if input is corrected
+    } else {
+      setMotivationalQuoteError('Motivational Quote must not exceed 25 words');
     }
+  };
+  
+  const validateMotivationalQuote = () => {
+    if (!motivationalQuote.trim()) {
+      setMotivationalQuoteError('Motivational Quote is required');
+      return false;
+    } else if (wordCount > 25) {
+      setMotivationalQuoteError('Motivational Quote must not exceed 25 words');
+      return false;
+    }
+    setMotivationalQuoteError('');
+    return true;
   };
 
   return (
@@ -99,30 +129,42 @@ export function EditMotivationalQuote({ id, oldMotivationalQuote, onEditMotivati
             Edit Your Motivational Quote
           </Typography>
           <TextField
-            multiline
-            rows={5}
-            margin="normal"
-            fullWidth
-            name="motivationalQuote"
-            label="Motivational Quote"
-            id="motivationalQuote"
-            value={motivationalQuote}
-            onChange={handleChange}
-            helperText={`${wordCount}/25 words`}
-            FormHelperTextProps={{
-              style: { textAlign: 'right' }
-            }}
-          />
+                required
+                multiline
+                rows={5}
+                margin="normal"
+                fullWidth
+                name="motivationalQuote"
+                label="Motivational Quote"
+                id="motivationalQuote"
+                value={motivationalQuote}
+                onChange={handleChange}
+                error={!!motivationalQuoteError}
+                helperText={motivationalQuoteError || `${wordCount}/25 words`}
+                FormHelperTextProps={{
+                    style: { textAlign: 'right' }  // Aligns text to the right
+                }}
+            />
           <GradientButton
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Save
+               {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
           </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={2000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }

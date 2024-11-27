@@ -6,9 +6,12 @@ import {
     Button,
     Typography,
     Modal,
-    TextField
+    TextField,
+    Snackbar,
+    CircularProgress
 } from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -33,27 +36,39 @@ const style = {
 };
 
 export function AddMotivationalQuote({onAddMotivationalQuote}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [motivationalQuote, setMotivationalQuote] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [addMotivationalQuoteStatus, setAddMotivationalQuoteStatus] = useState('');
+  const [motivationalQuoteError, setMotivationalQuoteError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
   const { user } = useUser();
   const uid = user.uid;
 
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const handleSubmit = async (e) => { 
     e.preventDefault(); 
+    if (!validateMotivationalQuote()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.post('https://be-um-fitness.vercel.app/motivationalQuotes/addMotivationalQuote', {
             uid,
             motivationalQuote
         });
         setAddMotivationalQuoteStatus(response.data.message);
-        onAddMotivationalQuote(response.data);
         setMotivationalQuote('');
         setWordCount(0);
-        handleClose();
+        setNotification({ open: true, message: 'Goal added successfully!', severity: 'success' });
+            setTimeout(() => {
+              onAddMotivationalQuote(response.data);
+              handleClose();
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -64,6 +79,8 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
         } else {
             setAddMotivationalQuoteStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -72,7 +89,23 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
     if (inputWords.length <= 25) {
         setMotivationalQuote(event.target.value);
         setWordCount(inputWords.length);
+        setMotivationalQuoteError(''); // Clears the error if input is corrected
+    } else {
+      setMotivationalQuoteError('Motivational Quote must not exceed 25 words');
     }
+  };
+  
+
+  const validateMotivationalQuote = () => {
+    if (!motivationalQuote.trim()) {
+      setMotivationalQuoteError('Motivational Quote is required');
+      return false;
+    } else if (wordCount > 25) {
+      setMotivationalQuoteError('Motivational Quote must not exceed 25 words');
+      return false;
+    }
+    setMotivationalQuoteError('');
+    return true;
   };
 
   return (
@@ -104,6 +137,7 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
                 Add Your Motivational Quote
             </Typography>
             <TextField
+                required
                 multiline
                 rows={5}
                 margin="normal"
@@ -113,7 +147,8 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
                 id="motivationalQuote"
                 value={motivationalQuote}
                 onChange={handleWordLimit}
-                helperText={`${wordCount}/25 words`}
+                error={!!motivationalQuoteError}
+                helperText={motivationalQuoteError || `${wordCount}/25 words`}
                 FormHelperTextProps={{
                     style: { textAlign: 'right' }  // Aligns text to the right
                 }}
@@ -123,12 +158,22 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                disabled={wordCount > 20}
+                disabled={wordCount > 25}
             >
-                Add
+                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
             </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={2000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }

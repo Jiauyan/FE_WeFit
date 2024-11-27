@@ -4,16 +4,12 @@ import { useUser } from "../../contexts/UseContext";
 import {
     Typography,
     Box,
-    Paper,
-    styled,
-    List,
-    IconButton,
     Grid,
     TextField,
     Card,
-    CardActionArea,
     CardContent,
-    Pagination
+    Pagination,
+    CircularProgress
 } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { AddMotivationalQuote } from "../trainerQuotes/AddMotivationalQuote";
@@ -22,6 +18,7 @@ import { EditMotivationalQuote } from "../trainerQuotes/EditMotivationalQuote"
 import { GetRandomMotivationalQuote } from "../trainerQuotes/GetRandomMotivationalQuote"
 
 export function MotivationalQuotes(){
+    const [loading, setLoading] = useState(true);
     const [motivationalQuotes, setMotivationalQuotes] = useState([]);
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
@@ -66,12 +63,15 @@ export function MotivationalQuotes(){
             try {
                 const uid = user?.uid;
                 if (!uid) return;
+                setLoading(true);
                 const response = await axios.get(`https://be-um-fitness.vercel.app/motivationalQuotes/getAllUserMotivationalQuotes/${uid}`);
                 const sortedMotivationalQuote = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setMotivationalQuotes(sortedMotivationalQuote);
             } catch (error) {
                 console.error('There was an error!', error);
-            }
+            } finally {
+              setLoading(false);
+          }
         };
         fetchMotivationalQuotes();
     }, [user?.uid]);
@@ -85,6 +85,13 @@ export function MotivationalQuotes(){
       const startIndex = (page - 1) * itemsPerPage;
       const currentMotivationalQuotes = filteredMotivationalQuotes.slice(startIndex, startIndex + itemsPerPage);
       
+      if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return(
         <Box sx={{ p: 3, width: '100%', boxSizing: 'border-box' }}>

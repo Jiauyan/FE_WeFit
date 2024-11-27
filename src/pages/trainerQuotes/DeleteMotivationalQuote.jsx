@@ -7,9 +7,12 @@ import {
     Modal,
     TextField,
     IconButton,
+    Snackbar,
+    CircularProgress,
 }from "@mui/material";
 import Delete from '@mui/icons-material/Delete';
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -35,18 +38,26 @@ const style = {
 
 
 export function DeleteMotivationalQuote({id, onDeleteMotivationalQuote}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deleteMotivationalQuoteStatus, setDeleteMotivationalQuoteStatus] = useState('');
-    
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const handleSubmit = async (e) => { 
-    e.preventDefault();
+    e.preventDefault(); 
+    setLoading(true);
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/motivationalQuotes/deleteMotivationalQuote/${id}`);
         setDeleteMotivationalQuoteStatus(response.data.message);
-        onDeleteMotivationalQuote(response.data)
-        handleClose();
+        setNotification({ open: true, message: 'Goal deleted successfully!', severity: 'success' });
+            setTimeout(() => {
+              onDeleteMotivationalQuote(response.data);
+              handleClose();
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -57,6 +68,8 @@ export function DeleteMotivationalQuote({id, onDeleteMotivationalQuote}) {
         } else {
             setDeleteMotivationalQuoteStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
 };
 
@@ -92,10 +105,20 @@ export function DeleteMotivationalQuote({id, onDeleteMotivationalQuote}) {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Confirm
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
             </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={2000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }
