@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios'; 
-import { Typography, Paper, Avatar, Button, Grid, Box } from "@mui/material";
+import { Typography, Paper, Avatar, Button, Grid, Box, CircularProgress } from "@mui/material";
 import { useNavigate, Outlet } from 'react-router-dom';
 import { DeleteTrainerAccount } from './DeleteTrainerAccount';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -11,6 +11,7 @@ export function TrainerProfile() {
     const { user , setUser} = useUser();
     const uid = user.uid;
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       window.scrollTo(0, 0); 
@@ -27,17 +28,30 @@ export function TrainerProfile() {
     useEffect(() => {
         const uid = user?.uid;
         if (!uid) return;
+        setLoading(true);
         axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${uid}`)
-            .then(response => {
-                setUserData(response.data); 
+              .then(response => {
+                setUserData(response.data);
             })
-            .catch(error => console.error('There was an error!', error));
+            .catch(error => {
+                console.error('There was an error fetching user data:', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, [user?.uid]); 
 
     const handleEdit = async () => {
       navigate("/editTrainerProfile");
     }; 
 
+    if (loading) {
+      return (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+              <CircularProgress />
+          </Box>
+      );
+  }
   return (
     <>
     <Grid
