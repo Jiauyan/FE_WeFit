@@ -5,37 +5,33 @@ import { Box, Typography, Link, Container, Grid } from '@mui/material';
 export default function Footer() {
   return (
     <Box
-      component="footer"
-      sx={{
+    component="footer"
+    sx={{
         backgroundColor: 'primary.main',
         color: 'white',
         py: 3,
         mt: 'auto',
-      }}
-    >
-      <Container  maxWidth="lg" sx={{ mx: 'auto' }}>
-        <Grid container spacing={4} justifyContent="center">
-          <Grid item xs={12} sm={4}>
-          <Link href="/privacyPolicy" color="inherit" underline="hover">
-              Contact Us
-            </Link>
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <Typography variant="h6" gutterBottom>
-              Contact
-            </Typography>
-            <Link href="/privacyPolicy" color="inherit" underline="hover">
-              Privacy Policy
-            </Link>
-          </Grid>
+    }}
+>
+    <Container maxWidth="lg" sx={{ mx: 'auto' }}>
+        <Grid container justifyContent="center">
+            <Grid item xs={6} sm={3} textAlign="center">
+                <Link href="/contactUs" color="inherit" underline="hover">
+                    Contact Us
+                </Link>
+            </Grid>
+            <Grid item xs={6} sm={3} textAlign="center">
+                <Link href="/privacyPolicy" color="inherit" underline="hover">
+                    Privacy Policy
+                </Link>
+            </Grid>
         </Grid>
         <Box mt={1} textAlign="center">
-          <Typography variant="body2">
-            © {new Date().getFullYear()} UMFitness. All Rights Reserved.
-          </Typography>
+            <Typography variant="body2">
+                © {new Date().getFullYear()} UMFitness. All Rights Reserved.
+            </Typography>
         </Box>
-      </Container>
-    </Box>
+    </Container>
+</Box>
   );
 };
