@@ -129,7 +129,7 @@ export function AddTrainingProgram() {
 
   const handleAddSlot = async (e) => {
     e.preventDefault();
-
+    setTrainingProgramError({ ...trainingProgramError, slots: '' });
     // Initial checks for completeness of input
     if (!currentDate || !currentStartTime || !currentEndTime) {
         alert("Please complete all date and time fields.");
@@ -809,6 +809,16 @@ export function AddTrainingProgram() {
           </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </MuiAlert>
+      </Snackbar>
     </LocalizationProvider>
   );
 }
