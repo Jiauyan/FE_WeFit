@@ -109,7 +109,7 @@ export function EditTip() {
                 shortDesc
               }
             });
-            setNotification({ open: true, message: 'Sharing tip added successfully!', severity: 'success' });
+            setNotification({ open: true, message: 'Sharing tip updated successfully!', severity: 'success' });
             setTimeout(() => {
               navigate("/viewTip", { state: { id: id } });
         }, 2000);
