@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from "../../contexts/UseContext";
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import {
     Box,
-    Button,
     Typography,
-    Modal,
     TextField,
     Paper,
     Grid,
     IconButton,
     Input,
+    Snackbar,
+    CircularProgress
 }from "@mui/material";
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import Edit from '@mui/icons-material/Edit';
@@ -19,6 +19,7 @@ import CloudUpload from '@mui/icons-material/CloudUpload';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
+import MuiAlert from '@mui/material/Alert';
 
 export function AddTip() {
   const navigate = useNavigate();
@@ -29,6 +30,12 @@ export function AddTip() {
   const [previewUrl, setPreviewUrl] = useState(null); 
   const [downloadUrl, setDownloadUrl] = useState(null); 
   const [addTipStatus, setAddTipStatus] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [tipError, setTipError] = useState('');
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const { user } = useUser();
   const uid = user.uid;
   const userImageUrl = user?.data?.photoURL;
@@ -37,34 +44,37 @@ export function AddTip() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-    setTipImage(file);
-
-    const fileRef = ref(storage, `tipImages/${file.name}`);
-    const uploadTask = uploadBytesResumable(fileRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // You can handle progress here if you need to show upload status
-      },
-      (error) => {
-        // Handle unsuccessful uploads
-        console.error("Upload failed", error);
-      },
-      () => {
-        // Handle successful uploads on complete
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        console.log("File available at", downloadURL);
-        setPreviewUrl(downloadURL);
-        setDownloadUrl(downloadURL);
-    });
+      setTipImage(file);
+  
+      const fileRef = ref(storage, `tipImages/${file.name}`);
+      const uploadTask = uploadBytesResumable(fileRef, file);
+  
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // You can handle progress here if you need to show upload status
+        },
+        (error) => {
+          console.error("Upload failed", error);
+          setTipError(prev => ({ ...prev, profileImage: 'Failed to upload image' }));
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setPreviewUrl(downloadURL);
+            setDownloadUrl(downloadURL);
+            setTipError(prev => ({ ...prev, profileImage: '' }));
+        });
+    }
+  );
   }
-);
-}
-};
+  };
 
   const handleSubmit = async (e) => { 
-    e.preventDefault();
+    e.preventDefault(); 
+    if (!validateTip()) {
+      return;
+    }
+    setLoading(true);
     try {
         const response = await axios.post('https://be-um-fitness.vercel.app/tips/addTip',{
           uid,
@@ -76,7 +86,10 @@ export function AddTip() {
           downloadUrl
         });
         setAddTipStatus(response.data.message);
-        navigate("/trainerTips");
+        setNotification({ open: true, message: 'Motivational quote added successfully!', severity: 'success' });
+            setTimeout(() => {
+              navigate("/trainerTips");
+        }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -87,12 +100,24 @@ export function AddTip() {
         } else {
             setAddTipStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
 };
 
-    const handleBack = async () => {
+  const handleBack = async () => {
         navigate(-1);
-    }; 
+  }; 
+
+  const validateTip = () => {
+    const errors = {};
+    if (!title.trim()) errors.title = 'Sharing tip title is required';
+    if (!shortDesc.trim()) errors.shortDesc = 'Sharing tip short description is required';
+    if (!desc) errors.desc = 'Sharing tip full description is required';
+    if (!tipImage) errors.tipImage = 'Sharing tip image is required';
+    setTipError(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   return (
     <Grid
@@ -207,9 +232,12 @@ export function AddTip() {
                 <Edit />
               </IconButton>
             </label>
+            {tipError.tipImage && (
+                                <FormHelperText error>{tipError.tipImage}</FormHelperText>
+                )}
             </Box>
           )}
-          <Box component="form" onSubmit={handleSubmit} sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <Box component="form" onSubmit={handleSubmit}  noValidate sx={{  mt: 1,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextField
                     required
                     margin="normal"
@@ -218,6 +246,9 @@ export function AddTip() {
                     label="Sharing Tip Title"
                     id="tipTitle"
                     onChange={(e) => setTitle(e.target.value)}
+                    variant="outlined"
+                    error={!!tipError.title}
+                    helperText={tipError.title}
             />
             <TextField
                 required
@@ -228,6 +259,8 @@ export function AddTip() {
                 id="tipShortDesc"
                 onChange={(e) => setShortDesc(e.target.value)}
                 variant="outlined"  
+                error={!!tipError.shortDesc}
+                helperText={tipError.shortDesc}
                 />
              <TextField
                 required
@@ -239,7 +272,9 @@ export function AddTip() {
                 onChange={(e) => setDesc(e.target.value)}
                 multiline
                 rows={20} 
-                variant="outlined"  
+                variant="outlined"
+                error={!!tipError.desc}
+                helperText={tipError.desc}  
                 />
             <GradientButton
                     type="submit"
@@ -247,10 +282,20 @@ export function AddTip() {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Add
+                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
             </GradientButton>
         </Box>
         </Paper>
+        <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </MuiAlert>
+      </Snackbar>
         </Grid>
   );
 }
