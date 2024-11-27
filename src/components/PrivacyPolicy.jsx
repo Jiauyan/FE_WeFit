@@ -83,10 +83,10 @@ export function PrivacyPolicy() {
                               <Typography variant="body1" paragraph>
                                 - To personalize your experience and tailor content and recommendations to your interests and preferences.
                               </Typography>
-                              <Typography variant="body1" gutterBottom paragraph>
+                              <Typography variant="body1"  paragraph>
                                 - To analyze usage trends and improve the functionality and performance of the application.                         
                               </Typography>
-                              <Typography variant="body1" gutterBottom paragraph>
+                              <Typography variant="body1"  paragraph>
                                 - To communicate with you about your account, updates to the application, and promotional offers.
                               </Typography>
                               <Typography variant="body1" gutterBottom paragraph>

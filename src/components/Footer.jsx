@@ -15,12 +15,12 @@ export default function Footer() {
 >
     <Container maxWidth="lg" sx={{ mx: 'auto' }}>
         <Grid container justifyContent="center">
-            <Grid item xs={6} sm={3} textAlign="center">
+            <Grid item xs={6} sm={1} textAlign="center">
                 <Link href="/contactUs" color="inherit" underline="hover">
                     Contact Us
                 </Link>
             </Grid>
-            <Grid item xs={6} sm={3} textAlign="center">
+            <Grid item xs={6} sm={1} textAlign="center">
                 <Link href="/privacyPolicy" color="inherit" underline="hover">
                     Privacy Policy
                 </Link>
