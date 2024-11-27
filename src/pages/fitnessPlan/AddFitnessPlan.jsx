@@ -29,6 +29,8 @@ import MuiAlert from '@mui/material/Alert';
 
 export function AddFitnessPlan() {
   const [loading, setLoading] = useState(false);
+  const [addActivityLoading, setAddActivityLoading] = useState(false);
+  const [editActivityLoading, setEditActivityLoading] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -163,7 +165,7 @@ export function AddFitnessPlan() {
     if (!validateFitnessActivity()) {
         return;
     }
-    setLoading(true);
+    setAddActivityLoading(true);
     try {
         const timestamp = new Date().toISOString();
         const response = await axios.post('https://be-um-fitness.vercel.app/fitnessActivity/addFitnessActivity', {
@@ -190,7 +192,7 @@ export function AddFitnessPlan() {
             setAddNewFitnessActivityStatus('An unexpected error occurred');
         }
     } finally {
-        setLoading(false)
+      setAddActivityLoading(false)
       }
 };
 
@@ -220,7 +222,7 @@ const handleUpdateFitnessActivity = async (e) => {
     if (!validateFitnessActivity()) {
         return;
     }
-    setLoading(true);
+    setEditActivityLoading(true);
     try {
         const updatedActivity = {
             ...currentActivity,
@@ -237,7 +239,7 @@ const handleUpdateFitnessActivity = async (e) => {
     } catch (error) {
         console.error('There was an error updating the fitness activity!', error);
     } finally {
-        setLoading(false)
+      setEditActivityLoading(false)
       }
 };
 
@@ -394,7 +396,7 @@ const handleUpdateFitnessActivity = async (e) => {
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                 >
-                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
+                    {addActivityLoading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
               </GradientButton>
               </Box>
             </Modal>
@@ -445,7 +447,7 @@ const handleUpdateFitnessActivity = async (e) => {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
-                   {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
+                   {editActivityLoading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
                 </GradientButton>
             </Box>
         </Modal>

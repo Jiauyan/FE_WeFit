@@ -30,7 +30,9 @@ import MuiAlert from '@mui/material/Alert';
 
 export function EditFitnessPlan() {
     const [loading, setLoading] = useState(false);
-    const [planLoading, setPlanLoading] = useState(false);
+    const [addActivityLoading, setAddActivityLoading] = useState(false);
+    const [editActivityLoading, setEditActivityLoading] = useState(false);
+    const [deleteActivityLoading, setDeleteActivityLoading] = useState(false);
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -177,7 +179,7 @@ export function EditFitnessPlan() {
         if (!validateFitnessPlan()) {
             return;
         }
-        setPlanLoading(true);
+        setLoading(true);
         try {
             const formattedDate = format(date, 'dd/MM/yyyy');
             await axios.patch(`https://be-um-fitness.vercel.app/fitnessPlan/updateFitnessPlan/${id}`, {
@@ -207,7 +209,7 @@ export function EditFitnessPlan() {
                 setUpdateFitnessPlanStatus('An unexpected error occurred');
             }
         } finally {
-            setPlanLoading(false)
+            setLoading(false)
           }
     };
 
@@ -216,7 +218,7 @@ export function EditFitnessPlan() {
         if (!validateFitnessActivity()) {
             return;
         }
-        setLoading(true);
+        setAddActivityLoading(true);
         try {
             const timestamp = new Date().toISOString();
             const response = await axios.post('https://be-um-fitness.vercel.app/fitnessActivity/addFitnessActivity', {
@@ -243,13 +245,14 @@ export function EditFitnessPlan() {
                 setAddNewFitnessActivityStatus('An unexpected error occurred');
             } 
         } finally {
-                setLoading(false)
+            setAddActivityLoading(false)
               }
     };
 
     const handleRemoveFitnessActivity = async () => {
         if (activityToDelete === null) return;
         const activityId = fitnessActivityData[activityToDelete].id;
+        setDeleteLoading(true);
         try {
             await axios.delete(`https://be-um-fitness.vercel.app/fitnessActivity/deleteFitnessActivity/${activityId}`);
             setFitnessActivityData(prev => prev.filter((_, i) => i !== activityToDelete));
@@ -258,6 +261,8 @@ export function EditFitnessPlan() {
             handleCloseDelete();
         } catch (error) {
             console.error('There was an error deleting the fitness activity!', error);
+        } finally {
+            setDeleteLoading(false)
         }
     };
 
@@ -275,7 +280,7 @@ export function EditFitnessPlan() {
         if (!validateFitnessActivity()) {
             return;
         }
-        setLoading(true)
+        setEditActivityLoading(true)
         try {
             const updatedActivity = {
                 ...currentActivity,
@@ -292,7 +297,7 @@ export function EditFitnessPlan() {
         } catch (error) {
             console.error('There was an error updating the fitness activity!', error);
         } finally {
-            setLoading(false)
+            setEditActivityLoading(false)
           }
     };
 
@@ -425,7 +430,7 @@ export function EditFitnessPlan() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                           {planLoading ? <CircularProgress size={24} color="inherit" /> : 'SAVE'}
+                           {loading ? <CircularProgress size={24} color="inherit" /> : 'SAVE'}
                         </GradientButton>
                     </Box>
                 </Paper>
@@ -475,7 +480,7 @@ export function EditFitnessPlan() {
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
+                    {addActivityLoading ? <CircularProgress size={24} color="inherit" /> : 'Add'}
                </GradientButton>
                 </Box>
             </Modal>
@@ -526,7 +531,7 @@ export function EditFitnessPlan() {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
-                     {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
+                     {editActivityLoading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
                 </GradientButton>
             </Box>
         </Modal>
@@ -556,7 +561,7 @@ export function EditFitnessPlan() {
                     sx={{ mt: 3, mb: 2 }}
                     onClick={handleRemoveFitnessActivity}
             >
-                Confirm
+                {deleteActivityLoading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
             </Button>
         </Box>
       </Modal>
