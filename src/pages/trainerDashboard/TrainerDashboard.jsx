@@ -1,6 +1,6 @@
 import React, { useState , useEffect} from 'react';
 import axios from 'axios';
-import {  Grid, Card, CardContent, Typography, Box } from '@mui/material';
+import {  Grid, Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
 import FitnessCenter from '@mui/icons-material/FitnessCenter';
 import FormatQuote from '@mui/icons-material/FormatQuote';
 import TipsAndUpdates from '@mui/icons-material/TipsAndUpdates';
@@ -25,8 +25,26 @@ export function TrainerDashboard() {
   const [sharingTipCount, setSharingTipCount] = useState(0);
   const [trainingProgram, setTrainingProgram] = useState("");
   const [trainingProgramCount, setTrainingProgramCount] = useState(0);
-  
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    if (!user?.uid) {
+        setLoading(false);
+        return;
+    }
+    setLoading(true);
+    Promise.all([
+        fetchUser(),
+        fetchMotivationalQuote(),
+        fetchSharingTip(),
+        fetchTrainingProgram()
+    ]).catch(error => {
+        console.error('Error fetching data:', error);
+    }).finally(() => {
+        setLoading(false);
+    });
+}, [user?.uid]);
+
     const fetchUser = async () => {
         try {
             const uid = user?.uid;
@@ -48,9 +66,6 @@ export function TrainerDashboard() {
         }
     };
 
-    fetchUser();
-}, [user?.uid]);
-
  useEffect(() => {
       const storedUid = localStorage.getItem('uid');
       if (storedUid) {
@@ -58,7 +73,6 @@ export function TrainerDashboard() {
       }
   }, [setUser, user]);
 
-    useEffect(() => {
       const fetchMotivationalQuote = async () => {
           try {
               const uid = user?.uid;
@@ -74,10 +88,7 @@ export function TrainerDashboard() {
               console.error('There was an error!', error);
           }
       };
-      fetchMotivationalQuote();
-    }, [user?.uid]);
 
- useEffect(() => {
       const fetchSharingTip = async () => {
           try {
               const uid = user?.uid;
@@ -92,10 +103,7 @@ export function TrainerDashboard() {
               console.error('There was an error!', error);
           }
       };
-      fetchSharingTip();
-    }, [user?.uid]);
 
-    useEffect(() => {
       const fetchTrainingProgram = async () => {
           try {
               const uid = user?.uid;
@@ -110,8 +118,6 @@ export function TrainerDashboard() {
               console.error('There was an error!', error);
           }
       };
-      fetchTrainingProgram();
-    }, [user?.uid]);
 
   let bmiCategoryColor;
   let bmiCategoryLabel;
@@ -164,6 +170,14 @@ export function TrainerDashboard() {
       return `calc(${interpolatePosition(BMIValue)}% - 5px)`;  // Adjust by half the marker's width
     };
 
+    if (loading) {
+      return (
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+          <CircularProgress />
+        </Box>
+      );
+    }
+
   return (
     <Box padding={3}>
       <Grid container spacing={3}>
@@ -190,13 +204,6 @@ export function TrainerDashboard() {
             <Typography variant="subtitle1" sx={{ color: 'white' }}>Training Programs</Typography>
           </Card>
         </Grid>
-        {/* <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ padding: 2, backgroundColor: '#8676FE'}}>
-            <School sx={{ color: 'white' }} />
-            <Typography variant="h6" sx={{ color: 'white' }}>{} </Typography>
-            <Typography variant="subtitle1" sx={{ color: 'white' }}></Typography>
-          </Card>
-        </Grid> */}
         <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ padding: 2 , backgroundColor: '#F56081'}}>
             <TipsAndUpdates  sx={{ color: 'white' }} />
