@@ -57,7 +57,7 @@ export function ContactUs() {
                         style={{ width: '50%', height: 'auto' }} // Adjusts the size of the image
                     />
                 </Box>
-                <Typography variant="body1" sx={{ mb:2 }}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
                     <strong>Location Address </strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
@@ -69,7 +69,7 @@ export function ContactUs() {
                 <Typography variant="body1" sx={{ mb: 2 }}>
                       03 79673210
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
                     <strong>Hours Open</strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 1 }}>
