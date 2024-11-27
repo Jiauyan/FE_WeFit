@@ -233,6 +233,7 @@ export function EditFitnessPlan() {
             const newActivity = response.data;
             setFitnessActivityData(prev => [...prev, newActivity]);
             setTotalCount(prevCount => prevCount + 1);
+            setActivitiesError('');
             handleClose();
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -370,7 +371,10 @@ export function EditFitnessPlan() {
                     name="fitnessPlanTitle"
                     label="Title"
                     id="fitnessPlanTitle"
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => {
+                        setTitle(e.target.value);
+                        setTitleError('');
+                      }}
                     error={!!titleError}
                     helperText={titleError}
                     />
@@ -379,7 +383,10 @@ export function EditFitnessPlan() {
                     label="Date"
                     format="dd/MM/yyyy"
                     value={date}
-                    onChange={(newValue) => setDate(newValue)}
+                    onChange={(newValue) => {
+                        setDate(newValue);
+                        setDateError('');
+                      }}
                     slots={{ textField: TextField }}
                     sx={{ marginBottom: 2, width: "100%" }}
                     minDate={new Date()}
@@ -459,7 +466,10 @@ export function EditFitnessPlan() {
                     name="fitnessActivity"
                     label="Fitness Activity"
                     id="fitnessActivity"
-                    onChange={(e) => setTask(e.target.value)}
+                    onChange={(e) => {
+                        setTask(e.target.value);
+                        setFitnessActivityError({ ...fitnessActivityError, task: '' });
+                      }}
                     error={!!fitnessActivityError.task}
                     helperText={fitnessActivityError.task}
                     />
@@ -470,7 +480,10 @@ export function EditFitnessPlan() {
                             name="duration"
                             label="Duration"
                             id="duration"
-                            onChange={(e) => setDuration(e.target.value)}
+                            onChange={(e) => {
+                                setDuration(e.target.value);
+                                setFitnessActivityError({ ...fitnessActivityError, duration: '' });
+                              }}
                             error={!!fitnessActivityError.duration}
                             helperText={fitnessActivityError.duration}
                     />
@@ -509,7 +522,10 @@ export function EditFitnessPlan() {
                     label="Fitness Activity"
                     id="editFitnessActivity"
                     value={task}
-                    onChange={(e) => setTask(e.target.value)}
+                    onChange={(e) => {
+                        setTask(e.target.value);
+                        setFitnessActivityError({ ...fitnessActivityError, task: '' });
+                      }}
                     error={!!fitnessActivityError.task}
                     helperText={fitnessActivityError.task}
                 />
@@ -521,7 +537,10 @@ export function EditFitnessPlan() {
                     label="Duration"
                     id="editDuration"
                     value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
+                    onChange={(e) => {
+                        setDuration(e.target.value);
+                        setFitnessActivityError({ ...fitnessActivityError, duration: '' });
+                      }}
                     error={!!fitnessActivityError.duration}
                     helperText={fitnessActivityError.duration}
                 />

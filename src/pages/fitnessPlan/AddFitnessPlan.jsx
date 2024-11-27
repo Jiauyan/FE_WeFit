@@ -180,6 +180,7 @@ export function AddFitnessPlan() {
         const newActivity = response.data;
         setFitnessActivities(prev => [...prev, newActivity]);
         setTotalCount(prevCount => prevCount + 1);
+        setActivitiesError('');
         handleClose();
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -287,7 +288,10 @@ const handleUpdateFitnessActivity = async (e) => {
             name="fitnessPlanTitle"
             label="Title"
             id="fitnessPlanTitle"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setTitleError('');
+            }}
             error={!!titleError}
             helperText={titleError}
             />
@@ -296,7 +300,10 @@ const handleUpdateFitnessActivity = async (e) => {
             label="Date"
             format="dd/MM/yyyy"
             value={date}
-            onChange={(newValue) => setDate(newValue)}
+            onChange={(newValue) => {
+              setDate(newValue);
+              setDateError('');
+            }}
             slots={{ textField: TextField }}
             sx={{ marginBottom: 2, width: "100%" }}
             minDate={new Date()}
@@ -375,7 +382,10 @@ const handleUpdateFitnessActivity = async (e) => {
                     name="fitnessActivity"
                     label="Fitness Activity"
                     id="fitnessActivity"
-                    onChange={(e) => setTask(e.target.value)}
+                    onChange={(e) => {
+                      setTask(e.target.value);
+                      setFitnessActivityError({ ...fitnessActivityError, task: '' });
+                    }}
                     error={!!fitnessActivityError.task}
                     helperText={fitnessActivityError.task}
               />
@@ -386,7 +396,10 @@ const handleUpdateFitnessActivity = async (e) => {
                     name="duration"
                     label="Duration"
                     id="duration"
-                    onChange={(e) => setDuration(e.target.value)}
+                    onChange={(e) => {
+                      setDuration(e.target.value);
+                      setFitnessActivityError({ ...fitnessActivityError, duration: '' });
+                    }}
                     error={!!fitnessActivityError.duration}
                     helperText={fitnessActivityError.duration}
               />
@@ -425,7 +438,10 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Fitness Activity"
                     id="editFitnessActivity"
                     value={task}
-                    onChange={(e) => setTask(e.target.value)}
+                    onChange={(e) => {
+                      setTask(e.target.value);
+                      setFitnessActivityError({ ...fitnessActivityError, task: '' });
+                    }}
                     error={!!fitnessActivityError.task}
                     helperText={fitnessActivityError.task}
                 />
@@ -437,7 +453,10 @@ const handleUpdateFitnessActivity = async (e) => {
                     label="Duration"
                     id="editDuration"
                     value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
+                    onChange={(e) => {
+                      setDuration(e.target.value);
+                      setFitnessActivityError({ ...fitnessActivityError, duration: '' });
+                    }}
                     error={!!fitnessActivityError.duration}
                     helperText={fitnessActivityError.duration}
                 />

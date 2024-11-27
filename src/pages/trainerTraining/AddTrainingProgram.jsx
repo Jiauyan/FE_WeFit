@@ -127,7 +127,6 @@ export function AddTrainingProgram() {
 
   const handleAddSlot = async (e) => {
     e.preventDefault();
-    setTrainingProgramError({ ...trainingProgramError, slots: '' });
     // Initial checks for completeness of input
     if (!currentDate || !currentStartTime || !currentEndTime) {
         alert("Please complete all date and time fields.");
@@ -171,7 +170,7 @@ export function AddTrainingProgram() {
     const updatedSlots = sortSlots([...currentSlots, newSlot]);
     setCurrentSlots(updatedSlots);
     setSlots(updatedSlots);
-
+    setTrainingProgramError({ ...trainingProgramError, slots: '' });
     // Reset fields and close modal
     setCurrentDate(null);
     setCurrentStartTime(null);
