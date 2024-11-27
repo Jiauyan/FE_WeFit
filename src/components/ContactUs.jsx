@@ -64,7 +64,10 @@ export function ContactUs() {
                     Universiti Malaya, 50603 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
-                    <strong>Phone</strong>: 03 79673210
+                    <strong>Phone</strong>
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                      03 79673210
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
                     <strong>Hours Open</strong>
