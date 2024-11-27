@@ -12,6 +12,7 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import { SelectSlot } from './SelectSlot';
 
 export function ViewTrainerTrainingProgram() {
+  const [loading, setLoading] = useState(false);
   const [trainingProgramData, setTrainingProgramData] = useState([]);
   const [trainingProgramUserID, setTrainingProgramUserID] = useState(null);
   const [trainingProgramUser, setTrainingProgramUser] = useState({});
