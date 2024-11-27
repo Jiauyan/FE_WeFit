@@ -13,25 +13,26 @@ export default function Footer() {
         mt: 'auto',
     }}
 >
-    <Container maxWidth="lg" sx={{ mx: 'auto' }}>
-        <Grid container justifyContent="center">
-            <Grid item xs={6} gap={1} textAlign="center">
-                <Link href="/contactUs" color="inherit" underline="hover">
-                    Contact Us
-                </Link>
-            </Grid>
-            <Grid item xs={6} gap={1} textAlign="center">
-                <Link href="/privacyPolicy" color="inherit" underline="hover">
-                    Privacy Policy
-                </Link>
-            </Grid>
-        </Grid>
-        <Box mt={1} textAlign="center">
-            <Typography variant="body2">
-                © {new Date().getFullYear()} UMFitness. All Rights Reserved.
-            </Typography>
+<Container maxWidth="lg" sx={{ mx: 'auto' }}>
+                <Grid container justifyContent="center" spacing={2}>
+                    {/* Adjusting the grid items to be closer by using smaller spacing */}
+                    <Grid item>
+                        <Link href="/contactUs" color="inherit" sx={{ textDecoration: 'underline', mr: 2 }}>
+                            Contact Us
+                        </Link>
+                    </Grid>
+                    <Grid item>
+                        <Link href="/privacyPolicy" color="inherit" sx={{ textDecoration: 'underline', ml: 2 }}>
+                            Privacy Policy
+                        </Link>
+                    </Grid>
+                </Grid>
+                <Box mt={1} textAlign="center">
+                    <Typography variant="body2">
+                        © {new Date().getFullYear()} UMFitness. All Rights Reserved.
+                    </Typography>
+                </Box>
+            </Container>
         </Box>
-    </Container>
-</Box>
   );
 };

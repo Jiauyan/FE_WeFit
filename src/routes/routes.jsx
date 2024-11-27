@@ -73,6 +73,7 @@ import { ViewScreeningForm } from '../pages/trainerTraining/ViewScreeningForm.js
 import { Logout } from '../pages/auth/Logout.jsx';
 import { DeleteAccountSuccess } from '../pages/auth/DeleteAccountSuccess.jsx';
 import { PrivacyPolicy } from '../components/PrivacyPolicy.jsx';
+import { ContactUs } from '../components/ContactUs.jsx';
 
 
 const routes = [
@@ -368,6 +369,10 @@ const routes = [
       {
         path: "privacyPolicy",
         element:  <PrivacyPolicy/> ,
+      },
+      {
+        path: "contactUs",
+        element:  <ContactUs/> ,
       },
     ],
   }
