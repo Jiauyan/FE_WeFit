@@ -124,7 +124,10 @@ const validatePost = () => {
                     name="post"
                     label="Post Description"
                     id="post"
-                    onChange={(e) => setPostDetails(e.target.value)}
+                    onChange={(e) => {
+                      setPostDetails(e.target.value);
+                      setPostError('');
+                    }}
                     error={!!postError}
                     helperText={postError}
                     FormHelperTextProps={{
