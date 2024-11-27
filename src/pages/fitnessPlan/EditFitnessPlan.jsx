@@ -197,7 +197,7 @@ export function EditFitnessPlan() {
             //setUpdateFitnessPlanStatus('Fitness Plan updated successfully!');
             setNotification({ open: true, message: 'Fitness plan updated successfully!', severity: 'success' });
             setTimeout(() => {
-                navigate("/viewFitnessPlan", { state: { id: id } });
+                navigate("/viewFitnessPlan", { state: { id: fitnessPlanID } });
         }, 2000);
         } catch (error) {
             if (axios.isAxiosError(error)) {
