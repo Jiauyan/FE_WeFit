@@ -9,7 +9,8 @@ import {
   Grid,
   IconButton,
   Menu,
-  MenuItem
+  MenuItem,
+  CircularProgress
 } from "@mui/material";
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import MoreVert from '@mui/icons-material/MoreVert';
@@ -17,6 +18,7 @@ import { GradientButton } from '../../contexts/ThemeProvider';
 
 export function ViewStudentDetails() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [studentDetailsData, setStudentDetailsData] = useState('');
   const { user, setUser } = useUser();
   const uid = user.uid;
@@ -51,6 +53,7 @@ export function ViewStudentDetails() {
   };
 
   const handleAttendance = async (bookingID) => {
+    setLoading(true);
     try {
       // Making the API request to update the booking status to true
       const response = await axios.post(`https://be-um-fitness.vercel.app/trainingClassBooking/updateBooking/${bookingID}`, {
@@ -64,7 +67,9 @@ export function ViewStudentDetails() {
       setStatus(true);
     } catch (error) {
       console.error("Failed to update booking status:", error);
-    }
+    } finally {
+      setLoading(false);
+  }
   };
 
   return (
@@ -180,7 +185,7 @@ export function ViewStudentDetails() {
             sx={{ mt: 3, mb: 2 }}
             onClick={() => handleAttendance(studentData.bookingID)}
           >
-            Mark as Done
+             {loading ? <CircularProgress size={24} color="inherit" /> : 'Mark as Done'}
           </GradientButton>
         ) : (
           <Box

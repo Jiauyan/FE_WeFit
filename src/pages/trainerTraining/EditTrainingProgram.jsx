@@ -358,7 +358,7 @@ const sortSlots = (slots) => {
            }
         });
         setUpdateTrainingProgramStatus(response.data.message);
-        setNotification({ open: true, message: 'Training program added successfully!', severity: 'success' });
+        setNotification({ open: true, message: 'Training program updated successfully!', severity: 'success' });
             setTimeout(() => {
               navigate("/viewTrainerTrainingProgram", { state: { id: id } });
         }, 2000);
@@ -781,7 +781,7 @@ const sortSlots = (slots) => {
               variant="contained"
               sx={{ mt: 3, mb: 2, backgroundColor: '#007bff', color: 'white' }}
             >
-              Save
+                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'}
             </GradientButton>
           </Box>
         </Paper>

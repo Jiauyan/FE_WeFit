@@ -18,7 +18,9 @@ export function StudentList() {
 
   useEffect(() => {
     const fetchStudents = async () => {
+
       try {
+        setLoading(true);
         const response = await axios.post(`https://be-um-fitness.vercel.app/trainingPrograms/getStudentBySlot`, {
           id,
           slot : slot.time
@@ -27,7 +29,9 @@ export function StudentList() {
         setFilteredStudents(response.data);
       } catch (error) {
         console.error('Error fetching students:', error);
-      }
+      } finally {
+        setLoading(false);
+    }
     };
 
     fetchStudents();
@@ -51,6 +55,14 @@ export function StudentList() {
   const handleStudentClick = async (studentData) => {
     navigate("/viewStudentDetails", { state: { studentData: studentData, id:id , slot} });
   };
+
+  if (loading) {
+    return (
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+        </Box>
+    );
+}
 
   return (
     <Grid

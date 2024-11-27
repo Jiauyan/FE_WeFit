@@ -361,7 +361,6 @@ export function AddTrainingProgram() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 2,
-                  border: '1px solid #c4c4c4',
                   border: `1px solid ${trainingProgramError.trainingProgramImage ? 'red' : '#c4c4c4'}`,
                   backgroundColor: 'rgba(255, 255, 255, 0.9)', // Ensuring it's visually noticeable
                 }}
