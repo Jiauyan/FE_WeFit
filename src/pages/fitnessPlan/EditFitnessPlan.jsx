@@ -186,18 +186,14 @@ export function EditFitnessPlan() {
                 completeCount,
                 totalCount,
             });
-            const fitnessPlanID = response.data.id;
-            await Promise.all(fitnessActivities.map(activity =>
-            axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${activity.id}`, {
-                uid,
-                ...activity,
-                fitnessPlanID,
-            })
+            
+            await Promise.all(fitnessActivityData.map(activity =>
+                axios.patch(`https://be-um-fitness.vercel.app/fitnessActivity/updateFitnessActivity/${activity.id}`, activity)
             ));
-            //setUpdateFitnessPlanStatus('Fitness Plan updated successfully!');
+            setUpdateFitnessPlanStatus('Fitness Plan updated successfully!');
             setNotification({ open: true, message: 'Fitness plan updated successfully!', severity: 'success' });
             setTimeout(() => {
-                navigate("/viewFitnessPlan", { state: { id: fitnessPlanID } });
+                navigate("/viewFitnessPlan", { state: { id: id } });
         }, 2000);
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -277,6 +273,7 @@ export function EditFitnessPlan() {
 
         if (!validateFitnessActivity()) {
             return;
+            setLoading(true)
         }try {
             const updatedActivity = {
                 ...currentActivity,
