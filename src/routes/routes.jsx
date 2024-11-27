@@ -72,6 +72,7 @@ import BookingSuccess from '../components/BookingSuccess.jsx';
 import { ViewScreeningForm } from '../pages/trainerTraining/ViewScreeningForm.jsx';
 import { Logout } from '../pages/auth/Logout.jsx';
 import { DeleteAccountSuccess } from '../pages/auth/DeleteAccountSuccess.jsx';
+import { PrivacyPolicy } from '../components/PrivacyPolicy.jsx';
 
 
 const routes = [
@@ -111,7 +112,6 @@ const routes = [
     path: "/logout",
     element: <Logout />,
   },
-  
   {
     path: "/deleteAccountSuccess",
     element: <DeleteAccountSuccess />,
@@ -364,6 +364,10 @@ const routes = [
       {
         path: "viewScreeningForm",
         element:  <ViewScreeningForm/> ,
+      },
+      {
+        path: "privacyPolicy",
+        element:  <PrivacyPolicy/> ,
       },
     ],
   }
