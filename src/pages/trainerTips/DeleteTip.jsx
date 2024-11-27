@@ -42,7 +42,8 @@ export function DeleteTip({id}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deleteTipStatus, setDeleteTipStatus] = useState('');
-   
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
   const handleCloseNotification = () => setNotification({ ...notification, open: false });
 
   const handleSubmit = async (e) => { 
@@ -51,7 +52,7 @@ export function DeleteTip({id}) {
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/tips/deleteTip/${id}`);
         setDeleteTipStatus(response.data.message);
-        setNotification({ open: true, message: 'Motivational quote deleted successfully!', severity: 'success' });
+        setNotification({ open: true, message: 'Sharing tip deleted successfully!', severity: 'success' });
         setTimeout(() => {
           handleClose();
           navigate("/trainerTips");

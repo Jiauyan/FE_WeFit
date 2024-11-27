@@ -87,7 +87,7 @@ export function AddTip() {
           downloadUrl
         });
         setAddTipStatus(response.data.message);
-        setNotification({ open: true, message: 'Motivational quote added successfully!', severity: 'success' });
+        setNotification({ open: true, message: 'Sharing tip added successfully!', severity: 'success' });
             setTimeout(() => {
               navigate("/trainerTips");
         }, 2000);
