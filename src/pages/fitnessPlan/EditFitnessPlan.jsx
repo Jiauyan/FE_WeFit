@@ -112,7 +112,7 @@ export function EditFitnessPlan() {
           setDateError('');
         }
       
-        if (fitnessActivities.length === 0) {
+        if (fitnessActivityData.length === 0) {
           setActivitiesError('At least one fitness activity is required');
           isValid = false;
         } else {
