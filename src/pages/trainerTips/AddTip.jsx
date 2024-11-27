@@ -246,7 +246,10 @@ export function AddTip() {
                     name="tipTitle"
                     label="Sharing Tip Title"
                     id="tipTitle"
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                      setTipError({ ...tipError, title: '' });
+                    }}
                     variant="outlined"
                     error={!!tipError.title}
                     helperText={tipError.title}
@@ -258,7 +261,10 @@ export function AddTip() {
                 name="tipShortDesc"
                 label="Sharing Tip Short Description"
                 id="tipShortDesc"
-                onChange={(e) => setShortDesc(e.target.value)}
+                onChange={(e) => {
+                  setShortDesc(e.target.value);
+                  setTipError({ ...tipError, shortDesc: '' });
+                }}
                 variant="outlined"  
                 error={!!tipError.shortDesc}
                 helperText={tipError.shortDesc}
@@ -270,7 +276,10 @@ export function AddTip() {
                 name="tipFullDesc"
                 label="Sharing Tip Full Description"
                 id="tipFullDesc"
-                onChange={(e) => setDesc(e.target.value)}
+                onChange={(e) => {
+                  setDesc(e.target.value);
+                  setTipError({ ...tipError, desc: '' });
+                }}
                 multiline
                 rows={20} 
                 variant="outlined"
