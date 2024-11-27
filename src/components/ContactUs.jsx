@@ -40,20 +40,20 @@ export function ContactUs() {
               </IconButton>
             </Box>
             <Grid container item xs={12} justifyContent="center">
-                    <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
+                    <Typography variant="h6" component="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
                       Contact Us
                     </Typography>
                 </Grid>
 
-                <Box sx={{ width: '80%', my: 2 }}>
+                <Box sx={{ width: '80%', my: 2, justifyContent: "center" }}>
                     <img
                         src={UMFitnessLogo} // Adjust path as necessary
                         alt="UMFitness Logo"
-                       // style={{ width: '100%', height: 'auto' }}
+                        style={{ width: '50%', height: 'auto' }}
                     />
                 </Box>
                 <Typography variant="body1" sx={{ mt: 2, mb: 1, fontWeight: 'bold' }}>
-                    Adress
+                    Location Address
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
                     Universiti Malaya, 50603 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur
