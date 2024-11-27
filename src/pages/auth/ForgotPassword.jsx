@@ -124,7 +124,7 @@ export function ForgotPassword() {
             <Typography component="h6" variant="h6" sx={{ fontWeight: 300, fontSize: '0.875rem' }} margin={1}>
                 The reset password link will send via your email
             </Typography>
-            <Box component="form" onSubmit={handleEmailCheck} sx={{ width: '100%' }}>
+            <Box component="form" noValidate onSubmit={handleEmailCheck} sx={{ width: '100%' }}>
             <TextField
                     margin="normal"
                     required
@@ -132,7 +132,10 @@ export function ForgotPassword() {
                     id="email"
                     label="Email"
                     name="email"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        setEmailError("");
+                    }}
                     error={!!emailError}
                     helperText={emailError}
             />

@@ -508,6 +508,7 @@ const sortSlots = (slots) => {
               helperText={trainingProgramError.title}
             />
            <FormControl 
+                  required
                   margin="normal" 
                   fullWidth 
                   error={!!trainingProgramError.typeOfTrainingProgram}>
@@ -558,6 +559,7 @@ const sortSlots = (slots) => {
              />
             )}
             <FormControl 
+                  required
                   margin="normal" 
                   fullWidth 
                   error={!!trainingProgramError.feeType}>
@@ -607,6 +609,7 @@ const sortSlots = (slots) => {
            />
             )}
               <FormControl 
+                required
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.venueType}
@@ -677,6 +680,7 @@ const sortSlots = (slots) => {
               )}
             </FormControl>
             <FormControl 
+                required
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.fitnessGoal}
@@ -704,6 +708,7 @@ const sortSlots = (slots) => {
               )}
             </FormControl>
             <FormControl 
+                required
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.typeOfExercise}

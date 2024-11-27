@@ -466,6 +466,7 @@ export function AddTrainingProgram() {
               helperText={trainingProgramError.title}
             />
            <FormControl 
+                  required
                   margin="normal" 
                   fullWidth 
                   error={!!trainingProgramError.typeOfTrainingProgram}>
@@ -517,6 +518,7 @@ export function AddTrainingProgram() {
               />
             )}
             <FormControl  
+                  required
                   margin="normal" 
                   fullWidth 
                   error={!!trainingProgramError.feeType}>
@@ -566,6 +568,7 @@ export function AddTrainingProgram() {
            />
             )}
              <FormControl 
+                required
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.venueType}
@@ -611,6 +614,7 @@ export function AddTrainingProgram() {
               )}
 
             <FormControl 
+                required
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.fitnessLevel}
@@ -636,6 +640,7 @@ export function AddTrainingProgram() {
               )}
             </FormControl>
             <FormControl 
+                required
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.fitnessGoal}
@@ -663,6 +668,7 @@ export function AddTrainingProgram() {
               )}
             </FormControl>
             <FormControl 
+                required
                 margin="normal" 
                 fullWidth 
                 error={!!trainingProgramError.typeOfExercise}
