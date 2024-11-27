@@ -45,15 +45,20 @@ export function ContactUs() {
                     </Typography>
                 </Grid>
 
-                <Box sx={{ width: '80%', my: 2, justifyContent: "center" }}>
+                <Box sx={{
+                    width: '80%', 
+                    my: 2, 
+                    display: 'flex', // Ensures the content inside box is flexibly managed
+                    justifyContent: "center" // Horizontally centers the content
+                }}>
                     <img
-                        src={UMFitnessLogo} // Adjust path as necessary
+                        src={UMFitnessLogo} // Make sure UMFitnessLogo is correctly imported or defined
                         alt="UMFitness Logo"
-                        style={{ width: '50%', height: 'auto' }}
+                        style={{ width: '50%', height: 'auto' }} // Adjusts the size of the image
                     />
                 </Box>
-                <Typography variant="body1" sx={{ mt: 2, mb: 1, fontWeight: 'bold' }}>
-                    Location Address
+                <Typography variant="body1" sx={{ mb:2 }}>
+                    <strong>Location Address </strong>
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
                     Universiti Malaya, 50603 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur
