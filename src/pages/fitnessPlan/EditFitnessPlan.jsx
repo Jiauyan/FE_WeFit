@@ -96,30 +96,14 @@ export function EditFitnessPlan() {
       };
 
       const validateFitnessPlan = () => {
-        let isValid = true;
+        const newErrors = {};
       
-        if (!title.trim()) {
-          setTitleError('Title is required');
-          isValid = false;
-        } else {
-          setTitleError('');
-        }
+        if (!title.trim()) newErrors.title = 'Title is required';
+        if (!date) newErrors.date = 'Date is required';
+        if (fitnessActivityData.length === 0) newErrors.activities = 'At least one fitness activity is required';
       
-        if (!date) {
-          setDateError('Date is required');
-          isValid = false;
-        } else {
-          setDateError('');
-        }
-      
-        if (fitnessActivityData.length === 0) {
-          setActivitiesError('At least one fitness activity is required');
-          isValid = false;
-        } else {
-          setActivitiesError('');
-        }
-      
-        return isValid;
+        setFitnessPlanError(newErrors);
+        return Object.keys(newErrors).length === 0;
       };
       
       const validateFitnessActivity = () => {
@@ -367,8 +351,8 @@ export function EditFitnessPlan() {
                     label="Title"
                     id="fitnessPlanTitle"
                     onChange={(e) => setTitle(e.target.value)}
-                    error={!!titleError}
-                    helperText={titleError}
+                    error={!!fitnessPlanError.title}
+                    helperText={fitnessPlanError.title}
                     />
                     <DatePicker
                     required
@@ -382,8 +366,8 @@ export function EditFitnessPlan() {
                     onError={!!dateError}
                     slotProps={{
                         textField: {
-                        error: !!dateError,
-                        helperText: dateError,
+                        error: !!fitnessPlanError.date,
+                        helperText: fitnessPlanError.date,
                         },
                     }}
                     />
@@ -395,9 +379,9 @@ export function EditFitnessPlan() {
                                 <Add />
                             </IconButton>
                         </Box>
-                        {activitiesError && (
+                        {fitnessPlanError.activities && (
                         <Typography color="error" variant="body2" sx={{ fontSize: '0.875rem', mb:2, ml:2 }}>
-                            {activitiesError}
+                            {fitnessPlanError.activities}
                         </Typography>
                         )}
                         <List>
