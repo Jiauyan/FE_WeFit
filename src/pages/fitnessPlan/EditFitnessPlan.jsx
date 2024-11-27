@@ -356,7 +356,7 @@ export function EditFitnessPlan() {
                     <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2 }} margin={1}>
                         Edit Your Fitness Plan
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                     <TextField
                     required
                     value={title}
