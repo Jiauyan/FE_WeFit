@@ -52,7 +52,7 @@ export function DeleteTrainingProgram({id}) {
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/trainingPrograms/deleteTrainingProgram/${id}`);
         setDeleteTrainingProgramStatus(response.data.message);
-        setNotification({ open: true, message: 'Sharing tip deleted successfully!', severity: 'success' });
+        setNotification({ open: true, message: 'Training program deleted successfully!', severity: 'success' });
         setTimeout(() => {
           handleClose();
           navigate("/trainerTrainingPrograms");
