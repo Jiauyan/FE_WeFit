@@ -7,8 +7,11 @@ import {
     Typography,
     Modal,
     MenuItem,
+    Snackbar,
+    CircularProgress,
 }from "@mui/material";
 import { GradientButton } from '../../contexts/ThemeProvider';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -38,14 +41,22 @@ export function DeleteTrainingProgram({id}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [deleteTrainingProgramStatus, setDeleteTrainingProgramStatus] = useState('');
-    
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  
+  const handleCloseNotification = () => setNotification({ ...notification, open: false });
+
   const handleSubmit = async (e) => { 
     e.preventDefault();
+    setLoading(true);
     try {
         const response = await axios.delete(`https://be-um-fitness.vercel.app/trainingPrograms/deleteTrainingProgram/${id}`);
         setDeleteTrainingProgramStatus(response.data.message);
-        handleClose();
-        navigate("/trainerTrainingPrograms");
+        setNotification({ open: true, message: 'Sharing tip deleted successfully!', severity: 'success' });
+        setTimeout(() => {
+          handleClose();
+          navigate("/trainerTrainingPrograms");
+    }, 2000);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
@@ -56,10 +67,10 @@ export function DeleteTrainingProgram({id}) {
         } else {
             setDeleteTrainingProgramStatus('An unexpected error occurred');
         }
+    } finally {
+      setLoading(false)
     }
 };
-
-
 
   return (
     <div>
@@ -95,10 +106,20 @@ export function DeleteTrainingProgram({id}) {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
             >
-                Confirm
-            </GradientButton>
+               {loading ? <CircularProgress size={24} color="inherit" /> : 'Confirm'}
+               </GradientButton>
         </Box>
       </Modal>
+      <Snackbar
+      open={notification.open}
+      autoHideDuration={2000}
+      onClose={handleCloseNotification}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        {notification.message}
+      </MuiAlert>
+    </Snackbar>
     </div>
   );
 }
