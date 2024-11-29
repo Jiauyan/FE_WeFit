@@ -149,7 +149,7 @@ export function UserChatList() {
         </Box>
         {users.length === 0 || filteredUsers.length === 0 ? (
             <Typography variant="body1" color="text.secondary" align="center">
-                No Users Found.
+                No User Found.
             </Typography>
             ) : (
           <>

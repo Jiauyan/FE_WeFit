@@ -182,7 +182,7 @@ export function Goals(){
             />
             {currentGoals.length === 0 || filteredGoals.length === 0 ? (
             <Typography variant="body1" color="text.secondary" align="center">
-                No Goals Found.
+                No Goal Found.
             </Typography>
             ) : (
           <>

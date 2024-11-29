@@ -141,7 +141,7 @@ export default function StepsBarChart() {
           
             ) : (
           <Box height={540} display="flex" alignItems="center" justifyContent="center">
-          <Typography>No Steps Found for the Selected Period.</Typography>
+          <Typography>No Step Found for the Selected Period.</Typography>
           </Box>
   )}
     </Box>

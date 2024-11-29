@@ -116,7 +116,7 @@ export function MotivationalQuotes(){
         />
         {currentMotivationalQuotes.length === 0 || filteredMotivationalQuotes.length === 0 ? (
           <Typography variant="body1" color="text.secondary" align="center">
-            No Motivational Quotes Found.
+            No Motivational Quote Found.
           </Typography>
         ) : (
           <>

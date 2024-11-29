@@ -126,7 +126,7 @@ export function StudentList() {
         </Box>
         {filteredStudents.length === 0 ? (
           <Typography variant="body1" sx={{ textAlign: 'center', marginTop: 2 }}>
-            No Students Found
+            No Student Found
           </Typography>
         ) : (
           <List sx={{ width: '100%' }}>

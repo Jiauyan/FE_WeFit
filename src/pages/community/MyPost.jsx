@@ -216,7 +216,7 @@ export function MyPost() {
             />
              {currentMyPosts.length === 0 || filteredMyPosts.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Posts Found.
+                    No Post Found.
                 </Typography>
             ) : (
                 <>

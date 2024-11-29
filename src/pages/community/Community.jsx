@@ -205,7 +205,7 @@ export function Community() {
             />
              {currentPosts.length === 0 || filteredPosts.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Posts Found.
+                    No Post Found.
                 </Typography>
             ) : (
                 <>

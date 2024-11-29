@@ -94,7 +94,7 @@ useEffect(() => {
             />
              {currentTips.length === 0 || filteredTips.length === 0 ? ( // Check if there are no tips
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Sharing Tips Found.
+                    No Sharing Tip Found.
                 </Typography>
             ) : (
                 <>

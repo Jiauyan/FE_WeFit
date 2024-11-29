@@ -131,7 +131,7 @@ export default function SleepBarChart() {
       </Box>
       {data.length === 0 ? (
           <Box height={400} display="flex" alignItems="center" justifyContent="center">
-          <Typography>No Sleeping Hours Found for the Selected Period.</Typography>
+          <Typography>No Sleeping Hour Found for the Selected Period.</Typography>
           </Box>
             ) : (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>

@@ -114,7 +114,7 @@ useEffect(() => {
             />
              {currentPrograms.length === 0 || filteredPrograms.length === 0 ? ( // Check if there are no programs
                 <Typography variant="body1" color="text.secondary" align="center">
-                    No Training Programs Found.
+                    No Training Program Found.
                 </Typography>
             ) : (
                 <>

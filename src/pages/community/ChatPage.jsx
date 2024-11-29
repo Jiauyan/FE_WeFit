@@ -163,7 +163,7 @@ export function ChatPage() {
         </Box>
         {chatrooms.length === 0 || filteredChatrooms.length === 0 ? (
             <Typography variant="body1" color="text.secondary" align="center">
-                No Chats Found.
+                No Chat Found.
             </Typography>
             ) : (
           <>

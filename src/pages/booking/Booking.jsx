@@ -159,7 +159,7 @@ export function Booking() {
                 /></>
                 ) : searchTerm && filteredBookings.length === 0 ? (
                     <Typography variant="body1" color="text.secondary" align="center" marginTop={5}>
-                        No Bookings Found.
+                        No Booking Found.
                     </Typography>
                 ) : (
                     <>

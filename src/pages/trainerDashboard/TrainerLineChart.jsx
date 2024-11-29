@@ -115,7 +115,7 @@ export default function TrainerLineChart() {
       </Box>
       {data.length === 0 ? (
           <Box height={400} display="flex" alignItems="center" justifyContent="center">
-          <Typography>No Sharing Tips Found for the Selected Period.</Typography>
+          <Typography>No Sharing Tip Found for the Selected Period.</Typography>
           </Box>
             ) : (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
