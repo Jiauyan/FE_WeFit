@@ -70,7 +70,10 @@ export function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+        // Clear errors at the beginning of the validation
+        setEmailError("");
+        setPasswordError("");
+
         // Validation
         let isValid = true;
         if (!email) {

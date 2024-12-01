@@ -49,7 +49,10 @@ export function Register() {
 
     const handleSubmit = async (e) => { 
         e.preventDefault(); 
-        
+        // Clear errors at the beginning of the validation
+        setEmailError("");
+        setPasswordError("");
+
         let isValid = true;
 
         if (!email) {
