@@ -106,7 +106,10 @@ const handleFileChange = (e) => {
 };
 
 const handleChange = (field, value) => {
-  setFormValues({ ...formValues, [field]: value });
+  setFormValues((prevValues) => ({
+    ...prevValues,
+    [field]: ['age', 'weight', 'height'].includes(field) ? Number(value) : value,
+  }));
   if (formErrors[field]) setFormErrors({ ...formErrors, [field]: '' });
 };
 
