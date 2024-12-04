@@ -114,8 +114,10 @@ export function Login() {
         if (errorDetails?.includes('auth/invalid-credential')) {
           if (checkUserEmail) {
             setPasswordError("Incorrect password");
+            setEmailError("");
           } else {
             setEmailError("No account found with this email");
+            setPasswordError("");
           }
         } else {
           setNotification({
