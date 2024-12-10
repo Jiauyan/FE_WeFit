@@ -67,11 +67,12 @@ export function ConsentForm() {
     if (!validateForm()) return;
     setLoading(true);
     try {
+      const formattedDate = format(date, 'dd/MM/yyyy');
       const uid = user.uid;
       const response = await axios.post('https://be-um-fitness.vercel.app/consentForm/upsertConsentForm', {
         uid,
         name,
-        date,
+        date : formattedDate,
         emergencyContactName,
         emergencyContactPhoneNumber
       });
