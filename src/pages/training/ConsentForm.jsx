@@ -7,6 +7,9 @@ import { Typography, Paper, Button, Grid, Box,
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { format } from 'date-fns';
 
 export function ConsentForm() {
     const [loading, setLoading] = useState(false);
@@ -197,22 +200,31 @@ export function ConsentForm() {
                               helperText={errors.name}
                               sx={{ width: '90%', ml: 5, mb: 2 }}
                             />
-                             <TextField
+                             <LocalizationProvider dateAdapter={AdapterDateFns}>
+                             <DatePicker
                               required
                               margin="normal"
                               fullWidth
-                              name="date"
                               label="Date"
+                              format="dd/MM/yyyy"
+                              name="date"
                               id="date"
                               value={date}
                               onChange={(e) => {
                                 setDate(e.target.value);
                                 setErrors({ ...errors, date: '' });
                               }}
-                              error={!!errors.date}
-                              helperText={errors.date}
+                              onError={!!errors.date}
+                              slotProps={{
+                                  textField: {
+                                  error: !!errors.date,
+                                  helperText: errors.date,
+                                  },
+                              }}
                               sx={{ width: '90%', ml: 5, mb: 2 }}
+                              minDate={new Date()}
                             />
+                            </LocalizationProvider>
                              <TextField
                               required
                               margin="normal"
