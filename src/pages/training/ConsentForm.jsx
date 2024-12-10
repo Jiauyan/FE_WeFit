@@ -210,8 +210,8 @@ export function ConsentForm() {
                               name="date"
                               id="date"
                               value={date}
-                              onChange={(e) => {
-                                setDate(e.target.value);
+                              onChange={(newValue) => {
+                                setDate(newValue);
                                 setErrors({ ...errors, date: '' });
                               }}
                               onError={!!errors.date}
