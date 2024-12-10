@@ -96,7 +96,7 @@ export function ConsentForm() {
     const newErrors = {};
 
     if (!name.trim()) newErrors.name = 'Name is required';
-    if (!date.trim()) newErrors.date = 'Date is required';
+    if (!date) newErrors.date = 'Date is required';
     if (!emergencyContactName.trim()) newErrors.emergencyContactName = 'Emergency contact name is required';
     if (!emergencyContactPhoneNumber.trim()) {
       newErrors.emergencyContactPhoneNumber = 'Emergency contact phone number is required';
