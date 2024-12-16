@@ -69,10 +69,7 @@ export function AddTip() {
     }
   );
   } else {
-    // Handle the error for wrong file type
   setTipError(prev => ({ ...prev, tipImage: 'Invalid file type.' }));
-  setPreviewUrl(null); // Clear the preview URL or set to a default image placeholder
-  setTipImage(null); // Also clear the profile image state if needed
 }
   };
 
@@ -122,6 +119,8 @@ export function AddTip() {
     if (!shortDesc.trim()) errors.shortDesc = 'Sharing tip short description is required';
     if (!desc) errors.desc = 'Sharing tip full description is required';
     if (!tipImage) errors.tipImage = 'Sharing tip image is required';
+    if (tipError.profileImage) errors.profileImage = tipError.profileImage;
+
     setTipError(errors);
     return Object.keys(errors).length === 0;
   };

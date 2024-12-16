@@ -65,11 +65,12 @@ export function EditTip() {
         }
     }, []);
 
-    const handleFileChange = (e) => {
+   const handleFileChange = (e) => {
       const file = e.target.files[0];
-      if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];  // Add more types as needed
+  
+      if (file && allowedTypes.includes(file.type)) {
         setTipImage(file);
-    
         const fileRef = ref(storage, `tipImages/${file.name}`);
         const uploadTask = uploadBytesResumable(fileRef, file);
     
@@ -90,9 +91,11 @@ export function EditTip() {
           });
       }
     );
-    }
+    } else {
+    setTipError(prev => ({ ...prev, tipImage: 'Invalid file type.' }));
+  }
     };
-
+    
     const handleSubmit = async (e) => { 
         e.preventDefault();
         if (!validateTip()) {
@@ -138,6 +141,8 @@ export function EditTip() {
       if (!shortDesc.trim()) errors.shortDesc = 'Sharing tip short description is required';
       if (!desc) errors.desc = 'Sharing tip full description is required';
       if (!tipImage) errors.tipImage = 'Sharing tip image is required';
+      if (tipError.profileImage) errors.profileImage = tipError.profileImage;
+
       setTipError(errors);
       return Object.keys(errors).length === 0;
     };
