@@ -26,6 +26,7 @@ import Edit from '@mui/icons-material/Edit';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
 import MuiAlert from '@mui/material/Alert';
+import DefaultProfileImg from "../../assets/defaultProfileImg.png";
 
 export function EditTrainerProfile() {
   const [formValues, setFormValues] = useState({
@@ -182,37 +183,64 @@ const handleSubmit = async (e) => {
           <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
             Edit Your Profile
           </Typography>
-            {previewUrl && (
-            <Box sx={{ position: 'relative', mb: 1, display: 'inline-block' }}>
-                <Avatar
-                    alt="Preview Image"
-                    src={previewUrl}
-                    sx={{ width: 200, height: 200 }}
-                />
-                <label htmlFor="icon-button-file">
-                    <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }} />
-                    <IconButton
-                        color="primary"
-                        aria-label="edit picture"
-                        component="span"
-                        sx={{
-                            position: 'absolute',
-                            bottom: 0, // Position at the bottom of the container
-                            right: 0, // Position at the right of the container
-                            backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
-                            '&:hover': {
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                            },
-                        }}
-                    >
-                        <Edit />
-                    </IconButton>
-                </label>
-                {formErrors.profileImage && (
-                                <FormHelperText error>{formErrors.profileImage}</FormHelperText>
-                )}
-            </Box>
+          {previewUrl ? (
+    <Box sx={{ position: 'relative', mb: 1, display: 'inline-block' }}>
+        <Avatar
+            alt="Preview Image"
+            src={previewUrl}
+            sx={{ width: 200, height: 200 }}
+        />
+        <label htmlFor="icon-button-file">
+            <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }} />
+            <IconButton
+                color="primary"
+                aria-label="edit picture"
+                component="span"
+                sx={{
+                    position: 'absolute',
+                    bottom: 0, // Position at the bottom of the container
+                    right: 0, // Position at the right of the container
+                    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                    '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    },
+                }}
+            >
+                <Edit />
+            </IconButton>
+        </label>
+    </Box>
+) : (
+    <Box sx={{ position: 'relative', mb: 1, display: 'inline-block' }}>
+        <Avatar
+            alt="Invalid Image"
+            src={DefaultProfileImg} // Path to your placeholder image
+            sx={{ width: 200, height: 200 }}
+        />
+        <label htmlFor="icon-button-file">
+            <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }} />
+            <IconButton
+                color="primary"
+                aria-label="edit picture"
+                component="span"
+                sx={{
+                    position: 'absolute',
+                    bottom: 0, // Position at the bottom of the container
+                    right: 0, // Position at the right of the container
+                    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                    '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    },
+                }}
+            >
+                <Edit />
+            </IconButton>
+        </label>
+        {formErrors.profileImage && (
+            <FormHelperText error>{formErrors.profileImage}</FormHelperText>
         )}
+    </Box>
+)}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{  mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
             required
