@@ -74,6 +74,7 @@ export function EditProfile() {
     if (formValues.weight <= 0) errors.weight = 'Weight must be a positive number';
     if (formValues.height <= 0) errors.height = 'Height must be a positive number';
     if (!profileImage) errors.profileImage = 'Profile image is required';
+    if (formErrors.profileImage) errors.profileImage = formErrors.profileImage;
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
 };
@@ -106,7 +107,7 @@ export function EditProfile() {
           );
       } else {
           // Handle the error for wrong file type
-          setFormErrors(prev => ({ ...prev, profileImage: 'Unsupported file type. Please upload an image file.' }));
+          setFormErrors(prev => ({ ...prev, profileImage: 'Invalid file type.' }));
       }
     };
 
