@@ -93,9 +93,11 @@ export function EditTip() {
     );
     } else {
     setTipError(prev => ({ ...prev, tipImage: 'Invalid file type.' }));
+    setPreviewUrl(null);
+    setDownloadUrl(null);
   }
     };
-    
+
     const handleSubmit = async (e) => { 
         e.preventDefault();
         if (!validateTip()) {

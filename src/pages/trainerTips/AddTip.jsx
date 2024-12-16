@@ -70,6 +70,8 @@ export function AddTip() {
   );
   } else {
   setTipError(prev => ({ ...prev, tipImage: 'Invalid file type.' }));
+  setPreviewUrl(null);
+  setDownloadUrl(null);
 }
   };
 
