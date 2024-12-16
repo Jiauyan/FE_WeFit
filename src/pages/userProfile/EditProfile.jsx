@@ -239,7 +239,7 @@ export function EditProfile() {
             </IconButton>
         </label>
         {formErrors.profileImage && (
-            <FormHelperText error>{formErrors.profileImage}</FormHelperText>
+            <FormHelperText style={{ textAlign: 'center' }} error>{formErrors.profileImage}</FormHelperText>
         )}
     </Box>
 )}
