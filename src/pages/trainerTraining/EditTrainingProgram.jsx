@@ -36,6 +36,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
 import { isToday, setHours, setMinutes, addMinutes,format,compareAsc, parse} from 'date-fns';
 import MuiAlert from '@mui/material/Alert';
+import CloudUpload from '@mui/icons-material/CloudUpload';
 
 const style = {
   position: 'absolute',
@@ -455,9 +456,55 @@ const sortSlots = (slots) => {
           <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
             Edit Your Training Program
           </Typography>
+          {!previewUrl && (
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 2,
+                  border: `1px solid ${trainingProgramError.trainingProgramImage ? 'red' : '#c4c4c4'}`,
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)', // Ensuring it's visually noticeable
+                }}
+              >
+                <label htmlFor="icon-button-file" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }}/>
+                  <IconButton
+                    color="gray"
+                    aria-label="upload picture"
+                    component="span"
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      },
+                    }}
+                  >
+                    <CloudUpload sx={{fontSize: 70}}/>
+                  </IconButton>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      mt: 1,
+                      color: '#686868',
+                      textAlign: 'center',
+                      width: '100%' // Ensure it spans the full width to center text properly
+                    }}
+                  >
+                    Upload Training Program Image
+                  </Typography>
+                </label>
+                {trainingProgramError.trainingProgramImage && (
+                                <FormHelperText error>{trainingProgramError.trainingProgramImage}</FormHelperText>
+                )}
+              </Box>
+            )}
           {previewUrl && (
             <Box sx={{
-              border: `1px solid ${trainingProgramError.trainingProgramImage ? 'red' : '#c4c4c4'}`,
               position: 'relative',  // Ensures the positioning context for the IconButton
               width: '100%',
                   height: '350px',
@@ -493,9 +540,6 @@ const sortSlots = (slots) => {
                 <Edit />
               </IconButton>
             </label>
-            {trainingProgramError.trainingProgramImage && (
-                                <FormHelperText error>{trainingProgramError.trainingProgramImage}</FormHelperText>
-                )}
             </Box>
           )}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2, width: '100%', justifyContent: 'center', alignItems: 'center' }}>

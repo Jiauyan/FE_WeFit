@@ -22,6 +22,7 @@ import Edit from '@mui/icons-material/Edit';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../configs/firebaseDB'; 
 import MuiAlert from '@mui/material/Alert';
+import CloudUpload from '@mui/icons-material/CloudUpload';
 
 export function EditTip() {
     const [tipData, setTipData] = useState({});
@@ -181,9 +182,55 @@ export function EditTip() {
           <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
             Edit Your Sharing Tip
           </Typography>
+          {!previewUrl && (
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 2,
+                  border: `1px solid ${tipError.tipImage ? 'red' : '#c4c4c4'}`,
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)', // Ensuring it's visually noticeable
+                }}
+              >
+                <label htmlFor="icon-button-file" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{ display: 'none' }}/>
+                  <IconButton
+                    color="gray"
+                    aria-label="upload picture"
+                    component="span"
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      },
+                    }}
+                  >
+                    <CloudUpload sx={{fontSize: 70}}/>
+                  </IconButton>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      mt: 1,
+                      color: '#686868',
+                      textAlign: 'center',
+                      width: '100%' // Ensure it spans the full width to center text properly
+                    }}
+                  >
+                    Upload Sharing Tip Image
+                  </Typography>
+                </label>
+                {tipError.tipImage && (
+                                <FormHelperText error>{tipError.tipImage}</FormHelperText>
+                )}
+              </Box>
+            )}
           {previewUrl && (
             <Box sx={{
-              border: `1px solid ${tipError.tipImage ? 'red' : '#c4c4c4'}`,
               position: 'relative',  // Ensures the positioning context for the IconButton
               width: '100%',
                   height: '350px',
@@ -200,28 +247,25 @@ export function EditTip() {
                   borderRadius: 8
                 }}
               />
-            <label htmlFor="icon-button-file">
-            <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{display: 'none'}}/>
-            <IconButton
+              <label htmlFor="icon-button-file">
+              <Input id="icon-button-file" type="file" onChange={handleFileChange} sx={{display: 'none'}}/>
+              <IconButton
                 color="primary"
                 aria-label="edit picture"
                 component="span"
                 sx={{
-                position: 'absolute',
-                bottom: 8,             // Adjust top position here
-                right: 8,           // Adjust right position here
-                backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
-                '&:hover': {
+                  position: 'absolute',
+                  bottom: 8,             // Adjust top position here
+                  right: 8,           // Adjust right position here
+                  backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
+                  '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                },
+                  },
                 }}
-            >
+              >
                 <Edit />
-            </IconButton>
+              </IconButton>
             </label>
-                {tipError.tipImage && (
-                                <FormHelperText error>{tipError.tipImage}</FormHelperText>
-                )}
             </Box>
           )}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{  mt: 2,width: '100%', justifyContent: 'center', alignItems: 'center' }}>
