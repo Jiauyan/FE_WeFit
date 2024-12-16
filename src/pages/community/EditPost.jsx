@@ -85,6 +85,7 @@ export function EditPost({id, oldDesc, onEditPost}) {
 
 const validatePost = () => {
   const cleanPost = postDetails.trim();
+  const normalizedPost = cleanPost.normalize("NFKC");
 
   if (!cleanPost) {
     setPostError('Post description is required');
@@ -92,15 +93,14 @@ const validatePost = () => {
   }
 
   // Check for potentially harmful scripts or HTML tags
-  if (/<[a-z][\s\S]*>/i.test(cleanPost)) {
+  if (/<\/?[a-z][^>]*>/i.test(normalizedPost)) {
     setPostError('Invalid input: HTML tags are not allowed');
     return false;
   }
 
-  // Check for unwanted non-ASCII characters
-  if (/[\x00-\x08\x0E-\x1F\x80-\xFF]/.test(cleanPost)) {
-    setPostError('Invalid input: contains non-ASCII or control characters');
-    return false;
+  if (/[\x00-\x08\x0E-\x1F\x80-\xFF]/.test(normalizedPost)) {
+      setPostError('Invalid input: contains non-ASCII or control characters');
+      return false;
   }
 
   setPostError('');
