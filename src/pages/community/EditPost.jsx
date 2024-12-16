@@ -84,10 +84,25 @@ export function EditPost({id, oldDesc, onEditPost}) {
 };
 
 const validatePost = () => {
-  if (!postDetails.trim()) {
+  const cleanPost = postDetails.trim();
+
+  if (!cleanPost) {
     setPostError('Post description is required');
     return false;
-  } 
+  }
+
+  // Check for potentially harmful scripts or HTML tags
+  if (/<[a-z][\s\S]*>/i.test(cleanPost)) {
+    setPostError('Invalid input: HTML tags are not allowed');
+    return false;
+  }
+
+  // Check for unwanted non-ASCII characters
+  if (/[\x00-\x08\x0E-\x1F\x80-\xFF]/.test(cleanPost)) {
+    setPostError('Invalid input: contains non-ASCII or control characters');
+    return false;
+  }
+
   setPostError('');
   return true;
 };
