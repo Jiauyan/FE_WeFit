@@ -79,29 +79,34 @@ export function EditProfile() {
 };
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
+      const file = e.target.files[0];
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];  // Add more types as needed
+
+      if (file && allowedTypes.includes(file.type)) {
           setProfileImage(file);
-    
+
           const fileRef = ref(storage, `profileImages/${file.name}`);
           const uploadTask = uploadBytesResumable(fileRef, file);
-      
+
           uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              // You can handle progress here if you need to show upload status
-            },
-            (error) => {
-              console.error("Upload failed", error);
-              setFormErrors(prev => ({ ...prev, profileImage: 'Failed to upload image' }));
-            },
-            () => {
-              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                setPreviewUrl(downloadURL);
-                setFormErrors(prev => ({ ...prev, profileImage: '' }));
-            });
-        }
-      );
+              "state_changed",
+              (snapshot) => {
+                  // Optional: update progress to the user
+              },
+              (error) => {
+                  console.error("Upload failed", error);
+                  setFormErrors(prev => ({ ...prev, profileImage: 'Failed to upload image. Try again.' }));
+              },
+              () => {
+                  getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                      setPreviewUrl(downloadURL);
+                      setFormErrors(prev => ({ ...prev, profileImage: '' }));
+                  });
+              }
+          );
+      } else {
+          // Handle the error for wrong file type
+          setFormErrors(prev => ({ ...prev, profileImage: 'Unsupported file type. Please upload an image file.' }));
       }
     };
 
