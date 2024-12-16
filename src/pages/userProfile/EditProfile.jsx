@@ -79,12 +79,13 @@ export function EditProfile() {
     return Object.keys(errors).length === 0;
 };
 
-    const handleFileChange = (e) => {
-      const file = e.target.files[0];
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];  // Add more types as needed
+const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];  // Add more types as needed
 
-      if (file && allowedTypes.includes(file.type)) {
-          setProfileImage(file);
+  if (file) {
+      if (allowedTypes.includes(file.type)) {
+          setProfileImage(file);  // Set the new file as the current image if it's valid
 
           const fileRef = ref(storage, `profileImages/${file.name}`);
           const uploadTask = uploadBytesResumable(fileRef, file);
@@ -92,24 +93,29 @@ export function EditProfile() {
           uploadTask.on(
               "state_changed",
               (snapshot) => {
-                  // Optional: update progress to the user
+                  // Optional: Update progress to the user
               },
               (error) => {
                   console.error("Upload failed", error);
                   setFormErrors(prev => ({ ...prev, profileImage: 'Failed to upload image. Try again.' }));
+                  // Do not clear the previewUrl here to keep the last valid image
               },
               () => {
                   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                      setPreviewUrl(downloadURL);
-                      setFormErrors(prev => ({ ...prev, profileImage: '' }));
+                      setPreviewUrl(downloadURL);  // Update the preview URL only on successful upload
+                      setFormErrors(prev => ({ ...prev, profileImage: '' }));  // Clear any related errors
                   });
               }
           );
+          } else {
+              // Set error without changing the existing previewUrl
+              setFormErrors(prev => ({ ...prev, profileImage: 'Invalid file type.' }));
+              // Optionally, you could clear or reset `profileImage` if you're using it for other logic
+              setProfileImage(null);
+          }
       } else {
-          // Handle the error for wrong file type
-        setFormErrors(prev => ({ ...prev, profileImage: 'Invalid file type.' }));
-        setPreviewUrl(null); // Clear the preview URL or set to a default image placeholder
-        setProfileImage(null); // Also clear the profile image state if needed
+          // Handle the case where no file is selected (e.g., canceling the file selection dialog)
+          setFormErrors(prev => ({ ...prev, profileImage: 'No file selected.' }));
       }
     };
 
