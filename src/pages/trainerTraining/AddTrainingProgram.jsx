@@ -98,7 +98,9 @@ export function AddTrainingProgram() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];  // Add more types as needed
+
+    if (file && allowedTypes.includes(file.type)) {
       setTrainingProgramImage(file);
 
     const fileRef = ref(storage, `trainingProgramImages/${file.name}`);
@@ -122,6 +124,10 @@ export function AddTrainingProgram() {
       });
   }
 );
+}else {
+  setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: 'Invalid file type.' }));
+  setPreviewUrl(null);
+  setDownloadUrl(null);
 }
   };
 
@@ -324,6 +330,7 @@ export function AddTrainingProgram() {
     if (!desc) errors.desc = 'Training program description is required';
     if (!contactNum) errors.contactNum = 'Trainer contact number is required';
     if (slots.length === 0) errors.slots = 'At least one slot is required';
+    if (trainingProgramError.trainingProgramImage) errors.trainingProgramImage = trainingProgramError.trainingProgramImage;
 
     setTrainingProgramError(errors);
     return Object.keys(errors).length === 0;

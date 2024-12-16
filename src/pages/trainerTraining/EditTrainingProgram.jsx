@@ -152,33 +152,40 @@ export function EditTrainingProgram() {
 }, []);
 
 const handleFileChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    setTrainingProgramImage(file);
+    const file = e.target.files[0];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];  // Add more types as needed
 
-  const fileRef = ref(storage, `trainingProgramImages/${file.name}`);
-  const uploadTask = uploadBytesResumable(fileRef, file);
+    if (file && allowedTypes.includes(file.type)) {
+      setTrainingProgramImage(file);
 
-  uploadTask.on(
-    "state_changed",
-    (snapshot) => {
-      // You can handle progress here if you need to show upload status
-    },
-    (error) => {
-      // Handle unsuccessful uploads
-      console.error("Upload failed", error);
-      setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: 'Failed to upload image' }));
-    },
-    () => {
-      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        setPreviewUrl(downloadURL);
-        setDownloadUrl(downloadURL);
-        setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: '' }));
-    });
-}
+    const fileRef = ref(storage, `trainingProgramImages/${file.name}`);
+    const uploadTask = uploadBytesResumable(fileRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // You can handle progress here if you need to show upload status
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+        console.error("Upload failed", error);
+        setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: 'Failed to upload image' }));
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setPreviewUrl(downloadURL);
+          setDownloadUrl(downloadURL);
+          setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: '' }));
+      });
+  }
 );
+}else {
+  setTrainingProgramError(prev => ({ ...prev, trainingProgramImage: 'Invalid file type.' }));
+  setPreviewUrl(null);
+  setDownloadUrl(null);
 }
-};
+  };
+
 
 const handleAddSlot = async (e) => {
   e.preventDefault();
@@ -409,6 +416,7 @@ const sortSlots = (slots) => {
     if (!desc) errors.desc = 'Training program description is required';
     if (!contactNum) errors.contactNum = 'Trainer contact number is required';
     if (slots.length === 0) errors.slots = 'At least one slot is required';
+    if (trainingProgramError.trainingProgramImage) errors.trainingProgramImage = trainingProgramError.trainingProgramImage;
 
     setTrainingProgramError(errors);
     return Object.keys(errors).length === 0;

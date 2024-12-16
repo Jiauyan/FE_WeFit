@@ -143,7 +143,7 @@ export function EditTip() {
       if (!shortDesc.trim()) errors.shortDesc = 'Sharing tip short description is required';
       if (!desc) errors.desc = 'Sharing tip full description is required';
       if (!tipImage) errors.tipImage = 'Sharing tip image is required';
-      if (tipError.profileImage) errors.profileImage = tipError.profileImage;
+      if (tipError.tipImage) errors.tipImage = tipError.tipImage;
 
       setTipError(errors);
       return Object.keys(errors).length === 0;
