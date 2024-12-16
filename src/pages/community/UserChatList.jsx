@@ -87,6 +87,9 @@ export function UserChatList() {
     }
   };
 
+  const startIndex = (page - 1) * itemsPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+
   if (loading) {
     return (
         <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -155,7 +158,7 @@ export function UserChatList() {
           <>
           <Grid container item xs={12}>
         <List sx={{ width: '100%' }}>
-          {filteredUsers.map((user) => (
+          {paginatedUsers.map((user) => (
             <ListItemButton
               sx={{ borderBottom: '1px solid #e0e0e0' }}
               key={user.uid}

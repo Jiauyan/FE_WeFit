@@ -96,6 +96,9 @@ export function ChatPage() {
     navigate('/chat', { state: {chatroomId, chatroomDetails, otherUserDetails } });
   };
 
+  const startIndex = (page - 1) * itemsPerPage;
+  const paginatedChatrooms = filteredChatrooms.slice(startIndex, startIndex + itemsPerPage);
+
   if (loading) {
     return (
         <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -169,7 +172,7 @@ export function ChatPage() {
           <>
         <Grid container item xs={12}>
         <List sx={{ width: '100%' }}>
-          {filteredChatrooms.map((chatroom) => {
+          {paginatedChatrooms.map((chatroom) => {
           const lastMessage = Object.values(chatroom.chatroomDetails.messages).slice(-1)[0];
           const formattedDateOrTime = lastMessage ? formatDateOrTime(lastMessage.timestamp) : '';
           const lastMessageText = lastMessage?.text || 'No messages yet';
