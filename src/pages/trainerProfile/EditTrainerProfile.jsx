@@ -109,6 +109,7 @@ export function EditTrainerProfile() {
       } else {
           // Handle the error for wrong file type
         setFormErrors(prev => ({ ...prev, profileImage: 'Invalid file type.' }));
+        setPreviewUrl(null);
       }
     };
 
