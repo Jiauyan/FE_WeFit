@@ -95,10 +95,10 @@ const validatePost = () => {
     return false;
   }
 
-  if (/[\x00-\x08\x0E-\x1F\x80-\xFF]/.test(normalizedPost)) {
-      setPostError('Invalid input: contains non-ASCII or control characters');
-      return false;
-  }
+  if (/[\x00-\x08\x0E-\x1F\x80-\xFF\u0099]/.test(normalizedPost)) {
+    setPostError('Invalid input: contains non-ASCII or control characters');
+    return false;
+}
 
   setPostError('');
   return true;
