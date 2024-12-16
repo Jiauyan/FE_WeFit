@@ -74,36 +74,44 @@ export function EditTrainerProfile() {
     if (formValues.weight <= 0) errors.weight = 'Weight must be a positive number';
     if (formValues.height <= 0) errors.height = 'Height must be a positive number';
     if (!profileImage) errors.profileImage = 'Profile image is required';
+    if (formErrors.profileImage) errors.profileImage = formErrors.profileImage;
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
 };
 
-const handleFileChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    setProfileImage(file);
+  const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];  // Add more types as needed
 
-    const fileRef = ref(storage, `profileImages/${file.name}`);
-    const uploadTask = uploadBytesResumable(fileRef, file);
+      if (file && allowedTypes.includes(file.type)) {
+          setProfileImage(file);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // You can handle progress here if you need to show upload status
-      },
-      (error) => {
-        console.error("Upload failed", error);
-        setFormErrors(prev => ({ ...prev, profileImage: 'Failed to upload image' }));
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setPreviewUrl(downloadURL);
-          setFormErrors(prev => ({ ...prev, profileImage: '' }));
-      });
-  }
-);
-}
-};
+          const fileRef = ref(storage, `profileImages/${file.name}`);
+          const uploadTask = uploadBytesResumable(fileRef, file);
+
+          uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                  // Optional: update progress to the user
+              },
+              (error) => {
+                  console.error("Upload failed", error);
+                  setFormErrors(prev => ({ ...prev, profileImage: 'Failed to upload image. Try again.' }));
+              },
+              () => {
+                  getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                      setPreviewUrl(downloadURL);
+                      setFormErrors(prev => ({ ...prev, profileImage: '' }));
+                  });
+              }
+          );
+      } else {
+          // Handle the error for wrong file type
+        setFormErrors(prev => ({ ...prev, profileImage: 'Invalid file type.' }));
+        setPreviewUrl(null); // Clear the preview URL or set to a default image placeholder
+        setProfileImage(null); // Also clear the profile image state if needed
+      }
+    };
 
 const handleChange = (field, value) => {
   setFormValues((prevValues) => ({

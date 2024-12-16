@@ -44,9 +44,10 @@ export function AddTip() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];  // Add more types as needed
+
+    if (file && allowedTypes.includes(file.type)) {
       setTipImage(file);
-  
       const fileRef = ref(storage, `tipImages/${file.name}`);
       const uploadTask = uploadBytesResumable(fileRef, file);
   
@@ -67,7 +68,12 @@ export function AddTip() {
         });
     }
   );
-  }
+  } else {
+    // Handle the error for wrong file type
+  setTipError(prev => ({ ...prev, tipImage: 'Invalid file type.' }));
+  setPreviewUrl(null); // Clear the preview URL or set to a default image placeholder
+  setTipImage(null); // Also clear the profile image state if needed
+}
   };
 
   const handleSubmit = async (e) => { 

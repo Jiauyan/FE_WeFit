@@ -107,7 +107,9 @@ export function EditProfile() {
           );
       } else {
           // Handle the error for wrong file type
-          setFormErrors(prev => ({ ...prev, profileImage: 'Invalid file type.' }));
+        setFormErrors(prev => ({ ...prev, profileImage: 'Invalid file type.' }));
+        setPreviewUrl(null); // Clear the preview URL or set to a default image placeholder
+        setProfileImage(null); // Also clear the profile image state if needed
       }
     };
 
