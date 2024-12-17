@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Navigate, useLocation } from 'react-router-dom';
+import { Outlet, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import App from "../App.jsx";
 import { Login } from "../pages/auth/Login.jsx";
 import { Register } from "../pages/auth/Register.jsx";
@@ -90,11 +90,20 @@ const ProtectedRoute = ({ children }) => {
 const RedirectIfAuthenticated = ({ children }) => {
   const isAuthenticated = Boolean(localStorage.getItem('accessToken')); // Check if user is authenticated
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/dashboard"; // Where to redirect if needed
-  console.log(location.state.from);
-  // Redirect authenticated users to 'from' or dashboard
+  const navigate = useNavigate();
+
+  // Use React state to store the last non-login page visited
+  React.useEffect(() => {
+    // Store the last route if it's not authentication related
+    if (!["/login", "/register", "/logout"].includes(location.pathname)) {
+      sessionStorage.setItem('lastRoute', location.pathname);
+    }
+  }, [location]);
+
   if (isAuthenticated) {
-    return <Navigate to={from} replace />;
+    // Try to get the last route or default to '/dashboard'
+    const lastRoute = sessionStorage.getItem('lastRoute') || '/dashboard';
+    return <Navigate to={lastRoute} replace />;
   }
 
   // Render children (Login, Register, etc.) if not authenticated
