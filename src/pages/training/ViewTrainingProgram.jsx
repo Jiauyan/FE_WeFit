@@ -17,7 +17,7 @@ export function ViewTrainingProgram() {
   const location = useLocation();
   const { id, pathName, pathPrev, page } = location.state;
   // Derived state to check if all slots are full
-  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.status === 'Full');
+  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.status);
 
   useEffect(() => {
     window.scrollTo(0, 0); 
