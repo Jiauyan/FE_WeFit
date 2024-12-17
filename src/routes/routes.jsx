@@ -164,19 +164,11 @@ const routes = [
   },
   {
     path: "/logout",
-    element: (
-    <RedirectIfAuthenticated>
-      <Logout />,
-    </RedirectIfAuthenticated>
-    )
+    element: <Logout />,
   },
   {
     path: "/deleteAccountSuccess",
-    element: (
-    <RedirectIfAuthenticated>
-      <DeleteAccountSuccess />,
-      </RedirectIfAuthenticated>
-    )
+    element: <DeleteAccountSuccess />
   },
   {
     path: "/",
