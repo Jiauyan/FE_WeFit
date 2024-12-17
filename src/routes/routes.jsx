@@ -88,11 +88,14 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const RedirectIfAuthenticated = () => {
-  const isAuthenticated = Boolean(localStorage.getItem('accessToken')); // Check authentication status
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/dashboard"; // Determine where to redirect
-
-  return isAuthenticated ? <Navigate to={from} replace /> : <Outlet />;
+  // Replace this logic with your actual authentication logic
+  const isAuthenticated = Boolean(localStorage.getItem('accessToken')); // Example: checking for a token in localStorage
+  const from = location.state?.from?.pathname
+ 
+  if (isAuthenticated) {
+    return <Navigate to={from} replace /> ;
+  }
+  return children;
 };
 
 const routes = [
