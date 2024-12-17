@@ -115,35 +115,68 @@ const routes = [
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <RedirectIfAuthenticated>
+      <Register />
+      </RedirectIfAuthenticated>
+    ),
   },
   {
     path: "/forgotPassword",
-    element: <ForgotPassword />,
+    element: 
+    (
+      <RedirectIfAuthenticated>
+      <ForgotPassword />,
+      </RedirectIfAuthenticated>
+    )
   },
   {
     path: "/completeProfile",
-    element: <CompleteProfile />,
+    element: (
+      <RedirectIfAuthenticated>
+    <CompleteProfile />,
+    </RedirectIfAuthenticated>
+    )
   },
   {
     path: "/fitnessLevel",
-    element: <FitnessLevel />,
+    element: (
+      <RedirectIfAuthenticated>
+    <FitnessLevel />,
+    </RedirectIfAuthenticated>
+    )
   },
   {
     path: "/fitnessGoal",
-    element: <FitnessGoal />,
+    element: (
+      <RedirectIfAuthenticated>
+        <FitnessGoal />,
+        </RedirectIfAuthenticated>
+    )
   },
   {
     path: "/favClass",
-    element: <FavClass />,
+    element: (
+      <RedirectIfAuthenticated>
+        <FavClass />,
+        </RedirectIfAuthenticated>
+    )
   },
   {
     path: "/logout",
-    element: <Logout />,
+    element: (
+    <RedirectIfAuthenticated>
+      <Logout />,
+    </RedirectIfAuthenticated>
+    )
   },
   {
     path: "/deleteAccountSuccess",
-    element: <DeleteAccountSuccess />,
+    element: (
+    <RedirectIfAuthenticated>
+      <DeleteAccountSuccess />,
+      </RedirectIfAuthenticated>
+    )
   },
   {
     path: "/",
