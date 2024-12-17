@@ -85,6 +85,12 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+
+  if (isAuthenticated) {
+    const from = location.state?.from?.pathname || "/dashboard"; // Redirect to the intended URL or dashboard if no specific redirection is required
+    return <Navigate to={from} replace />;
+  }
+  
   return children;
 };
 
