@@ -58,6 +58,11 @@ export function DeleteBooking({id, transactionId, feeAmount}) {
     } catch (error) {
       const message = axios.isAxiosError(error) && error.response ? error.response.data.message : 'An unexpected error occurred';
       setDeleteBookingStatus(message);
+      setNotification({
+        open: true,
+        message: message,
+        severity: 'error',
+      });
       handleClose();
     } finally {
       setLoading(false)

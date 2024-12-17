@@ -78,11 +78,26 @@ export function AddGoal({onAddGoal}) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
                 setAddGoalStatus(error.response.data.message);
+                setNotification({
+                  open: true,
+                  message: error.response.data.message,
+                  severity: 'error',
+                });
             } else {
                 setAddGoalStatus('An error occurred');
+                setNotification({
+                  open: true,
+                  message: 'An error occurred',
+                  severity: 'error',
+                });
             }
         } else {
             setAddGoalStatus('An unexpected error occurred');
+            setNotification({
+              open: true,
+              message: 'An unexpected error occurred',
+              severity: 'error',
+            });
         }
     } finally {
       setLoading(false)

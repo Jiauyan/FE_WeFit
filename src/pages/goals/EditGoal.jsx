@@ -74,11 +74,26 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
                 setEditGoalStatus(error.response.data.message);
+                setNotification({
+                  open: true,
+                  message: error.response.data.message,
+                  severity: 'error',
+                });
             } else {
                 setEditGoalStatus('An error occurred');
+                setNotification({
+                  open: true,
+                  message: 'An error occurred',
+                  severity: 'error',
+                });
             }
         } else {
             setEditGoalStatus('An unexpected error occurred');
+            setNotification({
+              open: true,
+              message: 'An unexpected error occurred',
+              severity: 'error',
+            });
         }
     } finally {
       setLoading(false)
