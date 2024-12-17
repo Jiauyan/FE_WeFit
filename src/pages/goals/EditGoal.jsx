@@ -41,7 +41,11 @@ export function EditGoal({id, oldTitle, disabled, onEditGoal}) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setTitle('');
+    setWordCount(0);
+  }
   const [editGoalStatus, setEditGoalStatus] = useState('');
   const { user } = useUser();
   const uid = user.uid;

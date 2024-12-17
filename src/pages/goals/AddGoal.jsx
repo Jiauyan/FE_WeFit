@@ -39,7 +39,11 @@ export function AddGoal({onAddGoal}) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setTitle('');
+    setWordCount(0);
+  }
   const [title, setTitle] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [addGoalStatus, setAddGoalStatus] = useState('');
