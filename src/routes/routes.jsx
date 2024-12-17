@@ -91,7 +91,7 @@ const RedirectIfAuthenticated = ({ children }) => {
   const isAuthenticated = Boolean(localStorage.getItem('accessToken')); // Check if user is authenticated
   const location = useLocation();
   const from = location.state?.from?.pathname || "/dashboard"; // Where to redirect if needed
-
+  console.log(location);
   // Redirect authenticated users to 'from' or dashboard
   if (isAuthenticated) {
     return <Navigate to={from} replace />;
