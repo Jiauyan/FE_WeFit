@@ -84,16 +84,16 @@ const ProtectedRoute = ({ children }) => {
     // Redirect to the login page but save the current location
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-
-
-  if (isAuthenticated) {
-    const from = location.state?.from?.pathname || "/dashboard"; // Redirect to the intended URL or dashboard if no specific redirection is required
-    return <Navigate to={from} replace />;
-  }
-  
   return children;
 };
 
+const RedirectIfAuthenticated = () => {
+  const isAuthenticated = Boolean(localStorage.getItem('accessToken')); // Check authentication status
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard"; // Determine where to redirect
+
+  return isAuthenticated ? <Navigate to={from} replace /> : <Outlet />;
+};
 
 const routes = [
   {
@@ -102,7 +102,11 @@ const routes = [
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <RedirectIfAuthenticated>
+        <Login />
+      </RedirectIfAuthenticated>
+    ),
   },
   {
     path: "/register",
