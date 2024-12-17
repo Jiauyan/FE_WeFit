@@ -39,7 +39,11 @@ export function AddMotivationalQuote({onAddMotivationalQuote}) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setMotivationalQuote('');
+    setWordCount(0);
+  }
   const [motivationalQuote, setMotivationalQuote] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [addMotivationalQuoteStatus, setAddMotivationalQuoteStatus] = useState('');
