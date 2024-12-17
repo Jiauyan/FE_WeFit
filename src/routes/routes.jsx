@@ -88,6 +88,19 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const CheckLogin = ({ children }) => {
+  const isAuthenticated = Boolean(localStorage.getItem('accessToken'));
+  const location = useLocation();
+
+  // If the user is authenticated, redirect them to the dashboard or a stored intended route
+  if (isAuthenticated) {
+    const redirectTo = location.state?.from?.pathname || '/dashboard';
+    return <Navigate to={redirectTo} replace />;
+  }
+
+  return children;
+};
+
 const routes = [
   {
     path: "/",
@@ -95,39 +108,39 @@ const routes = [
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <CheckLogin><Login /></CheckLogin>,
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <CheckLogin><Register /></CheckLogin>,
   },
   {
     path: "/forgotPassword",
-    element: <ForgotPassword />,
+    element: <CheckLogin><ForgotPassword /></CheckLogin>,
   },
   {
     path: "/completeProfile",
-    element: <CompleteProfile />,
+    element: <CheckLogin><CompleteProfile /></CheckLogin>,
   },
   {
     path: "/fitnessLevel",
-    element: <FitnessLevel />,
+    element: <CheckLogin><FitnessLevel /></CheckLogin>,
   },
   {
     path: "/fitnessGoal",
-    element: <FitnessGoal />,
+    element: <CheckLogin><FitnessGoal /></CheckLogin>,
   },
   {
     path: "/favClass",
-    element: <FavClass />,
+    element: <CheckLogin><FavClass /></CheckLogin>,
   },
   {
     path: "/logout",
-    element: <Logout />,
+    element: <CheckLogin><Logout /></CheckLogin>,
   },
   {
     path: "/deleteAccountSuccess",
-    element: <DeleteAccountSuccess />,
+    element: <CheckLogin><DeleteAccountSuccess /></CheckLogin>,
   },
   {
     path: "/",
