@@ -73,11 +73,26 @@ export function EditMotivationalQuote({ id, oldMotivationalQuote, onEditMotivati
       if (axios.isAxiosError(error)) {
         if (error.response) {
           setEditMotivationalQuoteStatus(error.response.data.message);
+          setNotification({
+            open: true,
+            message: error.response.data.message,
+            severity: 'error',
+          });
         } else {
           setEditMotivationalQuoteStatus('An error occurred');
+          setNotification({
+            open: true,
+            message: 'An error occurred',
+            severity: 'error',
+          });
         }
       } else {
         setEditMotivationalQuoteStatus('An unexpected error occurred');
+        setNotification({
+          open: true,
+          message: 'An unexpected error occurred',
+          severity: 'error',
+        });
       }
     } finally {
       setLoading(false)

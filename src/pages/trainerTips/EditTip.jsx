@@ -123,11 +123,26 @@ export function EditTip() {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
                     setEditTipStatus(error.response.data.message);
+                    setNotification({
+                      open: true,
+                      message: error.response.data.message,
+                      severity: 'error',
+                    });
                 } else {
                     setEditTipStatus('An error occurred');
+                    setNotification({
+                      open: true,
+                      message: 'An error occurred',
+                      severity: 'error',
+                    });
                 }
             } else {
                 setEditTipStatus('An unexpected error occurred');
+                setNotification({
+                  open: true,
+                  message: 'An unexpected error occurred',
+                  severity: 'error',
+                });
             }
         } finally {
           setLoading(false)

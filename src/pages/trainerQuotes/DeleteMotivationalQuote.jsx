@@ -62,11 +62,26 @@ export function DeleteMotivationalQuote({id, onDeleteMotivationalQuote}) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
                 setDeleteMotivationalQuoteStatus(error.response.data.message);
+                setNotification({
+                  open: true,
+                  message: error.response.data.message,
+                  severity: 'error',
+                });
             } else {
                 setDeleteMotivationalQuoteStatus('An error occurred');
+                setNotification({
+                  open: true,
+                  message: 'An error occurred',
+                  severity: 'error',
+                });
             }
         } else {
             setDeleteMotivationalQuoteStatus('An unexpected error occurred');
+            setNotification({
+              open: true,
+              message: 'An unexpected error occurred',
+              severity: 'error',
+            });
         }
     } finally {
       setLoading(false)

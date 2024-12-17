@@ -60,11 +60,26 @@ export function DeleteFitnessPlan({id}) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
                 setDeleteFitnessPlanStatus(error.response.data.message);
+                setNotification({
+                  open: true,
+                  message: error.response.data.message,
+                  severity: 'error',
+                });
             } else {
                 setDeleteFitnessPlanStatus('An error occurred');
+                setNotification({
+                  open: true,
+                  message: 'An error occurred',
+                  severity: 'error',
+                });
             }
         } else {
             setDeleteFitnessPlanStatus('An unexpected error occurred');
+            setNotification({
+              open: true,
+              message: 'An unexpected error occurred',
+              severity: 'error',
+            });
         }
     } finally {
       setLoading(false);
