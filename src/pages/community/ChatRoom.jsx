@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Avatar, Box, Button, IconButton, List, ListItem, ListItemText, Paper, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, IconButton, List, ListItem, ListItemText, Paper, TextField, Typography,Snackbar } from '@mui/material';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import FiberManualRecord from '@mui/icons-material/FiberManualRecord';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from "../../contexts/UseContext";
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
+import MuiAlert from '@mui/material/Alert';
 
 export function ChatRoom() {
   const [message, setMessage] = useState('');
@@ -19,6 +20,10 @@ export function ChatRoom() {
   const messagesEndRef = useRef(null);
   const [isInitialScroll, setIsInitialScroll] = useState(true); // Track the initial scroll
   const [isUpdated, setIsUpdated] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // Notification state
+  const handleCloseNotification = () => {
+    setNotification({ ...notification, open: false });
+  };
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -76,10 +81,18 @@ export function ChatRoom() {
         // Clear the message input field
         setMessage(''); 
       } catch (error) {
-        console.error('Error sending message:', error);
+        setNotification({
+          open: true,
+          message: 'Error sending message.',
+          severity: 'error',
+        });
       }
     } else {
-      console.log('Message is empty or only contains whitespace.');
+      setNotification({
+        open: true,
+        message: 'Message is empty or only contains whitespace.',
+        severity: 'error',
+      });
     }
   };
 
@@ -253,6 +266,16 @@ export function ChatRoom() {
     </Button>
   </Box>
   </Paper>
-</Box>
+  <Snackbar
+          open={notification.open}
+          autoHideDuration={6000}
+          onClose={handleCloseNotification}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <MuiAlert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+            {notification.message}
+          </MuiAlert>
+        </Snackbar>
+  </Box>
   );
 };
