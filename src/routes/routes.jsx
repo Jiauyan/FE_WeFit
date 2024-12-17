@@ -88,22 +88,15 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const RedirectIfAuthenticated = ({ children }) => {
-  const isAuthenticated = Boolean(localStorage.getItem('accessToken'));
+  const isAuthenticated = Boolean(localStorage.getItem('accessToken')); // Check if user is authenticated
   const location = useLocation();
-
-  // Store the current path if it's not authentication related
-  React.useEffect(() => {
-    if (!["/login", "/register", "/logout"].includes(location.pathname)) {
-      sessionStorage.setItem('lastNonAuthPath', location.pathname);
-    }
-  }, [location.pathname]);  // React to changes in pathname only
-
+  const from = location.state?.from?.pathname || "/dashboard"; // Where to redirect if needed
+  // Redirect authenticated users to 'from' or dashboard
   if (isAuthenticated) {
-    // Redirect to the last non-auth path or to dashboard if none is found
-    const lastPath = sessionStorage.getItem('lastNonAuthPath') || '/dashboard';
-    return <Navigate to={lastPath} replace />;
+    return <Navigate to={from} replace />;
   }
 
+  // Render children (Login, Register, etc.) if not authenticated
   return children;
 };
 
