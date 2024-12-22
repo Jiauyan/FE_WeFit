@@ -78,19 +78,27 @@ export function ViewBooking() {
   };
 
   const canCancelBooking = () => {
-    if (!bookingData.slot || !bookingData.slot.date) return { canCancel: false, message: '' };
+    if (!bookingData.slot || !bookingData.slot.date) {
+        console.log("Slot or slot date missing!");
+        return { canCancel: false, message: '' };
+    }
     const today = new Date();
     const slotDate = parseISO(bookingData.slot.date);
     const daysDifference = differenceInCalendarDays(slotDate, today);
 
+    console.log(`Days Difference: ${daysDifference}`); // Debugging output
+
     if (daysDifference < 0) {
+      console.log("Expired condition hit");
       return { canCancel: false, message: 'Expired' }; // Slot date has passed
     }
     if (daysDifference < 3) {
-      return { canCancel: false, message: 'Cancellation window has closed' }; // Within 3 days of the slot date
+      console.log("Cancellation window closed condition hit");
+      return { canCancel: false, message: 'Cancellation has closed' }; // Within 3 days of the slot date
     }
+    console.log("Eligible for cancellation");
     return { canCancel: true, message: '' }; // Eligible for cancellation
-};
+  };
 
   const cancellationCheck = canCancelBooking();
 
@@ -203,17 +211,17 @@ export function ViewBooking() {
             </Typography>
             
     </Grid>
-    <Grid container sx={{ width: '100%' }}>
+    <Grid container sx={{ width: '100%', justifyContent: 'center' }}>
     {cancellationCheck.message && (
         <Typography variant="subtitle1" color="error" sx={{ mb: 2 }}>
             {cancellationCheck.message}
         </Typography>
     )}
-    {cancellationCheck.canCancel && (
-        <Grid item xs={12}>
-            <DeleteBooking id={bookingId} transactionId={transactionId} feeAmount={trainingProgramData.feeAmount} />
-        </Grid>
-    )}
+          {cancellationCheck.canCancel && (
+              <Grid item xs={12}>
+                  <DeleteBooking id={bookingId} transactionId={transactionId} feeAmount={trainingProgramData.feeAmount} />
+              </Grid>
+          )}
       </Grid>
         </Paper>
       </Grid>
