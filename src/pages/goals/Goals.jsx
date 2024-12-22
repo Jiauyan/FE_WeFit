@@ -10,7 +10,8 @@ import {
     Card,
     CardContent,
     Pagination,
-    CircularProgress
+    CircularProgress,
+    LinearProgress 
 } from "@mui/material";
 import CheckCircle  from '@mui/icons-material/CheckCircle';
 import { useNavigate, Outlet } from 'react-router-dom';
@@ -42,6 +43,8 @@ export function Goals(){
         const completedGoalsCount = goals.filter(goal => goal.status).length;
         return (completedGoalsCount / totalGoals) * 100;
     };
+    
+    const progress = calculateProgress();
     
     // Callback for adding a goal
     const addGoalCallback = (newGoal) => {
@@ -180,6 +183,13 @@ export function Goals(){
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{ mb: 5, mt: 2 }}
             />
+             {/* Displaying the progress bar */}
+             <Box sx={{ width: '100%', mb: 2 }}>
+                <LinearProgress variant="determinate" value={progress} />
+                <Typography variant="body2" color="text.secondary">
+                    {`Completion: ${progress.toFixed(0)}%`}
+                </Typography>
+            </Box>
             {currentGoals.length === 0 || filteredGoals.length === 0 ? (
             <Typography variant="body1" color="text.secondary" align="center">
                 No Goal Found.
