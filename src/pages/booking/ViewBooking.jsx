@@ -6,6 +6,7 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import AttachMoney from '@mui/icons-material/AttachMoney';
 import { DeleteBooking } from './DeleteBooking';
+import { parseISO, differenceInCalendarDays } from 'date-fns';
 
 export function ViewBooking() {
   const [loading, setLoading] = useState(true);
@@ -77,10 +78,18 @@ export function ViewBooking() {
   };
 
   const canCancelBooking = () => {
-    if (!bookingData.slot || !bookingData.slot.date) return false;
+    if (!bookingData.slot || !bookingData.slot.date) return { canCancel: false, message: '' };
     const today = new Date();
     const slotDate = parseISO(bookingData.slot.date);
-    return differenceInCalendarDays(slotDate, today) >= 3;
+    const daysDifference = differenceInCalendarDays(slotDate, today);
+
+    if (daysDifference < 0) {
+      return { canCancel: false, message: 'Expired' }; // Slot date has passed
+    }
+    if (daysDifference < 3) {
+      return { canCancel: false, message: 'Cancellation window has closed' }; // Within 3 days of the slot date
+    }
+    return { canCancel: true, message: '' }; // Eligible for cancellation
 };
 
 
@@ -194,7 +203,12 @@ export function ViewBooking() {
             
     </Grid>
     <Grid container sx={{ width: '100%' }}>
-    {bookingData?.status === false && canCancelBooking() && (
+    {cancellationCheck.message && (
+        <Typography variant="subtitle1" color="error" sx={{ mb: 2 }}>
+            {cancellationCheck.message}
+        </Typography>
+    )}
+    {cancellationCheck.canCancel && (
         <Grid item xs={12}>
             <DeleteBooking id={bookingId} transactionId={transactionId} feeAmount={trainingProgramData.feeAmount} />
         </Grid>
