@@ -78,16 +78,16 @@ export function ViewBooking() {
   };
 
   const canCancelBooking = () => {
-    console.log(bookingData);
-    if (!bookingData.slot || !bookingData.slot.date) {
-        console.log("Slot or slot date missing!");
+    if (!bookingData.slot || !bookingData.slot.time) {
+        console.log("Slot or slot time missing!");
         return { canCancel: false, message: '' };
     }
+    const dateString = bookingData.slot.time.split(' - ')[0]; // Extracting date assuming format "9/12/2024 - 08:00 AM to 08:31 AM"
     const today = new Date();
-    const slotDate = parseISO(bookingData.slot.date);
+    const slotDate = parseISO(dateString); // Ensure this parses correctly; might need adjustments based on actual format
     const daysDifference = differenceInCalendarDays(slotDate, today);
 
-    console.log(`Days Difference: ${daysDifference}`); // Debugging output
+    console.log(`Days Difference: ${daysDifference}`, `Date String: ${dateString}`); // Debugging output
 
     if (daysDifference < 0) {
       console.log("Expired condition hit");
@@ -99,7 +99,7 @@ export function ViewBooking() {
     }
     console.log("Eligible for cancellation");
     return { canCancel: true, message: '' }; // Eligible for cancellation
-  };
+};
 
   const cancellationCheck = canCancelBooking();
 
