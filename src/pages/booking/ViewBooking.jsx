@@ -88,26 +88,34 @@ const canCancelBooking = () => {
       console.log("Slot or slot time missing!");
       return { canCancel: false, message: '' };
   }
-  const dateString = bookingData.slot.time.split(' - ')[0]; // Assuming the date is the first part
+  const dateString = bookingData.slot.time.split(' - ')[0]; // Extracting date assuming format "DD/MM/YYYY - HH:mm AM to HH:mm AM"
   const today = new Date();
-  const slotDate = parseDate(dateString);
+  const slotDate = parseDate(dateString); // Ensuring we use a custom function to handle date parsing correctly
   const daysDifference = differenceInCalendarDays(slotDate, today);
 
   console.log(`Days Difference: ${daysDifference}`, `Date String: ${dateString}`); // Debugging output
 
-  if (daysDifference < 0) {
-    console.log("Expired condition hit");
-    return { canCancel: false, message: 'Expired' }; // Slot date has passed
+  // Check if the booking is expired
+  if (daysDifference <= 0) {
+      console.log("Expired condition hit");
+      return { canCancel: false, message: 'Expired' }; // Slot date has passed or is today
   }
+
+  // Check if the booking status is true, which means it's completed
+  if (bookingData.status === true) {
+      console.log("Booking already completed");
+      return { canCancel: false, message: 'Booking already completed' };
+  }
+
+  // Check cancellation window
   if (daysDifference < 3) {
-    console.log("Cancellation window closed condition hit");
-    return { canCancel: false, message: 'Cancellation has closed' }; // Within 3 days of the slot date
+      console.log("Cancellation window closed condition hit");
+      return { canCancel: false, message: 'Cancellation window has closed' }; // Within 3 days of the slot date
   }
-  if (bookingData.status === true){
-    return { canCancel: true, message: '' }; 
-  }
+
+  // Eligible for cancellation
   console.log("Eligible for cancellation");
-  return { canCancel: true, message: '' }; // Eligible for cancellation
+  return { canCancel: true, message: '' };
 };
 
   const cancellationCheck = canCancelBooking();
