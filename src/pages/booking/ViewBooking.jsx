@@ -84,6 +84,10 @@ export function ViewBooking() {
 
 const canCancelBooking = () => {
   console.log(bookingData);
+  if (bookingData?.status === true) {
+      console.log("Booking already completed");
+      return { canCancel: false, message: 'Booking already completed' };
+  }
   if (!bookingData?.slot || !bookingData?.slot?.time) {
       console.log("Slot or slot time missing!");
       return { canCancel: false, message: '' };
@@ -94,13 +98,8 @@ const canCancelBooking = () => {
   const daysDifference = differenceInCalendarDays(slotDate, today);
 
   console.log(`Days Difference: ${daysDifference}`, `Date String: ${dateString}`); // Debugging output
-
-  // Check if the booking status is true, which means it's completed
-  if (bookingData.slot.status === true) {
-      console.log("Booking already completed");
-      return { canCancel: false, message: 'Booking already completed' };
-  }
-
+  console.log(bookingData.slot.status);
+  
   // Check if the booking is expired
   if (daysDifference <= 0) {
       console.log("Expired condition hit");
