@@ -101,12 +101,12 @@ const canCancelBooking = () => {
       return { canCancel: false, message: 'Booking already completed' };
   }
 
-  if (daysDifference <= 0) {
+  if (daysDifference < 0) {
       console.log("Expired condition hit");
       return { canCancel: false, message: 'Expired' };
   }
 
-  if (daysDifference < 3) {
+  if (daysDifference <= 3) {
       console.log("Cancellation window closed condition hit");
       return { canCancel: false, message: 'Cancellation window has closed' };
   }
