@@ -45,7 +45,7 @@ export function Goals(){
     };
     
     const progress = calculateProgress();
-    
+
     // Callback for adding a goal
     const addGoalCallback = (newGoal) => {
         setGoals(prevGoals => [ newGoal, ...prevGoals]);
@@ -184,9 +184,13 @@ export function Goals(){
             sx={{ mb: 5, mt: 2 }}
             />
              {/* Displaying the progress bar */}
-             <Box sx={{ width: '100%', mb: 2 }}>
+             <Box sx={{ width: '100%', mb: 5 }}>
                 <LinearProgress variant="determinate" value={progress} />
-                <Typography variant="body2" color="text.secondary">
+                <Typography 
+                    variant="body2" 
+                    color="text.secondary" 
+                    sx={{ mb: 2, textAlign: "right" }} // Corrected property to textAlign
+                >
                     {`Completion: ${progress.toFixed(0)}%`}
                 </Typography>
             </Box>
