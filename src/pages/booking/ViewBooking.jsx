@@ -78,6 +78,7 @@ export function ViewBooking() {
   };
 
   const canCancelBooking = () => {
+    console.log(bookingData);
     if (!bookingData.slot || !bookingData.slot.date) {
         console.log("Slot or slot date missing!");
         return { canCancel: false, message: '' };
