@@ -102,7 +102,7 @@ const canCancelBooking = () => {
   }
 
   // Check if the booking status is true, which means it's completed
-  if (bookingData.status === true) {
+  if (bookingData.slot.status === true) {
       console.log("Booking already completed");
       return { canCancel: false, message: 'Booking already completed' };
   }
