@@ -77,28 +77,34 @@ export function ViewBooking() {
     navigate(-1);
   };
 
-  const canCancelBooking = () => {
-    if (!bookingData.slot || !bookingData.slot.time) {
-        console.log("Slot or slot time missing!");
-        return { canCancel: false, message: '' };
-    }
-    const dateString = bookingData.slot.time.split(' - ')[0]; // Extracting date assuming format "9/12/2024 - 08:00 AM to 08:31 AM"
-    const today = new Date();
-    const slotDate = parseISO(dateString); // Ensure this parses correctly; might need adjustments based on actual format
-    const daysDifference = differenceInCalendarDays(slotDate, today);
+  const parseDate = (dateStr) => {
+    const [month, day, year] = dateStr.split('/');
+    return new Date(year, month - 1, day); // JavaScript's Date month is 0-indexed
+};
 
-    console.log(`Days Difference: ${daysDifference}`, `Date String: ${dateString}`); // Debugging output
+const canCancelBooking = () => {
+  console.log(bookingData);
+  if (!bookingData?.slot || !bookingData?.slot?.time) {
+      console.log("Slot or slot time missing!");
+      return { canCancel: false, message: '' };
+  }
+  const dateString = bookingData.slot.time.split(' - ')[0]; // Assuming the date is the first part
+  const today = new Date();
+  const slotDate = parseDate(dateString);
+  const daysDifference = differenceInCalendarDays(slotDate, today);
 
-    if (daysDifference < 0) {
-      console.log("Expired condition hit");
-      return { canCancel: false, message: 'Expired' }; // Slot date has passed
-    }
-    if (daysDifference < 3) {
-      console.log("Cancellation window closed condition hit");
-      return { canCancel: false, message: 'Cancellation has closed' }; // Within 3 days of the slot date
-    }
-    console.log("Eligible for cancellation");
-    return { canCancel: true, message: '' }; // Eligible for cancellation
+  console.log(`Days Difference: ${daysDifference}`, `Date String: ${dateString}`); // Debugging output
+
+  if (daysDifference < 0) {
+    console.log("Expired condition hit");
+    return { canCancel: false, message: 'Expired' }; // Slot date has passed
+  }
+  if (daysDifference < 3) {
+    console.log("Cancellation window closed condition hit");
+    return { canCancel: false, message: 'Cancellation has closed' }; // Within 3 days of the slot date
+  }
+  console.log("Eligible for cancellation");
+  return { canCancel: true, message: '' }; // Eligible for cancellation
 };
 
   const cancellationCheck = canCancelBooking();
