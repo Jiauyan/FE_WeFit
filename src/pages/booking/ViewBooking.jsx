@@ -95,16 +95,16 @@ const canCancelBooking = () => {
 
   console.log(`Days Difference: ${daysDifference}`, `Date String: ${dateString}`); // Debugging output
 
-  // Check if the booking is expired
-  if (daysDifference <= 0) {
-      console.log("Expired condition hit");
-      return { canCancel: false, message: 'Expired' }; // Slot date has passed or is today
-  }
-
   // Check if the booking status is true, which means it's completed
   if (bookingData.slot.status === true) {
       console.log("Booking already completed");
       return { canCancel: false, message: 'Booking already completed' };
+  }
+
+  // Check if the booking is expired
+  if (daysDifference <= 0) {
+      console.log("Expired condition hit");
+      return { canCancel: false, message: 'Expired' }; // Slot date has passed or is today
   }
 
   // Check cancellation window
