@@ -78,7 +78,7 @@ export function ViewBooking() {
   };
 
   const parseDate = (dateStr) => {
-    const [month, day, year] = dateStr.split('/');
+    const [day, month, year] = dateStr.split('/');
     return new Date(year, month - 1, day); // JavaScript's Date month is 0-indexed
 };
 
