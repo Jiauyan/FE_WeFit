@@ -83,36 +83,34 @@ export function ViewBooking() {
 };
 
 const canCancelBooking = () => {
-  console.log(bookingData);
-  if (bookingData?.status === true) {
-      console.log("Booking already completed");
-      return { canCancel: false, message: 'Booking already completed' };
-  }
   if (!bookingData?.slot || !bookingData?.slot?.time) {
       console.log("Slot or slot time missing!");
       return { canCancel: false, message: '' };
   }
-  const dateString = bookingData.slot.time.split(' - ')[0]; // Extracting date assuming format "DD/MM/YYYY - HH:mm AM to HH:mm AM"
+
+  const dateString = bookingData.slot.time.split(' - ')[0]; 
   const today = new Date();
-  const slotDate = parseDate(dateString); // Ensuring we use a custom function to handle date parsing correctly
+  today.setHours(0, 0, 0, 0); // Normalize today's date to remove time part
+  const slotDate = parseDate(dateString);
   const daysDifference = differenceInCalendarDays(slotDate, today);
 
-  console.log(`Days Difference: ${daysDifference}`, `Date String: ${dateString}`); // Debugging output
-  console.log(bookingData.slot.status);
-  
-  // Check if the booking is expired
+  console.log(`Today: ${today.toISOString()}`, `Slot Date: ${slotDate.toISOString()}`, `Days Difference: ${daysDifference}`);
+
+  if (bookingData?.status === true) {
+      console.log("Booking already completed");
+      return { canCancel: false, message: 'Booking already completed' };
+  }
+
   if (daysDifference <= 0) {
       console.log("Expired condition hit");
-      return { canCancel: false, message: 'Expired' }; // Slot date has passed or is today
+      return { canCancel: false, message: 'Expired' };
   }
 
-  // Check cancellation window
   if (daysDifference < 3) {
       console.log("Cancellation window closed condition hit");
-      return { canCancel: false, message: 'Cancellation window has closed' }; // Within 3 days of the slot date
+      return { canCancel: false, message: 'Cancellation window has closed' };
   }
 
-  // Eligible for cancellation
   console.log("Eligible for cancellation");
   return { canCancel: true, message: '' };
 };
