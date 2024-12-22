@@ -189,7 +189,7 @@ export function Goals(){
                 <Typography 
                     variant="body2" 
                     color="text.secondary" 
-                    sx={{ mb: 2, textAlign: "right" }} // Corrected property to textAlign
+                    sx={{ mt: 2, mb: 2, textAlign: "right" }} // Corrected property to textAlign
                 >
                     {`Completion: ${progress.toFixed(0)}%`}
                 </Typography>
