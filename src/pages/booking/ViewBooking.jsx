@@ -103,6 +103,9 @@ const canCancelBooking = () => {
     console.log("Cancellation window closed condition hit");
     return { canCancel: false, message: 'Cancellation has closed' }; // Within 3 days of the slot date
   }
+  if (bookingData.status == true){
+    return { canCancel: true, message: '' }; 
+  }
   console.log("Eligible for cancellation");
   return { canCancel: true, message: '' }; // Eligible for cancellation
 };
