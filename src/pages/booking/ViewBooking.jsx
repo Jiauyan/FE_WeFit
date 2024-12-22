@@ -76,6 +76,14 @@ export function ViewBooking() {
     navigate(-1);
   };
 
+  const canCancelBooking = () => {
+    if (!bookingData.slot || !bookingData.slot.date) return false;
+    const today = new Date();
+    const slotDate = parseISO(bookingData.slot.date);
+    return differenceInCalendarDays(slotDate, today) >= 3;
+};
+
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -186,11 +194,11 @@ export function ViewBooking() {
             
     </Grid>
     <Grid container sx={{ width: '100%' }}>
-          {bookingData?.status === false && (
-              <Grid item xs={12}>
-                  <DeleteBooking id={bookingId} transactionId={transactionId} feeAmount={trainingProgramData.feeAmount} />
-              </Grid>
-          )}
+    {bookingData?.status === false && canCancelBooking() && (
+        <Grid item xs={12}>
+            <DeleteBooking id={bookingId} transactionId={transactionId} feeAmount={trainingProgramData.feeAmount} />
+        </Grid>
+    )}
       </Grid>
         </Paper>
       </Grid>
