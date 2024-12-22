@@ -92,6 +92,7 @@ export function ViewBooking() {
     return { canCancel: true, message: '' }; // Eligible for cancellation
 };
 
+  const cancellationCheck = canCancelBooking();
 
   if (loading) {
     return (
