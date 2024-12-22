@@ -77,42 +77,58 @@ export function ViewBooking() {
     navigate(-1);
   };
 
-  const parseDate = (dateStr) => {
-    const [day, month, year] = dateStr.split('/');
-    return new Date(year, month - 1, day); // JavaScript's Date month is 0-indexed
+  const canCancelBooking = () => {
+    if (!bookingData?.slot || !bookingData?.slot?.time) {
+        console.log("Slot or slot time missing!");
+        return { canCancel: false, message: '' };
+    }
+
+    // Splitting the date and time from the slot time string
+    const [dateString, timeString] = bookingData.slot.time.split(' - ');
+    const [startTime, endTime] = timeString.split(' to ');
+
+    const today = new Date();
+    const now = new Date(); // Keeping the current time for time comparison
+    today.setHours(0, 0, 0, 0); // Normalize today's date for date comparison
+
+    const slotDate = parseDate(dateString);
+    const slotStartTime = parseTime(dateString, startTime);
+    const slotEndTime = parseTime(dateString, endTime);
+
+    const daysDifference = differenceInCalendarDays(slotDate, today);
+
+    console.log(`Today: ${today.toISOString()}`, `Slot Start Time: ${slotStartTime.toISOString()}`, `Now: ${now.toISOString()}`, `Days Difference: ${daysDifference}`);
+
+    if (bookingData?.status === true) {
+        return { canCancel: false, message: 'Booking Completed' };
+    }
+
+    if (daysDifference < 0) {
+        return { canCancel: false, message: 'Expired' }; // Slot date has passed
+    }
+
+    if (daysDifference === 0) {
+        if (now >= slotEndTime) {
+            return { canCancel: false, message: 'Expired' }; // Current time is past the end of the slot
+        }
+        if (now >= slotStartTime) {
+            return { canCancel: false, message: 'Cancellation Closed' }; // Current time is after the slot has started
+        }
+    }
+
+    if (daysDifference <= 3) {
+        return { canCancel: false, message: 'Cancellation Closed' }; // Within 3 days window
+    }
+
+    return { canCancel: true, message: '' }; // Eligible for cancellation
 };
 
-const canCancelBooking = () => {
-  if (!bookingData?.slot || !bookingData?.slot?.time) {
-      console.log("Slot or slot time missing!");
-      return { canCancel: false, message: '' };
-  }
-
-  const dateString = bookingData.slot.time.split(' - ')[0]; 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Normalize today's date to remove time part
-  const slotDate = parseDate(dateString);
-  const daysDifference = differenceInCalendarDays(slotDate, today);
-
-  console.log(`Today: ${today.toISOString()}`, `Slot Date: ${slotDate.toISOString()}`, `Days Difference: ${daysDifference}`);
-
-  if (bookingData?.status === true) {
-      console.log("Booking already completed");
-      return { canCancel: false, message: 'Booking already completed' };
-  }
-
-  if (daysDifference < 0) {
-      console.log("Expired condition hit");
-      return { canCancel: false, message: 'Expired' };
-  }
-
-  if (daysDifference <= 3) {
-      console.log("Cancellation window closed condition hit");
-      return { canCancel: false, message: 'Cancellation window has closed' };
-  }
-
-  console.log("Eligible for cancellation");
-  return { canCancel: true, message: '' };
+const parseTime = (dateStr, timeStr) => {
+    const [hours, minutes] = timeStr.match(/\d{2}/g);
+    const period = timeStr.match(/[AM|PM]+/i)[0];
+    const [day, month, year] = dateStr.split('/');
+    const date = new Date(year, month - 1, day, hours % 12 + (period.toLowerCase() === 'pm' ? 12 : 0), minutes);
+    return date;
 };
 
   const cancellationCheck = canCancelBooking();
