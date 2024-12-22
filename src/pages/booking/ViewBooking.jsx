@@ -84,7 +84,6 @@ export function ViewBooking() {
 
 const canCancelBooking = () => {
   if (!bookingData?.slot || !bookingData?.slot?.time) {
-      console.log("Slot or slot time missing!");
       return { canCancel: false, message: '' };
   }
 
@@ -101,8 +100,6 @@ const canCancelBooking = () => {
   const slotEndTime = parseTime(dateString, endTime);
 
   const daysDifference = differenceInCalendarDays(slotDate, today);
-
-  console.log(`Today: ${today.toISOString()}`, `Slot Start Time: ${slotStartTime.toISOString()}`, `Now: ${now.toISOString()}`, `Days Difference: ${daysDifference}`);
 
   if (bookingData?.status === true) {
       return { canCancel: false, message: 'Booking Completed' };
