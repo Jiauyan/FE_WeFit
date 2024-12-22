@@ -108,7 +108,7 @@ const canCancelBooking = () => {
   }
 
   // Check cancellation window
-  if (daysDifference < 3) {
+  if (daysDifference < -3) {
       console.log("Cancellation window closed condition hit");
       return { canCancel: false, message: 'Cancellation window has closed' }; // Within 3 days of the slot date
   }
