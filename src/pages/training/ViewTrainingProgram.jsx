@@ -16,7 +16,6 @@ export function ViewTrainingProgram() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, pathName, pathPrev, page } = location.state;
-  const isBookingAvailable = slots?.some(slot => slot.displayStatus === "Available");
 
   useEffect(() => {
     window.scrollTo(0, 0); 
@@ -117,7 +116,7 @@ const parseTime = (dateStr, timeStr) => {
       return { ...slot, displayStatus: status };
     })
   : [];
-
+  const isBookingAvailable = slots?.some(slot => slot.displayStatus === "Available");
   const detailItems = [
       { label: 'Type', value: trainingProgramData.typeOfTrainingProgram },
       { label: 'Capacity', value: trainingProgramData.capacity },
@@ -131,8 +130,6 @@ const parseTime = (dateStr, timeStr) => {
         value: slots.map(slot => `${slot.time} - ${slot.displayStatus}`).join(', ') 
       },
     ];
-
-    const isBookingAvailable = slots?.some(slot => slot.displayStatus === "Available");
 
     if (loading) {
       return (
