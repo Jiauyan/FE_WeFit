@@ -130,42 +130,36 @@ export function BookingDetails() {
       return Object.keys(newErrors).length === 0;
     };
 
-    const parseDate = (dateStr) => {
-      const [day, month, year] = dateStr.split('/');
-      return new Date(year, month - 1, day);
+    const parseSlotTime = (timeStr) => {
+      const datePart = timeStr.split(' ')[0];
+      const [startTime, endTime] = timeStr.split('-').map(t => t.trim());
+      const startDate = parseTime(datePart, startTime);
+      const endDate = parseTime(datePart, endTime);
+      return { startDate, endDate };
     };
     
-    const parseTime = (dateStr, timeStr) => {
-      const [hours, minutes] = timeStr.match(/\d{2}/g);
-      const period = timeStr.match(/[AM|PM]+/i)[0];
-      const [day, month, year] = dateStr.split('/');
-      const hourOffset = (period.toLowerCase() === 'pm' && hours !== '12') ? 12 : 0;
-      const hour = (hours % 12) + hourOffset;
-      return new Date(year, month - 1, day, hour, minutes);
+    const isSlotExpired = ({ endDate }) => {
+      const now = new Date();
+      return endDate < now;
     };
-
-    const slots = Array.isArray(trainingProgramSlot)
-      ? trainingProgramSlot.map(slot => {
-          const now = new Date();
-          const [datePart, timeRange] = slot.time.split(" - ");
-          const [startTime, endTime] = timeRange.split(" to ");
-
-          const slotStartTime = parseTime(datePart, startTime);
-          const slotEndTime = parseTime(datePart, endTime);
-
-          let status;
-          if (slotEndTime < now) {
-            status = "Expired";
-          } else if (slot.status) {
-            status = "Full";
-          } else {
-            status = "Available";
-          }
-
-          return { ...slot, displayStatus: status };
-        })
-      : [];
-
+    
+    const isSlotFull = (slot) => {
+      return slot.enrolled >= slot.capacity;
+    };
+    
+    const processSlots = (slots) => slots.map(slot => {
+      const { startDate, endDate } = parseSlotTime(slot.time);
+      let status = "Available";
+      if (isSlotExpired({ endDate })) {
+        status = "Expired";
+      } else if (isSlotFull(slot)) {
+        status = "Full";
+      }
+      return { ...slot, displayStatus: status };
+    });
+    
+    const slotsWithStatus = processSlots(trainingProgramSlot);
+    
   return (
       <Grid
             container
@@ -239,22 +233,21 @@ export function BookingDetails() {
                     id="demo-simple-select-autowidth"
                     value={slot}
                     onChange={(e) => {
-                      console.log(slot)
                       setSlot(e.target.value);
                       setErrors({ ...errors, slot: '' });
                     }}
                     fullWidth
                     label="Slot"
                 >
-                    {slots.map((slot, index) => (
-                        <MenuItem 
-                            key={index} 
-                            value={slot.time} 
-                            disabled={slot.displayStatus !== 'Available'}
-                        >
-                             {slot.time}
-                        </MenuItem>
-                    ))}
+                    {slotsWithStatus.map((slot, index) => (
+                      <MenuItem 
+                          key={index} 
+                          value={slot}
+                          disabled={slot.displayStatus !== "Available"}
+                      >
+                          {`${slot.time} - ${slot.displayStatus}`}
+                      </MenuItem>
+                  ))}
                 </Select>
                 <FormHelperText>{errors.slot}</FormHelperText>
             </FormControl>
