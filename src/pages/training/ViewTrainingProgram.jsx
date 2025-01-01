@@ -16,8 +16,8 @@ export function ViewTrainingProgram() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, pathName, pathPrev, page } = location.state;
-  // Derived state to check if all slots are full
-  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.displayStatus !== "Available");
+  const isBookingAvailable = trainingProgramData.slots?.some(slot => slot.displayStatus === "Available");
+
 
 
   useEffect(() => {
@@ -262,7 +262,7 @@ const parseTime = (dateStr, timeStr) => {
                     color="primary"
                     sx={{ mt: 2, mb: 2}}
                     onClick={() => handleBook(id)}
-                    disabled={allSlotsFull}
+                    disabled={isBookingAvailable}
                   >
                     Book
                   </GradientButton>
