@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "../../contexts/UseContext";
 import axios from 'axios';
-import { Typography, Paper, Avatar, Button, Grid, Box, IconButton, List, ListItem, ListItemText, Divider, TableContainer, Table, TableBody, TableRow, TableCell, Menu, MenuItem, CircularProgress} from "@mui/material";
+import { Typography, Paper, Grid, IconButton, TableContainer, Table, TableBody, TableRow, TableCell, Menu, MenuItem, CircularProgress} from "@mui/material";
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DeleteTrainingProgram } from './DeleteTrainingProgram';
 import { GradientButton } from '../../contexts/ThemeProvider';
@@ -71,8 +71,44 @@ export function ViewTrainerTrainingProgram() {
     navigate("/trainerTrainingPrograms", {state: {currentPage: page}});
   };
 
-  const slots = Array.isArray(trainingProgramData.slots) ? trainingProgramData.slots : [];
+  const parseDate = (dateStr) => {
+    const [day, month, year] = dateStr.split('/');
+    return new Date(year, month - 1, day); // JavaScript's Date month is 0-indexed
+};
 
+const parseTime = (dateStr, timeStr) => {
+  const [hours, minutes] = timeStr.match(/\d{2}/g);
+  const period = timeStr.match(/[AM|PM]+/i)[0];
+  const [day, month, year] = dateStr.split('/');
+  const date = new Date(year, month - 1, day, hours % 12 + (period.toLowerCase() === 'pm' ? 12 : 0), minutes);
+  return date;
+};
+
+  const slots = Array.isArray(trainingProgramData.slots)
+  ? trainingProgramData.slots.map(slot => {
+      const now = new Date();
+
+      // Extract the date and time parts
+      const [datePart, timeRange] = slot.time.split(" - ");
+      const [startTime, endTime] = timeRange.split(" to ");
+
+      const slotDate = parseDate(datePart);
+      const slotStartTime = parseTime(datePart, startTime);
+      const slotEndTime = parseTime(datePart, endTime);
+
+      let status;
+      if (slotStartTime <= now) {
+        status = "Expired";
+      } else if (slot.status) {
+        status = "Full";
+      } else {
+        status = "Available";
+      }
+
+      return { ...slot, displayStatus: status };
+    })
+  : [];
+  
   const detailItems = [
     { label: 'Type', value: trainingProgramData.typeOfTrainingProgram },
     { label: 'Capacity', value: trainingProgramData.capacity },
@@ -80,7 +116,10 @@ export function ViewTrainerTrainingProgram() {
     { label: 'Type of Exercise', value: trainingProgramData.typeOfExercise },
     { label: 'Goal', value: trainingProgramData.fitnessGoal },
     { label: 'Venue', value: trainingProgramData.venue },
-    { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status ? 'Full' : 'Available'}`).join(', ') },
+    { 
+      label: 'Slots', 
+      value: slots.map(slot => `${slot.time} - ${slot.displayStatus}`).join(', ') 
+    },
   ];
 
   if (loading) {
@@ -202,7 +241,7 @@ export function ViewTrainerTrainingProgram() {
                   {item.label === 'Slots' ? (
                     slots.map((slot, idx) => (
                       <Typography key={idx} variant="subtitle1" sx={{ display: 'block' }}>
-                        {slot.time} - {slot.status ? 'Full' : 'Available'}
+                        {slot.time} - {slot.displayStatus}
                       </Typography>
                     ))
                   ) : (
