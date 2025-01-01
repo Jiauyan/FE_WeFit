@@ -16,9 +16,7 @@ export function ViewTrainingProgram() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, pathName, pathPrev, page } = location.state;
-  const isBookingAvailable = trainingProgramData.slots?.some(slot => slot.displayStatus === "Available");
-
-
+  const isBookingAvailable = slots?.some(slot => slot.displayStatus === "Available");
 
   useEffect(() => {
     window.scrollTo(0, 0); 
@@ -108,7 +106,7 @@ const parseTime = (dateStr, timeStr) => {
       const slotEndTime = parseTime(datePart, endTime);
 
       let status;
-      if (slotStartTime < now) {
+      if (slotStartTime <= now) {
         status = "Expired";
       } else if (slot.status) {
         status = "Full";

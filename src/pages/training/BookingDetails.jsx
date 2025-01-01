@@ -155,12 +155,9 @@ export function BookingDetails() {
         const slotStartTime = parseTime(datePart, startTime);
         const slotEndTime = parseTime(datePart, endTime);
   
-        console.log(slotEndTime);
-        console.log(slotStartTime);
-        console.log(now);
         // Determine the slot status
         let status;
-        if (slotStartTime < now) {
+        if (slotStartTime <= now) {
           status = "Expired";
         } else if (slot.status) {
           status = "Full";
