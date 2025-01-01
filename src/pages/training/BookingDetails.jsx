@@ -130,36 +130,49 @@ export function BookingDetails() {
       return Object.keys(newErrors).length === 0;
     };
 
-    const parseSlotTime = (timeStr) => {
-      const datePart = timeStr.split(' ')[0];
-      const [startTime, endTime] = timeStr.split('-').map(t => t.trim());
-      const startDate = parseTime(datePart, startTime);
-      const endDate = parseTime(datePart, endTime);
-      return { startDate, endDate };
+    const parseDate = (dateStr) => {
+      const [day, month, year] = dateStr.split('/');
+      return new Date(year, month - 1, day); // JavaScript's Date month is 0-indexed
     };
-    
-    const isSlotExpired = ({ endDate }) => {
-      const now = new Date();
-      return endDate < now;
+  
+    const parseTime = (dateStr, timeStr) => {
+        const [hours, minutes] = timeStr.match(/\d{2}/g);
+        const period = timeStr.match(/[AM|PM]+/i)[0];
+        const [day, month, year] = dateStr.split('/');
+        const date = new Date(year, month - 1, day, hours % 12 + (period.toLowerCase() === 'pm' ? 12 : 0), minutes);
+        return date;
     };
-    
-    const isSlotFull = (slot) => {
-      return slot.enrolled >= slot.capacity;
-    };
-    
-    const processSlots = (slots) => slots.map(slot => {
-      const { startDate, endDate } = parseSlotTime(slot.time);
-      let status = "Available";
-      if (isSlotExpired({ endDate })) {
-        status = "Expired";
-      } else if (isSlotFull(slot)) {
-        status = "Full";
-      }
-      return { ...slot, displayStatus: status };
-    });
-    
-    const slotsWithStatus = processSlots(trainingProgramSlot);
-    
+
+    const slots = Array.isArray(trainingProgramSlot)
+    ? trainingProgramSlot.map(slot => {
+        const now = new Date();
+  
+        // Extract the date and time parts
+        const [datePart, timeRange] = slot.time.split(" - ");
+        const [startTime, endTime] = timeRange.split(" to ");
+  
+        const slotDate = parseDate(datePart);
+        const slotStartTime = parseTime(datePart, startTime);
+        const slotEndTime = parseTime(datePart, endTime);
+  
+        console.log(slotEndTime);
+        console.log(slotStartTime);
+        console.log(now);
+        // Determine the slot status
+        let status;
+        if (slotEndTime < now) {
+          status = "Expired";
+        } else if (slot.status) {
+          status = "Full";
+        } else {
+          status = "Available";
+        }
+  
+        return { ...slot, displayStatus: status };
+      })
+    : [];
+  
+
   return (
       <Grid
             container
@@ -239,7 +252,7 @@ export function BookingDetails() {
                     fullWidth
                     label="Slot"
                 >
-                    {slotsWithStatus.map((slot, index) => (
+                    {slots.map((slot, index) => (
                       <MenuItem 
                           key={index} 
                           value={slot}
