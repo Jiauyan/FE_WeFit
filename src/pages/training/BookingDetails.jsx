@@ -257,7 +257,7 @@ export function BookingDetails() {
                           value={slot.time}
                           disabled={slot.displayStatus !== "Available"}
                       >
-                          {slot.time}
+                          {slot.time} - {slot.displayStatus}
                       </MenuItem>
                   ))}
                 </Select>
