@@ -18,7 +18,8 @@ export function ViewTrainingProgram() {
   const location = useLocation();
   const { id, pathName, pathPrev, page } = location.state;
   // Derived state to check if all slots are full
-  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.status);
+  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.status === 'Full' || slot.status === 'Expired');
+
 
   useEffect(() => {
     window.scrollTo(0, 0); 
@@ -39,15 +40,17 @@ export function ViewTrainingProgram() {
     const fetchData = async () => {
         try {
           const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
-          const slotsWithStatus = programResponse.data.slots.map(slot => {
-            const startTimeStr = slot.time.split(' to ')[0]; // "15/12/2024 - 04:00 PM"
-            const startTime = parse(startTimeStr, 'dd/MM/yyyy - hh:mm a', new Date()); // Convert string to Date object
-      
-            // Determine status based on past and boolean status
-            const isSlotPast = isPast(startTime);
+          const slotsWithStatus = slots.map(slot => {
+            const startTimeStr = slot.time.split(' to ')[0];
+            const startTime = parse(startTimeStr, 'dd/MM/yyyy - hh:mm a', new Date());
+            const isSlotExpired = isPast(startTime);
+        
+            // Check if the slot is expired, otherwise check if it's full or available
+            const status = isSlotExpired ? 'Expired' : (slot.enrolled >= slot.capacity ? 'Full' : 'Available');
+        
             return {
               ...slot,
-              status: isSlotPast ? 'Expired' : (slot.status ? 'Full' : 'Available')
+              status: status
             };
           });
           setTrainingProgramData({...programResponse.data, slots: slotsWithStatus});
@@ -102,7 +105,7 @@ export function ViewTrainingProgram() {
       { label: 'Goal', value: trainingProgramData.fitnessGoal },
       { label: 'Venue', value: trainingProgramData.venue },
       { label: 'Trainer', value: trainer.username },
-      { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status ? 'Full' : 'Available'}`).join(', ') },
+      { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status}`).join(', ') },
     ];
 
     if (loading) {
