@@ -130,6 +130,42 @@ export function BookingDetails() {
       return Object.keys(newErrors).length === 0;
     };
 
+    const parseDate = (dateStr) => {
+      const [day, month, year] = dateStr.split('/');
+      return new Date(year, month - 1, day);
+    };
+    
+    const parseTime = (dateStr, timeStr) => {
+      const [hours, minutes] = timeStr.match(/\d{2}/g);
+      const period = timeStr.match(/[AM|PM]+/i)[0];
+      const [day, month, year] = dateStr.split('/');
+      const hourOffset = (period.toLowerCase() === 'pm' && hours !== '12') ? 12 : 0;
+      const hour = (hours % 12) + hourOffset;
+      return new Date(year, month - 1, day, hour, minutes);
+    };
+
+    const slots = Array.isArray(trainingProgramSlot)
+      ? trainingProgramSlot.map(slot => {
+          const now = new Date();
+          const [datePart, timeRange] = slot.time.split(" - ");
+          const [startTime, endTime] = timeRange.split(" to ");
+
+          const slotStartTime = parseTime(datePart, startTime);
+          const slotEndTime = parseTime(datePart, endTime);
+
+          let status;
+          if (slotEndTime < now) {
+            status = "Expired";
+          } else if (slot.status) {
+            status = "Full";
+          } else {
+            status = "Available";
+          }
+
+          return { ...slot, displayStatus: status };
+        })
+      : [];
+
   return (
       <Grid
             container
@@ -209,14 +245,13 @@ export function BookingDetails() {
                     fullWidth
                     label="Slot"
                 >
-                    {trainingProgramSlot.map((slot, index) => (
+                    {slots.map((slot, index) => (
                         <MenuItem 
                             key={index} 
                             value={slot} 
-                            disabled={slot.status} // Disables the MenuItem if slot.status is true
+                            disabled={slot.displayStatus !== 'Available'}
                         >
-                            {/* {`${slot.time} - ${slot.status ? 'Full' : 'Available'}`}   */}
-                            {slot.time}
+                             {`${slot.time} - ${slot.displayStatus}`}
                         </MenuItem>
                     ))}
                 </Select>
