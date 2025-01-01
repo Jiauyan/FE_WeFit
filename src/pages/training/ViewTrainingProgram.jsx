@@ -17,8 +17,7 @@ export function ViewTrainingProgram() {
   const location = useLocation();
   const { id, pathName, pathPrev, page } = location.state;
   // Derived state to check if all slots are full
-  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.status);
-
+  const allSlotsFullOrExpired = slots.every(slot => slot.status || slot.isExpired);
   useEffect(() => {
     window.scrollTo(0, 0); 
   }, []);
@@ -35,11 +34,28 @@ export function ViewTrainingProgram() {
     if (!uid) return; // Ensure there is a user ID before attempting any fetch.
     setLoading(true);
 
+    const parseDateTime = (dateTimeStr) => {
+      const [date, time] = dateTimeStr.split(' ');
+      const [day, month, year] = date.split('/');
+      const [hours, minutes] = time.split(':');
+      return new Date(year, month - 1, day, hours, minutes);
+  };
+  
     const fetchData = async () => {
         try {
             // Fetch the training program details
             const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
-            setTrainingProgramData(programResponse.data);
+            
+            const programData = programResponse.data;
+
+            // Update slot status based on current date and time
+            const currentDateTime = new Date();
+            const updatedSlots = programData.slots.map(slot => ({
+              ...slot,
+              isExpired: parseDateTime(slot.time) < currentDateTime // Add expiration check
+            }));
+           
+            setTrainingProgramData({...programData, slots: updatedSlots});
 
             // Using the trainer ID from the training program to fetch trainer details
             const trainerID = programResponse.data.uid;
@@ -90,7 +106,10 @@ export function ViewTrainingProgram() {
       { label: 'Goal', value: trainingProgramData.fitnessGoal },
       { label: 'Venue', value: trainingProgramData.venue },
       { label: 'Trainer', value: trainer.username },
-      { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status ? 'Full' : 'Available'}`).join(', ') },
+      {
+        label: 'Slots',
+        value: trainingProgramData.slots?.map(slot => `${slot.time} - ${slot.isExpired ? 'Expired' : (slot.status ? 'Full' : 'Available')}`).join(', ')
+      },
     ];
 
     if (loading) {
@@ -189,7 +208,7 @@ export function ViewTrainingProgram() {
                   {item.label === 'Slots' ? (
                     slots.map((slot, idx) => (
                       <Typography key={idx} variant="subtitle1" sx={{ display: 'block' }}>
-                        {slot.time} - {slot.status ? 'Full' : 'Available'}
+                         {slot.time} - {slot.isExpired ? 'Expired' : (slot.status ? 'Full' : 'Available')}
                       </Typography>
                     ))
                   ) : (
@@ -217,7 +236,7 @@ export function ViewTrainingProgram() {
                     color="primary"
                     sx={{ mt: 2, mb: 2}}
                     onClick={() => handleBook(id)}
-                    disabled={allSlotsFull}
+                    disabled={allSlotsFullOrExpired}
                   >
                     Book
                   </GradientButton>
