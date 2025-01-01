@@ -140,6 +140,8 @@ const parseTime = (dateStr, timeStr) => {
       );
   }
 
+  const isBookingAvailable = slots?.some(slot => slot.displayStatus === "Available");
+  
   return (
     <>
       <Grid
