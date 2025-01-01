@@ -32,23 +32,38 @@ export function ViewTrainingProgram() {
   }, []);
 
   useEffect(() => {
+    const uid = user?.uid;
+    if (!uid) return; // Ensure there is a user ID before attempting any fetch.
+    setLoading(true);
+
     const fetchData = async () => {
-      setLoading(true);
-      try {
-        const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
-        const slotsWithStatus = programResponse.data.slots.map(slot => {
-          const startTimeStr = slot.time.split(' to ')[0]; // "15/12/2024 - 04:00 PM"
-          const startTime = parse(startTimeStr, 'dd/MM/yyyy - hh:mm a', new Date()); // Convert string to Date object
-          return {
-            ...slot,
-            status: isPast(startTime) ? 'Expired' : slot.status ? 'Full' : 'Available' // Update status based on current time
-          };
-        });
-        setTrainingProgramData({...programResponse.data, slots: slotsWithStatus});
-      } catch (error) {
-        console.error('There was an error!', error);
-      } finally {
-        setLoading(false);
+        try {
+          const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
+          const slotsWithStatus = programResponse.data.slots.map(slot => {
+            const startTimeStr = slot.time.split(' to ')[0]; // "15/12/2024 - 04:00 PM"
+            const startTime = parse(startTimeStr, 'dd/MM/yyyy - hh:mm a', new Date()); // Convert string to Date object
+      
+            // Determine status based on past and boolean status
+            const isSlotPast = isPast(startTime);
+            return {
+              ...slot,
+              status: isSlotPast ? 'Expired' : (slot.status ? 'Full' : 'Available')
+            };
+          });
+          setTrainingProgramData({...programResponse.data, slots: slotsWithStatus});
+  
+
+            // Using the trainer ID from the training program to fetch trainer details
+            const trainerID = programResponse.data.uid;
+            if (!trainerID) {
+                throw new Error('Trainer ID not found in training program data');
+            }
+            const trainerResponse = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${trainerID}`);
+            setTrainer(trainerResponse.data);
+        } catch (error) {
+            console.error('There was an error!', error);
+        } finally {
+          setLoading(false);
       }
     };
 
