@@ -182,7 +182,7 @@ export function Checkout() {
                       Slot:
                     </Typography>
                     <Typography variant="body1">
-                      {slot.time}
+                      {slot}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>

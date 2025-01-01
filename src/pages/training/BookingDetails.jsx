@@ -105,7 +105,7 @@ export function BookingDetails() {
                 pathPrev,
                 name,
                 contactNum,
-                slot : slot.time,
+                slot,
                 trainingClassID,
                 trainingProgram,
                 feeAmount,

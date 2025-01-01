@@ -114,12 +114,12 @@ const canCancelBooking = () => {
           return { canCancel: false, message: 'Expired' }; // Current time is past the end of the slot
       }
       if (now >= slotStartTime) {
-          return { canCancel: false, message: 'Cancellation Closed' }; // Current time is after the slot has started
+          return { canCancel: false, message: 'No Cancellation Within 3 Days' }; // Current time is after the slot has started
       }
   }
 
   if (daysDifference <= 3) {
-      return { canCancel: false, message: 'Cancellation Closed' }; // Within 3 days window
+      return { canCancel: false, message: 'No Cancellation Within 3 Days' }; // Within 3 days window
   }
 
   return { canCancel: true, message: '' }; // Eligible for cancellation
