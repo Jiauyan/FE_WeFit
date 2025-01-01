@@ -246,7 +246,9 @@ export function BookingDetails() {
                     id="demo-simple-select-autowidth"
                     value={slot.time}
                     onChange={(e) => {
-                      setSlot(e.target.value);
+                      const selectedTime = e.target.value;
+                      const slot = slots.find(s => s.time === selectedTime);
+                      setSlot(slot || {});
                       setErrors({ ...errors, slot: '' });
                     }}
                     fullWidth
@@ -255,7 +257,7 @@ export function BookingDetails() {
                     {slots.map((slot, index) => (
                       <MenuItem 
                           key={index} 
-                          value={slot}
+                          value={slot.time}
                           disabled={slot.displayStatus !== "Available"}
                       >
                           {slot.time}
