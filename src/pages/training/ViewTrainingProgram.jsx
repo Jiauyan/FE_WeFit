@@ -17,7 +17,8 @@ export function ViewTrainingProgram() {
   const location = useLocation();
   const { id, pathName, pathPrev, page } = location.state;
   // Derived state to check if all slots are full
-  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.status);
+  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.displayStatus !== "Available");
+
 
   useEffect(() => {
     window.scrollTo(0, 0); 
@@ -102,9 +103,6 @@ const parseTime = (dateStr, timeStr) => {
       const [datePart, timeRange] = slot.time.split(" - ");
       const [startTime, endTime] = timeRange.split(" to ");
 
-      // const slotStartTime = new Date(`${datePart} ${startTime}`);
-      // const slotEndTime = new Date(`${datePart} ${endTime}`);
-
       const slotDate = parseDate(datePart);
       const slotStartTime = parseTime(datePart, startTime);
       const slotEndTime = parseTime(datePart, endTime);
@@ -115,13 +113,10 @@ const parseTime = (dateStr, timeStr) => {
       // Determine the slot status
       let status;
       if (slotEndTime < now) {
-        // Expired if the end time is earlier than the current time
         status = "Expired";
       } else if (slot.status) {
-        // Full if the slot is not expired and has a true status
         status = "Full";
       } else {
-        // Available otherwise
         status = "Available";
       }
 
