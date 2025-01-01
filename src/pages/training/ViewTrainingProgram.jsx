@@ -92,6 +92,9 @@ export function ViewTrainingProgram() {
       const slotStartTime = new Date(`${datePart} ${startTime}`);
       const slotEndTime = new Date(`${datePart} ${endTime}`);
 
+      console.log(slotEndTime);
+      console.log(slotStartTime);
+      console.log(now);
       // Determine the slot status
       let status;
       if (slotEndTime < now) {
