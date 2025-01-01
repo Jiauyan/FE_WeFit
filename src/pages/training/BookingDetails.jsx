@@ -160,7 +160,7 @@ export function BookingDetails() {
         console.log(now);
         // Determine the slot status
         let status;
-        if (slotEndTime < now) {
+        if (slotStartTime < now) {
           status = "Expired";
         } else if (slot.status) {
           status = "Full";
