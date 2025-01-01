@@ -6,6 +6,7 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import AttachMoney from '@mui/icons-material/AttachMoney';
+import { parse, isPast } from 'date-fns';
 
 export function ViewTrainingProgram() {
   const [loading, setLoading] = useState(true);
@@ -31,27 +32,23 @@ export function ViewTrainingProgram() {
   }, []);
 
   useEffect(() => {
-    const uid = user?.uid;
-    if (!uid) return; // Ensure there is a user ID before attempting any fetch.
-    setLoading(true);
-
     const fetchData = async () => {
-        try {
-            // Fetch the training program details
-            const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
-            setTrainingProgramData(programResponse.data);
-
-            // Using the trainer ID from the training program to fetch trainer details
-            const trainerID = programResponse.data.uid;
-            if (!trainerID) {
-                throw new Error('Trainer ID not found in training program data');
-            }
-            const trainerResponse = await axios.get(`https://be-um-fitness.vercel.app/auth/getUserById/${trainerID}`);
-            setTrainer(trainerResponse.data);
-        } catch (error) {
-            console.error('There was an error!', error);
-        } finally {
-          setLoading(false);
+      setLoading(true);
+      try {
+        const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
+        const slotsWithStatus = programResponse.data.slots.map(slot => {
+          const startTimeStr = slot.time.split(' to ')[0]; // "15/12/2024 - 04:00 PM"
+          const startTime = parse(startTimeStr, 'dd/MM/yyyy - hh:mm a', new Date()); // Convert string to Date object
+          return {
+            ...slot,
+            status: isPast(startTime) ? 'Expired' : slot.status ? 'Full' : 'Available' // Update status based on current time
+          };
+        });
+        setTrainingProgramData({...programResponse.data, slots: slotsWithStatus});
+      } catch (error) {
+        console.error('There was an error!', error);
+      } finally {
+        setLoading(false);
       }
     };
 
