@@ -257,7 +257,7 @@ const parseTime = (dateStr, timeStr) => {
                     color="primary"
                     sx={{ mt: 2, mb: 2}}
                     onClick={() => handleBook(id)}
-                    disabled={isBookingAvailable}
+                    disabled={!isBookingAvailable}
                   >
                     Book
                   </GradientButton>
