@@ -80,7 +80,7 @@ export function ViewTrainingProgram() {
   const handleBook = async (id) => {
     navigate("/screeningForm",{ state: { id, pathPrev } });
   };
-  
+
   const parseDate = (dateStr) => {
     const [day, month, year] = dateStr.split('/');
     return new Date(year, month - 1, day); // JavaScript's Date month is 0-indexed
@@ -105,9 +105,9 @@ const parseTime = (dateStr, timeStr) => {
       // const slotStartTime = new Date(`${datePart} ${startTime}`);
       // const slotEndTime = new Date(`${datePart} ${endTime}`);
 
-      const slotDate = parseDate(dateString);
-      const slotStartTime = parseTime(dateString, startTime);
-      const slotEndTime = parseTime(dateString, endTime);
+      const slotDate = parseDate(datePart);
+      const slotStartTime = parseTime(datePart, startTime);
+      const slotEndTime = parseTime(datePart, endTime);
 
       console.log(slotEndTime);
       console.log(slotStartTime);
