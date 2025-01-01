@@ -6,7 +6,6 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { GradientButton } from '../../contexts/ThemeProvider';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 import AttachMoney from '@mui/icons-material/AttachMoney';
-import { parse, isPast } from 'date-fns';
 
 export function ViewTrainingProgram() {
   const [loading, setLoading] = useState(true);
@@ -18,8 +17,7 @@ export function ViewTrainingProgram() {
   const location = useLocation();
   const { id, pathName, pathPrev, page } = location.state;
   // Derived state to check if all slots are full
-  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.status === 'Full' || slot.status === 'Expired');
-
+  const allSlotsFull = trainingProgramData.slots?.every(slot => slot.status);
 
   useEffect(() => {
     window.scrollTo(0, 0); 
@@ -39,22 +37,9 @@ export function ViewTrainingProgram() {
 
     const fetchData = async () => {
         try {
-          const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
-          const slotsWithStatus = slots.map(slot => {
-            const startTimeStr = slot.time.split(' to ')[0];
-            const startTime = parse(startTimeStr, 'dd/MM/yyyy - hh:mm a', new Date());
-            const isSlotExpired = isPast(startTime);
-        
-            // Check if the slot is expired, otherwise check if it's full or available
-            const status = isSlotExpired ? 'Expired' : (slot.enrolled >= slot.capacity ? 'Full' : 'Available');
-        
-            return {
-              ...slot,
-              status: status
-            };
-          });
-          setTrainingProgramData({...programResponse.data, slots: slotsWithStatus});
-  
+            // Fetch the training program details
+            const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
+            setTrainingProgramData(programResponse.data);
 
             // Using the trainer ID from the training program to fetch trainer details
             const trainerID = programResponse.data.uid;
@@ -105,7 +90,7 @@ export function ViewTrainingProgram() {
       { label: 'Goal', value: trainingProgramData.fitnessGoal },
       { label: 'Venue', value: trainingProgramData.venue },
       { label: 'Trainer', value: trainer.username },
-      { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status}`).join(', ') },
+      { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status ? 'Full' : 'Available'}`).join(', ') },
     ];
 
     if (loading) {
