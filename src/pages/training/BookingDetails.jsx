@@ -244,7 +244,7 @@ export function BookingDetails() {
                 <Select
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
-                    value={slot}
+                    value={slot.time}
                     onChange={(e) => {
                       setSlot(e.target.value);
                       setErrors({ ...errors, slot: '' });
@@ -255,7 +255,7 @@ export function BookingDetails() {
                     {slots.map((slot, index) => (
                       <MenuItem 
                           key={index} 
-                          value={slot.time}
+                          value={slot}
                           disabled={slot.displayStatus !== "Available"}
                       >
                           {slot.time}
