@@ -248,7 +248,7 @@ export function BookingDetails() {
                     {slots.map((slot, index) => (
                         <MenuItem 
                             key={index} 
-                            value={slot} 
+                            value={slot.id} 
                             disabled={slot.displayStatus !== 'Available'}
                         >
                              {slot.time}
