@@ -239,6 +239,7 @@ export function BookingDetails() {
                     id="demo-simple-select-autowidth"
                     value={slot}
                     onChange={(e) => {
+                      console.log(slot)
                       setSlot(e.target.value);
                       setErrors({ ...errors, slot: '' });
                     }}
@@ -248,7 +249,7 @@ export function BookingDetails() {
                     {slots.map((slot, index) => (
                         <MenuItem 
                             key={index} 
-                            value={slot.id} 
+                            value={slot} 
                             disabled={slot.displayStatus !== 'Available'}
                         >
                              {slot.time}
