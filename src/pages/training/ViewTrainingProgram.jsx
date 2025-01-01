@@ -84,13 +84,26 @@ export function ViewTrainingProgram() {
   const slots = Array.isArray(trainingProgramData.slots)
   ? trainingProgramData.slots.map(slot => {
       const now = new Date();
-      // Extract the start time for comparison
+
+      // Extract the date and time parts
       const [datePart, timeRange] = slot.time.split(" - ");
-      const [startTime] = timeRange.split(" to ");
+      const [startTime, endTime] = timeRange.split(" to ");
+
       const slotStartTime = new Date(`${datePart} ${startTime}`);
+      const slotEndTime = new Date(`${datePart} ${endTime}`);
 
       // Determine the slot status
-      const status = slotStartTime < now ? 'Expired' : slot.status ? 'Full' : 'Available';
+      let status;
+      if (slotEndTime < now) {
+        // Expired if the end time is earlier than the current time
+        status = "Expired";
+      } else if (slot.status) {
+        // Full if the slot is not expired and has a true status
+        status = "Full";
+      } else {
+        // Available otherwise
+        status = "Available";
+      }
 
       return { ...slot, displayStatus: status };
     })
