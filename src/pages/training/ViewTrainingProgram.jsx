@@ -28,19 +28,35 @@ export function ViewTrainingProgram() {
       setUser({ ...user, uid: storedUid });
     }
   }, []);
+  
+  const parseDateTime = (dateTimeStr) => {
+    // Extract date and time parts from the format "8/12/2024 - 08:00 AM to 09:00 AM"
+    const [datePart, timeRange] = dateTimeStr.split(' - ');
+    const [startTime,] = timeRange.split(' to ');
+    const [day, month, year] = datePart.split('/');
+
+    // Extract hours and minutes from the time format "08:00 AM"
+    const [time, period] = startTime.split(' ');
+    let [hours, minutes] = time.split(':');
+
+    // Adjust hours for AM/PM
+    hours = parseInt(hours, 10);
+    minutes = parseInt(minutes, 10);
+    if (period === 'PM' && hours !== 12) {
+        hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+        hours = 0;  // Convert 12 AM to 00 hrs
+    }
+
+    // Return the date object representing the start time of the slot
+    return new Date(year, month - 1, day, hours, minutes);
+};
 
   useEffect(() => {
     const uid = user?.uid;
     if (!uid) return; // Ensure there is a user ID before attempting any fetch.
     setLoading(true);
 
-    const parseDateTime = (dateTimeStr) => {
-      const [date, time] = dateTimeStr.split(' ');
-      const [day, month, year] = date.split('/');
-      const [hours, minutes] = time.split(':');
-      return new Date(year, month - 1, day, hours, minutes);
-  };
-  
     const fetchData = async () => {
         try {
             // Fetch the training program details
@@ -107,9 +123,9 @@ export function ViewTrainingProgram() {
       { label: 'Venue', value: trainingProgramData.venue },
       { label: 'Trainer', value: trainer.username },
       {
-        label: 'Slots',
-        value: trainingProgramData.slots?.map(slot => `${slot.time} - ${slot.isExpired ? 'Expired' : (slot.status ? 'Full' : 'Available')}`).join(', ')
-      },
+      label: 'Slots',
+      value: slots?.map(slot => `${slot.time} - ${slot.isExpired ? 'Expired' : (slot.status ? 'Full' : 'Available')}`).join(', ')
+    },
     ];
 
     if (loading) {
