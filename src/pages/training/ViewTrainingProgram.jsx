@@ -81,7 +81,21 @@ export function ViewTrainingProgram() {
     navigate("/screeningForm",{ state: { id, pathPrev } });
   };
 
-  const slots = Array.isArray(trainingProgramData.slots) ? trainingProgramData.slots : [];
+  const slots = Array.isArray(trainingProgramData.slots)
+  ? trainingProgramData.slots.map(slot => {
+      const now = new Date();
+      // Extract the start time for comparison
+      const [datePart, timeRange] = slot.time.split(" - ");
+      const [startTime] = timeRange.split(" to ");
+      const slotStartTime = new Date(`${datePart} ${startTime}`);
+
+      // Determine the slot status
+      const status = slotStartTime < now ? 'Expired' : slot.status ? 'Full' : 'Available';
+
+      return { ...slot, displayStatus: status };
+    })
+  : [];
+
   const detailItems = [
       { label: 'Type', value: trainingProgramData.typeOfTrainingProgram },
       { label: 'Capacity', value: trainingProgramData.capacity },
@@ -90,7 +104,10 @@ export function ViewTrainingProgram() {
       { label: 'Goal', value: trainingProgramData.fitnessGoal },
       { label: 'Venue', value: trainingProgramData.venue },
       { label: 'Trainer', value: trainer.username },
-      { label: 'Slots', value: slots.map(slot => `${slot.time} - ${slot.status ? 'Full' : 'Available'}`).join(', ') },
+      { 
+        label: 'Slots', 
+        value: slots.map(slot => `${slot.time} - ${slot.displayStatus}`).join(', ') 
+      },
     ];
 
     if (loading) {
@@ -189,7 +206,7 @@ export function ViewTrainingProgram() {
                   {item.label === 'Slots' ? (
                     slots.map((slot, idx) => (
                       <Typography key={idx} variant="subtitle1" sx={{ display: 'block' }}>
-                        {slot.time} - {slot.status ? 'Full' : 'Available'}
+                        {slot.time} - {slot.displayStatus}
                       </Typography>
                     ))
                   ) : (
