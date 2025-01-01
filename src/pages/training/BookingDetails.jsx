@@ -169,7 +169,6 @@ export function BookingDetails() {
       })
     : [];
   
-    console.log(slots);
   return (
       <Grid
             container

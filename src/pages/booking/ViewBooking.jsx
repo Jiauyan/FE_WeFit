@@ -110,7 +110,7 @@ const canCancelBooking = () => {
   }
 
   if (daysDifference === 0) {
-      if (now >= slotEndTime) {
+      if (now > slotEndTime) {
           return { canCancel: false, message: 'Expired' }; // Current time is past the end of the slot
       }
       if (now >= slotStartTime) {
