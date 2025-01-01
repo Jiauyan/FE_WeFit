@@ -80,6 +80,19 @@ export function ViewTrainingProgram() {
   const handleBook = async (id) => {
     navigate("/screeningForm",{ state: { id, pathPrev } });
   };
+  
+  const parseDate = (dateStr) => {
+    const [day, month, year] = dateStr.split('/');
+    return new Date(year, month - 1, day); // JavaScript's Date month is 0-indexed
+};
+
+const parseTime = (dateStr, timeStr) => {
+  const [hours, minutes] = timeStr.match(/\d{2}/g);
+  const period = timeStr.match(/[AM|PM]+/i)[0];
+  const [day, month, year] = dateStr.split('/');
+  const date = new Date(year, month - 1, day, hours % 12 + (period.toLowerCase() === 'pm' ? 12 : 0), minutes);
+  return date;
+};
 
   const slots = Array.isArray(trainingProgramData.slots)
   ? trainingProgramData.slots.map(slot => {
@@ -89,8 +102,12 @@ export function ViewTrainingProgram() {
       const [datePart, timeRange] = slot.time.split(" - ");
       const [startTime, endTime] = timeRange.split(" to ");
 
-      const slotStartTime = new Date(`${datePart} ${startTime}`);
-      const slotEndTime = new Date(`${datePart} ${endTime}`);
+      // const slotStartTime = new Date(`${datePart} ${startTime}`);
+      // const slotEndTime = new Date(`${datePart} ${endTime}`);
+
+      const slotDate = parseDate(dateString);
+      const slotStartTime = parseTime(dateString, startTime);
+      const slotEndTime = parseTime(dateString, endTime);
 
       console.log(slotEndTime);
       console.log(slotStartTime);
