@@ -183,17 +183,18 @@ export function Goals(){
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{ mb: 5, mt: 2 }}
             />
-             {/* Displaying the progress bar */}
-             <Box sx={{ width: '100%', mb: 5 }}>
-                <LinearProgress variant="determinate" value={progress} />
-                <Typography 
-                    variant="body2" 
-                    color="text.secondary" 
-                    sx={{ mb: 2, textAlign: "right" }} // Corrected property to textAlign
-                >
-                    {`Completion: ${progress.toFixed(0)}%`}
-                </Typography>
-            </Box>
+             {currentGoals.length > 0 && (
+                <Box sx={{ width: '100%', mb: 5 }}>
+                    <LinearProgress variant="determinate" value={progress} />
+                    <Typography 
+                        variant="body2" 
+                        color="text.secondary" 
+                        sx={{ mb: 2, textAlign: "right" }}
+                    >
+                        {`Completion: ${progress.toFixed(0)}%`}
+                    </Typography>
+                </Box>
+            )}
             {currentGoals.length === 0 || filteredGoals.length === 0 ? (
             <Typography variant="body1" color="text.secondary" align="center">
                 No Goal Found.
