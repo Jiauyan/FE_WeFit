@@ -70,7 +70,7 @@ const PendingBooking = () => {
                 const programs = await Promise.all(programPromises);
 
                 // Filter programs based on booking status
-                const pendingPrograms = programs.filter(program => program.status === false); // Pending
+                const pendingPrograms = programs.filter(program => program.status == false); // Pending
                 // Set state with filtered programs as needed
                 setPendingTrainingPrograms(pendingPrograms); 
             } catch (error) {

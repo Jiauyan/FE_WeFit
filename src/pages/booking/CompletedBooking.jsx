@@ -71,7 +71,7 @@ const CompletedBooking = () => {
                 const programs = await Promise.all(programPromises);
 
                 // Filter programs based on booking status
-                const completedPrograms = programs.filter(program => program.status === true); // Pending
+                const completedPrograms = programs.filter(program => program.status == true); // Pending
                 // Set state with filtered programs as needed
                 setCompletedTrainingPrograms(completedPrograms); 
             } catch (error) {

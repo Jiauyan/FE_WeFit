@@ -82,7 +82,7 @@ export function Goals(){
             setGoals(prevGoals => {
                 // Update the status of the goal and reorder it to the top
                 const updatedGoals = prevGoals.map(goal => 
-                    goal.id === id ? { ...goal, status: true } : goal
+                    goal.id === id ? { ...goal, status: true || "true"} : goal
                 );
     
                 // Find the completed goal and move it to the top
