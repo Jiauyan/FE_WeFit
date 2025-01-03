@@ -54,9 +54,9 @@ export function Booking() {
                 const pendingPrograms = programs.filter(program => program.status === false); // Pending
                 const completedPrograms = programs.filter(program => program.status === true); // Completed
                 // Set state with filtered programs as needed
-                console.log(programs);
-                console.log(pendingPrograms);
-                console.log(completedPrograms);
+                console.log("programs",programs);
+                console.log("p",pendingPrograms);
+                console.log("c",completedPrograms);
                 setPendingTrainingPrograms(pendingPrograms); // If you want to store pending separately
                 setCompletedTrainingPrograms(completedPrograms); // If you want to store completed separately
             } catch (error) {
