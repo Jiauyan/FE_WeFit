@@ -52,6 +52,7 @@ export function Booking() {
                 const programs = await Promise.all(programPromises);
                 setTrainingPrograms(programs);
                 // Filter programs based on booking status
+                console.log(programs);
                 const pendingPrograms = programs.filter(program => program.status === false); // Pending
                 const completedPrograms = programs.filter(program => program.status === true); // Completed
                 // Set state with filtered programs as needed
