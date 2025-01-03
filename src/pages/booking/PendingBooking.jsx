@@ -56,7 +56,7 @@ const PendingBooking = () => {
 
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 setBookings(response.data);
-    
+                console.log(response.data)
                 // Fetch training programs details for each booking
                 const programPromises = response.data.map(async (booking) => {
                     const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${booking.trainingClassID}`);
