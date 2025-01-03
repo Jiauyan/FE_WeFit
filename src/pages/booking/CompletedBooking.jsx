@@ -57,7 +57,7 @@ const CompletedBooking = () => {
 
                 const response = await axios.get(`https://be-um-fitness.vercel.app/trainingClassBooking/getAllTrainingClassBookingsByUID/${uid}`);
                 setBookings(response.data);
-                console.log(response.data)
+    
                 // Fetch training programs details for each booking
                 const programPromises = response.data.map(async (booking) => {
                     const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${booking.trainingClassID}`);
@@ -71,7 +71,7 @@ const CompletedBooking = () => {
                 const programs = await Promise.all(programPromises);
 
                 // Filter programs based on booking status
-                const completedPrograms = programs.filter(program => program.status == true); // Pending
+                const completedPrograms = programs.filter(program => program.status === true); // Pending
                 // Set state with filtered programs as needed
                 setCompletedTrainingPrograms(completedPrograms); 
             } catch (error) {

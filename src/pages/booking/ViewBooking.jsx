@@ -101,7 +101,7 @@ const canCancelBooking = () => {
 
   const daysDifference = differenceInCalendarDays(slotDate, today);
 
-  if (bookingData?.status == true) {
+  if (bookingData?.status === true) {
       return { canCancel: false, message: 'Booking Completed' };
   }
 

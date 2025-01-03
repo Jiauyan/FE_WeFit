@@ -51,12 +51,10 @@ export function Booking() {
     
                 const programs = await Promise.all(programPromises);
                 setTrainingPrograms(programs);
-                const pendingPrograms = programs.filter(program => program.status == false); // Pending
-                const completedPrograms = programs.filter(program => program.status == true); // Completed
+                // Filter programs based on booking status
+                const pendingPrograms = programs.filter(program => program.status === false); // Pending
+                const completedPrograms = programs.filter(program => program.status === true); // Completed
                 // Set state with filtered programs as needed
-                console.log("programs",programs);
-                console.log("p",pendingPrograms);
-                console.log("c",completedPrograms);
                 setPendingTrainingPrograms(pendingPrograms); // If you want to store pending separately
                 setCompletedTrainingPrograms(completedPrograms); // If you want to store completed separately
             } catch (error) {
@@ -159,7 +157,7 @@ export function Booking() {
                     color="primary"
                     sx={{ marginTop: 3, display: 'flex', justifyContent: 'center' }}
                 /></>
-                ) : searchTerm && filteredBookings.length == 0 ? (
+                ) : searchTerm && filteredBookings.length === 0 ? (
                     <Typography variant="body1" color="text.secondary" align="center" marginTop={5}>
                         No Booking Found.
                     </Typography>
