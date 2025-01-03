@@ -19,7 +19,7 @@ export default function SectionBooking({ title, programs, onSeeAll }) {
     const handleView = (trainingProgram) => {
         navigate("/viewBooking", { state: { id: trainingProgram.id, slot: trainingProgram.slot, bookingId : trainingProgram.bookingId} });
     };
-
+    console.log(programs);
     // Limit programs to the first 3
     const displayedPrograms = programs.slice(0, 3);
 
