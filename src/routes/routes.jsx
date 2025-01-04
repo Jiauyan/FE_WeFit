@@ -76,12 +76,24 @@ import { PrivacyPolicy } from '../components/PrivacyPolicy.jsx';
 import { ContactUs } from '../components/ContactUs.jsx';
 
 const ProtectedRoute = ({ children }) => {
-  // Replace this logic with your actual authentication logic
-  const isAuthenticated = Boolean(localStorage.getItem('accessToken')); // Example: checking for a token in localStorage
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
 
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
   if (!isAuthenticated) {
-    // Redirect to the login page but save the current location
+    // Redirect to login with state to save the current location
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   return children;
