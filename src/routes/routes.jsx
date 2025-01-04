@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import App from "../App.jsx";
 import { Login } from "../pages/auth/Login.jsx";
@@ -76,24 +76,12 @@ import { PrivacyPolicy } from '../components/PrivacyPolicy.jsx';
 import { ContactUs } from '../components/ContactUs.jsx';
 
 const ProtectedRoute = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Replace this logic with your actual authentication logic
+  const isAuthenticated = Boolean(localStorage.getItem('accessToken')); // Example: checking for a token in localStorage
   const location = useLocation();
 
-  useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
-
   if (!isAuthenticated) {
-    // Redirect to login with state to save the current location
+    // Redirect to the login page but save the current location
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   return children;
