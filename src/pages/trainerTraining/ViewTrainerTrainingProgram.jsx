@@ -241,7 +241,7 @@ const parseTime = (dateStr, timeStr) => {
                   {item.label === 'Slots' ? (
                     slots.map((slot, idx) => (
                       <Typography key={idx} variant="subtitle1" sx={{ display: 'block' }}>
-                        {slot.time} - {slot.displayStatus}
+                        {slot.time} - {slot.displayStatus} ({slot.enrolled}/{slot.capacity} Enrolled)
                       </Typography>
                     ))
                   ) : (
