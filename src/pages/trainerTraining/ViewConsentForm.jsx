@@ -151,15 +151,15 @@ export function ViewConsentForm() {
                                     </Box>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
                                         <Typography variant="body1" sx={{ fontWeight: 'bold', mr: 1 }}>
-                                            Emergency Contact Phone Number:
-                                        </Typography>
-                                        <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>{consentFormData.emergencyContactPhoneNumber}</Typography>
-                                    </Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 'bold', mr: 1 }}>
                                             Emergency Contact Name:
                                         </Typography>
                                         <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>{consentFormData.emergencyContactName}</Typography>
+                                    </Box>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 'bold', mr: 1 }}>
+                                            Emergency Contact Phone Number:
+                                        </Typography>
+                                        <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>{consentFormData.emergencyContactPhoneNumber}</Typography>
                                     </Box>
                                 </Box>
                             </Box>

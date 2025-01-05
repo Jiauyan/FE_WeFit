@@ -226,22 +226,6 @@ export function ConsentForm() {
                               minDate={new Date()}
                             />
                             </LocalizationProvider>
-                             <TextField
-                              required
-                              margin="normal"
-                              fullWidth
-                              name="emergencyContactPhoneNumber"
-                              label="Emergency Contact Phone Number"
-                              id="emergencyContactPhoneNumber"
-                              value={emergencyContactPhoneNumber}
-                              onChange={(e) => {
-                                setEmergencyContactPhoneNumber(e.target.value);
-                                setErrors({ ...errors, emergencyContactPhoneNumber: '' });
-                              }}
-                              error={!!errors.emergencyContactPhoneNumber}
-                              helperText={errors.emergencyContactPhoneNumber}
-                              sx={{ width: '90%', ml: 5, mb: 2 }}
-                            />
                             <TextField
                               required
                               margin="normal"
@@ -256,6 +240,22 @@ export function ConsentForm() {
                               }}
                               error={!!errors.emergencyContactName}
                               helperText={errors.emergencyContactName}
+                              sx={{ width: '90%', ml: 5, mb: 2 }}
+                            />
+                            <TextField
+                              required
+                              margin="normal"
+                              fullWidth
+                              name="emergencyContactPhoneNumber"
+                              label="Emergency Contact Phone Number"
+                              id="emergencyContactPhoneNumber"
+                              value={emergencyContactPhoneNumber}
+                              onChange={(e) => {
+                                setEmergencyContactPhoneNumber(e.target.value);
+                                setErrors({ ...errors, emergencyContactPhoneNumber: '' });
+                              }}
+                              error={!!errors.emergencyContactPhoneNumber}
+                              helperText={errors.emergencyContactPhoneNumber}
                               sx={{ width: '90%', ml: 5, mb: 2 }}
                             />
                             <GradientButton
