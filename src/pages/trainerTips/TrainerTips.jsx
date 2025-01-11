@@ -47,7 +47,9 @@ useEffect(() => {
                 if (!uid) return;
                 setLoading(true);
                 const response = await axios.get(`https://be-um-fitness.vercel.app/tips/getAllUserTips/${uid}`);
-                setTips(response.data);
+                const sortedTips = response.data.sort(
+                  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());  
+                setTips(sortedTips);
             } catch (error) {
                 console.error('There was an error!', error);
             } finally {

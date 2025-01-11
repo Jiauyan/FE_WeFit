@@ -37,7 +37,9 @@ export function ViewTrainingProgram() {
         try {
             // Fetch the training program details
             const programResponse = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
-            setTrainingProgramData(programResponse.data);
+            const sortedTrainingPrograms = programResponse.data.sort(
+              (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());  
+            setTrainingProgramData(sortedTrainingPrograms);
 
             // Using the trainer ID from the training program to fetch trainer details
             const trainerID = programResponse.data.uid;
