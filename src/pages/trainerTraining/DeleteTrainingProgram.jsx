@@ -59,12 +59,7 @@ export function DeleteTrainingProgram({id}) {
         console.log(hasEnrollments);
 
         if (hasEnrollments) {
-            // If any slot has students, prevent deletion
-            setNotification({ 
-              open: true, 
-              message: 'Cannot delete the training program because there are enrolled students in one or more slots.', 
-              severity: 'error' 
-            });
+          alert('Cannot delete the training program because there are enrolled students in one or more slots.');
         } else {
             // If no slots have students, proceed with deletion
             const deleteResponse = await axios.delete(`https://be-um-fitness.vercel.app/trainingPrograms/deleteTrainingProgram/${id}`);
