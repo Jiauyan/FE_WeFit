@@ -50,30 +50,44 @@ export function DeleteTrainingProgram({id}) {
     e.preventDefault();
     setLoading(true);
     try {
-        const response = await axios.delete(`https://be-um-fitness.vercel.app/trainingPrograms/deleteTrainingProgram/${id}`);
-        setDeleteTrainingProgramStatus(response.data.message);
-        setNotification({ open: true, message: 'Training program deleted successfully!', severity: 'success' });
-        setTimeout(() => {
-          handleClose();
-          navigate("/trainerTrainingPrograms");
-    }, 2000);
+        const response = await axios.get(`https://be-um-fitness.vercel.app/trainingPrograms/getTrainingProgramById/${id}`);
+        const slots = response.data.slots;
+
+        // Check if any slot has students enrolled
+        const hasEnrollments = slots.some(slot => slot.enrolled > 0);
+
+        console.log(hasEnrollments);
+
+        if (hasEnrollments) {
+            // If any slot has students, prevent deletion
+            setNotification({ 
+              open: true, 
+              message: 'Cannot delete the training program because there are enrolled students in one or more slots.', 
+              severity: 'error' 
+            });
+        } else {
+            // If no slots have students, proceed with deletion
+            const deleteResponse = await axios.delete(`https://be-um-fitness.vercel.app/trainingPrograms/deleteTrainingProgram/${id}`);
+            setDeleteTrainingProgramStatus(deleteResponse.data.message);
+            setNotification({ 
+              open: true, 
+              message: 'Training program deleted successfully!', 
+              severity: 'success' 
+            });
+            setTimeout(() => {
+              handleClose();
+              navigate("/trainerTrainingPrograms");
+            }, 2000);
+        }
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            if (error.response) {
-                setDeleteTrainingProgramStatus(error.response.data.message);
-                setNotification({
-                  open: true,
-                  message: error.response.data.message,
-                  severity: 'error',
-                });
-            } else {
-                setDeleteTrainingProgramStatus('An error occurred');
-                setNotification({
-                  open: true,
-                  message: 'An error occurred',
-                  severity: 'error',
-                });
-            }
+            const errorMessage = error.response ? error.response.data.message : 'An error occurred';
+            setDeleteTrainingProgramStatus(errorMessage);
+            setNotification({
+              open: true,
+              message: errorMessage,
+              severity: 'error',
+            });
         } else {
             setDeleteTrainingProgramStatus('An unexpected error occurred');
             setNotification({
@@ -83,7 +97,7 @@ export function DeleteTrainingProgram({id}) {
             });
         }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
 };
 
