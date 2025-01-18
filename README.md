@@ -1,8 +1,9 @@
-# React + Vite
+# UMFitness Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project aims to provide web applications for university students to enhance their fitness level and maintain a healthy lifestyle. 
+The target users of the system will be Universiti Malaya students who are interested in engaging in fitness activity. 
 
-Currently, two official plugins are available:
+The URLs for the deployed UMFitness are as follows:
+- Frontend URL (ReactJS app): https://fe-we-fit.vercel.app/
+- Backend URL (Node.js/Express API): https://be-um-fitness.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
